@@ -5,7 +5,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="pure"
+ZSH_THEME="bira"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -74,7 +74,7 @@ export EDITOR="emacs -nw"
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-export PATH=$PATH:$HOME/bin
+export PATH=$HOME/.cabal/bin:$PATH:$HOME/bin
 
 # OPAM configuration
 . /home/pervez/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

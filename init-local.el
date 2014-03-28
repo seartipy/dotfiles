@@ -57,6 +57,9 @@
 (setq emmet-move-cursor-between-quotes t) ;; default nil
 
 
+(require-package 'fsharp-mode)
+
+(require-package 'jade-mode)
 
 (require-package 'key-chord)
 (require 'key-chord)

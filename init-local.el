@@ -213,6 +213,6 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; Revert current hunk
 (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
-
+(require-package 'wispjs-mode)
 (provide 'init-local)
 ;;; init-local.el ends here

@@ -5,13 +5,15 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="bira"
+ZSH_THEME="pervez"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias nh="node --harmony"
 alias mh="mocha --harmony"
+alias tmux="tmux -u"
+alias gh="node --harmony /home/pervez/.nvm/v0.11.12/bin/gulp"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -47,7 +49,7 @@ alias mh="mocha --harmony"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git command-not-found git-extras autojump coffee debian lein sbt scala node npm sublime tmux tmuxinator vagrant web-search)
+plugins=(git command-not-found git-extras autojump coffee lein sbt scala node npm sublime tmux tmuxinator vagrant web-search)
 
 source $ZSH/oh-my-zsh.sh
 

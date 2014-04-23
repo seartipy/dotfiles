@@ -15,7 +15,7 @@
 (require 'semantic/bovine/gcc)
 
 ;; tern setup for javascript autocompletion
-(add-to-list 'load-path "/home/pervez/tern/emacs")
+(add-to-list 'load-path "~/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
 (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
@@ -48,14 +48,13 @@
                                         (match-end 1) "\u0192")
                         nil)))))
 
-;;emmet-mode setup for emmet support in html files
+;;emmet-mode setup for emmet support in html/css files
 (require-package 'emmet-mode)
 (require 'emmet-mode)
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-(add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent 2 spaces.
-(setq emmet-move-cursor-between-quotes t) ;; default nil
-
+(add-hook 'sgml-mode-hook 'emmet-mode)
+(add-hook 'css-mode-hook  'emmet-mode)
+(add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 4)))
+(setq emmet-move-cursor-between-quotes t)
 
 (require-package 'fsharp-mode)
 
@@ -76,6 +75,13 @@
         (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
+(defun smart-open-line ()
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode."
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+
 (defun smart-open-line-above ()
   "Insert an empty line above the current line.
 Position the cursor at it's beginning, according to the current mode."
@@ -84,7 +90,6 @@ Position the cursor at it's beginning, according to the current mode."
   (newline-and-indent)
   (forward-line -1)
   (indent-according-to-mode))
-
 
 (defun sudo-edit (&optional arg)
   "Edit currently visited file as root.
@@ -187,6 +192,26 @@ Repeated invocations toggle between the two most recently open buffers."
    (kill-line 0)
    (indent-according-to-mode)))
 
+(setq flycheck-check-syntax-automatically '(new-line save mode-enabled))
+
+(require-package 'git-gutter)
+(global-git-gutter-mode t)
+
+(setq git-gutter:modified-sign "~") ;; two space
+(setq git-gutter:hide-gutter t)
+(global-set-key (kbd "C-x C-g") 'git-gutter:toggle)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+
+;; Jump to next/previous hunk
+
+(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+
+;; Stage current hunk
+(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
 
 (provide 'init-local)

@@ -1,6 +1,6 @@
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="bira"
+ZSH_THEME="mybira"
 
 plugins=(gitfast git-extras command-not-found lein node npm rails ruby rvm sbt scala sublime terminator tmux vagrant autojump bower bundler cabal coffee common-aliases debian dircycle dirhistory fasd gem)
 

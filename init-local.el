@@ -214,5 +214,12 @@ Repeated invocations toggle between the two most recently open buffers."
 (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
 (require-package 'wispjs-mode)
+
+(require-package 'yasnippet)
+(yas-global-mode 1)
+(add-hook 'prog-mode-hook
+          '(lambda ()
+             (yas-minor-mode)))
+
 (provide 'init-local)
 ;;; init-local.el ends here

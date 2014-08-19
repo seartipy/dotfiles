@@ -8,11 +8,13 @@ source $ZSH/oh-my-zsh.sh
 
 [ -s "/home/pervez/.nvm/nvm.sh" ] && . "/home/pervez/.nvm/nvm.sh" # This loads nvm
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
 . /home/pervez/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true # nvm
 
 alias nh="node --harmony"
 alias mh="mocha --harmony"
 alias tmux="tmux -u"
 alias gh="node --harmony /home/pervez/.nvm/v0.11.12/bin/gulp"
+
+alias scs="~/scriptcs/src/ScriptCs/bin/Release/scriptcs.exe"
+
+export PATH=$PATH:"/home/pervez/.nvm/v0.10.30/bin"

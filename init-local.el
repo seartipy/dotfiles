@@ -14,6 +14,9 @@
 (semantic-mode +1)
 (require 'semantic/bovine/gcc)
 
+(require-package 'flx-ido)
+(flx-ido-mode 1)
+
 ;; tern setup for javascript autocompletion
 (add-to-list 'load-path "~/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
@@ -32,7 +35,10 @@
 (setq-default js2-show-parse-errors nil)
 (setq-default js2-strict-missing-semi-warning nil)
 (setq-default js2-strict-trailing-comma-warning t)
-(add-hook 'js2-mode-hook (lambda () (flycheck-mode 1)))
+(setq-default js2-mode-display-warnings-and-errors nil)
+(add-hook 'js2-mode-hook (lambda ()
+                           (flycheck-mode 1)
+          (js2-mode-hide-warnings-and-errors)))
 (setq js2-basic-offset 4) ;; I like 4 spaces in javascript code
 
 ;; refactoring support for javascript
@@ -56,9 +62,28 @@
 (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 4)))
 (setq emmet-move-cursor-between-quotes t)
 
+(require-package 'jade-mode)
+
+;;coffeescript settings
+(custom-set-variables '(coffee-tab-width 2))
+(setq coffee-args-compile '("-c" "-m")) ;; generating sourcemap
+(add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
+
+;; If you want to remove sourcemap file after jumping corresponding point
+(defun my/coffee-after-compile-hook (props)
+  (sourcemap-goto-corresponding-point props)
+  (delete-file (plist-get props :sourcemap)))
+(add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
+
+
 (require-package 'fsharp-mode)
 
-(require-package 'jade-mode)
+(require-package 'projectile)
+(projectile-global-mode +1)
+;; (require-package 'perspective)
+;; (persp-mode)
+;; (require-package 'projectile-rails)
+;; (require-package 'persp-projectile)
 
 (require-package 'key-chord)
 (require 'key-chord)
@@ -220,6 +245,78 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(defun rotate-windows ()
+  "Rotate your windows"
+  (interactive)
+  (cond ((not (> (count-windows)1))
+         (message "You can't rotate a single window!"))
+        (t
+         (setq i 1)
+         (setq numWindows (count-windows))
+         (while  (< i numWindows)
+           (let* (
+                  (w1 (elt (window-list) i))
+                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
+
+                  (b1 (window-buffer w1))
+                  (b2 (window-buffer w2))
+
+                  (s1 (window-start w1))
+                  (s2 (window-start w2))
+                  )
+             (set-window-buffer w1  b2)
+             (set-window-buffer w2 b1)
+             (set-window-start w1 s2)
+             (set-window-start w2 s1)
+             (setq i (1+ i)))))))
+
+;; full screen magit-status
+
+(require 'magit-key-mode)
+
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+
+(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+
+(require-package 'zeal-at-point)
+(global-set-key "\C-cd" 'zeal-at-point)
+
+(electric-pair-mode -1)
 
 (provide 'init-local)
 ;;; init-local.el ends here

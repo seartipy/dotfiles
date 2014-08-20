@@ -318,5 +318,24 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (electric-pair-mode -1)
 
+(require-package 'scala-mode2)
+(require-package 'sbt-mode)
+(require-package 'ensime)
+
+(add-hook 'sbt-mode-hook
+          '(lambda ()
+             (local-set-key (kbd "C-a") 'comint-bol)
+             (local-set-key (kbd "M-RET") 'comint-accumulate)
+             ))
+
+
+(add-hook 'scala-mode-hook
+          '(lambda ()
+             (require-package 'flymake)
+             (local-set-key (kbd "M-.") 'sbt-find-definitions)
+             (local-set-key (kbd "C-x '") 'sbt-run-previous-command)
+             (ensime-mode 1)
+             ))
+
 (provide 'init-local)
 ;;; init-local.el ends here

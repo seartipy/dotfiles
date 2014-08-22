@@ -337,5 +337,8 @@ Repeated invocations toggle between the two most recently open buffers."
              (ensime-mode 1)
              ))
 
+(require-package 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
 (provide 'init-local)
 ;;; init-local.el ends here

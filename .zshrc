@@ -1,6 +1,6 @@
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="mybira"
+ZSH_THEME="bira"
 
 plugins=(gitfast git-extras command-not-found lein node npm rails ruby rvm sbt scala sublime terminator tmux vagrant autojump bower bundler cabal coffee common-aliases debian dircycle dirhistory fasd gem)
 
@@ -10,11 +10,8 @@ source $ZSH/oh-my-zsh.sh
 
 . /home/pervez/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true # nvm
 
-alias nh="node --harmony"
-alias mh="mocha --harmony"
+
 alias tmux="tmux -u"
-alias gh="node --harmony /home/pervez/.nvm/v0.11.12/bin/gulp"
 
-alias scs="~/scriptcs/src/ScriptCs/bin/Release/scriptcs.exe"
-
-export PATH=$PATH:"/home/pervez/.nvm/v0.10.30/bin"
+export JAVA_HOME="/usr/lib/jvm/java-7-oracle"
+export JDK_HOME="/usr/lib/jvm/java-7-oracle"

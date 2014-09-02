@@ -15,3 +15,5 @@ alias tmux="tmux -u"
 
 export JAVA_HOME="/usr/lib/jvm/java-7-oracle"
 export JDK_HOME="/usr/lib/jvm/java-7-oracle"
+
+export PATH=$PATH:$HOME/bin

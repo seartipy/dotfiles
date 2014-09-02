@@ -335,6 +335,7 @@ Repeated invocations toggle between the two most recently open buffers."
              (local-set-key (kbd "M-.") 'sbt-find-definitions)
              (local-set-key (kbd "C-x '") 'sbt-run-previous-command)
              ))
+(require 'ensime)
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 (require-package 'browse-kill-ring)

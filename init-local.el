@@ -334,8 +334,8 @@ Repeated invocations toggle between the two most recently open buffers."
              (require-package 'flymake)
              (local-set-key (kbd "M-.") 'sbt-find-definitions)
              (local-set-key (kbd "C-x '") 'sbt-run-previous-command)
-             (ensime-mode 1)
              ))
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 (require-package 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)

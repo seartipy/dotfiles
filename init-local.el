@@ -76,7 +76,7 @@
 (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
 
 
-(require-package 'fsharp-mode)
+;; (require-package 'fsharp-mode)
 
 (require-package 'projectile)
 (projectile-global-mode +1)

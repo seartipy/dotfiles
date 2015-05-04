@@ -1,19 +1,3 @@
-;; C++ configuration
-(require-package 'company)
-(setq company-clang-arguments
-     '("-std=c++11"
-       "-stdlib=libc++"
-       "-I/usr/include/c++/v1"
-       "-I/usr/include"
-       "-I/usr/include/x86_64-linux-gnu"
-       "-I/usr/include/clang/3.4/include/"))
-
-(setq flycheck-clang-language-standard "c++11")
-(setq flycheck-clang-standard-library "libc++")
-
-(semantic-mode +1)
-(require 'semantic/bovine/gcc)
-
 (require-package 'flx-ido)
 (flx-ido-mode 1)
 
@@ -75,9 +59,6 @@
   (delete-file (plist-get props :sourcemap)))
 (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
 
-
-;; (require-package 'fsharp-mode)
-
 (require-package 'projectile)
 (projectile-global-mode +1)
 ;; (require-package 'perspective)
@@ -134,11 +115,11 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-;; (defun top-join-line ()
-;;   "Join the current line with the line beneath it."
-;;   (interactive)
-;;   (delete-indentation 1))
-;;(global-set-key (kbd "C-^") 'top-join-line)
+(defun top-join-line ()
+  "Join the current line with the line beneath it."
+  (interactive)
+  (delete-indentation 1))
+(global-set-key (kbd "C-^") 'top-join-line)
 
 (defun smart-kill-whole-line (&optional arg)
   "A simple wrapper around `kill-whole-line' that respects indentation."
@@ -321,6 +302,10 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (require-package 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
+
+(require-package 'midje-mode)
+(require-package 'clojure-jump-to-file)
+(add-hook 'clojure-mode-hook 'midje-mode)
 
 (provide 'init-local)
 ;;; init-local.el ends here

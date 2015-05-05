@@ -303,8 +303,19 @@ Repeated invocations toggle between the two most recently open buffers."
 (require-package 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
 
-(require-package 'midje-mode)
-(add-hook 'clojure-mode-hook 'midje-mode)
+;; (require-package 'midje-mode)
+;; (require 'clojure-jump-to-file)
+;; (add-hook 'clojure-mode-hook 'midje-mode)
+(require-package 'clojure-quick-repls)
+
+(require-package 'ace-window)
+(global-set-key (kbd "C-'") 'ace-window)
+
+(global-unset-key (kbd "C-z"))
+
+;;(require-package 'eyebrowse)
+(require-package 'workgroups2)
+(workgroups-mode 1)
 
 (provide 'init-local)
 ;;; init-local.el ends here

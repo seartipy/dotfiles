@@ -304,7 +304,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (browse-kill-ring-default-keybindings)
 
 (require-package 'midje-mode)
-(require-package 'clojure-jump-to-file)
 (add-hook 'clojure-mode-hook 'midje-mode)
 
 (provide 'init-local)

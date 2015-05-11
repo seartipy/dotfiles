@@ -317,5 +317,30 @@ Repeated invocations toggle between the two most recently open buffers."
 (require-package 'workgroups2)
 (workgroups-mode 1)
 
+(require-package 'back-button)
+(back-button-mode 1)
+
+(require-package 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+
+(require-package 'direx)
+(global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
+
+(require-package 'web-beautify)
+(eval-after-load 'js2-mode
+  '(define-key js2-mode-map (kbd "C-c b") 'web-beautify-js))
+;; Or if you're using 'js-mode' (a.k.a 'javascript-mode')
+(eval-after-load 'js
+  '(define-key js-mode-map (kbd "C-c b") 'web-beautify-js))
+
+(eval-after-load 'json-mode
+  '(define-key json-mode-map (kbd "C-c b") 'web-beautify-js))
+
+(eval-after-load 'sgml-mode
+  '(define-key html-mode-map (kbd "C-c b") 'web-beautify-html))
+
+(eval-after-load 'css-mode
+  '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
+
 (provide 'init-local)
 ;;; init-local.el ends here

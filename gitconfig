@@ -1,0 +1,68 @@
+[push]
+        default = simple
+
+[color]
+        ui = true
+
+[color "branch"]
+        current = yellow ul
+        local = cyan bold
+        remote = magenta
+
+[color "diff"]
+        meta = yellow
+        frag = magenta
+        old = red bold
+        new = green bold
+
+[color "status"]
+        # added = cyan
+        # changed = yellow
+        # untracked = magenta
+
+[alias]
+        aa = add --all
+        ap = add --patch
+        ai = add -i
+        ca = commit --amend
+        ci = commit -v
+        co = checkout
+        cb = checkout -b
+        st = status
+        sl = log --pretty=oneline --abbrev-commit --relative-date --graph -7
+        ll = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short -7
+        df = diff
+        dc = diff --cached
+        dr = diff HEAD
+        z = log HEAD -1
+        unstage = reset HEAD
+        merge-branch = !git checkout master && git merge @{-1}
+        rebase-origin = !git fetch origin && git rebase origin/master
+
+        up = !git fetch origin && git rebase origin/master
+[core]
+        # ~/.gitignore for unix and OS X; %HOME%\.gitignore for Windows
+        # excludesfile = <path to .gitignore of your home directory>
+
+        autocrlf = input
+        # for windows:
+        # autocrlf = true
+
+        editor = emacsclient # vim, nano, gedit, notepad2 etc.
+        # for windows, something along the lines of(check the path):
+        # editor = 'C:/Program Files/Sublime Text 3/sublime_text.exe'
+
+        pager = less -F -X
+
+[user]
+        name = <Your Full Name>
+        email = <Your EMail Id>
+
+[merge]
+        tool = kdiff3
+
+[mergetool]
+        keepBackup = false
+        template = ~/.gitmessage
+[fetch]
+        prune = true

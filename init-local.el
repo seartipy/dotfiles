@@ -1,14 +1,14 @@
 (require-package 'flx-ido)
 (flx-ido-mode 1)
 
-;; tern setup for javascript autocompletion
+;; tern setup for javascript autocompletionc
 (add-to-list 'load-path "~/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
 (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+  '(progn
+     (require 'tern-auto-complete)
+     (tern-ac-setup)))
 
 ;;run javascript from within emacs using skewer-mode.
 (add-hook 'js2-mode-hook 'skewer-mode)
@@ -18,11 +18,11 @@
 ;;enable flycheck instead of js2
 (setq-default js2-show-parse-errors nil)
 (setq-default js2-strict-missing-semi-warning nil)
-(setq-default js2-strict-trailing-comma-warning t)
-(setq-default js2-mode-display-warnings-and-errors nil)
+
+
 (add-hook 'js2-mode-hook (lambda ()
                            (flycheck-mode 1)
-          (js2-mode-hide-warnings-and-errors)))
+                           (js2-mode-hide-warnings-and-errors)))
 (setq js2-basic-offset 4) ;; I like 4 spaces in javascript code
 
 ;; refactoring support for javascript
@@ -61,25 +61,12 @@
 
 (require-package 'projectile)
 (projectile-global-mode +1)
-;; (require-package 'perspective)
-;; (persp-mode)
-;; (require-package 'projectile-rails)
-;; (require-package 'persp-projectile)
 
 (require-package 'key-chord)
 (require 'key-chord)
 (key-chord-mode +1)
 
 ;;miscellaneous settings
-
-(defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
-  (interactive)
-  (unwind-protect
-      (progn
-        (linum-mode 1)
-        (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
 
 (defun smart-open-line ()
   "Insert an empty line after the current line.
@@ -131,12 +118,6 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; disable auto-save
 (setq auto-save-default nil)
 
-;; store all backup and autosave files in the tmp dir
-;; (setq backup-directory-alist
-;;       `((".*" . ,temporary-file-directory)))
-;; (setq auto-save-file-name-transforms
-;;       `((".*" ,temporary-file-directory t)))
-
 (defun visit-term-buffer ()
   "Create or visit a terminal buffer."
   (interactive)
@@ -160,7 +141,6 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (require-package 'multi-term)
 (require 'multi-term)
-
 (setq multi-term-scroll-to-bottom-on-output "others")
 (setq multi-term-scroll-show-maximum-output +1)
 
@@ -175,7 +155,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key global-map [?\s-g] 'goto-line)
 
 (key-chord-define-global "jj" 'ace-jump-mode)
-(key-chord-define-global "zz" 'zap-up-to-char)
+(key-chord-define-global "zz" 'zop-up-to-char)
 
 (global-set-key (kbd "<C-S-up>")     'buf-move-up)
 (global-set-key (kbd "<C-S-down>")   'buf-move-down)
@@ -303,17 +283,65 @@ Repeated invocations toggle between the two most recently open buffers."
 (require-package 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
 
-;; (require-package 'midje-mode)
-;; (require 'clojure-jump-to-file)
-;; (add-hook 'clojure-mode-hook 'midje-mode)
 (require-package 'clojure-quick-repls)
 
 (require-package 'ace-window)
-(global-set-key (kbd "C-'") 'ace-window)
+(global-set-key (kbd "C-,") 'ace-window)
+(ace-window-display-mode)
 
-(global-unset-key (kbd "C-z"))
+(require-package 'hydra)
 
-;;(require-package 'eyebrowse)
+(require-package 'avy)
+(avy-setup-default)
+
+(global-set-key (kbd "M-g c") 'avy-goto-char)
+(global-set-key (kbd "C-'") 'avy-goto-char-2)
+(global-set-key (kbd "M-g f") 'avy-goto-line)
+(global-set-key (kbd "M-g w") 'avy-goto-word-1)
+(global-set-key (kbd "M-g e") 'avy-goto-word-0)
+
+(set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
+(set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")
+(setq ;; aw-keys   '(?a ?s ?d ?f ?j ?k ?l)
+ aw-dispatch-always t
+ aw-dispatch-alist
+ '((?x aw-delete-window     "Ace - Delete Window")
+   (?c aw-swap-window       "Ace - Swap Window")
+   (?n aw-flip-window)?
+   (?v aw-split-window-vert "Ace - Split Vert Window")
+   (?h aw-split-window-horz "Ace - Split Horz Window")
+   (?m delete-other-windows "Ace - Maximize Window")
+   (?g delete-other-windows)
+   (?b balance-windows)
+   (?u winner-undo)
+   (?r winner-redo)))
+
+(when (package-installed-p 'hydra)
+  (defhydra hydra-window-size (:color red)
+    "Windows size"
+    ("h" shrink-window-horizontally "shrink horizontal")
+    ("j" shrink-window "shrink vertical")
+    ("k" enlarge-window "enlarge vertical")
+    ("l" enlarge-window-horizontally "enlarge horizontal"))
+  (defhydra hydra-window-frame (:color red)
+    "Frame"
+    ("f" make-frame "new frame")
+    ("x" delete-frame "delete frame"))
+  (defhydra hydra-window-scroll (:color red)
+    "Scroll other window"
+    ("n" joe-scroll-other-window "scroll")
+    ("p" joe-scroll-other-window-down "scroll down"))
+  (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+  (add-to-list 'aw-dispatch-alist '(?o hydra-window-scroll/body) t)
+  (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+(ace-window-display-mode t)
+
+(global-unset-key (kbd "C-z")) ;;disable minimize
+
+(require-package 'lispy)
+(add-hook 'emacs-lisp-mode-hook  (lambda () (lispy-mode 1)))
+
+
 (require-package 'workgroups2)
 (workgroups-mode 1)
 
@@ -341,6 +369,28 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (eval-after-load 'css-mode
   '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
+
+(require-package 'discover-my-major)
+
+(require-package 'easy-kill)
+(global-set-key [remap kill-ring-save] 'easy-kill)
+
+(require-package 'god-mode)
+(global-set-key (kbd "<escape>") 'god-local-mode)
+
+(require-package 'ov)
+
+(require-package 'move-text)
+(move-text-default-bindings)
+
+(require-package 'volatile-highlights)
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
+
+(require-package 'zop-to-char)
+(global-set-key [remap zap-to-char] 'zop-to-char)
+
+(require-package 'gist)
 
 (provide 'init-local)
 ;;; init-local.el ends here

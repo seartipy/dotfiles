@@ -1,4 +1,4 @@
-# My Ubuntu setup
+# My Ubuntu Gnome setup
 
 If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
 
@@ -19,7 +19,7 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     sudo add-apt-repository ppa:eugenesan/ppa
     sudo apt-get update
     sudo apt-get install git-extras smartgithg
-    ln -s ~/dotfiles/gitconfig ~/.gitconfig
+    ln -s ~/dotfiles/common/gitconfig ~/.gitconfig
 
 #### ZSH
 
@@ -27,7 +27,7 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
     chsh -s /bin/zsh
     mv ~/.zshrc ~/.zshrc-backup
-    ln -s ~/dotfiles/zshrc ~/.zshrc
+    ln -s ~/dotfiles/linux/zshrc ~/.zshrc
 
 **In gnome terminal profile preferences, select 'Run command as a login shell and reboot**
 
@@ -35,7 +35,7 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
 
     sudo apt-get install emacs24 aspell aspell-en
     git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
-    ln -s ~/dotfiles/init-local.el ~/.emacs.d/lisp/init-local.el
+    ln -s ~/dotfiles/linux/init-local.el ~/.emacs.d/lisp/init-local.el
 
 open emacs to install all packages, you can close it after the installations complete successfully
 
@@ -53,7 +53,7 @@ open emacs to install all packages, you can close it after the installations com
 
     curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
     lein repl
-    ln -s ~/dotfiles/profiles.clj ~/.lein/profiles.clj
+    ln -s ~/dotfiles/common/profiles.clj ~/.lein/profiles.clj
     lein repl
 
 ####Scala
@@ -63,7 +63,7 @@ open emacs to install all packages, you can close it after the installations com
     sudo apt-get install sbt
     sbt console
     mkdir ~/.sbt/0.13/plugins
-    ln -s ~/dotfiles/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+    ln -s ~/dotfiles/common/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     sbt console
 
 ####Javscript

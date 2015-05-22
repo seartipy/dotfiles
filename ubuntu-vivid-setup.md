@@ -10,6 +10,8 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
 
     sudo apt-get update && sudo apt-get upgrade -y
     sudo apt-get install build-essential curl wget git linux-headers-`uname -r`
+    sudo apt-get install exfat-fuse exfat-utils
+
     sudo apt-get install tree tmux git-extras vim-gnome autojump silversearcher-ag editorconfig
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin
@@ -23,13 +25,13 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
 
 #### ZSH
 
+** In gnome terminal profile preferences, select 'Run command as a login shell and reboot **
+
     sudo apt-get install zsh
-    curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
     chsh -s /bin/zsh
+    git clone https://github.com/zsh-users/antigen.git
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/linux/zshrc ~/.zshrc
-
-**In gnome terminal profile preferences, select 'Run command as a login shell and reboot**
 
 #### Emacs
 
@@ -37,7 +39,7 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
     ln -s ~/dotfiles/linux/init-local.el ~/.emacs.d/lisp/init-local.el
 
-open emacs to install all packages, you can close it after the installations complete successfully
+** open emacs to install all packages, you can close it after the installations complete successfully **
 
 #### C++
 
@@ -73,7 +75,6 @@ open emacs to install all packages, you can close it after the installations com
     nvm install 0.12
     nvm alias default 0.12
     source ~/.nvm/nvm.sh
-
     npm install -g coffee-script typescript babel
     npm install -g grunt-cli gulp bower browserify webpack
     npm install -g tap karma-cli jest jshint coffeelint
@@ -93,4 +94,4 @@ open emacs to install all packages, you can close it after the installations com
     sudo add-apt-repository ppa:webupd8team/sublime-text-3
     sudo add-apt-repository  ppa:webupd8team/atom
     sudo apt-get update
-    sudo apt-get install youtube-dl sublime-text-installer atom
+    sudo apt-get install youtube-dl sublime-text-installer atom zeal

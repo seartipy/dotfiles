@@ -13,13 +13,13 @@ Type the follwing in your os x terminal and install xcode command line tools
 
 #### Essential
 
-    brew install wget tree tmux fasd the_silver_searcher ctags
+    brew install wget tree tmux fasd the_silver_searcher editorconfig ctags
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin
 
 #### ZSH
 
-    curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+    git clone https://github.com/zsh-users/antigen.git
     chsh -s /bin/zsh
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/mac/zshrc ~/.zshrc
@@ -34,6 +34,12 @@ Type the follwing in your os x terminal and install xcode command line tools
 
 **open emacs, you can close it after the installations complete successfully**
 
+#### Vim
+
+    brew install macvim --override-system-vim --with-lua --with-luajit
+    brew linkapps macvim
+    curl http://j.mp/spf13-vim3 -L -o - | sh
+
 #### C++
 
     brew install boost --c++11
@@ -42,9 +48,17 @@ Type the follwing in your os x terminal and install xcode command line tools
 
 #### Haskell
 
-Currently nearly everything is broken with ghc 7.10, will update this when I get a fix. :-)
-
     brew install ghc cabal-install
+    cabal update
+    cabal install alex happy
+    cabal install hlint
+    cabal install hoogle
+    cabal install structured-haskell-mode
+
+ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master
+
+    git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
+    cabal install ~/ghc-mod
 
 #### Java(required for scala and clojure)
 
@@ -94,4 +108,4 @@ Currently nearly everything is broken with ghc 7.10, will update this when I get
     brew install p7zip unrar  android-file-transfer google-chrome
     brew cask install atom google-chrome intellij-idea smartgit virtualbox transmission iterm2 dash macdown
 
-(pending - vim, git)
+(pending - git)

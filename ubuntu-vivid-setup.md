@@ -17,7 +17,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     sudo apt-get install autojump silversearcher-ag exuberant-ctags editorconfig
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin
-    
+
 #### ZSH
 
 **In gnome terminal profile preferences, select 'Run command as a login shell**
@@ -40,7 +40,8 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
 #### Emacs
 
     sudo apt-get install emacs24 aspell aspell-en
-    git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
+    git clone https://github.com/pervezfunctor/emacs.d.git ~/.emacs.d
+    cd ~/.emacs.d && git checkout linux && cd
     ln -s ~/dotfiles/linux/init-local.el ~/.emacs.d/lisp/init-local.el
 
 **Open emacs to install all packages, you can close it after the installations complete successfully.**
@@ -52,7 +53,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
 
 #### Haskell
 
-    sudo add-apt-repository ppa:hvr/ghc 
+    sudo add-apt-repository ppa:hvr/ghc
     sudo apt-get install ghc cabal-install
     cabal update
     cabal install alex happy
@@ -64,7 +65,7 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
 
     git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
     cabal install ~/ghc-mod
-    
+
 #### Java
 
     sudo add-apt-repository  ppa:webupd8team/java -y
@@ -75,9 +76,9 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
 
 #### C++
 
-    sudo apt-get install clang libclang-dev libc++-dev libc++abi-dev 
+    sudo apt-get install clang libclang-dev libc++-dev libc++abi-dev
     sudo apt-get install libboost1.55-all-dev g++ cppcheck scons cmake
-    
+
 **Download and install CLion from Jetbrains**
 
 ####Clojure
@@ -128,12 +129,12 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
     sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
     sudo add-apt-repository  ppa:webupd8team/atom -y
     sudo add-apt-repository ppa:zeal-developers/ppa -y
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
     sudo apt-get update
     sudo apt-get install youtube-dl sublime-text-installer atom zeal google-chrome-stable virtualbox-4.3 dkms
     curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && gibo -u
     git clone https://github.com/clvv/fasd.git
-    cd fasd && PREFIX=$HOME make install && cd 
+    cd fasd && PREFIX=$HOME make install && cd
 
 **Download and install virtualbox extensions pack from virtualbox.org**

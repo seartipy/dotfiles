@@ -2,7 +2,7 @@
 
 #### Install xcode from mac app store
 
-Type the follwing in your os x terminal and install xcode command line tools
+Type the following in your os x terminal and click on Install xcode in the pop up window
 
     clang++ -v
 
@@ -12,8 +12,10 @@ Type the follwing in your os x terminal and install xcode command line tools
     brew install caskroom/cask/brew-cask
 
 #### Essential
-
-    brew install wget tree tmux fasd the_silver_searcher editorconfig ctags
+    
+    brew update && brew upgrade
+    brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo
+    brew cask install karabiner seil spectacle
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin
 
@@ -24,6 +26,12 @@ Type the follwing in your os x terminal and install xcode command line tools
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/mac/zshrc ~/.zshrc
 
+#### Git
+
+    brew install git-extras 
+    brew cask install smartgit
+    cp ~/dotfiles/common/gitconfig ~/.gitconfig
+
 #### Emacs
 
     brew tap railwaycat/emacsmacport
@@ -31,6 +39,7 @@ Type the follwing in your os x terminal and install xcode command line tools
     brew install aspell --with-lang-en
     git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
     ln -s ~/dotfiles/mac/init-local.el ~/.emacs.d/lisp/init-local.el
+    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
 **open emacs, you can close it after the installations complete successfully**
 
@@ -39,6 +48,7 @@ Type the follwing in your os x terminal and install xcode command line tools
     brew install macvim --override-system-vim --with-lua --with-luajit
     brew linkapps macvim
     curl http://j.mp/spf13-vim3 -L -o - | sh
+    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/Cellar/macvim/7.4-76/MacVim.app" at POSIX file "/Applications"'
 
 #### C++
 
@@ -60,10 +70,11 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
     git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
     cabal install ~/ghc-mod
 
-#### Java(required for scala and clojure)
+#### Java
 
     brew cask install java
     brew cask install caskroom/homebrew-versions/java6
+    brew cask install  intellij-idea scala-ide
 
 #### Clojure
 
@@ -87,8 +98,6 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
     nvm install 0.12
     nvm alias default 0.12
     source ~/.nvm/nvm.sh
-
-
     npm install -g coffee-script typescript babel
     npm install -g grunt-cli gulp bower browserify webpack
     npm install -g tap karma-cli jest jshint coffeelint
@@ -101,11 +110,12 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
     curl -sSL https://get.rvm.io | bash -s stable --ruby
     source ~/.rvm/scripts/rvm
-    gem install pry  sinatra thin guard watchr tmuxinator sass --no-ri --no-rdoc
+    gem install pry sinatra thin guard watchr tmuxinator sass --no-ri --no-rdoc
 
 #### Miscellaneous
 
-    brew install p7zip unrar  android-file-transfer google-chrome
-    brew cask install atom google-chrome intellij-idea smartgit virtualbox transmission iterm2 dash macdown
-
-(pending - git)
+    brew install p7zip unrar
+    brew cask install atom google-chrome iterm2 dash android-file-transfer
+    brew cask install virtualbox transmission macdown github
+    brew tap caskroom/versions
+    brew cask install sublime-text3

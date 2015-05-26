@@ -6,26 +6,21 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     gsettings set org.gnome.desktop.interface scaling-factor 2
     gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
 
+For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in System Settings/Displays
+
 #### Essentials
 
     sudo apt-get update && sudo apt-get upgrade -y
-    sudo apt-get install build-essential curl wget git linux-headers-`uname -r`
+    sudo apt-get install build-essential linux-headers-`uname -r`
     sudo apt-get install exfat-fuse exfat-utils
-
-    sudo apt-get install tree tmux git-extras vim-gnome autojump silversearcher-ag editorconfig
+    sudo apt-get install curl wget tree tmux git terminator
+    sudo apt-get install autojump silversearcher-ag exuberant-ctags editorconfig
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin
-
-#### Git
-
-    sudo add-apt-repository ppa:eugenesan/ppa
-    sudo apt-get update
-    sudo apt-get install git-extras smartgithg
-    ln -s ~/dotfiles/common/gitconfig ~/.gitconfig
-
+    
 #### ZSH
 
-** In gnome terminal profile preferences, select 'Run command as a login shell and reboot **
+**In gnome terminal profile preferences, select 'Run command as a login shell**
 
     sudo apt-get install zsh
     chsh -s /bin/zsh
@@ -33,27 +28,62 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/linux/zshrc ~/.zshrc
 
+**Recommended to reboot your system**
+
+#### Git
+
+    sudo add-apt-repository ppa:eugenesan/ppa -y
+    sudo apt-get update
+    sudo apt-get install git-extras smartgithg
+    cp ~/dotfiles/common/gitconfig ~/.gitconfig
+
 #### Emacs
 
     sudo apt-get install emacs24 aspell aspell-en
     git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
     ln -s ~/dotfiles/linux/init-local.el ~/.emacs.d/lisp/init-local.el
 
-** open emacs to install all packages, you can close it after the installations complete successfully **
+**Open emacs to install all packages, you can close it after the installations complete successfully.**
+
+#### Vim
+
+    sudo apt-get install vim-gnome
+    curl http://j.mp/spf13-vim3 -L -o - | sh
+
+#### Haskell
+
+    sudo add-apt-repository ppa:hvr/ghc 
+    sudo apt-get install ghc cabal-install
+    cabal update
+    cabal install alex happy
+    cabal install hlint
+    cabal install hoogle
+    cabal install structured-haskell-mode
+
+ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master
+
+    git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
+    cabal install ~/ghc-mod
+    
+#### Java
+
+    sudo add-apt-repository  ppa:webupd8team/java -y
+    sudo apt-get update
+    sudo apt-get install oracle-java8-installer
+
+**Download and install Scala IDE and Intellij Idea**
 
 #### C++
 
-    sudo apt-get install clang libclang-dev libc++-dev libc++abi-dev libboost1.55-all-dev g++ cppcheck
-
-#### Java
-
-    sudo add-apt-repository  ppa:webupd8team/java
-    sudo apt-get update
-    sudo apt-get install oracle-java8-installer
+    sudo apt-get install clang libclang-dev libc++-dev libc++abi-dev 
+    sudo apt-get install libboost1.55-all-dev g++ cppcheck scons cmake
+    
+**Download and install CLion from Jetbrains**
 
 ####Clojure
 
     curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
+    chmod +x ~/bin/lein
     lein repl
     ln -s ~/dotfiles/common/profiles.clj ~/.lein/profiles.clj
     lein repl
@@ -81,6 +111,8 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
     npm install -g jstransform react-tools
     git clone https://github.com/marijnh/tern.git ~/tern && cd ~/tern && npm install
 
+**Download and install flow**
+
 ####Ruby
 
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
@@ -90,8 +122,18 @@ If you are on a HiDPI screen, enter the following commands(gnome 3.x only)
 
 #### Misceleanous
 
-    sudo add-apt-repository  ppa:nilarimogard/webupd8
-    sudo add-apt-repository ppa:webupd8team/sublime-text-3
-    sudo add-apt-repository  ppa:webupd8team/atom
+    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+    sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
+    sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
+    sudo add-apt-repository  ppa:webupd8team/atom -y
+    sudo add-apt-repository ppa:zeal-developers/ppa -y
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
     sudo apt-get update
-    sudo apt-get install youtube-dl sublime-text-installer atom zeal
+    sudo apt-get install youtube-dl sublime-text-installer atom zeal google-chrome-stable virtualbox-4.3 dkms
+    curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && gibo -u
+    git clone https://github.com/clvv/fasd.git
+    cd fasd && PREFIX=$HOME make install && cd 
+
+**Download and install virtualbox extensions pack from virtualbox.org**

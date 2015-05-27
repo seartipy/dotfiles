@@ -26,7 +26,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     chsh -s /bin/zsh
     git clone https://github.com/zsh-users/antigen.git
     mv ~/.zshrc ~/.zshrc-backup
-    ln -s ~/dotfiles/linux/zshrc ~/.zshrc
+    ln -s ~/dotfiles/common/zshrc ~/.zshrc
 
 **Recommended to reboot your system**
 

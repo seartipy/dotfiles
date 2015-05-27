@@ -12,7 +12,7 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     brew install caskroom/cask/brew-cask
 
 #### Essential
-    
+
     brew update && brew upgrade
     brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo
     brew cask install karabiner seil spectacle
@@ -24,11 +24,11 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     git clone https://github.com/zsh-users/antigen.git
     chsh -s /bin/zsh
     mv ~/.zshrc ~/.zshrc-backup
-    ln -s ~/dotfiles/mac/zshrc ~/.zshrc
+    ln -s ~/dotfiles/common/zshrc ~/.zshrc
 
 #### Git
 
-    brew install git-extras 
+    brew install git-extras
     brew cask install smartgit
     cp ~/dotfiles/common/gitconfig ~/.gitconfig
 

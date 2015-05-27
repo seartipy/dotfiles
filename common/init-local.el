@@ -392,5 +392,26 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (require-package 'gist)
 
+;;python
+
+(require-package 'anaconda-mode)
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'eldoc-mode)
+
+(require-package 'ac-anaconda)
+(add-hook 'python-mode-hook 'ac-anaconda-setup)
+
+(require-package 'pyenv-mode)
+(pyenv-mode)
+(defun projectile-pyenv-mode-set ()
+  "Set pyenv version matching project name.
+Version must be already installed."
+  (pyenv-mode-set (projectile-project-name)))
+(add-hook 'projectile-switch-project-hook 'projectile-pyenv-mode-set)
+
+(require-package 'pyvenv)
+(require-package 'hy-mode)
+(require-package 'cython-mode)
+
 (provide 'init-local)
 ;;; init-local.el ends here

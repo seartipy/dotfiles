@@ -38,7 +38,7 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     brew install emacs-mac
     brew install aspell --with-lang-en
     git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
-    ln -s ~/dotfiles/mac/init-local.el ~/.emacs.d/lisp/init-local.el
+    ln -s ~/dotfiles/common/init-local.el ~/.emacs.d/lisp/init-local.el
     osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
 **open emacs, you can close it after the installations complete successfully**

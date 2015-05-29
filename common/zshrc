@@ -38,8 +38,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
 
 #java
-export JAVA_HOME="/usr/lib/jvm/java-7-oracle"
-export JDK_HOME="/usr/lib/jvm/java-7-oracle"
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+    export JDK_HOME="/usr/lib/jvm/java-8-oracle"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+    export JDK_HOME=`/usr/libexec/java_home -v 1.8`
+fi
 
 alias tmux="tmux -u"
 export PATH="$PATH:$HOME/bin"
@@ -47,3 +52,6 @@ export PATH="$PATH:$HOME/bin"
 #ruby
 export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM
+
+#python
+export PATH="$HOME/anaconda/bin:$PATH"

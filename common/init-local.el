@@ -375,8 +375,8 @@ Repeated invocations toggle between the two most recently open buffers."
 (require-package 'easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
 
-(require-package 'god-mode)
-(global-set-key (kbd "<escape>") 'god-local-mode)
+;; (require-package 'god-mode)
+;; (global-set-key (kbd "<escape>") 'god-local-mode)
 
 (require-package 'ov)
 
@@ -412,6 +412,8 @@ Version must be already installed."
 (require-package 'pyvenv)
 (require-package 'hy-mode)
 (require-package 'cython-mode)
+
+(require-package 'ein)
 
 (provide 'init-local)
 ;;; init-local.el ends here

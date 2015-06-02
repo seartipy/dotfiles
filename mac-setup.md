@@ -41,6 +41,10 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     ln -s ~/dotfiles/common/init-local.el ~/.emacs.d/lisp/init-local.el
     osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
+If you use zsh from inside emacs, you need the following
+
+    tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.8/share/emacs/24.5/etc/e/eterm-color.ti
+
 **open emacs, you can close it after the installations complete successfully**
 
 #### Vim
@@ -114,7 +118,7 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
 
 #### Miscellaneous
 
-    brew install p7zip unrar
+    brew install p7zip unrar trash coreutils
     brew cask install atom google-chrome iterm2 dash android-file-transfer
     brew cask install virtualbox transmission macdown github
     brew tap caskroom/versions

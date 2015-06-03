@@ -16,7 +16,5 @@
 
 (require 'more-keys)
 
-(require-package 'ein)
-
 (provide 'init-local)
 ;;; init-local.el ends here

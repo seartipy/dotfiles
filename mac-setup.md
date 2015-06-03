@@ -37,7 +37,8 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     brew tap railwaycat/emacsmacport
     brew install emacs-mac
     brew install aspell --with-lang-en
-    git clone https://github.com/purcell/emacs.d.git ~/.emacs.d
+    git clone https://github.com/pervezfunctor/emacs.d.git ~/.emacs.d
+    cd ~/.emacs.d && git checkout pervez && cd
     ln -s ~/dotfiles/common/init-local.el ~/.emacs.d/lisp/init-local.el
     osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 

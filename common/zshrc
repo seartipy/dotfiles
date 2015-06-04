@@ -2,8 +2,6 @@ source ~/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
-antigen bundle nojhan/liquidprompt
-
 antigen bundle git
 antigen bundle gitfast
 antigen bundle git-extras
@@ -29,8 +27,14 @@ antigen bundle atom
 antigen bundle sublime
 antigen bundle web-search
 
-antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-history-substring-search
+
+if [ -n "$INSIDE_EMACS" ]; then
+    antigen theme robbyrussell
+else
+    antigen bundle nojhan/liquidprompt
+    antigen bundle zsh-users/zsh-syntax-highlighting
+fi
 
 antigen apply
 
@@ -56,4 +60,3 @@ export PATH="$PATH:$HOME/bin"
 
 #ruby
 export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM

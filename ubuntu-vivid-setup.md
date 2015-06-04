@@ -42,7 +42,6 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     sudo apt-get install emacs24 aspell aspell-en
     git clone https://github.com/pervezfunctor/emacs.d.git ~/.emacs.d
     cd ~/.emacs.d && git checkout pervez && cd
-    ln -s ~/dotfiles/common/init-local.el ~/.emacs.d/lisp/init-local.el
 
 **Open emacs to install all packages, you can close it after the installations complete successfully.**
 

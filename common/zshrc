@@ -48,11 +48,19 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export JDK_HOME="/usr/lib/jvm/java-8-oracle"
     #python
     export PATH="$HOME/anaconda3/bin:$PATH"
+
+    alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`
     #python
     export PATH="$HOME/anaconda/bin:$PATH"
+
+    alias upgrade="brew update && brew upgrade"
+
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+
 fi
 
 alias tmux="tmux -u"

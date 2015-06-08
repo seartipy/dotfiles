@@ -116,6 +116,21 @@ ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so ne
     source ~/.rvm/scripts/rvm
     gem install pry sinatra thin guard watchr tmuxinator sass --no-ri --no-rdoc
 
+####Python
+
+    brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
+    echo 'eval "$(pyenv init -)"' >> ~/.zshenv
+    git clone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
+    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshenv
+
+Restart your shell
+
+    exec $SHELL
+    pyenv install anaconda3-2.2.0
+    pyenv global anaconda3-2.2.0
+    pip install --upgrade pip
+    pip install flake8 pylint
+
 #### Miscellaneous
 
     brew install p7zip unrar trash coreutils

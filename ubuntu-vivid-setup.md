@@ -52,17 +52,17 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
 
 #### Haskell
 
-    sudo add-apt-repository ppa:hvr/ghc
+    sudo add-apt-repository ppa:hvr/ghc -y
+    sudo apt-get update
     sudo apt-get install ghc cabal-install
     cabal update
     cabal install alex happy
     cabal install hlint
-    cabal install hoogle
     cabal install structured-haskell-mode
 
 ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master
 
-    git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
+    git clone https://github.com/kazu-yamamoto/ghc-mod.git ~/ghc-mod
     cabal install ~/ghc-mod
 
 #### Java

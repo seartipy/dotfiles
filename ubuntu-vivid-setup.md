@@ -138,6 +138,7 @@ Restart your shell
     pyenv global anaconda3-2.2.0
     pip install --upgrade pip
     pip install flake8 pylint
+    pyenv global system
 
 #### Misceleanous
 

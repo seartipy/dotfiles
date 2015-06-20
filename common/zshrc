@@ -52,6 +52,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export PATH="/opt/ghc/7.10.2/bin:$PATH"
     alias cabal="cabal-1.22"
 
+    alias pbcopy="xsel --clipboard --input"
+    alias pbpaste="xsel --clipboard --output"
+    alias open="xdg-open"
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`

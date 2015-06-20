@@ -14,6 +14,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     sudo apt-get install build-essential linux-headers-`uname -r`
     sudo apt-get install exfat-fuse exfat-utils
     sudo apt-get install curl wget tree tmux git terminator
+    sudo apt-get install xsel
     sudo apt-get install autojump silversearcher-ag exuberant-ctags editorconfig
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin

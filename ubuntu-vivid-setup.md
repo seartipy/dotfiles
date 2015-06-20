@@ -54,10 +54,11 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
 
     sudo add-apt-repository ppa:hvr/ghc -y
     sudo apt-get update
-    sudo apt-get install ghc cabal-install
+    sudo apt-get install ghc-7.10.2 cabal-install-1.22
     cabal update
     cabal install alex happy
     cabal install hlint
+    cabal install hoogle
     cabal install structured-haskell-mode
 
 ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master

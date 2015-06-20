@@ -48,6 +48,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export JDK_HOME="/usr/lib/jvm/java-8-oracle"
 
     alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
+
+    export PATH="/opt/ghc/7.10.2/bin:$PATH"
+    alias cabal="cabal-1.22"
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`

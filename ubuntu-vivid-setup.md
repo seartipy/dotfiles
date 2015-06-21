@@ -61,6 +61,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     cabal install hlint
     cabal install hoogle
     cabal install structured-haskell-mode
+    cabal install stylish-haskell hasktags hident
 
 ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master
 

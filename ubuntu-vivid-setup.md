@@ -36,7 +36,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
 
     sudo add-apt-repository ppa:eugenesan/ppa -y
     sudo apt-get update
-    sudo apt-get install git-extras smartgithg
+    sudo apt-get install git-extras smartgithg meld kdiff3
     cp ~/dotfiles/common/gitconfig ~/.gitconfig
 
 #### Emacs

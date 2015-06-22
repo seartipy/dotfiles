@@ -30,7 +30,7 @@ Type the following in your os x terminal and click on Install xcode in the pop u
 #### Git
 
     brew install git-extras
-    brew cask install smartgit
+    brew cask install smartgit kdiff3
     cp ~/dotfiles/common/gitconfig ~/.gitconfig
 
 #### Emacs

@@ -25,6 +25,7 @@ Type the following in your os x terminal and click on Install xcode in the pop u
     chsh -s /bin/zsh
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/common/zshrc ~/.zshrc
+    ln -s ~/dotfiles/common/tmux.conf ~/.tmux.conf
 
 #### Git
 

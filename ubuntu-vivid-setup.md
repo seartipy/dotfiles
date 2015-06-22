@@ -28,6 +28,7 @@ For Ubuntu Unity please also select 2 for "Scale for menu and title bars" in Sys
     git clone https://github.com/zsh-users/antigen.git
     mv ~/.zshrc ~/.zshrc-backup
     ln -s ~/dotfiles/common/zshrc ~/.zshrc
+    ln -s ~/dotfiles/common/tmux.conf ~/.tmux.conf
 
 **Recommended to reboot your system**
 
@@ -157,5 +158,3 @@ Restart your shell
     curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && gibo -u
     git clone https://github.com/clvv/fasd.git
     cd fasd && PREFIX=$HOME make install && cd
-
-**Download and install virtualbox extensions pack from virtualbox.org**

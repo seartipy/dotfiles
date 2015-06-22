@@ -69,10 +69,11 @@ If you use zsh from inside emacs, you need the following
     cabal install hlint
     cabal install hoogle
     cabal install structured-haskell-mode
+    cabal install hasktags stylish-haskell hindent
 
 ghc-mod unfortunately does not build with ghc 7.10. Bug is fixed in master so need to clone master
 
-    git clone git@github.com:kazu-yamamoto/ghc-mod.git ~/ghc-mod
+    git clone https://github.com/kazu-yamamoto/ghc-mod.git ~/ghc-mod
     cabal install ~/ghc-mod
 
 #### Java

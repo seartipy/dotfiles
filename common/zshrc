@@ -56,6 +56,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias pbpaste="xsel --clipboard --output"
     alias open="xdg-open"
 
+    alias e="TERM=xterm-256color emacs -nw"
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`
@@ -63,7 +65,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     alias upgrade="brew update && brew upgrade"
 fi
 
-alias tmux="tmux -u"
+alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
 export PATH="$PATH:$HOME/bin"
 
 #ruby

@@ -14,7 +14,7 @@ Type the following in your os x terminal and click on Install xcode in the pop u
 #### Essential
 
     brew update && brew upgrade
-    brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo
+    brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo gpg
     brew cask install karabiner seil spectacle
     git clone https://github.com/pervezfunctor/dotfiles.git
     mkdir ~/bin

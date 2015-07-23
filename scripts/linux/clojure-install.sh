@@ -16,6 +16,15 @@ git clone https://github.com/pervezfunctor/emacs.d.git ~/housem.d
 ln -s ~/dotfiles/common/tmux.conf ~/.tmux.conf
 cp ~/dotfiles/common/gitconfig ~/.gitconfig
 
+echo "=======Installing Adobe Source Code Pro fonts======"
+
+wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
+unzip 1.030R-it.zip
+mkdir ~/.fonts
+cp 1.030R-it.zip/OTF/*.otf ~/.fonts
+fc-cache -f -v
+rm -f 1.030R-it.zip
+
 echo "================Installing emacs...================"
 
 git clone --recursive https://github.com/syl20bnr/spacemacs ~/spacemacs

@@ -6,7 +6,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 
 echo "===============Installing packages...==============="
 
-sudo apt-get install -y build-essential emacs24 curl tree tmux git xsel xclip silversearcher-ag exuberant-ctags editorconfig zsh kdiff3 oracle-java8-installer chromium-browser
+sudo apt-get install -y build-essential emacs24 curl tree tmux git xsel xclip silversearcher-ag exuberant-ctags editorconfig zsh kdiff3 oracle-java8-installer chromium-browser unrar trash-cli
 sudo apt-get autoremove && sudo apt-get clean && sudo apt-get autoclean
 
 echo "===============Installing dotfiles...==============="

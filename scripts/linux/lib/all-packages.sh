@@ -1,0 +1,18 @@
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+sudo add-apt-repository  ppa:webupd8team/java -y
+sudo add-apt-repository ppa:eugenesan/ppa -y
+sudo add-apt-repository ppa:hvr/ghc -y
+echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
+sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
+sudo add-apt-repository  ppa:webupd8team/atom -y
+sudo add-apt-repository ppa:zeal-developers/ppa -y
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install build-essential linux-headers-`uname -r` exfat-fuse exfat-utils unrar trash-cli curl wget tree tmux git terminator xsel xclip silversearcher-ag exuberant-ctags editorconfig zsh git-extras smartgithg meld kdiff3 emacs24 aspell aspell-en vim-gnome ghc-7.10.2 cabal-install-1.22  oracle-java8-installer clang libclang-dev libc++-dev libc++abi-dev libboost1.55-all-dev g++ cppcheck scons cmake sbt  youtube-dl sublime-text-installer atom zeal google-chrome-stable virtualbox-4.3 dkms lm-sensors
+
+sudo apt-get autoremove && sudo apt-get clean && sudo apt-get autoclean

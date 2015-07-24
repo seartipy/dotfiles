@@ -1,6 +1,6 @@
-source $DOTFILES/scripts/linux/lib/base.sh
+source $DOTFILES/lib/base.sh
 
-source $DOTFILES/scripts/linux/lib/web-packages.sh
-source $DOTFILES/scripts/linux/lib/web-install.sh
+source $DOTFILES/lib/web-packages.sh
+source $DOTFILES/lib/web-install.sh
 
 chsh -s /bin/zsh

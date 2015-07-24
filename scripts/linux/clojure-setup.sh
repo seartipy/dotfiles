@@ -1,3 +1,5 @@
+DOTFILES="$(dirname "$0")"
+
 source $DOTFILES/lib/base.sh
 
 source $DOTFILES/lib/java-packages.sh

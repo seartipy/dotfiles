@@ -11,6 +11,7 @@ source $DOTFILES/python-packages.sh
 source $DOTFILES/web-packages.sh
 source $DOTFILES/cpp-packages.sh
 source $DOTFILES/haskell-packages.sh
+source $DOTFILES/additional-packages.sh
 source $DOTFILES/ruby-packages.sh
 
 source $DOTFILES/java-install.sh
@@ -20,6 +21,7 @@ source $DOTFILES/python-install.sh
 source $DOTFILES/web-install.sh
 source $DOTFILES/cpp-install.sh
 source $DOTFILES/haskell-install.sh
+source $DOTFILES/additional-install.sh
 source $DOTFILES/ruby-install.sh
 
 lein repl

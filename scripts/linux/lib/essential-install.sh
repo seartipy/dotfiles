@@ -49,4 +49,3 @@ rm -rf source-code-pro*
 
 ## external commands
 emacs&
-chsh -s /bin/zsh

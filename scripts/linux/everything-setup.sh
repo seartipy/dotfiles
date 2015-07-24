@@ -27,4 +27,4 @@ source $DOTFILES/lib/ruby-install.sh
 # lein repl
 # sbt console
 
-# chsh -s /bin/zsh
+chsh -s /bin/zsh

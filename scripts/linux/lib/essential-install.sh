@@ -3,7 +3,6 @@
 git clone https://github.com/pervezfunctor/dotfiles.git ~/dotfiles
 mkdir ~/bin
 
-
 #### bash
 
 git clone https://github.com/nojhan/liquidprompt.git ~/liquidprompt
@@ -46,6 +45,7 @@ mkdir ~/.fonts
 cp source-code-pro*/OTF/*.otf ~/.fonts
 fc-cache -f -v
 rm -f 1.030R-it.zip
+rm -rf source-code-pro*
 
 ## external commands
 emacs&

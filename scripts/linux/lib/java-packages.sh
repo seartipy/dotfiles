@@ -1,1 +1,1 @@
-sudo apt-get install oracle-java8-installer
+sudo apt-get install -y oracle-java8-installer

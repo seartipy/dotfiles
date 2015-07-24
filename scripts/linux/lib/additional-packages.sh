@@ -1,1 +1,1 @@
-sudo apt-get install virtualbox-5.0 dkms smartgithg meld vlc youtube-dl sublime-text-installer atom exfat-fuse exfat-utils terminator git-extras build-essential linux-headers-`uname -r` zeal google-chrome-stable
+sudo apt-get install -y virtualbox-5.0 dkms smartgithg meld vlc youtube-dl sublime-text-installer atom exfat-fuse exfat-utils terminator git-extras build-essential linux-headers-`uname -r` zeal google-chrome-stable

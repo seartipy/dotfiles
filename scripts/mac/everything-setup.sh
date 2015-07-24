@@ -1,9 +1,7 @@
 DOTFILES="$(dirname "$0")"
 
 source $DOTFILES/lib/base.sh
-source $DOTFILES/scripts/mac/lib/essential.sh
-
-emacs&
+source $DOTFILES/lib/essential.sh
 
 source $DOTFILES/lib/java.sh
 source $DOTFILES/lib/clojure.sh

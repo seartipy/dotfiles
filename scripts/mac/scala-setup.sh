@@ -1,12 +1,12 @@
-DOTFILES="$(dirname "$0"/../..)"
+DOTFILES="$(dirname "$0")"
 
-source $DOTFILES/scripts/mac/lib/base.sh
-source $DOTFILES/scripts/mac/lib/essential.sh
+source $DOTFILES/lib/base.sh
+source $DOTFILES/lib/essential.sh
 
 emacs&
 
-source $DOTFILES/scripts/mac/lib/java.sh
-source $DOTFILES/scripts/mac/lib/scala.sh
+source $DOTFILES/lib/java.sh
+source $DOTFILES/lib/scala.sh
 
 sbt console
 chsh -s /bin/zsh

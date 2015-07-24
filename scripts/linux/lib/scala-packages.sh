@@ -1,1 +1,1 @@
-sudo apt-get install sbt -y
+sudo apt-get  install sbt --yes --force-yes

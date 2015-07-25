@@ -1,4 +1,4 @@
-source $DOTFILES/lib/base.sh
+source $DOTFILES/linux/lib/base.sh
 
 source $DOTFILES/linux/lib/java-packages.sh
 source $DOTFILES/linux/lib/clojure-packages.sh

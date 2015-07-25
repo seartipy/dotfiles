@@ -1,7 +1,6 @@
-brew cask install atom google-chrome iterm2 dash android-file-transfer virtualbox transmission macdown github sublime-text3 vlc karabiner seil spectacle amethyst
+brew cask install atom google-chrome iterm2 dash android-file-transfer virtualbox transmission macdown github sublime-text3 vlc karabiner seil spectacle amethyst youtube-dl android-file-transfer github inkscape lightable paintbrush skype transmission xquartz
 
-echo "Enter password for changing your shell to zsh:"
-chsh -s /bin/zsh
+brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook
 
 echo "Installation done! Launching applications, these might fail, ignore them"
 

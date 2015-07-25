@@ -6,8 +6,9 @@ git clone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pi
 git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshenv
 
+source ~/.zshenv
 pyenv install anaconda3-2.2.0
 pyenv global anaconda3-2.2.0
 pip install --upgrade pip
-pip install flake8 pylint
+pip install pylint
 pyenv global system

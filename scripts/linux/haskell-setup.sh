@@ -1,8 +1,6 @@
-DOTFILES="$(dirname "$0")"
+source $DOTFILES/linux/lib/base.sh
 
-source $DOTFILES/lib/base.sh
-
-source $DOTFILES/lib/haskell-packages.sh
-source $DOTFILES/lib/haskell-install.sh
+source $DOTFILES/linux/lib/haskell-packages.sh
+source $DOTFILES/linux/lib/haskell-install.sh
 
 chsh -s /bin/zsh

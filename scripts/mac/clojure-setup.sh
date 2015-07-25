@@ -1,12 +1,10 @@
-DOTFILES="$(dirname "$0")"
-
-source $DOTFILES/lib/base.sh
-source $DOTFILES/lib/essential.sh
+source $DOTFILES/mac/lib/base.sh
+source $DOTFILES/mac/lib/essential.sh
 
 emacs&
 
-source $DOTFILES/lib/java.sh
-source $DOTFILES/lib/clojure.sh
+source $DOTFILES/mac/lib/java.sh
+source $DOTFILES/mac/lib/clojure.sh
 
 lein repl
 chsh -s /bin/zsh

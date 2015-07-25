@@ -1,12 +1,10 @@
-DOTFILES="$(dirname "$0")"
+source $DOTFILES/linux/lib/base.sh
 
-source $DOTFILES/lib/base.sh
+source $DOTFILES/linux/lib/java-packages.sh
+source $DOTFILES/linux/lib/scala-packages.sh
 
-source $DOTFILES/lib/java-packages.sh
-source $DOTFILES/lib/scala-packages.sh
-
-source$DOTFILES/ lib/java-install.sh
-source $DOTFILES/lib/scala-install.sh
+source$DOTFILES/linux/ lib/java-install.sh
+source $DOTFILES/linux/lib/scala-install.sh
 
 sbt console
 

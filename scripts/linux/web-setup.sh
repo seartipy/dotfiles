@@ -1,8 +1,6 @@
-DOTFILES="$(dirname "$0")"
+source $DOTFILES/linux/lib/base.sh
 
-source $DOTFILES/lib/base.sh
-
-source $DOTFILES/lib/web-packages.sh
-source $DOTFILES/lib/web-install.sh
+source $DOTFILES/linux/lib/web-packages.sh
+source $DOTFILES/linux/lib/web-install.sh
 
 chsh -s /bin/zsh

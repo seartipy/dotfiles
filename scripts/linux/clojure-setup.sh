@@ -1,12 +1,10 @@
-DOTFILES="$(dirname "$0")"
+source $DOTFILES/linux/lib/base.sh
 
-source $DOTFILES/lib/base.sh
+source $DOTFILES/linux/lib/java-packages.sh
+source $DOTFILES/linux/lib/clojure-packages.sh
 
-source $DOTFILES/lib/java-packages.sh
-source $DOTFILES/lib/clojure-packages.sh
-
-source $DOTFILES/lib/java-install.sh
-source $DOTFILES/lib/clojure-install.sh
+source $DOTFILES/linux/lib/java-install.sh
+source $DOTFILES/linux/lib/clojure-install.sh
 
 lein repl
 

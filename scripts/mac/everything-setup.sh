@@ -1,5 +1,3 @@
-DOTFILES="$HOME/$(dirname "$0")"
-
 source $DOTFILES/mac/lib/base.sh
 source $DOTFILES/mac/lib/essential.sh
 

@@ -1,4 +1,5 @@
-brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo gpg kdiff3 smartgit git-extras emacs-mac unrar p7zip trash coreutils
+brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo gpg kdiff3 git-extras emacs-mac unrar p7zip trash coreutils
+brew cask install smartgit
 brew install aspell --with-lang-en
 brew install macvim --override-system-vim --with-lua --with-luajit
 brew linkapps macvim

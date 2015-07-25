@@ -1,19 +1,14 @@
-DOTFILES="$(dirname "$0")"
+DOTFILES="$HOME/$(dirname "$0")"
 
-source $DOTFILES/lib/base.sh
-source $DOTFILES/lib/essential.sh
+source $DOTFILES/mac/lib/base.sh
+source $DOTFILES/mac/lib/essential.sh
 
-source $DOTFILES/lib/java.sh
-source $DOTFILES/lib/clojure.sh
-source $DOTFILES/lib/scala.sh
-source $DOTFILES/lib/python.sh
-source $DOTFILES/lib/web.sh
-source $DOTFILES/lib/cpp.sh
-source $DOTFILES/lib/haskell.sh
-source $DOTFILES/lib/ruby.sh
-source $DOTFILES/lib/additional.sh
-
-lein repl
-sbt console
-
-chsh -s /bin/zsh
+source $DOTFILES/mac/lib/java.sh
+source $DOTFILES/mac/lib/clojure.sh
+source $DOTFILES/mac/lib/scala.sh
+source $DOTFILES/mac/lib/python.sh
+source $DOTFILES/mac/lib/web.sh
+source $DOTFILES/mac/lib/cpp.sh
+source $DOTFILES/mac/lib/haskell.sh
+source $DOTFILES/mac/lib/ruby.sh
+source $DOTFILES/mac/lib/additional.sh

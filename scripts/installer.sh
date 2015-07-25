@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # INSTALLER_SCRIPT_OPTIONS=(
 #     'everything',
 #     'essential',

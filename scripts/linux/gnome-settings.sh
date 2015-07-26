@@ -20,3 +20,18 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
 
 gsettings set org.gnome.desktop.privacy remove-old-temp-files true
 gsettings set org.gnome.desktop.privacy remove-old-trash-files true
+
+# gnome extensions
+
+gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"
+
+wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install
+chmod +x ~/bin/shell-extension-install
+
+shell-extension-install 3.14 294 # shellshape
+shell-extension-install 3.14 97  # coverflow alt-tab
+shell-extension-install 3.14 442 # drop down terminal
+shell-extension-install 3.14 413 # app keys
+shell-extension-install 3.14 361 # emacs manager
+
+gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F11']"

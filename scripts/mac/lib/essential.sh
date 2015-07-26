@@ -27,7 +27,7 @@ cp ~/dotfiles/common/gitconfig ~/.gitconfig
 
 # emacs
 
-git clone --recursive https://github.com/syl20bnr/spacemacs ~/spacemacs
+git clone --recursive https://github.com/syl20bnr/spacemacs ~/.spacemacs
 git clone https://github.com/pervezfunctor/emacs.d.git ~/housem.d
 ln -s ~/housem.d ~/.emacs.d
 osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'

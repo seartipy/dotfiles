@@ -21,6 +21,8 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
 gsettings set org.gnome.desktop.privacy remove-old-temp-files true
 gsettings set org.gnome.desktop.privacy remove-old-trash-files true
 
+gsettings set org.gnome.system.locale region 'en_US.UTF-8'
+
 # gnome extensions
 
 gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"

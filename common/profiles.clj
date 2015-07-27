@@ -11,4 +11,4 @@
                   [venantius/ultra "0.3.4"]]
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.10"]
-                       [acyclic/squiggly-clojure "0.1.3-SNAPSHOT"]]}}
+                       [acyclic/squiggly-clojure "0.1.2-SNAPSHOT"]]}}

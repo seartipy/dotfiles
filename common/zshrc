@@ -27,6 +27,8 @@ antigen bundle atom
 antigen bundle sublime
 antigen bundle web-search
 
+antigen bundle fasd
+
 antigen bundle zsh-users/zsh-history-substring-search
 
 if [ -n "$INSIDE_EMACS" ]; then

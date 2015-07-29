@@ -1,17 +1,16 @@
 #!/bin/bash
 
-echo "Installing required packages..."
-
 function install_ubuntu_packages {
     echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
     sudo add-apt-repository  ppa:webupd8team/java -y
+
     sudo apt-get update && sudo apt-get upgrade -y
-    sudo apt-get install -y curl oracle-java8-installer git emacs24 silversearcher-ag expect
-    sudo apt-get install -y aspell-en trash-cli
+
+    sudo apt-get install -y curl oracle-java8-installer git emacs24 silversearcher-ag expect aspell-en trash-cli
 }
 
 function install_mac_packages {
-    if ! brew -v; then
+    if ! brew -v > /dev/null; then
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
     brew install caskroom/cask/brew-cask
@@ -19,7 +18,7 @@ function install_mac_packages {
     brew install emacs-mac --with-spacemacs-icon
     brew install aspell --with-lang-en
     brew cask install java
-    brew install wget the_silver_searcher trash leiningen expect
+    brew install wget the_silver_searcher trash leiningen
 }
 
 function setup_liquidprompt {
@@ -35,19 +34,19 @@ function setup_liquidprompt {
 
 function setup_emacs {
     if [ -e ~/seartipy/spacemacs ]; then
-        pushd .
+        pushd . > /dev/null
         cd ~/seartipy/spacemacs
         if git status --porcelain; then
             git pull
         fi
-        popd
+        popd > /dev/null
     else
         git clone --recursive https://github.com/syl20bnr/spacemacs ~/seartipy/spacemacs
     fi
-    mv -f -b ~/.emacs.d ~/.emacs.d.seartipy.backup 2> /dev/null
-    ln -s ~/seartipy/spacemacs ~/.emacs.d
+    mv -f  ~/.emacs.d ~/.emacs.d.seartipy.backup 2> /dev/null
+    ln -s ~/seartipy/spacemacs/ ~/.emacs.d
 
-    mv -f -b ~/.spacemacs ~/.spacemacs.seartipy.backup 2> /dev/null
+    mv -f ~/.spacemacs ~/.spacemacs.seartipy.backup 2> /dev/null
     if ! [ -e ~/.spacemacs ]; then
          curl -L https://raw.githubusercontent.com/pervezfunctor/dotfiles/master/common/spacemacs > ~/.spacemacs
     fi
@@ -59,7 +58,6 @@ function setup_emacs {
 
 function setup_clojure {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-
         [-e ~/bin ] || mkdir ~/bin
         if ! grep "\$HOME/bin" ~/.bashrc > /dev/null; then
             echo "export PATH=\$HOME/bin:\$PATH" >> ~/.bashrc
@@ -69,7 +67,7 @@ function setup_clojure {
         fi
         export PATH=$PATH:$HOME/bin
         if ! lein > /dev/null; then
-            mv -f -b ~/bin/lein ~/bin/lein.seartipy.backup 2> /dev/null
+            mv -f ~/bin/lein ~/bin/lein.seartipy.backup 2> /dev/null
             curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
             chmod +x ~/bin/lein
         else
@@ -77,14 +75,12 @@ function setup_clojure {
         fi
     fi
 
+    echo "Copy/Update profiles.clj..."
     [ -e ~/.lein ] || mkdir ~/.lein 2> /dev/null
-    mv -f -b /.lein/profiles.clj ~/.lein/profiles.clj.seartipy.backup 2> /dev/null
-    curl -L https://raw.githubusercontent.com/pervezfunctor/dotfiles/master/common/profiles.clj > ~/.lein/profiles.clj
-    mkdir -p ~/programs/clojure 2> /dev/null
-    cd ~/programs/clojure
-    [ -e hello-clojure-world ] || lein new app hello-clojure-world
-    cd hello-clojure-world
+    mv -f /.lein/profiles.clj ~/.lein/profiles.clj.seartipy.backup 2> /dev/null
+    curl -L https://raw.githubusercontent.com/pervezfunctor/dotfiles/master/common/profiles.clj > ~/.lein/profiles.clj 2> /dev/null
 
+    echo "Update leiningin plugins..."
     expect > /dev/null <<EOF
 spawn lein repl
 expect "user => "
@@ -93,7 +89,7 @@ EOF
 }
 
 function installer {
-    pushd .
+    pushd . > /dev/null
     cd
 
     echo "Installing packages..."
@@ -103,6 +99,7 @@ function installer {
         install_mac_packages
     fi
 
+    echo "Creating ~/seartipy unless it already exists..."
     [ -e ~/seartipy ] || mkdir ~/seartipy
 
     echo "Setting up liquidprompt for bash..."
@@ -114,6 +111,8 @@ function installer {
     echo "Setting up clojure..."
     setup_clojure
 
-    popd
+    popd > /dev/null
     echo "Please reboot your system!"
 }
+
+installer

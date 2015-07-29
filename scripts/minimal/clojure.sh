@@ -58,7 +58,7 @@ function setup_emacs {
 
 function setup_clojure {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        [-e ~/bin ] || mkdir ~/bin
+        [ -e ~/bin ] || mkdir ~/bin
         if ! grep "\$HOME/bin" ~/.bashrc > /dev/null; then
             echo "export PATH=\$HOME/bin:\$PATH" >> ~/.bashrc
         fi
@@ -71,12 +71,16 @@ function setup_clojure {
             curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
             chmod +x ~/bin/lein
         else
-            lein upgrade
+            expect > /dev/null <<EOF
+spawn lein upgrade
+expect -re "Do you want to continue.*"
+send "y\r"
+EOF
         fi
     fi
 
     echo "Copy/Update profiles.clj..."
-    [ -e ~/.lein ] || mkdir ~/.lein 2> /dev/null
+    [ -e ~/.lein ] || mkdir ~/.lein
     mv -f /.lein/profiles.clj ~/.lein/profiles.clj.seartipy.backup 2> /dev/null
     curl -L https://raw.githubusercontent.com/pervezfunctor/dotfiles/master/common/profiles.clj > ~/.lein/profiles.clj 2> /dev/null
 

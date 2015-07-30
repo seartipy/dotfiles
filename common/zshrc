@@ -75,4 +75,5 @@ export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
 
 #haskell
 export PATH="$HOME/.cabal/bin:$PATH"
-export PATH="/home/pervez/.cask/bin:$PATH"
+
+export PATH="$HOME/.cask/bin:$PATH"

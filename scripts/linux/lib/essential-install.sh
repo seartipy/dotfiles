@@ -26,6 +26,10 @@ cp ~/dotfiles/common/gitconfig ~/.gitconfig
 git clone --recursive https://github.com/syl20bnr/spacemacs ~/.spacemacs
 git clone https://github.com/pervezfunctor/emacs.d.git ~/housem.d
 ln -s ~/housem.d ~/.emacs.d
+curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
+pushd .
+cd ~/housem.d && ~/.cask/bin/cask install
+popd
 
 #### misceleanous
 

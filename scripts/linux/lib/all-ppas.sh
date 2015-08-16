@@ -15,6 +15,7 @@ sudo add-apt-repository  ppa:webupd8team/atom -y # atom editor
 
 # scala
 echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
 
 # haskell
 sudo add-apt-repository ppa:hvr/ghc -y

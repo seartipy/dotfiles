@@ -26,15 +26,15 @@ function upgrade_emacs {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         cask upgrade
     fi
-    spull $SEARTIPY_HOME/housem.d
+    spull $SEARTIPY_HOME/emacses/housem.d
     pushd . > /dev/null
-    cd $SEARTIPY_HOME/housem.d > /dev/null && cask update
+    cd $SEARTIPY_HOME/emacses/housem.d > /dev/null && cask update
     popd > /dev/null
 
-    spull SEARTIPY_HOME/spacemacs
-    spull SEARTIPY_HOME/purcell
-    spull SEARTIPY_HOME/prelude
-    spull SEARTIPY_HOME/magnars
+    spull SEARTIPY_HOME/emacses/spacemacs
+    spull SEARTIPY_HOME/emacses/purcell
+    spull SEARTIPY_HOME/emacses/prelude
+    spull SEARTIPY_HOME/emacses/magnars
 }
 
 function upgrade_clojure {
@@ -66,7 +66,7 @@ function upgrade_all {
     upgrade_web
 }
 
-source $SEARTIPY_HOME/antigen/antigen.zsh
+source $SEARTIPY_HOME/vendors/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 

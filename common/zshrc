@@ -1,4 +1,4 @@
-SEARTIPY_HOME=$HOME
+SEARTIPY_HOME=$HOME/seartipy
 
 function spull {
     if [ -e $1 ]; then
@@ -99,6 +99,7 @@ antigen bundle fasd
 
 antigen bundle zsh-users/zsh-history-substring-search
 
+# fix for using zsh inside emacs
 if [ -n "$INSIDE_EMACS" ]; then
     antigen theme robbyrussell
 else
@@ -108,40 +109,45 @@ fi
 
 antigen apply
 
-#node
-export NVM_DIR="$HOME/.nvm"
-[ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
-
-#java
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    #java
     export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
     export JDK_HOME="/usr/lib/jvm/java-8-oracle"
 
-    alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
 
+    #haskell
     export PATH="/opt/ghc/7.10.2/bin:$PATH"
     alias cabal="cabal-1.22"
 
+    alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
     alias pbcopy="xsel --clipboard --input"
     alias pbpaste="xsel --clipboard --output"
     alias open="xdg-open"
 
+    alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
+
+    #to support xterm key bindings in emacs
     alias e="TERM=xterm-256color emacs -nw"
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
+    #java
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`
 
     alias upgrade="brew update && brew upgrade"
 fi
 
-alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
 export PATH="$PATH:$SEARTIPY_HOME/bin"
 
 #ruby
-export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
+export PATH="$HOME/.rvm/bin:$PATH"
 
 #haskell
 export PATH="$HOME/.cabal/bin:$PATH"
 
+#emacs
 export PATH="$HOME/.cask/bin:$PATH"
+
+#node
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"

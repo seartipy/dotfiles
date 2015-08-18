@@ -1,12 +1,15 @@
-#### dotfiles
+# START WITH SOURCING ZSHRC
 
-git clone https://github.com/pervezfunctor/dotfiles.git ~/dotfiles
-mkdir ~/bin
+sclone https://github.com/pervezfunctor/dotfiles.git ~/dotfiles
+smkdir ~/bin
+sclone https://github.com/nojhan/liquidprompt.git ~/liquidprompt
+safe_append "[[ $- = *i* ]] && source ~/liquidprompt/liquidprompt" ~/.bashrc liquidprompt
+sclone https://github.com/zsh-users/antigen.git ~/antigen
 
-#### bash
+sln ~/dotfiles/common/zshrc ~/.zshrc
+sln ~/dotfiles/common/tmux.conf ~/.tmux.conf
 
-git clone https://github.com/nojhan/liquidprompt.git ~/liquidprompt
-echo "[[ $- = *i* ]] && source ~/liquidprompt/liquidprompt" >> ~/.bashrc
+[ -e ~/.gitconfig ] || cp ~/dotfiles/common/gitconfig ~/.gitconfig
 
 #### zsh
 
@@ -33,6 +36,17 @@ popd
 
 #### misceleanous
 
+sclone https://github.com/syl20bnr/spacemacs ~/spacemacs --recursive
+sclone https://github.com/pervezfunctor/emacs.d.git ~/housem.d
+sln ~/housem.d ~/.emacs.d
+
 curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && ~/bin/gibo -u
-git clone https://github.com/clvv/fasd.git ~/fasd
-pushd . && cd ~/fasd && PREFIX=$HOME make install && popd
+
+if ! fasd > /dev/null
+then
+    force_clone https://github.com/clvv/fasd.git ~/fasd
+    pushd . > /dev/null
+    cd ~/fasd && PREFIX=$HOME make install > /dev/null
+    popd > /dev/null
+    rm -rf ~/fasd
+fi

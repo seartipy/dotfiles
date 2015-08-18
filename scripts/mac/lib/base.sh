@@ -1,7 +1,3 @@
-# install xcode
-
-clang++ -v
-
 # homebrew and caskroom
 
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"

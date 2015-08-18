@@ -2,6 +2,16 @@ function secho {
     echo "SEARTIPY: $1"
 }
 
+function spull {
+    if [ -e $1 ]; then
+        cd $1
+        if git status --porcelain > /dev/null; then
+            git pull origin master
+        fi
+        popd > /dev/null
+    fi
+}
+
 function sclone {
     local source=$1
     local target=$2
@@ -18,7 +28,7 @@ function sclone {
     fi
 }
 
-function force_clone {
+function force-clone {
     local source=$1
     local target=$2
     [ -e $target ] && trash-put $target
@@ -34,7 +44,7 @@ function smkdir {
     fi
 }
 
-function safe_append {
+function safe-append {
     local source=$1
     local target=$2
     local search_for=$3
@@ -61,4 +71,7 @@ function sln {
     else
         ln -s $source $target
     fi
+}
+
+function safe-add-apt-repository {
 }

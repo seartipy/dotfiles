@@ -41,7 +41,7 @@ curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && 
 # fasd
 if ! fasd > /dev/null
 then
-    force_clone https://github.com/clvv/fasd.git ~/fasd
+    force-clone https://github.com/clvv/fasd.git ~/fasd
     pushd . > /dev/null
     cd ~/fasd && PREFIX=$HOME make install > /dev/null
     popd > /dev/null

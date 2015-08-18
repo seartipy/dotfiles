@@ -3,7 +3,7 @@
 sclone https://github.com/pervezfunctor/dotfiles.git ~/dotfiles
 smkdir ~/bin
 sclone https://github.com/nojhan/liquidprompt.git ~/liquidprompt
-safe_append "[[ $- = *i* ]] && source ~/liquidprompt/liquidprompt" ~/.bashrc liquidprompt
+safe-append "[[ $- = *i* ]] && source ~/liquidprompt/liquidprompt" ~/.bashrc liquidprompt
 sclone https://github.com/zsh-users/antigen.git ~/antigen
 
 sln ~/dotfiles/common/zshrc ~/.zshrc
@@ -44,7 +44,7 @@ curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && 
 
 if ! fasd > /dev/null
 then
-    force_clone https://github.com/clvv/fasd.git ~/fasd
+    force-clone https://github.com/clvv/fasd.git ~/fasd
     pushd . > /dev/null
     cd ~/fasd && PREFIX=$HOME make install > /dev/null
     popd > /dev/null

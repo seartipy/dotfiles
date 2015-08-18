@@ -26,7 +26,8 @@ else
     OS="linux"
 fi
 
-DOTFILES="$HOME/$(dirname "$0")"
+SEARTIPY_HOME=$HOME/seartipy
+DOTFILES=$SEARTIPY_HOME/dotfiles
 
 function install_git {
     if [ $OS == "mac" ]; then
@@ -42,4 +43,4 @@ sclone https://github.com/pervezfunctor/dotfiles.git ~/dotfiles
 secho "Installing $INSTALLER_SCRIPT ..."
 
 
-source "$HOME/dotfiles/scripts/${OS}/${INSTALLER_SCRIPT}-setup.sh"
+source "$DOTFILES/scripts/${OS}/${INSTALLER_SCRIPT}-setup.sh"

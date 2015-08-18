@@ -72,6 +72,3 @@ function sln {
         ln -s $source $target
     fi
 }
-
-function safe-add-apt-repository {
-}

@@ -1,17 +1,30 @@
-sudo add-apt-repository ppa:zeal-developers/ppa -y # zeal
+if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu; then
+    sudo add-apt-repository ppa:zeal-developers/ppa -y # zeal
+fi
 
 # google chrome
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+if ! ls /etc/apt/sources.list.d | grep google.list; then
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+fi
 
 # virtualbox
-wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list; then
+    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+fi
 
-sudo add-apt-repository ppa:eugenesan/ppa -y # smartgit
-sudo add-apt-repository  ppa:nilarimogard/webupd8 -y # youtube-dl etc
-sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y # sublime text 3 editor
-sudo add-apt-repository  ppa:webupd8team/atom -y # atom editor
+if ! ls /etc/apt/sources.list.d | grep nilarimogard-ubuntu-webupd8; then
+    sudo add-apt-repository  ppa:nilarimogard/webupd8 -y # youtube-dl etc
+fi
+
+if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-sublime-text-3; then
+    sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y # sublime text 3 editor
+fi
+
+if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom; then
+    sudo add-apt-repository  ppa:webupd8team/atom -y # atom editor
+fi
 
 sudo apt-get update
 

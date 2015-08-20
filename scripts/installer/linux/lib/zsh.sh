@@ -1,4 +1,4 @@
-sudo apt-get install zsh
+sudo apt-get install -y zsh
 git clone https://github.com/zsh-users/antigen.git $SEARTIPY_HOME/vendors/antigen
 [ -e ~/.zshrc ] && mv -b ~/.zshrc ~/.zshrc-backup
 ln -s $SEARTIPY_HOME/dotfiles/common/zshrc ~/.zshrc

@@ -6,3 +6,4 @@ sudo apt-get -y install sbt
 
 mkdir -p ~/.sbt/0.13/plugins
 ln -s $SEARTIPY_HOME/dotfiles/common/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+scala -batch

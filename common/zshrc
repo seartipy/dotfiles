@@ -151,3 +151,6 @@ export PATH="$HOME/.cask/bin:$PATH"
 #node
 export NVM_DIR="$HOME/.nvm"
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
+
+#flow
+export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"

@@ -8,7 +8,7 @@ nvm install 0.12
 nvm alias default 0.12
 npm install -g coffee-script typescript babel
 npm install -g grunt-cli gulp bower browserify webpack
-npm install -g eslint esline-plugin-react jshint coffeelint
+npm install -g eslint eslint-plugin-react jshint coffeelint
 npm install -g tern js-beautify
 npm install -g react-tools
 npm install -g webpack-dev-server

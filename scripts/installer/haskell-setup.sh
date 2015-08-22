@@ -1,2 +1,2 @@
-source $INSTALLER_SCRIPTS/linux/lib/essential.sh
-source $INSTALLER_SCRIPTS/linux/lib/haskell.sh
+source $INSTALLER_SCRIPTS/$OS/essential.sh
+source $INSTALLER_SCRIPTS/$OS/haskell.sh

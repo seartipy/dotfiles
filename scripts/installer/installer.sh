@@ -19,9 +19,9 @@ else
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
-    OS="mac"
+    export OS="mac"
 else
-    OS="linux"
+    export OS="linux"
 fi
 
 SEARTIPY_HOME=$HOME/seartipy
@@ -37,7 +37,7 @@ function install_git {
 }
 
 install_git
-mkdir -p SEARTIPY_HOME/{emacses,vendors} > /dev/null
+mkdir -p SEARTIPY_HOME/{emacses,vendors} 2>& /dev/null
 if [ -e $SEARTIPY_HOME/dotfiles ]; then
     pushd . > /dev/null
     cd $SEARTIPY_HOME/dotfiles && git pull origin master
@@ -50,4 +50,4 @@ source $INSTALLER_SCRIPTS/utils.sh
 secho "Installing $INSTALLER_SCRIPT ..."
 
 
-source "$INSTALLER_SCRIPTS/${OS}/${INSTALLER_SCRIPT}-setup.sh"
+source "$INSTALLER_SCRIPTS/${INSTALLER_SCRIPT}-setup.sh"

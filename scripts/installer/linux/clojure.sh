@@ -5,6 +5,6 @@ else
     chmod +x ~/bin/lein
 fi
 
-mkdir ~/.lein > /dev/null
+mkdir ~/.lein 2>& /dev/null
 sln $SEARTIPY_HOME/dotfiles/common/profiles.clj ~/.lein/profiles.clj
 ~/bin/lein > /dev/null

@@ -1,2 +1,2 @@
-source $INSTALLER_SCRIPTS/linux/lib/essential.sh
-source $INSTALLER_SCRIPTS/linux/lib/web.sh
+source $INSTALLER_SCRIPTS/$OS/essential.sh
+source $INSTALLER_SCRIPTS/$OS/web.sh

@@ -1,2 +1,2 @@
-source $INSTALLER_SCRIPTS/linux/lib/essential.sh
-source $INSTALLER_SCRIPTS/linux/lib/cpp.sh
+source $INSTALLER_SCRIPTS/$OS/essential.sh
+source $INSTALLER_SCRIPTS/$OS/cpp.sh

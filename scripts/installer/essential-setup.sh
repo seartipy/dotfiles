@@ -1,5 +1,5 @@
-source $INSTALLER_SCRIPTS/linux/lib/essential.sh
-source $INSTALLER_SCRIPTS/linux/lib/emacs.sh
-source $INSTALLER_SCRIPTS/linux/lib/bash.sh
-source $INSTALLER_SCRIPTS/linux/lib/git.sh
-source $INSTALLER_SCRIPTS/linux/lib/zsh.sh
+source $INSTALLER_SCRIPTS/$OS/essential.sh
+source $INSTALLER_SCRIPTS/$OS/emacs.sh
+source $INSTALLER_SCRIPTS/$OS/bash.sh
+source $INSTALLER_SCRIPTS/$OS/git.sh
+source $INSTALLER_SCRIPTS/$OS/zsh.sh

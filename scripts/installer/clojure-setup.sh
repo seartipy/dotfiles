@@ -1,3 +1,3 @@
-source $INSTALLER_SCRIPTS/linux/lib/essential.sh
-source $INSTALLER_SCRIPTS/linux/lib/java.sh
-source $INSTALLER_SCRIPTS/linux/lib/clojure.sh
+source $INSTALLER_SCRIPTS/$OS/essential.sh
+source $INSTALLER_SCRIPTS/$OS/java.sh
+source $INSTALLER_SCRIPTS/$OS/clojure.sh

@@ -4,6 +4,7 @@ function secho {
 
 function spull {
     if [ -e $1 ]; then
+        pushd .
         cd $1
         if git status --porcelain > /dev/null; then
             git pull origin master
@@ -61,13 +62,11 @@ function safe-append {
 function sln {
     local source=$1
     local target=$2
-    if [ -e $target ]; then
-        if [ -L $target ]; then
+    if [ -L $target ]; then
             trash-put $target
             ln -s $source $target
-        else
-            secho "$target exists and not a link, skipping"
-        fi
+    elif [ -e $target ]; then
+        secho "$target exists and not a link, skipping"
     else
         ln -s $source $target
     fi

@@ -1,4 +1,4 @@
-if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc; then
+if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
     sudo add-apt-repository ppa:hvr/ghc -y
     sudo apt-get update
 fi

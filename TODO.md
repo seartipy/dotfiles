@@ -1,2 +1,2 @@
-* Possibly create single zshrc and init-local.el for both mac and linux
-* Use purcell's fork and make required changes
+* fix cds( add pushd for bash)
+* fix everything for bash(current stuff works with zsh)

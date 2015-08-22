@@ -1,6 +1,2 @@
-source $DOTFILES/linux/lib/base.sh
-
-source $DOTFILES/linux/lib/cpp-packages.sh
-source $DOTFILES/linux/lib/cpp-install.sh
-
-chsh -s /bin/zsh
+source $INSTALLER_SCRIPTS/linux/lib/essential.sh
+source $INSTALLER_SCRIPTS/linux/lib/cpp.sh

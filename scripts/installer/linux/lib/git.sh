@@ -1,4 +1,4 @@
-if ! ls /etc/apt/sources.list.d | grep eugenesan-ubuntu-ppa; then
+if ! ls /etc/apt/sources.list.d | grep eugenesan-ubuntu-ppa > /dev/null; then
     sudo add-apt-repository ppa:eugenesan/ppa -y # smartgit
     sudo apt-get update
 fi

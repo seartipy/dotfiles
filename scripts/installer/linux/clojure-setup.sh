@@ -1,11 +1,3 @@
-source $DOTFILES/linux/lib/base.sh
-
-source $DOTFILES/linux/lib/java-packages.sh
-source $DOTFILES/linux/lib/clojure-packages.sh
-
-source $DOTFILES/linux/lib/java-install.sh
-source $DOTFILES/linux/lib/clojure-install.sh
-
-lein repl
-
-chsh -s /bin/zsh
+source $INSTALLER_SCRIPTS/linux/lib/essential.sh
+source $INSTALLER_SCRIPTS/linux/lib/java.sh
+source $INSTALLER_SCRIPTS/linux/lib/clojure.sh

@@ -1,6 +1,2 @@
-source $DOTFILES/linux/lib/base.sh
-
-source $DOTFILES/linux/lib/haskell-packages.sh
-source $DOTFILES/linux/lib/haskell-install.sh
-
-chsh -s /bin/zsh
+source $INSTALLER_SCRIPTS/linux/lib/essential.sh
+source $INSTALLER_SCRIPTS/linux/lib/haskell.sh

@@ -1,6 +1,6 @@
 #### javascript
 
-if ! nvm -v > /dev/null; then
+if ! nvm --version > /dev/null; then
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
     source ~/.nvm/nvm.sh
 fi
@@ -13,15 +13,18 @@ npm install -g tern js-beautify
 npm install -g react-tools
 npm install -g webpack-dev-server
 
+pushd .
 sclone https://github.com/marijnh/tern.git ~/tern && cd ~/tern && npm install
-popd
+popd > /dev/null
 
 if ! flow -v > /dev/null; then
+    pushd .
     cd $SEARTIPY_HOME/vendors
     wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
     unzip flow*.zip
+    pushd .
     cd flow
     echo -e "\nPATH=\"\$PATH:$(pwd)/\"" >> ~/.bashrc && source ~/.bashrc
-    popd
-    popd
+    popd > /dev/null
+    popd > /dev/null
 fi

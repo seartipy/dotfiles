@@ -1,34 +1,14 @@
-brew install wget tree tmux fasd the_silver_searcher editorconfig ctags gibo gpg kdiff3 git-extras emacs-mac unrar p7zip trash coreutils
-brew cask install smartgit
-brew install aspell --with-lang-en
-brew install macvim --override-system-vim --with-lua --with-luajit
-brew linkapps macvim
+# homebrew and caskroom
 
-# dotfiles
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install caskroom/cask/brew-cask
 
-git clone https://github.com/pervezfunctor/dotfiles.git
-mkdir ~/bin
+# taps
 
-#### bash
+brew tap caskroom/versions
 
-git clone https://github.com/nojhan/liquidprompt.git ~/liquidprompt
-echo "[[ $- = *i* ]] && source ~/liquidprompt/liquidprompt" >> ~/.bash_profile
+# upgrade all packages
 
-# zsh
+brew update && brew upgrade
 
-git clone https://github.com/zsh-users/antigen.git
-[ -e ~/.zshrc ] && mv -b ~/.zshrc ~/.zshrc-backup
-ln -s ~/dotfiles/common/zshrc ~/.zshrc
-ln -s ~/dotfiles/common/tmux.conf ~/.tmux.conf
-
-#### git
-
-cp ~/dotfiles/common/gitconfig ~/.gitconfig
-
-# emacs
-
-git clone https://github.com/syl20bnr/spacemacs ~/.spacemacs --recursive
-git clone https://github.com/pervezfunctor/emacs.d.git ~/housem.d
-ln -s ~/housem.d ~/.emacs.d
-osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
-tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.8/share/emacs/24.5/etc/e/eterm-color.ti
+brew install wget tree tmux fasd  ctags gibo gpg unrar p7zip trash coreutils

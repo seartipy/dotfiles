@@ -1,5 +1,3 @@
-##### Javascript
-
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.1/install.sh | bash
 source ~/.nvm/nvm.sh
 nvm install 0.12

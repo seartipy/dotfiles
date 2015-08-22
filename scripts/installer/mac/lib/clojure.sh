@@ -1,8 +1,4 @@
-#### clojure
-
-curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
-chmod +x ~/bin/lein
-mkdir ~/.lein
-ln -s ~/dotfiles/common/profiles.clj ~/.lein/profiles.clj
-
-# ~/bin/lein repl
+brew install leiningen
+mkdir ~/.lein > /dev/null
+sln $SEARTIPY_HOME/dotfiles/common/profiles.clj ~/.lein/profiles.clj
+~/bin/lein > /dev/null

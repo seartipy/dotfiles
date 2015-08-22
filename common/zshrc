@@ -1,71 +1,5 @@
 SEARTIPY_HOME=$HOME/seartipy
 
-function spull {
-    if [ -e $1 ]; then
-        cd $1
-        if git status --porcelain > /dev/null; then
-            git pull origin master
-        fi
-        popd > /dev/null
-    fi
-}
-
-function upgrade_system {
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        sudo apt-get update && sudo apt-get upgrade -y
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        brew update && brew upgrade && brew cleanup && brew cask cleanup
-    fi
-}
-
-function upgrade_dotfiles {
-    spull SEARTIPY_HOME/dotfiles
-}
-
-function upgrade_emacs {
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        cask upgrade
-    fi
-    spull $SEARTIPY_HOME/emacses/housem.d
-    pushd . > /dev/null
-    cd $SEARTIPY_HOME/emacses/housem.d > /dev/null && cask update
-    popd > /dev/null
-
-    spull SEARTIPY_HOME/emacses/spacemacs
-    spull SEARTIPY_HOME/emacses/purcell
-    spull SEARTIPY_HOME/emacses/prelude
-    spull SEARTIPY_HOME/emacses/magnars
-}
-
-function upgrade_clojure {
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        lein upgrade
-    fi
-    lein ancient upgrade-profiles :allow-snapshots
-}
-
-function upgrade_scala {
-    expect > /dev/null <<EOF
-spawn sbt console
-expect "scala>"
-send ":quit\r"
-EOF
-}
-
-function upgrade_web {
-    nvm install 0.12
-    npm upgrade -g
-}
-
-function upgrade_all {
-    upgrade
-    upgrade_dotfiles
-    upgrade_emacs
-    upgrade_clojure
-    upgrade_scala
-    upgrade_web
-}
-
 source $SEARTIPY_HOME/vendors/antigen/antigen.zsh
 
 antigen use oh-my-zsh
@@ -109,48 +43,12 @@ fi
 
 antigen apply
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    #java
-    export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
-    export JDK_HOME="/usr/lib/jvm/java-8-oracle"
-
-
-    #haskell
-    export PATH="/opt/ghc/7.10.2/bin:$PATH"
-    alias cabal="cabal-1.22"
-
-    alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
-    alias pbcopy="xsel --clipboard --input"
-    alias pbpaste="xsel --clipboard --output"
-    alias open="xdg-open"
-
-    alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
-
-    #to support xterm key bindings in emacs
-    alias e="TERM=xterm-256color emacs -nw"
-
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    #java
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-    export JDK_HOME=`/usr/libexec/java_home -v 1.8`
-
-    alias upgrade="brew update && brew upgrade"
-fi
-
-export PATH="$PATH:$SEARTIPY_HOME/bin"
-
-#ruby
-export PATH="$HOME/.rvm/bin:$PATH"
-
-#haskell
-export PATH="$HOME/.cabal/bin:$PATH"
-
-#emacs
-export PATH="$HOME/.cask/bin:$PATH"
+source $SEARTIPY_HOME/dotfiles/scripts/upgrades.sh
+source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
+source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
 
 #node
-export NVM_DIR="$HOME/.nvm"
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
 
-#flow
-export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
+#rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"

@@ -28,7 +28,7 @@ SEARTIPY_HOME=$HOME/seartipy
 DOTFILES=$SEARTIPY_HOME/dotfiles
 INSTALLER_SCRIPTS=$SEARTIPY_HOME/dotfiles/scripts/installer
 
-function install_git {
+function install-git {
     if [ $OS == "mac" ]; then
         clang++ -v # install xcode to get git
     else
@@ -36,18 +36,20 @@ function install_git {
     fi
 }
 
-install_git
-mkdir -p SEARTIPY_HOME/{emacses,vendors} 2>& /dev/null
-if [ -e $SEARTIPY_HOME/dotfiles ]; then
-    pushd . > /dev/null
-    cd $SEARTIPY_HOME/dotfiles && git pull origin master
-    popd > /dev/null
-else
-    git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
-fi
-source $INSTALLER_SCRIPTS/utils.sh
+function clone-dotfiles {
+    if [ -e $SEARTIPY_HOME/dotfiles ]; then
+        pushd . > /dev/null
+        cd $SEARTIPY_HOME/dotfiles && git pull origin master
+        popd > /dev/null
+    else
+        git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
+    fi
+    source $INSTALLER_SCRIPTS/utils.sh
+}
 
+install-git
+mkdir -p SEARTIPY_HOME/{emacses,vendors} 2> /dev/null
+clone-dotfiles
 secho "Installing $INSTALLER_SCRIPT ..."
-
 
 source "$INSTALLER_SCRIPTS/${INSTALLER_SCRIPT}-setup.sh"

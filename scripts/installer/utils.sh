@@ -41,7 +41,7 @@ function smkdir {
     if [ -e $target ]; then
         secho "bin already exists, skipping"
     else
-        mkdir $target
+        mkdir -p $target 2> /dev/null
     fi
 }
 
@@ -70,4 +70,9 @@ function sln {
     else
         ln -s $source $target
     fi
+}
+
+function smv {
+    local $source=$1
+    [ -e $1 ] && mv -b $1 $2 > /dev/null
 }

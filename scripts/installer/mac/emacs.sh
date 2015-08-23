@@ -2,18 +2,23 @@ brew tap railwaycat/emacsmacport
 
 brew install emacs-mac
 brew install aspell --with-lang-en
-brew install editorconfig the_silver_searcher
+brew install editorconfig
+brew install the_silver_searcher
 
 sclone https://github.com/syl20bnr/spacemacs $SEARTIPY_HOME/emacses/spacemacs.d --recursive # spacemacs
 sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
-sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
-
 brew install cask
 pushd . > /dev/null
 cd $SEARTIPY_HOME/emacses/housem.d && ~/.cask/bin/cask install
 popd > /dev/null
+
+if [ $USER == "pervez" ]; then
+    sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
+else
+    sln $SEARTIPY_HOME/emacses/spacemacs.d ~/.emacs.d
+fi
 
 if [ $USER == "pervez" ]; then
     sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs

@@ -4,10 +4,19 @@ if ! nvm --version > /dev/null; then
 fi
 nvm install 0.12
 nvm alias default 0.12
-npm install -g coffee-script typescript babel
-npm install -g grunt-cli gulp bower browserify webpack
-npm install -g eslint eslint-plugin-react jshint coffeelint
-npm install -g tern js-beautify
+npm install -g coffee-script
+npm install -g typescript babel
+npm install -g grunt-cli
+npm install -g gulp
+npm install -g bower
+npm install -g browserify
+npm install -g webpack
+npm install -g eslint
+npm install -g eslint-plugin-react
+npm install -g jshint
+npm install -g coffeelint
+npm install -g tern
+npm install -g js-beautify
 npm install -g react-tools
 npm install -g webpack-dev-server
 
@@ -16,7 +25,7 @@ sclone https://github.com/marijnh/tern.git ~/tern && cd ~/tern && npm install
 popd > /dev/null
 
 if ! flow -v > /dev/null; then
-    pushd .
+    pushd . > /dev/null
     cd $SEARTIPY_HOME/vendors
     wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
     unzip flow*.zip

@@ -44,7 +44,7 @@ sudo apt-get install -y google-chrome-stable
 if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
     wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
     unzip 1.030R-it.zip
-    mkdir ~/.fonts 2> /dev/null
+    smkdir ~/.fonts
     cp source-code-pro*/OTF/*.otf ~/.fonts
     fc-cache -f -v
     rm -f 1.030R-it.zip
@@ -53,14 +53,14 @@ fi
 
 #gibo
 if ! gibo -v > /dev/null; then
-    smkdir ~/bin 2> /dev/null
+    smkdir ~/bin
     curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && ~/bin/gibo -u > /dev/null
 fi
 
 # fasd
 if ! fasd > /dev/null; then
     force-clone https://github.com/clvv/fasd.git ~/fasd
-    pushd .
+    pushd . > /dev/null
     cd ~/fasd && PREFIX=$HOME make install > /dev/null
     popd > /dev/null
     rm -rf ~/fasd

@@ -8,7 +8,11 @@ sclone https://github.com/syl20bnr/spacemacs $SEARTIPY_HOME/emacses/spacemacs.d 
 sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
-sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
+if [ $USER == "pervez" ]; then
+    sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
+else
+    sln $SEARTIPY_HOME/emacses/spacemacs.d ~/.emacs.d
+fi
 
 if ! cask --version > /dev/null; then
     curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python

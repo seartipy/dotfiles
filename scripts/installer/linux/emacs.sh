@@ -10,13 +10,15 @@ sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
 sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
 
-if ! cask --version; then
+if ! cask --version > /dev/null; then
     curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
 fi
-pushd .
+pushd . > /dev/null
 cd $SEARTIPY_HOME/emacses/housem.d && ~/.cask/bin/cask install
 popd > /dev/null
 
-sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs
-sclone https://github.com/bbatsov/prelude.git $SEARTIPY_HOME/emacses/prelude.d # batsov prelude
-sclone https://github.com/magnars/.emacs.d.git $SEARTIPY_HOME/emacses/magnars.d --recursive # magnars
+if [ $USER == "pervez" ]; then
+    sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs
+    sclone https://github.com/bbatsov/prelude.git $SEARTIPY_HOME/emacses/prelude.d # batsov prelude
+    sclone https://github.com/magnars/.emacs.d.git $SEARTIPY_HOME/emacses/magnars.d --recursive # magnars
+fi

@@ -3,8 +3,6 @@ if ! rvm list > /dev/null; then
     curl -sSL https://get.rvm.io | bash -s stable --ruby
 fi
 
-source ~/.rvm/scripts/rvm
-
 gem install pry sinatra thin --no-ri --no-rdoc
 gem install guard watchr --no-ri --no-rdoc
 gem install tmuxinator git-up sass --no-ri --no-rdoc

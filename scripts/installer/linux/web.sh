@@ -1,7 +1,3 @@
-if [ -e ~/.nvm ]; then
-    source ~/.nvm/nvm.sh
-fi
-
 if ! nvm --version > /dev/null; then
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
     source ~/.nvm/nvm.sh

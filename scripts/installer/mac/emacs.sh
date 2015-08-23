@@ -11,13 +11,15 @@ sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/house
 sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
 
 brew install cask
-pushd .
+pushd . > /dev/null
 cd $SEARTIPY_HOME/emacses/housem.d && ~/.cask/bin/cask install
 popd > /dev/null
 
-sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs
-sclone https://github.com/bbatsov/prelude.git $SEARTIPY_HOME/emacses/prelude.d # batsov prelude
-sclone https://github.com/magnars/.emacs.d.git $SEARTIPY_HOME/emacses/magnars.d --recursive # magnars
+if [ $USER == "pervez" ]; then
+    sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs
+    sclone https://github.com/bbatsov/prelude.git $SEARTIPY_HOME/emacses/prelude.d # batsov prelude
+    sclone https://github.com/magnars/.emacs.d.git $SEARTIPY_HOME/emacses/magnars.d --recursive # magnars
+fi
 
 osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.8/share/emacs/24.5/etc/e/eterm-color.ti

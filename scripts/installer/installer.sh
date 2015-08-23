@@ -45,6 +45,8 @@ function clone-dotfiles {
         git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
     fi
     source $INSTALLER_SCRIPTS/utils.sh
+    source $DOTFILES/scripts/exports.sh
+    source $DOTFILES/scripts/sources.sh
 }
 
 install-git

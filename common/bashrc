@@ -1,0 +1,8 @@
+SEARTIPY_HOME=$HOME/seartipy
+
+[[ $- = *i* ]] && source $SEARTIPY_HOME/vendors/liquidprompt/liquidprompt
+
+source $SEARTIPY_HOME/dotfiles/scripts/upgrades.sh
+source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
+source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
+source $SEARTIPY_HOME/dotfiles/scripts/sources.sh

@@ -25,8 +25,5 @@ if ! flow -v > /dev/null; then
     wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
     unzip flow*.zip
     pushd .
-    cd flow
-    echo -e "\nPATH=\"\$PATH:$(pwd)/\"" >> ~/.bashrc && source ~/.bashrc
-    popd > /dev/null
     popd > /dev/null
 fi

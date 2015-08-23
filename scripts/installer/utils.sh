@@ -50,9 +50,9 @@ function safe-append {
     local target=$2
     local search_for=$3
     if grep $source $target > /dev/null; then
-        secho "$source already exists in ~/.bashrc, skipping..."
+        secho "$source already exists in $target, skipping..."
     elif grep $3 $target > /dev/null; then
-        secho "$source already exists in ~/.bashrc, skipping..."
+        secho "$source already exists in $target, skipping..."
     else
         secho "adding $source to .bashrc..."
         echo $source >> $target

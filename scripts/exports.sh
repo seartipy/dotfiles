@@ -25,3 +25,7 @@ export NVM_DIR="$HOME/.nvm"
 
 #flow
 export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
+
+#python
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"

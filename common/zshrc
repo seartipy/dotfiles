@@ -46,9 +46,4 @@ antigen apply
 source $SEARTIPY_HOME/dotfiles/scripts/upgrades.sh
 source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
 source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
-
-#node
-[ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
-
-#rvm
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+source $SEARTIPY_HOME/dotfiles/scripts/sources.sh

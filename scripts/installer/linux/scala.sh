@@ -5,6 +5,6 @@ if ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
 fi
 sudo apt-get -y install sbt
 
-smkdir~/.sbt/0.13/plugins
+smkdir ~/.sbt/0.13/plugins
 sln $SEARTIPY_HOME/dotfiles/common/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
 sbt -batch > /dev/null

@@ -1,6 +1,4 @@
-if lein -v > /dev/null; then
-    lein upgrade
-else
+if ! lein -v > /dev/null; then
     curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
     chmod +x ~/bin/lein
 fi

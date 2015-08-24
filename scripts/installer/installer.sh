@@ -44,9 +44,7 @@ function install-git {
 
 function clone-dotfiles {
     if [ -e $SEARTIPY_HOME/dotfiles ]; then
-        pushd . > /dev/null
         cd $SEARTIPY_HOME/dotfiles && git pull origin master
-        popd > /dev/null
     else
         git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
     fi

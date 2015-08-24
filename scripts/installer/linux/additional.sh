@@ -60,8 +60,6 @@ fi
 # fasd
 if ! fasd > /dev/null; then
     force-clone https://github.com/clvv/fasd.git ~/fasd
-    pushd . > /dev/null
     cd ~/fasd && PREFIX=$HOME make install > /dev/null
-    popd > /dev/null
     rm -rf ~/fasd
 fi

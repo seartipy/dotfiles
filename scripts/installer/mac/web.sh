@@ -3,8 +3,8 @@ if ! nvm --version > /dev/null; then
     source ~/.nvm/nvm.sh
 fi
 
-nvm install 0.12
-nvm alias default 0.12
+nvm install stable
+
 npm install -g coffee-script
 npm install -g typescript
 npm install -g babel

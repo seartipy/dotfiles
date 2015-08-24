@@ -1,4 +1,4 @@
-if [ $(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1) -ge 3200 ]; then
+if [ $(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1) -ge 2800 ]; then
     gsettings set org.gnome.desktop.interface text-scaling-factor .9
     gsettings set org.gnome.desktop.interface scaling-factor 2
     gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"

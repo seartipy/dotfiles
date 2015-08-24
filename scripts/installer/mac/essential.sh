@@ -1,13 +1,11 @@
-# homebrew and caskroom
+# homebrew
+if [ ! $(which brew) ]; then
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
 
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#caskroom
 brew install caskroom/cask/brew-cask
-
-# taps
-
 brew tap caskroom/versions
-
-# upgrade all packages
 
 brew update && brew upgrade
 

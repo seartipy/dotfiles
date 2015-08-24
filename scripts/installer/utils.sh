@@ -1,12 +1,21 @@
+if [ $OS == "linux" ]; then
+    alias trash=trash-put
+fi
 function secho {
     echo "SEARTIPY: $1"
 }
 
 function spull {
+    local branch
+    if [ $# -gt 1 ]; then
+        branch=$2
+    else
+        branch='master'
+    fi
     if [ -e $1 ]; then
         cd $1
         if git status --porcelain > /dev/null; then
-            git pull origin master
+            git pull origin $branch
         fi
     fi
 }
@@ -17,8 +26,7 @@ function sclone {
     local recursive=$3
     if [ -e $target ]; then
         secho "pulling $1 ..."
-        cd $target
-        git pull --all > /dev/null
+        spull $target
     else
         secho "cloning $1 ..."
         git clone $source $target $recursive
@@ -28,7 +36,7 @@ function sclone {
 function force-clone {
     local source=$1
     local target=$2
-    [ -e $target ] && trash-put $target
+    [ -e $target ] && trash $target
     git clone $source $target
 }
 
@@ -59,7 +67,7 @@ function sln {
     local source=$1
     local target=$2
     if [ -L $target ]; then
-            trash-put $target
+            trash $target
             ln -s $source $target
     elif [ -e $target ]; then
         secho "$target exists and not a link, skipping"
@@ -69,6 +77,7 @@ function sln {
 }
 
 function smv {
-    local $source=$1
-    [ -e $1 ] && mv -b $1 $2 > /dev/null
+    local source=$1
+    [ -e $2 ] && trash $2
+    [ -e $1 ] && mv $1 $2 > /dev/null
 }

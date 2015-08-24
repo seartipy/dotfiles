@@ -24,4 +24,5 @@ else
 fi
 
 osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
-tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.8/share/emacs/24.5/etc/e/eterm-color.ti
+emacsversion=`ls /usr/local/Cellar/emacs-mac`
+tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/${emacsversion}/share/emacs/24.5/etc/e/eterm-color.ti

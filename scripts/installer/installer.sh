@@ -49,6 +49,7 @@ function clone-dotfiles {
         git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
     fi
     source $INSTALLER_SCRIPTS/utils.sh
+    source $DOTFILES/scripts/aliases.sh
     source $DOTFILES/scripts/exports.sh
     source $DOTFILES/scripts/sources.sh
 }
@@ -65,7 +66,7 @@ source $INSTALLER_SCRIPTS/$OS/emacs.sh
 source $INSTALLER_SCRIPTS/$OS/git.sh
 
 if [ $CHOICE == "everything" ]; then
-    source $INSTALLER_SCRIPTS/$OS/java.sh
+   source $INSTALLER_SCRIPTS/$OS/java.sh
     source $INSTALLER_SCRIPTS/$OS/clojure.sh
     source $INSTALLER_SCRIPTS/$OS/scala.sh
     source $INSTALLER_SCRIPTS/$OS/python.sh

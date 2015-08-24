@@ -13,9 +13,5 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias e="TERM=xterm-256color emacs -nw"
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    #java
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-    export JDK_HOME=`/usr/libexec/java_home -v 1.8`
-
     alias upgrade="brew update && brew upgrade"
 fi

@@ -4,7 +4,9 @@ if [ ! $(which brew) ]; then
 fi
 
 #caskroom
-brew install caskroom/cask/brew-cask
+if ! brew cask > /dev/null; then
+    brew install caskroom/cask/brew-cask
+fi
 brew tap caskroom/versions
 
 brew update && brew upgrade

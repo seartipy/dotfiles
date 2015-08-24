@@ -8,7 +8,6 @@ brew cask install transmission
 brew cask install macdown
 brew cask install github
 brew cask install sublime-text3
-brew cask install
 brew cask install vlc
 brew cask install karabiner
 brew cask install seil

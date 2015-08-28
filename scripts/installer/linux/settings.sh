@@ -28,6 +28,8 @@ if gnome-shell --version && [ $USER == "pervez" ]; then
 
     # gnome extensions
 
+    gsettings set org.gnome.shell disable-extension-version-validation "true"
+
     gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"
 
     wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install

@@ -7,6 +7,7 @@ sudo apt-get install -y tree
 sudo apt-get install -y tmux
 sudo apt-get install -y xsel
 sudo apt-get install -y xclip
+sudo aptg-get install -y trash-cli
 
 sudo apt-get install -y lm-sensors
 sudo apt-get install -y unrar

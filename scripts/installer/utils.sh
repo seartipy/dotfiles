@@ -1,6 +1,7 @@
-if [ $OS == "linux" ]; then
+if [ "$OS" == "linux" ]; then
     alias trash=trash-put
 fi
+
 function secho {
     echo "SEARTIPY: $1"
 }

@@ -15,7 +15,7 @@ fi
 cd $SEARTIPY_HOME/emacses/housem.d && cask install
 
 smv ~/.emacs.d ~/.emacs.d-backup
-if [ $USER == "pervez" ]; then
+if [ "$USER" == "pervez" ]; then
     sln $SEARTIPY_HOME/emacses/housem.d ~/.emacs.d
 
     sclone https://github.com/purcell/emacs.d.git $SEARTIPY_HOME/emacses/purcell.d # purcell emacs

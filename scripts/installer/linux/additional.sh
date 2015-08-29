@@ -9,10 +9,12 @@ if ! ls /etc/apt/sources.list.d | grep google.list > /dev/null; then
     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 fi
 
-# virtualbox
-if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list > /dev/null; then
-    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+if [ ! $(vmwarectrl) ]; then
+    # virtualbox
+    if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list > /dev/null; then
+        wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+        sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+    fi
 fi
 
 # youtube-dl etc
@@ -32,7 +34,10 @@ fi
 
 sudo apt-get update
 
-sudo apt-get install -y virtualbox-5.0 dkms
+if [ ! $(vmwarectrl) ]; then
+    sudo apt-get install -y virtualbox-5.0 dkms
+fi
+
 sudo apt-get install -y vlc
 sudo apt-get install -y youtube-dl
 sudo apt-get install -y sublime-text-installer
@@ -52,13 +57,13 @@ if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
 fi
 
 #gibo
-if ! gibo -v > /dev/null; then
+if [ ! $(which gibo) ]; then
     smkdir ~/bin
     curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo && chmod +x ~/bin/gibo && ~/bin/gibo -u > /dev/null
 fi
 
 # fasd
-if ! fasd > /dev/null; then
+if [ ! $(which fasd) ]; then
     force-clone https://github.com/clvv/fasd.git ~/fasd
     cd ~/fasd && PREFIX=$HOME make install > /dev/null
     rm -rf ~/fasd

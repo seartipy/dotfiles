@@ -9,10 +9,14 @@ smv ~/.spacemacs ~/.spacemacs-backup
 sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
+
+[ $USER == "pervez" ] && git checkout pervez
+
 if [ ! $(which cask) ]; then
     curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
 fi
-cd $SEARTIPY_HOME/emacses/housem.d && cask install
+
+cd $SEARTIPY_HOME/emacses/housem.d && cask install && cask update
 
 smv ~/.emacs.d ~/.emacs.d-backup
 if [ "$USER" == "pervez" ]; then

@@ -12,6 +12,8 @@
 #     'ruby'
 # )
 
+curdir=`pwd`
+
 # Ask for the administrator password upfront
 sudo -v
 
@@ -89,3 +91,5 @@ source $INSTALLER_SCRIPTS/$OS/zsh.sh
 if [ "$CHOICE" == "everything" ]; then
     source $INSTALLER_SCRIPTS/$OS/vim.sh
 fi
+
+cd $curdir

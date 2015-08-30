@@ -1,4 +1,4 @@
-if ! nvm --version > /dev/null; then
+if [ ! $(which nvm > /dev/null) ]; then
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
     source ~/.nvm/nvm.sh
 fi
@@ -20,7 +20,7 @@ npm install -g js-beautify
 npm install -g react-tools
 npm install -g webpack-dev-server
 
-if ! flow -v > /dev/null; then
+if [ ! $(which flow) ]; then
     cd $SEARTIPY_HOME/vendors
     wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
     unzip flow*.zip

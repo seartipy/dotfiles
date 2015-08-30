@@ -4,7 +4,7 @@ if [ $(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1) -
     gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
 fi
 
-if gnome-shell --version && [ $USER == "pervez" ]; then
+if [ $(which gnome-shell) ] && [ $USER == "pervez" ]; then
     gsettings set  org.gnome.desktop.screensaver lock-enabled false
     gsettings set  org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
     [ -e ~/.config/gtk-3.0/settings.ini ] || printf "[Settings]\ngtk-application-prefer-dark-theme=1\n" > ~/.config/gtk-3.0/settings.ini

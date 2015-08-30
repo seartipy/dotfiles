@@ -1,4 +1,4 @@
-if ! lein -v > /dev/null; then
+if ! [ ! $(which lein) ]; then
     curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
     chmod +x ~/bin/lein
 fi

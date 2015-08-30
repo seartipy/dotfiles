@@ -1,3 +1,4 @@
 * installer: install virtualbox only if physical system
 * installer: implement only and minimal
 * fix everything for bash(current stuff works with zsh)
+* bash does not work, at least on linux

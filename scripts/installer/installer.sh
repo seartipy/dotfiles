@@ -14,27 +14,30 @@
 
 curdir=`pwd`
 
-# Ask for the administrator password upfront
-sudo -v
+function keep-sudo-running {
+    # Ask for the administrator password upfront
+    sudo -v
 
-# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+}
 
-if [ $# -ge 1 ]; then
-    CHOICE=`echo $1 |  tr '[:upper:]' '[:lower:]' | xargs`
-else
-    CHOICE="everything"
-fi
+function setup-variables {
+    if [ $# -ge 1 ]; then
+        CHOICE=`echo $1 |  tr '[:upper:]' '[:lower:]' | xargs`
+    else
+        CHOICE="everything"
+    fi
 
-if [ "$(uname)" == "Darwin" ]; then
-    export OS="mac"
-else
-    export OS="linux"
-fi
-
-SEARTIPY_HOME=$HOME/seartipy
-DOTFILES=$SEARTIPY_HOME/dotfiles
-INSTALLER_SCRIPTS=$SEARTIPY_HOME/dotfiles/scripts/installer
+    if [ "$(uname)" == "Darwin" ]; then
+        export OS="mac"
+    else
+        export OS="linux"
+    fi
+    SEARTIPY_HOME=$HOME/seartipy
+    DOTFILES=$SEARTIPY_HOME/dotfiles
+    INSTALLER_SCRIPTS=$SEARTIPY_HOME/dotfiles/scripts/installer
+}
 
 function install-git {
     if [ "$OS" == "mac" ]; then
@@ -44,52 +47,70 @@ function install-git {
     fi
 }
 
+function source-shell-scripts {
+    source $INSTALLER_SCRIPTS/utils.sh
+
+    source $DOTFILES/scripts/aliases.sh
+    source $DOTFILES/scripts/exports.sh
+    source $DOTFILES/scripts/sources.sh
+}
+
 function clone-dotfiles {
     if [ -e $SEARTIPY_HOME/dotfiles ]; then
         cd $SEARTIPY_HOME/dotfiles && git pull origin master
     else
         git clone https://github.com/pervezfunctor/dotfiles.git $SEARTIPY_HOME/dotfiles
     fi
-    source $DOTFILES/scripts/aliases.sh
-    source $DOTFILES/scripts/exports.sh
-    source $DOTFILES/scripts/sources.sh
 }
 
-source $INSTALLER_SCRIPTS/utils.sh
-install-git
-smkdir $SEARTIPY_HOME/{emacses,vendors}
-smkdir $HOME/bin
-clone-dotfiles
+function create-folders {
+    smkdir $SEARTIPY_HOME/{emacses,vendors}
+    smkdir $HOME/bin
+}
 
-secho "Installing $CHOICE ..."
+function initialize {
+    keep-sudo-running
+    setup-variables
+    install-git
+    source-shell-scripts
+    clone-dotfiles
+    create-folders
+}
 
-source $INSTALLER_SCRIPTS/$OS/essential.sh
-source $INSTALLER_SCRIPTS/$OS/emacs.sh
-source $INSTALLER_SCRIPTS/$OS/git.sh
+function installer {
+    secho "Installing $CHOICE ..."
 
-if [ "$CHOICE" == "everything" ]; then
-   source $INSTALLER_SCRIPTS/$OS/java.sh
-    source $INSTALLER_SCRIPTS/$OS/clojure.sh
-    source $INSTALLER_SCRIPTS/$OS/scala.sh
-    source $INSTALLER_SCRIPTS/$OS/web.sh
-    source $INSTALLER_SCRIPTS/$OS/cpp.sh
-    source $INSTALLER_SCRIPTS/$OS/haskell.sh
-    source $INSTALLER_SCRIPTS/$OS/python.sh
-    source $INSTALLER_SCRIPTS/$OS/ruby.sh
-    source $INSTALLER_SCRIPTS/$OS/additional.sh
-    source $INSTALLER_SCRIPTS/$OS/settings.sh
-elif [ "$CHOICE" != "essential" ]; then
-    if [ $CHOICE == "clojure" || $CHOICE == "scala" ]; then
+    source $INSTALLER_SCRIPTS/$OS/essential.sh
+    source $INSTALLER_SCRIPTS/$OS/emacs.sh
+    source $INSTALLER_SCRIPTS/$OS/git.sh
+
+    if [ "$CHOICE" == "everything" ]; then
         source $INSTALLER_SCRIPTS/$OS/java.sh
+        source $INSTALLER_SCRIPTS/$OS/clojure.sh
+        source $INSTALLER_SCRIPTS/$OS/scala.sh
+        source $INSTALLER_SCRIPTS/$OS/web.sh
+        source $INSTALLER_SCRIPTS/$OS/cpp.sh
+        source $INSTALLER_SCRIPTS/$OS/haskell.sh
+        source $INSTALLER_SCRIPTS/$OS/python.sh
+        source $INSTALLER_SCRIPTS/$OS/ruby.sh
+        source $INSTALLER_SCRIPTS/$OS/additional.sh
+        source $INSTALLER_SCRIPTS/$OS/settings.sh
+    elif [ "$CHOICE" != "essential" ]; then
+        if [ $CHOICE == "clojure" || $CHOICE == "scala" ]; then
+            source $INSTALLER_SCRIPTS/$OS/java.sh
+        fi
+        source "$INSTALLER_SCRIPTS/$OS/$INSTALLER_SCRIPT.sh"
     fi
-    source "$INSTALLER_SCRIPTS/$OS/$INSTALLER_SCRIPT.sh"
-fi
 
-source $INSTALLER_SCRIPTS/$OS/bash.sh
-source $INSTALLER_SCRIPTS/$OS/zsh.sh
+    source $INSTALLER_SCRIPTS/$OS/bash.sh
+    source $INSTALLER_SCRIPTS/$OS/zsh.sh
 
-if [ "$CHOICE" == "everything" ]; then
-    source $INSTALLER_SCRIPTS/$OS/vim.sh
-fi
+    if [ "$CHOICE" == "everything" ]; then
+        source $INSTALLER_SCRIPTS/$OS/vim.sh
+    fi
+}
+
+initialize
+installer
 
 cd $curdir

@@ -6,11 +6,14 @@ brew install editorconfig
 brew install the_silver_searcher
 
 sclone https://github.com/syl20bnr/spacemacs $SEARTIPY_HOME/emacses/spacemacs.d --recursive # spacemacs
+smv ~/.spacemacs ~/.spacemacs-backup
 sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
+[ $USER == "pervez" ] && cd $SEARTIPY_HOME/emacses/housem.d && git checkout pervez
+
 brew install cask
-cd $SEARTIPY_HOME/emacses/housem.d && cask install
+cd $SEARTIPY_HOME/emacses/housem.d && cask install && cask update
 
 smv ~/.emacs.d ~/.emacs.d-backup
 if [ "$USER" == "pervez" ]; then

@@ -9,8 +9,7 @@ smv ~/.spacemacs ~/.spacemacs-backup
 sln $SEARTIPY_HOME/dotfiles/common/spacemacs ~/.spacemacs
 
 sclone https://github.com/pervezfunctor/emacs.d.git $SEARTIPY_HOME/emacses/housem.d # my emacs
-
-[ $USER == "pervez" ] && git checkout pervez
+[ $USER == "pervez" ] && cd $SEARTIPY_HOME/emacses/housem.d && git checkout pervez
 
 if [ ! $(which cask) ]; then
     curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python

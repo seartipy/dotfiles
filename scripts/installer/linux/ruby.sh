@@ -4,6 +4,11 @@ if [ ! $(which rvm) ] || [ ! rvm list rubies 2> /dev/null | grep "=* ruby" ]; th
     source ~/.rvm/scripts/rvm
 fi
 
-gem install pry sinatra thin --no-ri --no-rdoc
-gem install guard watchr --no-ri --no-rdoc
-gem install tmuxinator git-up sass --no-ri --no-rdoc
+gem install pry --no-ri --no-rdoc
+gem install sinatra --no-ri --no-rdoc
+gem install thin --no-ri --no-rdoc
+gem install guard --no-ri --no-rdoc
+gem install watchr --no-ri --no-rdoc
+gem install tmuxinator --no-ri --no-rdoc
+gem install git-up --no-ri --no-rdoc
+gem install sass --no-ri --no-rdoc

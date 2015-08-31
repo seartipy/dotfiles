@@ -48,7 +48,6 @@ function gnome-settings-pervez {
         gsettings set  org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
         gsettings set org.gnome.desktop.interface clock-show-date true
         gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
-        gsettings set org.gnome.Terminal.Legacy.Settings dark-theme true
         gsettings set org.gnome.shell.calendar show-weekdate true
         gsettings set org.gnome.SessionManager logout-prompt false
 
@@ -61,7 +60,8 @@ function gnome-settings-pervez {
 function gnome-settings-all {
     if [ $(which gnome-shell) ]; then
         dconf write /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell true
-        gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false       gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
+        gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
+        gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
         gsettings set org.gnome.system.locale region 'en_US.UTF-8'
     fi
 }

@@ -10,7 +10,7 @@ if ! ls /etc/apt/sources.list.d | grep google.list > /dev/null; then
 fi
 
 # virtualbox
-if [ ! $(vmwarectrl) ]; then
+if [ ! $(which vmwarectrl) ]; then
     if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list > /dev/null; then
         wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
         sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
@@ -34,7 +34,7 @@ fi
 
 sudo apt-get update
 
-if [ ! $(vmwarectrl) ]; then
+if [ ! $(which vmwarectrl) ]; then
     sudo apt-get install -y virtualbox-5.0 dkms
 fi
 

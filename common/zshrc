@@ -47,4 +47,5 @@ source $SEARTIPY_HOME/dotfiles/scripts/upgrades.sh
 source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
 source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
 source $SEARTIPY_HOME/dotfiles/scripts/sources.sh
+[[ $- != *i* ]] && return
 source $SEARTIPY_HOME/dotfiles/scripts/start-tmux.sh

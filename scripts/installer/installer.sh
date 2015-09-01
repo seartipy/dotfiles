@@ -99,7 +99,7 @@ function installer {
         if [ $CHOICE == "clojure" || $CHOICE == "scala" ]; then
             source $INSTALLER_SCRIPTS/$OS/java.sh
         fi
-        source "$INSTALLER_SCRIPTS/$OS/$INSTALLER_SCRIPT.sh"
+        source "$INSTALLER_SCRIPTS/$OS/$CHOICE.sh"
     fi
 
     source $INSTALLER_SCRIPTS/$OS/bash.sh

@@ -14,6 +14,12 @@
 
 curdir=`pwd`
 
+if [ $# -ge 1 ]; then
+    CHOICE=`echo $1 |  tr '[:upper:]' '[:lower:]' | xargs`
+else
+    CHOICE="everything"
+fi
+
 function keep-sudo-running {
     # Ask for the administrator password upfront
     sudo -v
@@ -23,12 +29,6 @@ function keep-sudo-running {
 }
 
 function setup-variables {
-    if [ $# -ge 1 ]; then
-        CHOICE=`echo $1 |  tr '[:upper:]' '[:lower:]' | xargs`
-    else
-        CHOICE="everything"
-    fi
-
     if [ "$(uname)" == "Darwin" ]; then
         export OS="mac"
     else
@@ -73,8 +73,8 @@ function initialize {
     setup-variables
     install-git
     clone-dotfiles
-    create-folders
     source-shell-scripts
+    create-folders
 }
 
 function installer {

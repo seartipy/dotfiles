@@ -96,7 +96,7 @@ function installer {
         source $INSTALLER_SCRIPTS/$OS/additional.sh
         source $INSTALLER_SCRIPTS/$OS/settings.sh
     elif [ "$CHOICE" != "essential" ]; then
-        if [ $CHOICE == "clojure" || $CHOICE == "scala" ]; then
+        if [ "$CHOICE" == "clojure" ] || [ "$CHOICE" == "scala" ]; then
             source $INSTALLER_SCRIPTS/$OS/java.sh
         fi
         source "$INSTALLER_SCRIPTS/$OS/$CHOICE.sh"

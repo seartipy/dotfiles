@@ -72,9 +72,9 @@ function initialize {
     keep-sudo-running
     setup-variables
     install-git
-    source-shell-scripts
     clone-dotfiles
     create-folders
+    source-shell-scripts
 }
 
 function installer {

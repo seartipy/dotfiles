@@ -54,10 +54,6 @@
 
         pager = less -F -X
 
-[user]
-        name = <Your Full Name>
-        email = <Your EMail Id>
-
 [merge]
         tool = kdiff3
 

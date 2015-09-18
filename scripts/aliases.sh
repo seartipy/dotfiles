@@ -6,6 +6,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias pbcopy="xsel --clipboard --input"
     alias pbpaste="xsel --clipboard --output"
     alias open="xdg-open"
+    alias trash=trash-put
 
     alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
 

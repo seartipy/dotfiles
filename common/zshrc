@@ -48,7 +48,6 @@ source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
 source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
 source $SEARTIPY_HOME/dotfiles/scripts/sources.sh
 
-if [[ $- == *i* && $- == *m* ]]; then
+if [[ "$USER" == "pervez" ]] && [[ $- == *i* && $- == *m* ]] && ! [[ -n "$INSIDE_EMACS" ]]; then
     [[ -z "$TMUX" ]] && exec tmux
 fi
-

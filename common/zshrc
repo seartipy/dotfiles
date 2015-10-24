@@ -25,7 +25,7 @@ antigen bundle ruby
 antigen bundle pip
 antigen bundle coffee
 
-antigen bundle atom
+# antigen bundle atom
 antigen bundle sublime
 antigen bundle web-search
 

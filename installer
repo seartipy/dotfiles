@@ -477,6 +477,9 @@ emacs_install() {
     fi
 
     if cd ~/seartipy/emacses/housemd; then
+        if [ -n "$SEARTIPY" ]; then
+            git checkout seartipy
+        fi
         if has_cmd cask; then
             cask install
         else

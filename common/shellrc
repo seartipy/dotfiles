@@ -1,0 +1,70 @@
+# aliases
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    #haskell
+    alias cabal="cabal-1.22"
+
+    alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
+    alias pbcopy="xsel --clipboard --input"
+    alias pbpaste="xsel --clipboard --output"
+    alias open="xdg-open"
+    alias trash=trash-put
+
+    alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
+
+    #to support xterm key bindings in emacs
+    alias e="TERM=xterm-256color emacs -nw"
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    alias upgrade="brew update && brew upgrade"
+fi
+
+# exports
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    #java
+    export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+    export JDK_HOME="/usr/lib/jvm/java-8-oracle"
+
+    #haskell
+    export PATH="/opt/ghc/7.10.2/bin:$PATH"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    #java
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+    export JDK_HOME=`/usr/libexec/java_home -v 1.8`
+fi
+
+#ruby
+export PATH="$HOME/.rvm/bin:$PATH"
+
+#haskell
+export PATH="$HOME/.cabal/bin:$PATH"
+
+#emacs
+export PATH="$HOME/.cask/bin:$PATH"
+
+#node
+export NVM_DIR="$HOME/.nvm"
+
+#flow
+export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
+
+#python
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+export PATH="$HOME/bin:$PATH"
+
+# sources
+
+#node
+[ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
+
+#rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+#python
+if command -v pyenv > /dev/null; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+fi

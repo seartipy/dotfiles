@@ -1,6 +1,4 @@
-SEARTIPY_HOME=$HOME/seartipy
-
-source $SEARTIPY_HOME/vendors/antigen/antigen.zsh
+source ~/seartipy/vendors/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
@@ -43,10 +41,7 @@ fi
 
 antigen apply
 
-source $SEARTIPY_HOME/dotfiles/scripts/upgrades.sh
-source $SEARTIPY_HOME/dotfiles/scripts/aliases.sh
-source $SEARTIPY_HOME/dotfiles/scripts/exports.sh
-source $SEARTIPY_HOME/dotfiles/scripts/sources.sh
+source ~/seartipy/dotfiles/common/shellrc
 
 if [[ "$USER" == "pervez" ]] && [[ $- == *i* && $- == *m* ]] && ! [[ -n "$INSIDE_EMACS" ]]; then
     [[ -z "$TMUX" ]] && exec tmux

@@ -1,0 +1,1101 @@
+colorize() {
+    if [ -t 1 ]; then
+        printf "\e[%sm%s\e[m" 1 "$2"
+    else
+        echo -n "$2"
+    fi
+}
+
+log() {
+    echo $1 >> ~/seartipy_installer.log
+}
+
+warn() {
+    colorize "WARNING : "
+    echo $1
+}
+
+err_exit() {
+    colorize "FATAL: "
+    echo $1
+    exit 1
+}
+
+is_linux() {
+    [ "$OSTYPE" == "linux-gnu" ] || return 1
+}
+
+is_mac() {
+    [[ "$OSTYPE" == "darwin"* ]] || return 1
+}
+
+has_cmd() {
+    command -v $1 > /dev/null
+}
+
+md() {
+    [ -d "$1" ] || mkdir -p "$1" 2>> ~/errors.log
+}
+
+sln() {
+    if ! [ -e "$1" ]; then
+        warn "$1 does not exist, cannot create the link $2"
+    else
+        if [ -L "$2" ]; then
+            $trash "$2"
+        elif [ -e "$2" ]; then
+            warn "$2 exists and not a symbolic link! not creating link"
+            return
+        fi
+    fi
+    ln -s $1 $2 2>> ~/errors.log
+}
+
+pre_cmd_check() {
+    has_cmd "$1" || err_exit "$1 not installed"
+}
+
+cmd_check() {
+    has_cmd "$1" || warn "$1 not installed"
+}
+
+ln_check() {
+    local rl=readlink
+    if is_mac; then
+        rl=greadlink
+    fi
+
+    [ $($rl -f $2) == "$1" ] ||  warn "$2 not a link to $1"
+}
+brew_install() {
+    if ! has_cmd brew; then
+        cmd_check ruby
+
+        log "Installing homebrew"
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" > /dev/null
+    fi
+    if ! has_cmd brew; then
+        err_exit "could not install brew, quitting"
+    fi
+
+    log "Installing brew cask"
+    brew install caskroom/cask/brew-cask
+
+    log "Tapping emacsport"
+    [ -n "$EMACS" ] && brew tap railwaycat/emacsmacport
+
+    log "Upgrading brew packages"
+    brew update && brew upgrade
+}
+
+mac_packages_install() {
+    brew_install
+
+    log "Installing all packages, this will take a while..."
+    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gibo gpg
+    brew cask install iterm2
+
+    if [ -n "$EMACS" ]; then
+        brew install emacs-mac ---with-spacemacs-icon
+        brew install editorconfig cask
+        # TODO : ctags
+        brew install aspell --with-lang-en
+    fi
+
+    if [ -n "$VIM" ]; then
+        brew install macvim --override-system-vim --with-lua --with-luajit
+        brew linkapps macvim
+    fi
+
+    if [ -n "$GIT" ]; then
+        brew cask install smartgit
+        brew install kdiff3 git-extras
+    fi
+
+    [ -n "$HASKELL" ] && brew install ghc cabal-install haskell-stack
+
+    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        brew cask install java caskroom/homebrew-versions/java6 intellij-idea
+    fi
+
+    if [ -n "$PYTHON" ]; then
+        brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
+    fi
+
+    if [ -n "$SCALA" ]; then
+        brew install sbt scala
+        brew cask install scala-ide
+    fi
+
+    [ -n "$CLOJURE" ] && brew install leiningen boot-clj
+
+    if [ -n "$WEB" ]; then
+        brew install node flow
+        brew cask install webstorm
+    fi
+
+    if [ -n "$CPP" ]; then
+         brew install boost --c++11
+         brew install cmake scons boost-build cppcheck
+         brew cask install clion
+    fi
+
+    if [ -n "$ADDITIONAL" ]; then
+        brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord
+        brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook
+        # brew cask install suspicious-package xquartz
+        brew install youtube-dl
+    fi
+
+    brew cleanup > /dev/null
+    brew cask cleanup
+}
+
+add_java_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
+        pre_cmd_check debconf-set-selections
+
+        log "Adding java ppa..."
+        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+        sudo add-apt-repository ppa:webupd8team/java -y
+    fi
+}
+
+add_scala_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
+        pre_cmd_check apt-key
+        log "Adding scala ppa..."
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+        echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+    fi
+}
+
+add_smartgit_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep eugenesan-ubuntu-ppa > /dev/null; then
+        sudo add-apt-repository ppa:eugenesan/ppa -y
+    fi
+}
+
+# add_ghc_ppa() {
+#     if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
+#         sudo add-apt-repository ppa:hvr/ghc -y
+#     fi
+# }
+
+add_additional_ppas() {
+    # zeal
+    # if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu > /dev/null; then
+    #     sudo add-apt-repository ppa:zeal-developers/ppa -y
+    # fi
+
+    # google chrome
+    if ! ls /etc/apt/sources.list.d | grep google.list > /dev/null; then
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    fi
+
+    # virtualbox
+    if ! has_cmd vmwarectrl; then
+        if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list > /dev/null; then
+            wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+            sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
+        fi
+    fi
+
+    # youtube-dl etc
+    if ! ls /etc/apt/sources.list.d | grep nilarimogard-ubuntu-webupd8 > /dev/null; then
+        sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
+    fi
+
+    # sublime text 3 editor
+    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-sublime-text-3 > /dev/null; then
+        sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
+    fi
+
+    # atom editor
+    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom > /dev/null; then
+        sudo add-apt-repository  ppa:webupd8team/atom -y
+    fi
+}
+
+add_ppas() {
+    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        add_java_ppa
+    fi
+    [ -n "$SCALA" ] && add_scala_ppa
+    [ -n "$GIT" ] && add_smartgit_ppa
+    # [ -n "$HASKELL" ] && add_ghc_ppa
+    [ -n "$ADDITIONAL" ] && add_additional_ppas
+
+    log "Updating ubuntu..."
+    if ! sudo apt-get update > /dev/null; then
+        err_exit "apt-get update failed, quitting"
+    fi
+
+    log "Upgrading packages..."
+    if ! sudo apt-get upgrade -y > /dev/null; then
+        err_exit "apt-get upgrade failed, quitting"
+    fi
+}
+
+linux_packages_install() {
+
+    add_ppas
+
+    log "Installing all packages, this will take a while..."
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r` silversearcher-ag
+
+    [ -n "$EMACS" ] && sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
+    [ -n "$ZSH" ] && sudo apt-get install -y zsh
+
+    [ -n "$GIT" ] && sudo apt-get install -y smartgit kdiff3 git-extras meld
+
+    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+    fi
+
+    [ -n "$SCALA" ] && sudo apt-get -y install sbt
+
+    # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
+
+    [ -n "$VIM" ] && sudo apt-get install -y vim-gnome
+
+    if [ -n "$CPP" ]; then
+        sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
+    fi
+
+    if [ -n "$ADDITIONAL" ]; then
+        sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
+        if ! has_cmd; then
+            sudo apt-get install -y virtualbox-5.0 dkms
+        fi
+    fi
+
+    sudo apt-get clean
+}
+
+packages_install() {
+    if is_linux; then
+        linux_packages_install
+    elif is_mac; then
+        mac_packages_install
+    fi
+}
+spacemacs_dotfiles() {
+    if ! [ -d "$HOME/seartipy/emacses/spacemacs" ]; then
+        log "Cloning spacemacs to ~/seartipy/emacses/spacemacs"
+        git clone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
+    fi
+
+    log "Linking ~/seartipy/dotfiles/spacemacs as ~/.spacemacs"
+    sln ~/seartipy/dotfiles/common/spacemacs ~/.spacemacs
+}
+
+leanemacs_dotfiles() {
+    if [ -f ~/seartipy/lean-dotfiles/emacs-init.el ]; then
+        log "Moving ~/seartipy/emacses/lean-emacs to $BACKUP_DIR (if it exists)"
+        mv ~/seartipy/emacses/lean-emacs $BACKUP_DIR 2> /dev/null
+
+        md ~/seartipy/emacses/lean-emacs
+
+        log "Linking ~/seartipy/lean-dotfiles/emacs-init.el as ~/seartipy/emacses/lean-emacs/init.el"
+        sln ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+    else
+        warn "~/seartipy/lean-dotfiles/emacs-init.el does not exist, skipping emacs lean dotfiles"
+    fi
+}
+
+housemd_dotfiles() {
+    if ! [ -d "$HOME/seartipy/emacses/housemd" ]; then
+        log "Cloning housemd to ~/seartipy/emacses/housemd"
+        git clone  https://github.com/pervezfunctor/emacs.d ~/seartipy/emacses/housemd
+    fi
+
+    if [ -d "$HOME/seartipy/emacses/housemd" ]; then
+        log "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
+        mv ~/.emacs.d $BACKUP_DIR 2> /dev/null
+
+        log "Linking ~/seartipy/emacses/housemd as ~/.emacs.d"
+        sln ~/seartipy/emacses/housemd ~/.emacs.d
+    else
+        warn "~/seartipy/emacses/housemd does not exist, skipping housemd dotfiles"
+    fi
+}
+
+emacs_dotfiles() {
+    spacemacs_dotfiles
+    leanemacs_dotfiles
+    housemd_dotfiles
+}
+
+clojure_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/common/lein-profiles.clj ]; then
+        log "Moving ~/.lein/profiles.clj to $BACKUP_DIR (if exists)"
+        mv ~/.lein/profiles.clj $BACKUP_DIR 2> /dev/null
+
+        md ~/.lein
+
+        log "Linking ~/seartipy/dotfiles/common/lein-profiles.clj as ~/.lein/profiles.clj"
+        sln ~/seartipy/dotfiles/common/lein-profiles.clj ~/.lein/profiles.clj
+    else
+        warn "~/seartipy/dotfiles/common/lein-profiles.clj does not exist. skipping clojure dotfiles"
+    fi
+}
+
+scala_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/common/sbt-plugins.sbt ]; then
+        log "Moving ~/.sbt/0.13/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
+        mv ~/.sbt/0.13/plugins/plugins.sbt $BACKUP_DIR 2> /dev/null
+
+        md ~/.sbt/0.13/plugins
+
+        log "Linking ~/seartipy/lean-dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
+        sln ~/seartipy/dotfiles/common/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+    else
+        warn "~/seartipy/dotfiles/common/sbt-plugins.sbt does not exist. skipping scala dotfiles"
+    fi
+}
+
+zsh_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/common/zshrc ]; then
+        log "Moving ~/.zshrc to $BACKUP_DIR "
+        mv ~/.zshrc $BACKUP_DIR 2> /dev/null
+
+        log "Linking ~/seartipy/lean-dotfiles/zshrc as ~/.zshrc"
+        sln ~/seartipy/dotfiles/common/zshrc ~/.zshrc
+    else
+        warn "~/seartipy/dotfiles/common/zhrc does not exist, skipping zsh dotfiles"
+    fi
+}
+
+bash_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/common/bashrc ]; then
+        log "Moving ~/.bash_profile to $BACKUP_DIR"
+        mv ~/.bash_profile $BACKUP_DIR 2> /dev/null
+        sln ~/seartipy/dotfiles/common/bashrc ~/.bash_profile
+
+        if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
+            echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
+        fi
+    else
+        warn "~/seartipy/dotfiles/common/bashrc does not exist, skipping bash dotfiles"
+    fi
+}
+
+tmux_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/common/tmux.conf ]; then
+        log "Moving ~/.tmux.conf to $BACKUP_DIR"
+        mv ~/.tmux.conf $BACKUP_DIR 2> /dev/null
+
+        log "Linking ~/seartipy/dotfiles/common/tmux.conf to ~/.tmux.conf"
+        sln ~/seartipy/dotfiles/common/tmux.conf ~/.tmux.conf
+    else
+        warn "~/seartipy/dotfiles/common/tmux.conf does not exist, skipping tmux dotfiles"
+    fi
+}
+
+clone_lean_dotfiles() {
+    log "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
+    mv ~/seartipy/lean-dotfiles $BACKUP_DIR 2> /dev/null
+
+    log "Cloning lean dotfiles"
+    if ! git clone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles; then
+        warn 'cannot clone lean-dotfiles, skipping installing lean dotfiles'
+    fi
+}
+
+clone_dotfiles() {
+    log "Backing up your current dotfiles(if exists) to $BACKUP_DIR"
+    mv ~/seartipy/dotfiles $BACKUP_DIR
+
+    log "Cloning dotfiles"
+    if ! git clone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles; then
+        warn 'cannot clone dotfiles, skipping installing dotfiles'
+    fi
+}
+
+dotfiles_install() {
+    clone_dotfiles
+    clone_lean_dotfiles
+
+    [ -d "$HOME/seartipy/dotfiles" ] || err_exit "~/seartipy/dotfiles/ does not exist, quitting"
+
+    if [ -n "$ZSH" ]; then
+        zsh_dotfiles
+        tmux_dotfiles
+    fi
+    [ -n "$BASH" ] && bash_dotfiles
+
+    [ -n "$EMACS" ] && emacs_dotfiles
+
+    [ -n "$CLOJURE" ] && clojure_dotfiles
+    [ -n "$SCALA" ] && scala_dotfiles
+}
+liquidprompt_install() {
+    if ! [ -d ~/seartipy/vendors/liquidprompt ]; then
+        log "Cloning liquidprompt to ~/seartipy/vendors/liquidprompt"
+        git clone https://github.com/nojhan/liquidprompt.git ~/seartipy/vendors/liquidprompt
+    fi
+}
+
+zsh_install() {
+    if ! [ -d ~/.slimzsh ]; then
+        log "Cloning slimzsh to ~/.slimzsh"
+        git clone https://github.com/changs/slimzsh.git ~/.slimzsh
+    fi
+
+    if ! [ -d ~/seartipy/vendors/antigen ]; then
+        log "Cloning antigen to ~/seartipy/vendors/antigen"
+        git clone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
+    fi
+
+    liquidprompt_install
+}
+
+bash_install() {
+    liquidprompt_install
+}
+
+emacs_install() {
+    if is_mac; then
+        log "Trashing /Applications/Emacs.app alias (if exists)"
+        $trash '/Applications/Emacs.app alias' 2> /dev/null
+
+        log "Creating Emacs alias in /Applications..."
+        # make emacs available from spotlight
+        osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+
+        log "Generating terminfo for terminal in emacs"
+        local emacsversion=`ls /usr/local/Cellar/emacs-mac`
+        tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/${emacsversion}/share/emacs/24.5/etc/e/eterm-color.ti
+
+    elif is_linux; then
+	if ! has_cmd cask; then
+	    curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
+	fi
+    fi
+
+    if cd ~/seartipy/emacses/housemd; then
+        if has_cmd cask; then
+            cask install
+        else
+            warn "cask command absent, skipping emacs install"
+        fi
+    else
+        warn "~/seartipy/emacses/housemd does not exist, skipping emacs install"
+    fi
+}
+
+lein_install() {
+    if ! has_cmd lein; then
+        log "Installing leiningen"
+        curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
+        chmod +x ~/bin/lein
+    fi
+}
+
+boot_install() {
+    if ! has_cmd boot; then
+        log "Installing boot"
+        curl https://github.com/boot-clj/boot/releases/download/2.3.0/boot.sh > ~/bin/boot
+        chmod +x ~/bin/boot
+    fi
+}
+
+clojure_install() {
+    if is_linux; then
+        if ! has_cmd javac; then
+            warn "Java not installed, skipping clojure"
+            return 1
+        fi
+
+        lein_install
+        boot_install
+    fi
+}
+
+haskell_install() {
+    local CABAL=cabal
+    if is_linux; then
+        CABAL=cabal-1.22
+    fi
+
+    if ! has_cmd $CABAL; then
+        warn "$CABAL not installed, skipping haskell install"
+        return 1
+    fi
+
+    log "Installing cabal packages"
+    $CABAL update
+    $CABAL install alex
+    $CABAL install happy
+    $CABAL install hlint
+    $CABAL install hoogle
+    $CABAL install structured-haskell-mode
+    $CABAL install stylish-haskell
+    $CABAL install hasktags
+    $CABAL install hindent
+    $CABAL install hdevtools
+    $CABAL install ghc-mod
+}
+
+python_install() {
+    if is_linux; then
+        if ! [ -d "~/.pyenv" ]; then
+            log "Cloning pyenv"
+            git clone  https://github.com/yyuu/pyenv.git ~/.pyenv
+        fi
+
+        if ! [ -d "~/.pyenv/plugins/pyenv-pip-rehash" ]; then
+            log "Cloning pyenv-pip-rehash"
+            git clone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
+        fi
+
+        if ! [ -d "~/.pyenv/plugins/pyenv-virtualenv" ]; then
+            log "Cloning pyenv-virtualenv"
+            git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+        fi
+
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+    fi
+
+    if has_cmd pyenv; then
+        if ! pyenv versions | grep anaconda > /dev/null; then
+            log "Installing anaconda"
+            local anacondaversion=`pyenv install --list | grep anaconda | tail -1`
+            pyenv install $anacondaversion
+        else
+            warn "pyenv command does not exist, skipping python install"
+        fi
+    else
+        warn "pyenv does not exists, skipping python install"
+    fi
+}
+
+ruby_install() {
+    if ! has_cmd rvm || ! rvm list rubies | grep "=* ruby"; then
+        log "Installing rvm"
+        gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+        curl -sSL https://get.rvm.io | bash -s stable --ruby
+    fi
+
+    source ~/.rvm/scripts/rvm
+    log "Installing ruby gems"
+    if is_mac; then
+        gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
+    fi
+    gem install pry sinatra thin guard watchr tmuxinator git-up sass  --no-ri --no-rdoc
+}
+
+flow_install() {
+    if ! has_cmd flow; then
+        log "Installing flow"
+        cd ~/seartipy/vendors
+        wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
+        unzip flow-linux64-latest.zip
+        $trash flow-linux64-latest.zip
+    fi
+}
+
+linux_web_install() {
+    if is_linux; then
+        log "Installing nvm"
+        has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+
+        source ~/.nvm/nvm.sh
+        nvm install stable
+        nvm alias default stable
+
+        flow_install
+    fi
+}
+
+web_install() {
+    linux_web_install
+
+    if ! has_cmd npm; then
+        warn "npm not installed, skipping web install"
+        return 1
+    fi
+
+    log "Installing npm packages for web development"
+    npm install -g coffee-script typescript babel webpack karma-cli eslint jshint coffeelint tern js-beautify webpack-dev-server eslint-plugin-react babel-eslint browserify watchify babelify budo gulp grunt-cli
+
+}
+
+vim_install() {
+    log "Installing vim packages"
+    if ! [ -d ~/.spf13-vim-3 ]; then
+        curl http://j.mp/spf13-vim3 -L -o - | sh
+    fi
+}
+
+fasd_install() {
+    if ! has_cmd fasd; then
+        log "Installing fasd..."
+        if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
+            cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
+            $trash ~/seartipy-installer-fasd 2> /dev/null
+        else
+            warn 'could not clone fasd, skipping fasd installation'
+        fi
+    fi
+}
+
+gibo_install() {
+    if ! has_cmd gibo; then
+        log "Installing gibo"
+        curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo
+        chmod +x ~/bin/gibo
+	~/bin/gibo -u
+    fi
+}
+
+sourcecodepro_install() {
+    if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
+        log "Installing Source code pro fonts"
+        wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
+        unzip 1.030R-it.zip
+        md ~/.fonts
+        cp source-code-pro*/OTF/*.otf ~/.fonts
+        fc-cache -f -v
+        $trash 1.030R-it.zip
+        $trash source-code-pro*
+    fi
+}
+
+additional_install() {
+    if is_linux && [ -n "$ADDITIONAL" ]; then
+	sourcecodepro_install
+        gibo_install
+        fasd_install
+    fi
+    [ -n "$VIM" ] && vim_install
+}
+
+install_all() {
+    [ -n "$ZSH" ] && zsh_install
+    [ -n "$EMACS" ] && emacs_install
+
+    [ -n "$CLOJURE" ] && clojure_install
+    [ -n "$WEB" ] && web_install
+
+    [ -n "$PYTHON" ] && python_install
+    [ -n "$HASKELL" ] && haskell_install
+
+    [ -n "$RUBY" ] && ruby_install
+
+    if [ -n "$ADDITIONAL" ]; then
+        settings
+        additional_install
+    fi
+}
+hidpi_conf() {
+    local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
+    if [ $xres -ge 2800 ]; then
+        gsettings set org.gnome.desktop.interface scaling-factor 2
+        gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
+    fi
+
+    if [ $xres -ge 3840 ]; then
+        gsettings set org.gnome.desktop.interface text-scaling-factor .8
+    fi
+}
+
+gnome_extensions() {
+    if has_cmd gnome-shell && [ -n "$SEARTIPY" ]; then
+        gsettings set org.gnome.shell disable-extension-version-validation "true"
+
+        gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"
+
+        wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install
+        chmod +x ~/bin/shell-extension-install
+
+        local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
+
+        shell-extension-install $gnomever 294 # shellshape
+        shell-extension-install $gnomever 97  # coverflow alt-tab
+        shell-extension-install $gnomever 442 # drop down terminal
+        shell-extension-install $gnomever 413 # app keys
+        shell-extension-install $gnomever 361 # emacs manager
+
+        gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F10']"
+
+        gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.prefs default-layout 'vertical'
+    fi
+}
+
+gnome_settings() {
+    if has_cmd gnome-shell; then
+        dconf write /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell true
+        gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
+        gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
+        gsettings set org.gnome.system.locale region 'en_US.UTF-8'
+    fi
+
+    if has_cmd gnome-shell && [ -n "$SEARTIPY" ]; then
+        gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
+        gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
+        gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
+        gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
+        gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
+        gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
+        gsettings set org.gnome.desktop.interface gtk-key-theme Emacs
+
+        gsettings set org.gnome.desktop.privacy remove-old-temp-files true
+        gsettings set org.gnome.desktop.privacy remove-old-trash-files true
+        gsettings set  org.gnome.desktop.screensaver lock-enabled false
+        gsettings set  org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+        gsettings set org.gnome.desktop.interface clock-show-date true
+        gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
+        gsettings set org.gnome.shell.calendar show-weekdate true
+        gsettings set org.gnome.SessionManager logout-prompt false
+
+        [ -e ~/.config/gtk-3.0/settings.ini ] || printf "[Settings]\ngtk-application-prefer-dark-theme=1\n" > ~/.config/gtk-3.0/settings.ini
+        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 1800
+        gsettings set org.gnome.desktop.session idle-delay 180
+    fi
+}
+
+linux_settings() {
+    hidpi_conf
+    gnome_settings
+    gnome_extensions
+}
+
+mac_settings() {
+    # https://github.com/mathiasbynens/dotfiles/blob/978fb2696860ebe055a0caec425c67be0ad73319/.osx
+
+    # Disable Resume system-wide
+    defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
+
+    # Check for software updates daily, not just once per week
+    defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+
+    # Disable Notification Center and remove the menu bar icon
+    launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+
+    # Disable smart quotes as they’re annoying when typing code
+    defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+    # Disable smart dashes as they’re annoying when typing code
+    defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+    # Trackpad: enable tap to click for this user and for the login screen
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+    # Disable “natural” (Lion-style) scrolling
+    defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+
+    # Increase sound quality for Bluetooth headphones/headsets
+    defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+
+    # Disable press-and-hold for keys in favor of key repeat
+    defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+    # Set a blazingly fast keyboard repeat rate
+    defaults write NSGlobalDomain KeyRepeat -int 0
+
+    # Enable HiDPI display modes (requires restart)
+    sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+
+    # Finder: allow quitting via ⌘ + Q; doing so will also hide desktop icons
+    defaults write com.apple.finder QuitMenuItem -bool true
+
+    # Set Desktop as the default location for new Finder windows
+    # For other paths, use `PfLo` and `file:///full/path/here/`
+    defaults write com.apple.finder NewWindowTarget -string "PfDe"
+    defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
+
+    # Show icons for hard drives, servers, and removable media on the desktop
+    defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+    defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+    defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+    defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+
+    # Finder: show all filename extensions
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+    # Avoid creating .DS_Store files on network volumes
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+    # Disable disk image verification
+    defaults write com.apple.frameworks.diskimages skip-verify -bool true
+    defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+    defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
+
+    # Disable the warning before emptying the Trash
+    defaults write com.apple.finder WarnOnEmptyTrash -bool false
+
+    # Enable AirDrop over Ethernet and on unsupported Macs running Lion
+    defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+
+    # Show the ~/Library folder
+    chflags nohidden ~/Library
+
+    # Set the icon size of Dock items to 36 pixels
+    defaults write com.apple.dock tilesize -int 36
+
+    # Minimize windows into their application’s icon
+    defaults write com.apple.dock minimize-to-application -bool true
+
+    # Show indicator lights for open applications in the Dock
+    defaults write com.apple.dock show-process-indicators -bool true
+
+    # Disable Dashboard
+    defaults write com.apple.dashboard mcx-disabled -bool true
+
+    # Don’t show Dashboard as a Space
+    defaults write com.apple.dock dashboard-in-overlay -bool true
+
+    # Don’t automatically rearrange Spaces based on most recent use
+    defaults write com.apple.dock mru-spaces -bool false
+
+    # Set Safari’s home page to `about:blank` for faster loading
+    defaults write com.apple.Safari HomePage -string "about:blank"
+
+    # Prevent Safari from opening ‘safe’ files automatically after downloading
+    defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+
+
+    # Allow hitting the Backspace key to go to the previous page in history
+    defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled -bool true
+
+    # Disable Safari’s thumbnail cache for History and Top Sites
+    defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
+
+    # Enable Safari’s debug menu
+    defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+
+    # Hide Spotlight tray-icon (and subsequent helper)
+    #sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+    # Disable Spotlight indexing for any volume that gets mounted and has not yet
+    # been indexed before.
+    # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
+    sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+    # Change indexing order and disable some file types
+    defaults write com.apple.spotlight orderedItems -array \
+             '{"enabled" = 1;"name" = "APPLICATIONS";}' \
+             '{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
+             '{"enabled" = 1;"name" = "DIRECTORIES";}' \
+             '{"enabled" = 1;"name" = "PDF";}' \
+             '{"enabled" = 0;"name" = "DOCUMENTS";}' \
+             '{"enabled" = 0;"name" = "EVENT_TODO";}' \
+             '{"enabled" = 0;"name" = "BOOKMARKS";}' \
+             '{"enabled" = 0;"name" = "MUSIC";}' \
+             '{"enabled" = 0;"name" = "MOVIES";}' \
+             '{"enabled" = 0;"name" = "PRESENTATIONS";}' \
+             '{"enabled" = 0;"name" = "SPREADSHEETS";}' \
+             '{"enabled" = 0;"name" = "SOURCE";}'
+
+    # Only use UTF-8 in Terminal.app
+    defaults write com.apple.terminal StringEncodings -array 4
+
+    # Don’t display the annoying prompt when quitting iTerm
+    defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+}
+
+settings() {
+    if is_linux; then
+        linux_settings
+    elif is_mac && [ -n "$SEARTIPY" ]; then
+        mac_settings
+    fi
+}
+#!/bin/bash
+
+select_everything() {
+    SCALA="scala"
+    CLOJURE="clojure"
+    WEB="web"
+    PYTHON="python"
+    HASKELL="haskell"
+    RUBY="ruby"
+    CPP="cpp"
+    ADDITIONAL="additional"
+    VIM="vim"
+}
+
+script_options() {
+    ZSH="zsh"
+    BASH="bash"
+    EMACS="emacs"
+    DOTFILES="dotfiles"
+
+    if [ $# -eq 0 ]; then
+        select_everything
+    fi
+
+    if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
+        SEARTIPY="seartipy"
+    fi
+
+    while [[ $# > 0 ]]; do
+        case $1 in
+            clojure)
+                CLOJURE="clojure"
+                shift
+                ;;
+            scala)
+                SCALA="scala"
+                shift
+                ;;
+            web)
+                WEB="web"
+                shift
+                ;;
+            nozsh)
+                ZSH=""
+                shift
+                ;;
+            noemacs)
+                EMACS=""
+                shift
+                ;;
+            nobash)
+                BASH=""
+                shift
+                ;;
+            nodotfiles)
+                DOTFILES=""
+                shift
+                ;;
+            noseartipy)
+                SEARTIPY=""
+                shift
+                ;;
+            diagnostics)
+                DIAGNOSTICS="diagnostics"
+                shift
+                ;;
+            haskell)
+                HASKELL="haskell"
+                shift
+                ;;
+            ruby)
+                RUBY="ruby"
+                shift
+                ;;
+            cpp)
+                CPP="cpp"
+                shift
+                ;;
+            python)
+                PYTHON="python"
+                shift
+                ;;
+            additional)
+                ADDITIONAL="additional"
+                VIM="vim"
+                shift
+                ;;
+            seartipy)
+                SEARTIPY="seartipy"
+                shift
+                ;;
+            everything)
+                select_everything
+                shift
+                ;;
+            *)
+                shift # ignore unknown option
+                ;;
+        esac
+    done
+}
+
+keep_sudo_running() {
+    # Ask for the administrator password upfront
+    sudo -v
+
+    # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+}
+
+install_git() {
+    if is_linux; then
+        sudo apt-get install -y git
+    fi
+}
+
+setup_backup_dir() {
+    BACKUP_DIR=~/seartipy.backups
+
+    if [ -d "$BACKUP_DIR" ]; then
+        log "moving $BACKUP_DIR to trash..."
+        $trash $BACKUP_DIR 2> /dev/null
+    fi
+
+    md $BACKUP_DIR
+
+    if ! [ -d "$BACKUP_DIR" ]; then
+        err_exit "cannot create $BACKUP_DIR, quitting"
+    fi
+}
+
+create_dirs() {
+    setup_backup_dir
+    md ~/seartipy/{emacses,vendors}
+    md ~/bin
+}
+
+source_installer_scripts() {
+    source ~/installer/utils.sh
+    source ~/installer/packages.sh
+    source ~/installer/dotfiles.sh
+    source ~/installer/installs.sh
+    source ~/installer/settings.sh
+}
+
+installer() {
+    keep_sudo_running
+
+    script_options $*
+
+    source_installer_scripts
+
+    if [ -n "$DIAGNOSTICS" ]; then
+        post_installer_check
+        exit 0
+    fi
+
+    echo "Installing $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ADDITIONAL"
+
+    packages_install
+
+    if is_linux; then
+        trash=trash-put
+    elif is_mac; then
+        trash=trash
+    fi
+
+    create_dirs
+
+    export PATH="$HOME/bin:$PATH"
+
+    # pre_installer_check
+
+    [ -n "$DOTFILES" ] && dotfiles_install
+    install_all
+
+    if [ -n "$ZSH" ]; then
+        echo "Set zsh as your default shell(this sometimes fails)..."
+        chsh -s /bin/zsh
+    fi
+
+    # post_installer_check
+
+    echo "Installation done!!! You could run"
+    echo "'bash ~/seartipy/lean-dotfiles/installer.sh diagnostics $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ADDITIONAL'"
+    echo "to check your installation"
+
+}
+
+curdir=`pwd`
+installer $*
+cd $curdir

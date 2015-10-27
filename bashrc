@@ -1,3 +1,3 @@
 [[ $- = *i* ]] && source ~/seartipy/vendors/liquidprompt/liquidprompt
 
-source ~/seartipy/dotfiles/common/shellrc
+source ~/seartipy/dotfiles/shellrc

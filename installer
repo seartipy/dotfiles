@@ -67,6 +67,7 @@ ln_check() {
 
     [ $($rl -f $2) == "$1" ] ||  warn "$2 not a link to $1"
 }
+
 brew_install() {
     if ! has_cmd brew; then
         cmd_check ruby
@@ -288,7 +289,7 @@ spacemacs_dotfiles() {
     fi
 
     log "Linking ~/seartipy/dotfiles/spacemacs as ~/.spacemacs"
-    sln ~/seartipy/dotfiles/common/spacemacs ~/.spacemacs
+    sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
 }
 
 leanemacs_dotfiles() {
@@ -329,68 +330,68 @@ emacs_dotfiles() {
 }
 
 clojure_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/common/lein-profiles.clj ]; then
+    if [ -f ~/seartipy/dotfiles/lein-profiles.clj ]; then
         log "Moving ~/.lein/profiles.clj to $BACKUP_DIR (if exists)"
         mv ~/.lein/profiles.clj $BACKUP_DIR 2> /dev/null
 
         md ~/.lein
 
-        log "Linking ~/seartipy/dotfiles/common/lein-profiles.clj as ~/.lein/profiles.clj"
-        sln ~/seartipy/dotfiles/common/lein-profiles.clj ~/.lein/profiles.clj
+        log "Linking ~/seartipy/dotfiles/lein-profiles.clj as ~/.lein/profiles.clj"
+        sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     else
-        warn "~/seartipy/dotfiles/common/lein-profiles.clj does not exist. skipping clojure dotfiles"
+        warn "~/seartipy/dotfiles/lein-profiles.clj does not exist. skipping clojure dotfiles"
     fi
 }
 
 scala_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/common/sbt-plugins.sbt ]; then
+    if [ -f ~/seartipy/dotfiles/sbt-plugins.sbt ]; then
         log "Moving ~/.sbt/0.13/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
         mv ~/.sbt/0.13/plugins/plugins.sbt $BACKUP_DIR 2> /dev/null
 
         md ~/.sbt/0.13/plugins
 
         log "Linking ~/seartipy/lean-dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
-        sln ~/seartipy/dotfiles/common/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+        sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     else
-        warn "~/seartipy/dotfiles/common/sbt-plugins.sbt does not exist. skipping scala dotfiles"
+        warn "~/seartipy/dotfiles/sbt-plugins.sbt does not exist. skipping scala dotfiles"
     fi
 }
 
 zsh_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/common/zshrc ]; then
+    if [ -f ~/seartipy/dotfiles/zshrc ]; then
         log "Moving ~/.zshrc to $BACKUP_DIR "
         mv ~/.zshrc $BACKUP_DIR 2> /dev/null
 
         log "Linking ~/seartipy/lean-dotfiles/zshrc as ~/.zshrc"
-        sln ~/seartipy/dotfiles/common/zshrc ~/.zshrc
+        sln ~/seartipy/dotfiles/zshrc ~/.zshrc
     else
-        warn "~/seartipy/dotfiles/common/zhrc does not exist, skipping zsh dotfiles"
+        warn "~/seartipy/dotfiles/zhrc does not exist, skipping zsh dotfiles"
     fi
 }
 
 bash_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/common/bashrc ]; then
+    if [ -f ~/seartipy/dotfiles/bashrc ]; then
         log "Moving ~/.bash_profile to $BACKUP_DIR"
         mv ~/.bash_profile $BACKUP_DIR 2> /dev/null
-        sln ~/seartipy/dotfiles/common/bashrc ~/.bash_profile
+        sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
 
         if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
             echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
         fi
     else
-        warn "~/seartipy/dotfiles/common/bashrc does not exist, skipping bash dotfiles"
+        warn "~/seartipy/dotfiles/bashrc does not exist, skipping bash dotfiles"
     fi
 }
 
 tmux_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/common/tmux.conf ]; then
+    if [ -f ~/seartipy/dotfiles/tmux.conf ]; then
         log "Moving ~/.tmux.conf to $BACKUP_DIR"
         mv ~/.tmux.conf $BACKUP_DIR 2> /dev/null
 
-        log "Linking ~/seartipy/dotfiles/common/tmux.conf to ~/.tmux.conf"
-        sln ~/seartipy/dotfiles/common/tmux.conf ~/.tmux.conf
+        log "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
+        sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
     else
-        warn "~/seartipy/dotfiles/common/tmux.conf does not exist, skipping tmux dotfiles"
+        warn "~/seartipy/dotfiles/tmux.conf does not exist, skipping tmux dotfiles"
     fi
 }
 

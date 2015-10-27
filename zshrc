@@ -41,7 +41,7 @@ fi
 
 antigen apply
 
-source ~/seartipy/dotfiles/common/shellrc
+source ~/seartipy/dotfiles/shellrc
 
 if [[ "$USER" == "pervez" ]] && [[ $- == *i* && $- == *m* ]] && ! [[ -n "$INSIDE_EMACS" ]]; then
     [[ -z "$TMUX" ]] && exec tmux

@@ -68,3 +68,59 @@ if command -v pyenv > /dev/null; then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
 fi
+
+# utils
+
+colorize() {
+    if [ -t 1 ]; then
+        printf "\e[%sm%s\e[m" 1 "$2"
+    else
+        echo -n "$2"
+    fi
+}
+
+log() {
+    echo $1 >> ~/seartipy_installer.log
+}
+
+warn() {
+    colorize "WARNING : "
+    echo $1
+}
+
+err_exit() {
+    colorize "FATAL: "
+    echo $1
+    exit 1
+}
+
+is_linux() {
+    [ "$OSTYPE" == "linux-gnu" ] || return 1
+}
+
+is_mac() {
+    [[ "$OSTYPE" == "darwin"* ]] || return 1
+}
+
+has_cmd() {
+    command -v $1 > /dev/null
+}
+
+md() {
+    [ -d "$1" ] || mkdir -p "$1" 2>> ~/errors.log
+}
+
+sln() {
+    if ! [ -e "$1" ]; then
+        warn "$1 does not exist, cannot create the link $2"
+    else
+        if [ -L "$2" ]; then
+            $trash "$2"
+        elif [ -e "$2" ]; then
+            warn "$2 exists and not a symbolic link! not creating link"
+            return
+        fi
+    fi
+    ln -s $1 $2 2>> ~/errors.log
+}
+

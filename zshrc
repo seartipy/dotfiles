@@ -1,3 +1,5 @@
+[ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
+
 source ~/seartipy/vendors/antigen/antigen.zsh
 
 antigen use oh-my-zsh
@@ -46,3 +48,5 @@ source ~/seartipy/dotfiles/shellrc
 if [[ "$USER" == "pervez" ]] && [[ $- == *i* && $- == *m* ]] && ! [[ -n "$INSIDE_EMACS" ]]; then
     [[ -z "$TMUX" ]] && exec tmux
 fi
+
+[ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local

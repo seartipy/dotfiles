@@ -124,3 +124,24 @@ sln() {
     ln -s $1 $2 2>> ~/errors.log
 }
 
+# functions
+
+seartipy_fix_links() {
+    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+    sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
+    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+}
+
+seartipy_upgrade_all() {
+    upgrade
+    cd ~/seartipy/dotfiles && git-up
+    cd ~/seartipy/lean-dotfiles && git-up
+    cd ~/seartipy/emacses/housemd && git-up
+    cd ~/seartipy/emacses/spacemacs && git-up
+    cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
+    sbt console -batch
+    lein
+    npm update -g
+}

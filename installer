@@ -1048,20 +1048,10 @@ create_dirs() {
     md ~/bin
 }
 
-source_installer_scripts() {
-    source ~/installer/utils.sh
-    source ~/installer/packages.sh
-    source ~/installer/dotfiles.sh
-    source ~/installer/installs.sh
-    source ~/installer/settings.sh
-}
-
 installer() {
     keep_sudo_running
 
     script_options $*
-
-    source_installer_scripts
 
     if [ -n "$DIAGNOSTICS" ]; then
         post_installer_check
@@ -1082,8 +1072,6 @@ installer() {
 
     export PATH="$HOME/bin:$PATH"
 
-    # pre_installer_check
-
     [ -n "$DOTFILES" ] && dotfiles_install
     install_all
 
@@ -1092,12 +1080,7 @@ installer() {
         chsh -s /bin/zsh
     fi
 
-    # post_installer_check
-
-    echo "Installation done!!! You could run"
-    echo "'bash ~/seartipy/lean-dotfiles/installer.sh diagnostics $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ADDITIONAL'"
-    echo "to check your installation"
-
+    echo "Installation done!"
 }
 
 curdir=`pwd`

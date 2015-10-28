@@ -152,3 +152,19 @@ seartipy_upgrade_all() {
 seartipy_emacs_default() {
     sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
 }
+
+seartipy_ctrl_alt_set() {
+    if is_linux; then
+        gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
+    else
+        warn "this command works only in linux"
+    fi
+}
+
+seartipy_ctrl_alt_reset() {
+    if is_linux; then
+        gsettings set org.gnome.desktop.input-sources xkb-options "@as []"
+    else
+        warn "this command works only in linux"
+    fi
+}

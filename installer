@@ -177,6 +177,13 @@ add_smartgit_ppa() {
     fi
 }
 
+add_haskell_stack_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep fpco > /dev/null; then
+        wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
+        echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main'|sudo tee /etc/apt/sources.list.d/fpco.list
+    fi
+}
+
 # add_ghc_ppa() {
 #     if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
 #         sudo add-apt-repository ppa:hvr/ghc -y
@@ -226,6 +233,8 @@ add_ppas() {
     [ -n "$SCALA" ] && add_scala_ppa
     [ -n "$GIT" ] && add_smartgit_ppa
     # [ -n "$HASKELL" ] && add_ghc_ppa
+    [ -n "$HASKELL" ] && add_haskell_stack_ppa
+
     [ -n "$ADDITIONAL" ] && add_additional_ppas
 
     log "Updating ubuntu..."
@@ -258,6 +267,7 @@ linux_packages_install() {
     [ -n "$SCALA" ] && sudo apt-get -y install sbt
 
     # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
+    [ -n "$HASKELL" ] && sudo apt-get install -y stack
 
     [ -n "$VIM" ] && sudo apt-get install -y vim-gnome
 
@@ -282,6 +292,7 @@ packages_install() {
         mac_packages_install
     fi
 }
+
 spacemacs_dotfiles() {
     if ! [ -d "$HOME/seartipy/emacses/spacemacs" ]; then
         log "Cloning spacemacs to ~/seartipy/emacses/spacemacs"
@@ -432,6 +443,7 @@ dotfiles_install() {
     [ -n "$CLOJURE" ] && clojure_dotfiles
     [ -n "$SCALA" ] && scala_dotfiles
 }
+
 liquidprompt_install() {
     if ! [ -d ~/seartipy/vendors/liquidprompt ]; then
         log "Cloning liquidprompt to ~/seartipy/vendors/liquidprompt"
@@ -519,28 +531,21 @@ clojure_install() {
 }
 
 haskell_install() {
-    local CABAL=cabal
-    if is_linux; then
-        CABAL=cabal-1.22
-    fi
-
-    if ! has_cmd $CABAL; then
-        warn "$CABAL not installed, skipping haskell install"
+    if ! has_cmd stack; then
+        warn "stack not installed, skipping haskell install"
         return 1
     fi
 
-    log "Installing cabal packages"
-    $CABAL update
-    $CABAL install alex
-    $CABAL install happy
-    $CABAL install hlint
-    $CABAL install hoogle
-    $CABAL install structured-haskell-mode
-    $CABAL install stylish-haskell
-    $CABAL install hasktags
-    $CABAL install hindent
-    $CABAL install hdevtools
-    $CABAL install ghc-mod
+    log "Installing stack packages"
+    stack setup
+    stack install alex
+    stack install happy
+    stack install hlint
+    stack install structured-haskell-mode
+    stack install stylish-haskell
+    stack install hasktags
+    stack install hindent
+    stack install hdevtools
 }
 
 python_install() {

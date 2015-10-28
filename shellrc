@@ -40,6 +40,9 @@ export PATH="$HOME/.rvm/bin:$PATH"
 #haskell
 export PATH="$HOME/.cabal/bin:$PATH"
 
+# haskell stack
+export PATH="$HOME/.local/bin:$PATH"
+
 #emacs
 export PATH="$HOME/.cask/bin:$PATH"
 

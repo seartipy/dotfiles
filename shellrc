@@ -140,8 +140,8 @@ seartipy_upgrade_all() {
     cd ~/seartipy/lean-dotfiles && git-up
     cd ~/seartipy/emacses/housemd && git-up
     cd ~/seartipy/emacses/spacemacs && git-up
-    cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
-    sbt console -batch
-    lein
-    npm update -g
+    has_cmd cask && cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
+    has_cmd sbt && sbt console -batch
+    has_cmd lein && lein
+    has_cmd npm && npm update -g
 }

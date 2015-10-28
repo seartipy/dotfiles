@@ -148,3 +148,7 @@ seartipy_upgrade_all() {
     has_cmd lein && lein
     has_cmd npm && npm update -g
 }
+
+seartipy_emacs_default() {
+    sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
+}

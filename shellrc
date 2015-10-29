@@ -135,6 +135,7 @@ seartipy_fix_links() {
     sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
     sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    sln ~/seartipy/emacses/housemd ~/.emacs.d
 }
 
 seartipy_upgrade_all() {

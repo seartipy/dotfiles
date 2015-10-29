@@ -550,17 +550,17 @@ haskell_install() {
 
 python_install() {
     if is_linux; then
-        if ! [ -d "~/.pyenv" ]; then
+        if ! [ -d ~/.pyenv ]; then
             log "Cloning pyenv"
             git clone  https://github.com/yyuu/pyenv.git ~/.pyenv
         fi
 
-        if ! [ -d "~/.pyenv/plugins/pyenv-pip-rehash" ]; then
+        if ! [ -d ~/.pyenv/plugins/pyenv-pip-rehash ]; then
             log "Cloning pyenv-pip-rehash"
             git clone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
         fi
 
-        if ! [ -d "~/.pyenv/plugins/pyenv-virtualenv" ]; then
+        if ! [ -d ~/.pyenv/plugins/pyenv-virtualenv ]; then
             log "Cloning pyenv-virtualenv"
             git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
         fi

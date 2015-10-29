@@ -109,8 +109,8 @@ has_cmd() {
     command -v $1 > /dev/null
 }
 
-md() {
-    [ -d "$1" ] || mkdir -p "$1" 2>> ~/errors.log
+smd() {
+    [ -d "$1" ] || mkdir -p "$1"
 }
 
 sln() {

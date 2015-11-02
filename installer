@@ -224,6 +224,13 @@ add_additional_ppas() {
     if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom > /dev/null; then
         sudo add-apt-repository  ppa:webupd8team/atom -y
     fi
+
+    # docker
+    if ! ls /etc/apt/sources.list.d | grep docker > /dev/null; then
+        wget -qO- https://get.docker.com/ | sh
+        sudo usermod -aG docker $USER
+    fi
+
 }
 
 add_ppas() {

@@ -45,8 +45,4 @@ antigen apply
 
 source ~/seartipy/dotfiles/shellrc
 
-if [[ -n "$SEARTIPY" ]] && [[ $- == *i* && $- == *m* ]] && ! [[ -n "$INSIDE_EMACS" ]]; then
-    [[ -z "$TMUX" ]] && exec tmux
-fi
-
 [ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local

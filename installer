@@ -518,7 +518,9 @@ lein_install() {
 }
 
 boot_install() {
-    if ! has_cmd boot; then
+    if has_cmd boot; then
+        boot -u
+    else
         log "Installing boot"
         curl -L https://github.com/boot-clj/boot/releases/download/2.3.0/boot.sh > ~/bin/boot
         chmod +x ~/bin/boot

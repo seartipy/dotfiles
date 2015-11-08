@@ -701,7 +701,7 @@ xmonad_install() {
     mv ~/.xmonad $BACKUP_DIR
     git clone https://github.com/pervezfunctor/xmonad-config
     sln ~/.xmonad/bin/xsession ~/.xinitrc
-
+    sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
 }
 
 additional_install() {

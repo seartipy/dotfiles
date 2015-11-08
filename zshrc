@@ -37,7 +37,9 @@ antigen bundle zsh-users/zsh-history-substring-search
 if [ -n "$INSIDE_EMACS" ]; then
     antigen theme robbyrussell
 else
-    antigen bundle nojhan/liquidprompt
+    antigen bundle mafredri/zsh-async
+    antigen bundle sindresorhus/pure
+    # antigen bundle nojhan/liquidprompt
     antigen bundle zsh-users/zsh-syntax-highlighting
 fi
 

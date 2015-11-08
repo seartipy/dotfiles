@@ -681,11 +681,21 @@ sourcecodepro_install() {
     fi
 }
 
+mac_docker_install() {
+    if ! has_cmd docker-osx-dev; then
+        curl -o /usr/local/bin/docker-osx-dev https://raw.githubusercontent.com/brikis98/docker-osx-dev/master/src/docker-osx-dev
+        chmod +x /usr/local/bin/docker-osx-dev
+        docker-osx-dev install
+    fi
+}
+
 additional_install() {
     if is_linux && [ -n "$ADDITIONAL" ]; then
 	sourcecodepro_install
         gibo_install
         fasd_install
+    else
+        mac_docker_install
     fi
     [ -n "$VIM" ] && vim_install
 }

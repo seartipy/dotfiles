@@ -289,6 +289,10 @@ linux_packages_install() {
         fi
     fi
 
+    if [ -n "$XMONAD" ]; then
+        sudo apt-get install xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
+    fi
+
     sudo apt-get clean
 }
 
@@ -691,6 +695,15 @@ mac_docker_install() {
     fi
 }
 
+xmonad_install() {
+    sudo cabal update
+    sudo cabal install --global yeganesh
+    mv ~/.xmonad $BACKUP_DIR
+    git clone https://github.com/pervezfunctor/xmonad-config
+    sln ~/.xmonad/bin/xsession ~/.xinitrc
+
+}
+
 additional_install() {
     if is_linux && [ -n "$ADDITIONAL" ]; then
 	sourcecodepro_install
@@ -700,6 +713,7 @@ additional_install() {
         mac_docker_install
     fi
     [ -n "$VIM" ] && vim_install
+    [ -n "$XMONAD" ] && xmonad_install
 }
 
 install_all() {

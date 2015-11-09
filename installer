@@ -1036,6 +1036,10 @@ script_options() {
                 VIM="vim"
                 shift
                 ;;
+            xmonad)
+                XMONAD="xmonaad"
+                shift
+                ;;
             seartipy)
                 SEARTIPY="seartipy"
                 shift

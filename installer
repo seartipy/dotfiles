@@ -991,6 +991,13 @@ script_options() {
                 WEB="web"
                 shift
                 ;;
+            nodefaults)
+                ZSH=""
+                BASH=""
+                EMACS=""
+                DOTFILES=""
+                shift
+                ;;
             nozsh)
                 ZSH=""
                 shift

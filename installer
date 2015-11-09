@@ -699,7 +699,7 @@ xmonad_install() {
     sudo cabal update
     sudo cabal install --global yeganesh
     mv ~/.xmonad $BACKUP_DIR
-    git clone https://github.com/pervezfunctor/xmonad-config
+    git clone https://github.com/pervezfunctor/xmonad-config ~/.xmonad
     sln ~/.xmonad/bin/xsession ~/.xinitrc
     sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
 }

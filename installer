@@ -154,7 +154,7 @@ mac_packages_install() {
     fi
 
     if [ -n "$ADDITIONAL" ]; then
-        brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord
+        brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
         brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook
         # brew cask install suspicious-package xquartz
         brew install youtube-dl
@@ -477,6 +477,18 @@ tmux_dotfiles() {
     fi
 }
 
+amethyst_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/amethyst ]; then
+        log "Moving ~/.amethyst to $BACKUP_DIR"
+        mv ~/.amethyst $BACKUP_DIR 2> /dev/null
+
+        log "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
+        sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+    else
+        warn "~/seartipy/dotfiles/amethyst doesnt not exist, skipping amethyst dotfiles"
+    fi
+}
+
 clone_lean_dotfiles() {
     log "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
     mv ~/seartipy/lean-dotfiles $BACKUP_DIR 2> /dev/null
@@ -513,6 +525,7 @@ dotfiles_install() {
 
     [ -n "$CLOJURE" ] && clojure_dotfiles
     [ -n "$SCALA" ] && scala_dotfiles
+    [ -n "$ADDITIONAL" ] && amethyst_dotfiles
 }
 
 liquidprompt_install() {

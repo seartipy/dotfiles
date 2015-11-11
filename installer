@@ -267,7 +267,6 @@ add_ppas() {
     fi
 }
 
-linux_packages_install() {
 fedora_packages_install() {
     echo "Add rpmfusion free and non free packages"
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
@@ -312,6 +311,7 @@ fedora_packages_install() {
     sudo dnf clean all
 }
 
+ubuntu_packages_install() {
 
     add_ppas
 
@@ -340,23 +340,27 @@ fedora_packages_install() {
 
     if [ -n "$ADDITIONAL" ]; then
         sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
-        if ! has_cmd; then
+        if ! has_cmd vmware-user-suid-wrapper; then
             sudo apt-get install -y virtualbox-5.0 dkms
         fi
     fi
 
     if [ -n "$XMONAD" ]; then
-        sudo apt-get install xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
+        sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
     fi
 
     sudo apt-get clean
 }
 
 packages_install() {
-    if is_linux; then
-        linux_packages_install
+    if is_ubuntu; then
+        ubuntu-packages-install
+    elif is_fedora; then
+        fedora_packages_install
     elif is_mac; then
         mac_packages_install
+    else
+        err_exit "Unknown OS, quitting"
     fi
 }
 

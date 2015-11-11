@@ -1130,12 +1130,6 @@ keep_sudo_running() {
     while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 }
 
-install_git() {
-    if is_linux; then
-        sudo apt-get install -y git
-    fi
-}
-
 setup_backup_dir() {
     BACKUP_DIR=~/seartipy.backups
 

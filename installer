@@ -268,6 +268,50 @@ add_ppas() {
 }
 
 linux_packages_install() {
+fedora_packages_install() {
+    echo "Add rpmfusion free and non free packages"
+    sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+    log "Installing all packages, this will take a while..."
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unrar p7zip dconf tmux exfat-utils
+
+    [ -n "$EMACS" ] && sudo dnf install -y emacs aspell aspell-en ctags-etags
+    [ -n "$ZSH" ] && sudo dnf install -y zsh
+
+    [ -n "$GIT" ] && sudo dnf install -y kdiff3 git-extras meld
+
+    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
+    fi
+
+    [ -n "$SCALA" ] && sudo dnf -y install sbt scala
+
+    # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
+    if [ -n "$HASKELL" ]; then
+        sudo dnf copr -y enable petersen/stack
+        sudo dnf install -y stack
+    fi
+
+    [ -n "$VIM" ] && sudo dnf install -y vim-enhanced
+
+    if [ -n "$CPP" ]; then
+        sudo dnf install -y clang clang-devel  clang-analyzer clang-libs boost boost-build  gcc-g++ cppcheck scons cmake
+    fi
+
+    if [ -n "$ADDITIONAL" ]; then
+        sudo dnf install -y vlc youtube-dl google-chrome-stable
+        if ! has_cmd vmware-user-suid-wrapper; then
+            sudo dnf install -y VirtualBox dkms
+        fi
+    fi
+
+    if [ -n "$XMONAD" ]; then
+        sudo dnf install -y xmonad ghc-xmonad-contrib xmonad-mate ghc-xmonad-devel ghc-xmonad-contrib-devel xmobar stalonetray dmenu scrot cabal-install xcompmgr
+    fi
+
+    sudo dnf clean all
+}
+
 
     add_ppas
 

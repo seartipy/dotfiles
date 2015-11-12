@@ -294,7 +294,7 @@ fedora_packages_install() {
     [ -n "$VIM" ] && sudo dnf install -y vim-enhanced
 
     if [ -n "$CPP" ]; then
-        sudo dnf install -y clang clang-devel  clang-analyzer clang-libs boost boost-build  gcc-g++ cppcheck scons cmake
+        sudo dnf install -y clang clang-devel  clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
     fi
 
     if [ -n "$ADDITIONAL" ]; then

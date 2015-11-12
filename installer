@@ -1180,7 +1180,7 @@ installer() {
 
     if is_ubuntu; then
         trash=trash-put
-    elif is_mac; then
+    else
         trash=trash
     fi
 

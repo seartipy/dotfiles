@@ -577,7 +577,7 @@ emacs_install() {
             git checkout seartipy
         fi
         if has_cmd cask; then
-            cask install
+            cask install && cask update
         else
             warn "cask command absent, skipping emacs install"
         fi

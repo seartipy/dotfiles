@@ -438,7 +438,19 @@ scala_dotfiles() {
         log "Linking ~/seartipy/lean-dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
         sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     else
-        warn "~/seartipy/dotfiles/sbt-plugins.sbt does not exist. skipping scala dotfiles"
+        warn "~/seartipy/dotfiles/sbt-plugins.sbt does not exist. skipping linking"
+    fi
+
+    if [ -f ~/seartipy/dotfiles/sbt-global.sbt ]; then
+        log "Moving ~/.sbt/0.13/global.sbt to $BACKUP_DIR (if exists)"
+        mv ~/.sbt/0.13/global.sbt $BACKUP_DIR 2> /dev/null
+
+        md ~/.sbt/0.13/
+
+        log "Linking ~/seartipy/lean-dotfiles/sbt-global.sbt as ~/.sbt/0.13/global.sbt"
+        sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    else
+        warn "~/seartipy/dotfiles/sbt-global.sbt does not exist. skipping linking"
     fi
 }
 

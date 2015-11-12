@@ -10,7 +10,7 @@
                   [quickie "0.4.1"] ; Lein plugin for auto testing
                   [venantius/ultra "0.3.4"] ; A Leiningen plugin for a superior development environment
                   [alembic "0.3.2"] ; A library for distilling dependencies
-                  [lein-ancient "0.6.8-SNAPSHOT"]] ; upgrade packages
+                  [lein-ancient "0.6.8"]] ; upgrade packages
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.11"]
                        [acyclic/squiggly-clojure "0.1.4"]]}} ; flycheck using eastwood

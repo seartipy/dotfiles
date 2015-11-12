@@ -283,7 +283,11 @@ fedora_packages_install() {
         sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
     fi
 
-    [ -n "$SCALA" ] && sudo dnf -y install sbt scala
+    if [ -n "$SCALA" ]; then
+        curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo > /dev/null 2>> ~/errors.log
+        install scala sbt
+    fi
+
 
     # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
     if [ -n "$HASKELL" ]; then

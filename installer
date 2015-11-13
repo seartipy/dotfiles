@@ -125,7 +125,10 @@ mac_packages_install() {
         brew install kdiff3 git-extras
     fi
 
-    [ -n "$HASKELL" ] && brew install ghc cabal-install haskell-stack
+    if [ -n "$HASKELL" ]; then
+        brew install ghc cabal-install haskell-stack
+        brew cask install elm-platform idris purescript
+    fi
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
         brew cask install java caskroom/homebrew-versions/java6 intellij-idea
@@ -288,8 +291,8 @@ fedora_packages_install() {
         install scala sbt
     fi
 
-    # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
     if [ -n "$HASKELL" ]; then
+        sudo dnf install ghc cabal-install
         sudo dnf copr -y enable petersen/stack
         sudo dnf install -y stack
     fi
@@ -332,8 +335,10 @@ ubuntu_packages_install() {
 
     [ -n "$SCALA" ] && sudo apt-get -y install sbt
 
-    # [ -n "$HASKELL" ] && sudo apt-get install -y ghc-7.10.2 cabal-install-1.22
-    [ -n "$HASKELL" ] && sudo apt-get install -y stack
+    if [ -n "$HASKELL" ]; then
+        sudo apt-get install -y stack
+        sudo apt-get install -y cabal-install ghc
+    fi
 
     [ -n "$VIM" ] && sudo apt-get install -y vim-gnome
 
@@ -647,6 +652,22 @@ haskell_install() {
     stack install hasktags
     stack install hindent
     stack install hdevtools
+
+    if is_linux; then
+        nvm_install
+        if ! has_cmd npm; then
+            warn "npm not installed, cannot install elm"
+            return 2
+        fi
+        npm install -g  purescript elm@0.15.1-beta4 # elm would release a final version for npm 3
+
+        if ! has_cmd cabal; then
+            warn "cabal not installed; cannot install idris"
+            return 3
+        fi
+        cabal update
+        cabal install idris
+    fi
 }
 
 python_install() {

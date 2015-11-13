@@ -786,7 +786,7 @@ mac_docker_install() {
 }
 
 xmonad_install() {
-    sudo cabal update
+    cabal update
     sudo cabal install --global yeganesh
     mv ~/.xmonad $BACKUP_DIR
     git clone https://github.com/pervezfunctor/xmonad-config ~/.xmonad

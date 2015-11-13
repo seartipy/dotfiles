@@ -708,15 +708,18 @@ flow_install() {
     fi
 }
 
+nvm_install() {
+    log "Installing nvm"
+    has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+
+    source ~/.nvm/nvm.sh
+    nvm install stable
+    nvm alias default stable
+}
+
 linux_web_install() {
     if is_linux; then
-        log "Installing nvm"
-        has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
-
-        source ~/.nvm/nvm.sh
-        nvm install stable
-        nvm alias default stable
-
+        nvm_install
         flow_install
     fi
 }
@@ -731,7 +734,6 @@ web_install() {
 
     log "Installing npm packages for web development"
     npm install -g coffee-script typescript babel webpack karma-cli eslint jshint coffeelint tern js-beautify webpack-dev-server eslint-plugin-react babel-eslint browserify watchify babelify budo gulp grunt-cli
-
 }
 
 vim_install() {

@@ -27,10 +27,9 @@ is_ubuntu() {
     [[ "Ubuntu" == "$os" ]] || return 1
 }
 
+# FIX THIS: lsb_release might not be available in fedora
 is_fedora() {
-    has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Fedora" == "$os" ]] || return 1
+    [ -f /etc/redhat-release ]] || return 1
 }
 
 is_linux() {
@@ -45,22 +44,24 @@ has_cmd() {
     command -v $1 > /dev/null
 }
 
-md() {
-    [ -d "$1" ] || mkdir -p "$1" 2>> ~/errors.log
+smv() {
+    mv $1 $2 > /dev/null
+}
+
+smd() {
+    [ -d "$1" ] || mkdir -p "$1" 2> /dev/null
 }
 
 sln() {
     if ! [ -e "$1" ]; then
         warn "$1 does not exist, cannot create the link $2"
-    else
-        if [ -L "$2" ]; then
-            $trash "$2"
-        elif [ -e "$2" ]; then
-            warn "$2 exists and not a symbolic link! not creating link"
-            return
-        fi
+    elif [ -L "$2" ]; then
+        $trash "$2"
+    elif [ -e "$2" ]; then
+        warn "$2 exists and not a symbolic link! not creating link"
+        return
     fi
-    ln -s $1 $2 2>> ~/errors.log
+    ln -s $1 $2 2> /dev/null
 }
 
 pre_cmd_check() {
@@ -87,6 +88,7 @@ brew_install() {
         log "Installing homebrew"
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" > /dev/null
     fi
+
     if ! has_cmd brew; then
         err_exit "could not install brew, quitting"
     fi
@@ -109,6 +111,7 @@ mac_packages_install() {
     brew cask install iterm2
 
     if [ -n "$EMACS" ]; then
+        log "Installing emacs packages"
         brew install emacs-mac ---with-spacemacs-icon
         brew install editorconfig cask
         # TODO : ctags
@@ -116,62 +119,72 @@ mac_packages_install() {
     fi
 
     if [ -n "$VIM" ]; then
+        log "Installing vim packages"
         brew install macvim --override-system-vim --with-lua --with-luajit
         brew linkapps macvim
     fi
 
     if [ -n "$GIT" ]; then
+        log "Installing git packages"
         brew cask install smartgit
         brew install kdiff3 git-extras
     fi
 
     if [ -n "$HASKELL" ]; then
+        log "Installing haskell packages"
         brew install ghc cabal-install haskell-stack
         brew cask install elm-platform idris purescript
     fi
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        log "Installing java"
         brew cask install java caskroom/homebrew-versions/java6 intellij-idea
     fi
 
     if [ -n "$PYTHON" ]; then
+        log "Installing python packages"
         brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
     fi
 
     if [ -n "$SCALA" ]; then
+        log "Installing scala packages"
         brew install sbt scala
         brew cask install scala-ide
     fi
 
-    [ -n "$CLOJURE" ] && brew install leiningen boot-clj
+    if [ -n "$CLOJURE" ]; then
+        log "Installing clojure packages"
+        brew install leiningen boot-clj
+    fi
 
     if [ -n "$WEB" ]; then
+        log "Installing web packages"
         brew install node flow
         brew cask install webstorm
     fi
 
     if [ -n "$CPP" ]; then
-         brew install boost --c++11
-         brew install cmake scons boost-build cppcheck
-         brew cask install clion
+        log "Installing c++ packages"
+        brew install boost --c++11
+        brew install cmake scons boost-build cppcheck
+        brew cask install clion
     fi
 
     if [ -n "$ADDITIONAL" ]; then
+        log "Installing additional packages"
         brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
-        brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook
-        # brew cask install suspicious-package xquartz
+        brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook xquartz
         brew install youtube-dl
     fi
 
-    brew cleanup > /dev/null
+    log "cleanup brew"
+    brew cleanup
     brew cask cleanup
 }
 
 add_java_ppa() {
     if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
-        pre_cmd_check debconf-set-selections
-
-        log "Adding java ppa..."
+        log "Adding java ppa"
         echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
         sudo add-apt-repository ppa:webupd8team/java -y
     fi
@@ -179,8 +192,7 @@ add_java_ppa() {
 
 add_scala_ppa() {
     if ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
-        pre_cmd_check apt-key
-        log "Adding scala ppa..."
+        log "Adding scala ppa"
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
         echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
     fi
@@ -188,67 +200,96 @@ add_scala_ppa() {
 
 add_smartgit_ppa() {
     if ! ls /etc/apt/sources.list.d | grep eugenesan-ubuntu-ppa > /dev/null; then
+        log "Adding smartgit ppa"
         sudo add-apt-repository ppa:eugenesan/ppa -y
     fi
 }
 
 add_haskell_stack_ppa() {
     if ! ls /etc/apt/sources.list.d | grep fpco > /dev/null; then
+        log "Adding stack ppa"
         wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
         echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main'|sudo tee /etc/apt/sources.list.d/fpco.list
     fi
 }
 
-# add_ghc_ppa() {
-#     if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
-#         sudo add-apt-repository ppa:hvr/ghc -y
-#     fi
-# }
+add_ghc_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
+        log "Adding ghc ppa"
+        sudo add-apt-repository ppa:hvr/ghc -y
+    fi
+}
 
-add_additional_ppas() {
-    # zeal
-    # if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu > /dev/null; then
-    #     sudo add-apt-repository ppa:zeal-developers/ppa -y
-    # fi
+add_zeal_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu > /dev/null; then
+        echo "Adding zeal ppa"
+        sudo add-apt-repository ppa:zeal-developers/ppa -y
+    fi
+}
 
-    # google chrome
+add_chrome_ppa() {
     if ! ls /etc/apt/sources.list.d | grep google.list > /dev/null; then
+        log "Adding google chrome ppa"
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
     fi
+}
 
-    # virtualbox
-    if ! has_cmd vmwarectrl; then
+add_webupd8_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep nilarimogard-ubuntu-webupd8 > /dev/null; then
+        log "Adding webupd8 ppa for youtub-dl etc"
+        sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
+    fi
+}
+
+add_virtualbox_ppa() {
+    if ! has_cmd vmware-user-suid-wrapper; then
+        log "Adding virtualbox ppa"
         if ! grep download.virtualbox.org/virtualbox/debian /etc/apt/sources.list > /dev/null; then
             wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
             sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list'
         fi
     fi
+}
 
-    # youtube-dl etc
-    if ! ls /etc/apt/sources.list.d | grep nilarimogard-ubuntu-webupd8 > /dev/null; then
-        sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
-    fi
-
-    # sublime text 3 editor
+add_sublime_ppa() {
     if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-sublime-text-3 > /dev/null; then
+        log "Adding sublime ppa"
         sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
     fi
+}
 
-    # atom editor
-    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom > /dev/null; then
+add_atom_ppa() {
+        if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom > /dev/null; then
+        log "Adding atom ppa"
         sudo add-apt-repository  ppa:webupd8team/atom -y
     fi
+}
 
-    # docker
-    if ! ls /etc/apt/sources.list.d | grep docker > /dev/null; then
+add_docker_ppa() {
+    if ! has_cmd vmware-user-suid-wrapper && ! ls /etc/apt/sources.list.d | grep docker > /dev/null; then
+        log "Installing docker"
         wget -qO- https://get.docker.com/ | sh
         sudo usermod -aG docker $USER
     fi
+}
 
+add_additional_ppas() {
+    # add_zeal_ppa
+    add_atom_ppa
+    add_sublime_ppa
+    add_virtualbox_ppa
+    add_docker_ppa
+    add_chrome_ppa
+    add_webupd8_ppa
+    add_smartgit_ppa
 }
 
 add_ppas() {
+    pre_cmd_check debconf-set-selections
+    pre_cmd_check add-apt-repository
+    pre_cmd_check apt-key
+
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
         add_java_ppa
     fi
@@ -259,51 +300,71 @@ add_ppas() {
 
     [ -n "$ADDITIONAL" ] && add_additional_ppas
 
-    log "Updating ubuntu..."
-    if ! sudo apt-get update > /dev/null; then
+    log "Updating ubuntu"
+    if ! sudo apt-get update; then
         err_exit "apt-get update failed, quitting"
     fi
 
-    log "Upgrading packages..."
-    if ! sudo apt-get upgrade -y > /dev/null; then
+    log "Upgrading packages"
+    if ! sudo apt-get upgrade -y; then
         err_exit "apt-get upgrade failed, quitting"
     fi
 }
 
 fedora_packages_install() {
+    pre_cmd_check dnf
+
     echo "Add rpmfusion free and non free packages"
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
-    log "Installing all packages, this will take a while..."
+    log "Installing all packages, this will take a while"
     sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unrar p7zip dconf tmux exfat-utils
 
-    [ -n "$EMACS" ] && sudo dnf install -y emacs aspell aspell-en ctags-etags
-    [ -n "$ZSH" ] && sudo dnf install -y zsh
+    if [ -n "$EMACS" ]; then
+        log "Installing emacs"
+        sudo dnf install -y emacs aspell aspell-en ctags-etags
+    fi
 
-    [ -n "$GIT" ] && sudo dnf install -y kdiff3 git-extras meld
+    if [ -n "$ZSH" ]; then
+        log "Installing zsh"
+        sudo dnf install -y zsh
+    fi
+
+    if [ -n "$GIT" ]; then
+        log "Installing git"
+        sudo dnf install -y kdiff3 git-extras meld
+    fi
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        log "Installing java"
         sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
     fi
 
     if [ -n "$SCALA" ]; then
+        log "Installing scala"
         curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-        install scala sbt
+        sudo dnf install -y scala sbt
     fi
 
     if [ -n "$HASKELL" ]; then
-        sudo dnf install ghc cabal-install
+        log "Installing haskell"
+        sudo dnf install -y ghc cabal-install
         sudo dnf copr -y enable petersen/stack
         sudo dnf install -y stack
     fi
 
-    [ -n "$VIM" ] && sudo dnf install -y vim-enhanced
+    if [ -n "$VIM" ]; then
+        log "Installing vim"
+        sudo dnf install -y vim-enhanced
+    fi
 
     if [ -n "$CPP" ]; then
-        sudo dnf install -y clang clang-devel  clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
+        log "Installing C++"
+        sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
     fi
 
     if [ -n "$ADDITIONAL" ]; then
+        log "Installing additional packages"
         sudo dnf install -y vlc youtube-dl google-chrome-stable
         if ! has_cmd vmware-user-suid-wrapper; then
             sudo dnf install -y VirtualBox dkms
@@ -311,6 +372,7 @@ fedora_packages_install() {
     fi
 
     if [ -n "$XMONAD" ]; then
+        log "Installing xmonad"
         sudo dnf install -y xmonad ghc-xmonad-contrib xmonad-mate ghc-xmonad-devel ghc-xmonad-contrib-devel xmobar stalonetray dmenu scrot cabal-install xcompmgr
     fi
 
@@ -318,35 +380,54 @@ fedora_packages_install() {
 }
 
 ubuntu_packages_install() {
-
+    pre_cmd_check apt-get
     add_ppas
 
-    log "Installing all packages, this will take a while..."
+    log "Installing all packages, this will take a while"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r` silversearcher-ag
 
-    [ -n "$EMACS" ] && sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
-    [ -n "$ZSH" ] && sudo apt-get install -y zsh
+    if [ -n "$EMACS" ]; then
+        log "Installing emacs"
+        sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
+    fi
+    if [ -n "$ZSH" ]; then
+        log "Installing zsh"
+        sudo apt-get install -y zsh
+    fi
 
-    [ -n "$GIT" ] && sudo apt-get install -y smartgit kdiff3 git-extras meld
+    if [ -n "$GIT" ]; then
+        log "Installing git"
+        sudo apt-get install -y smartgit kdiff3 git-extras meld
+    fi
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        log "Installing Java"
         sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
     fi
 
-    [ -n "$SCALA" ] && sudo apt-get -y install sbt
+    if [ -n "$SCALA" ]; then
+        log "Install scala"
+        sudo apt-get -y install sbt
+    fi
 
     if [ -n "$HASKELL" ]; then
+        log "Installing haskell"
         sudo apt-get install -y stack
         sudo apt-get install -y cabal-install ghc
     fi
 
-    [ -n "$VIM" ] && sudo apt-get install -y vim-gnome
+    if [ -n "$VIM" ]; then
+        log "Installing vim"
+        sudo apt-get install -y vim-gnome
+    fi
 
     if [ -n "$CPP" ]; then
+        log "Installing C++"
         sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
     fi
 
     if [ -n "$ADDITIONAL" ]; then
+        log "Installing additional"
         sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
         if ! has_cmd vmware-user-suid-wrapper; then
             sudo apt-get install -y virtualbox-5.0 dkms
@@ -354,6 +435,7 @@ ubuntu_packages_install() {
     fi
 
     if [ -n "$XMONAD" ]; then
+        log "Installing xmonad"
         sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
     fi
 
@@ -372,12 +454,15 @@ packages_install() {
     fi
 }
 
-spacemacs_dotfiles() {
-    if ! [ -d "$HOME/seartipy/emacses/spacemacs" ]; then
-        log "Cloning spacemacs to ~/seartipy/emacses/spacemacs"
-        git clone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
+sclone() {
+    if ! [ -d "$2" ]; then
+        log "Cloning $1 to $2"
+        git clone $1 $2
     fi
+}
 
+spacemacs_dotfiles() {
+    sclone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
     log "Linking ~/seartipy/dotfiles/spacemacs as ~/.spacemacs"
     sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
 }
@@ -385,9 +470,9 @@ spacemacs_dotfiles() {
 leanemacs_dotfiles() {
     if [ -f ~/seartipy/lean-dotfiles/emacs-init.el ]; then
         log "Moving ~/seartipy/emacses/lean-emacs to $BACKUP_DIR (if it exists)"
-        mv ~/seartipy/emacses/lean-emacs $BACKUP_DIR 2> /dev/null
+        smv ~/seartipy/emacses/lean-emacs $BACKUP_DIR
 
-        md ~/seartipy/emacses/lean-emacs
+        smd ~/seartipy/emacses/lean-emacs
 
         log "Linking ~/seartipy/lean-dotfiles/emacs-init.el as ~/seartipy/emacses/lean-emacs/init.el"
         sln ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
@@ -397,14 +482,10 @@ leanemacs_dotfiles() {
 }
 
 housemd_dotfiles() {
-    if ! [ -d "$HOME/seartipy/emacses/housemd" ]; then
-        log "Cloning housemd to ~/seartipy/emacses/housemd"
-        git clone  https://github.com/pervezfunctor/emacs.d ~/seartipy/emacses/housemd
-    fi
-
+    sclone  https://github.com/pervezfunctor/emacs.d ~/seartipy/emacses/housemd
     if [ -d "$HOME/seartipy/emacses/housemd" ]; then
         log "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
-        mv ~/.emacs.d $BACKUP_DIR 2> /dev/null
+        smv ~/.emacs.d $BACKUP_DIR
 
         log "Linking ~/seartipy/emacses/housemd as ~/.emacs.d"
         sln ~/seartipy/emacses/housemd ~/.emacs.d
@@ -419,26 +500,45 @@ emacs_dotfiles() {
     housemd_dotfiles
 }
 
-clojure_dotfiles() {
+boot_dotfiles() {
+    if [ -f ~/seartipy/dotfiles/boot-profile.clj ]; then
+        log "Moving ~/.boot/profiles.clj to $BACKUP_DIR (if exists)"
+        smv ~/.boot/profile.clj $BACKUP_DIR
+
+        smd ~/.boot
+
+        log "Linking ~/seartipy/dotfiles/boot-profile.clj as ~/.boot/profile.clj"
+        sln ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+    else
+        warn "~/seartipy/dotfiles/boot-profile.clj does not exist. skipping linking"
+    fi
+}
+
+lein_dotfiles() {
     if [ -f ~/seartipy/dotfiles/lein-profiles.clj ]; then
         log "Moving ~/.lein/profiles.clj to $BACKUP_DIR (if exists)"
-        mv ~/.lein/profiles.clj $BACKUP_DIR 2> /dev/null
+        smv ~/.lein/profiles.clj $BACKUP_DIR
 
-        md ~/.lein
+        smd ~/.lein
 
         log "Linking ~/seartipy/dotfiles/lein-profiles.clj as ~/.lein/profiles.clj"
         sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     else
-        warn "~/seartipy/dotfiles/lein-profiles.clj does not exist. skipping clojure dotfiles"
+        warn "~/seartipy/dotfiles/lein-profiles.clj does not exist. skipping linking"
     fi
+}
+
+clojure_dotfiles() {
+    lein_dotfiles
+    boot_dotfiles
 }
 
 scala_dotfiles() {
     if [ -f ~/seartipy/dotfiles/sbt-plugins.sbt ]; then
         log "Moving ~/.sbt/0.13/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
-        mv ~/.sbt/0.13/plugins/plugins.sbt $BACKUP_DIR 2> /dev/null
+        smv ~/.sbt/0.13/plugins/plugins.sbt $BACKUP_DIR
 
-        md ~/.sbt/0.13/plugins
+        smd ~/.sbt/0.13/plugins
 
         log "Linking ~/seartipy/lean-dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
         sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
@@ -448,9 +548,9 @@ scala_dotfiles() {
 
     if [ -f ~/seartipy/dotfiles/sbt-global.sbt ]; then
         log "Moving ~/.sbt/0.13/global.sbt to $BACKUP_DIR (if exists)"
-        mv ~/.sbt/0.13/global.sbt $BACKUP_DIR 2> /dev/null
+        smv ~/.sbt/0.13/global.sbt $BACKUP_DIR
 
-        md ~/.sbt/0.13/
+        smd ~/.sbt/0.13/
 
         log "Linking ~/seartipy/lean-dotfiles/sbt-global.sbt as ~/.sbt/0.13/global.sbt"
         sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
@@ -462,7 +562,7 @@ scala_dotfiles() {
 zsh_dotfiles() {
     if [ -f ~/seartipy/dotfiles/zshrc ]; then
         log "Moving ~/.zshrc to $BACKUP_DIR "
-        mv ~/.zshrc $BACKUP_DIR 2> /dev/null
+        smv ~/.zshrc $BACKUP_DIR
 
         log "Linking ~/seartipy/lean-dotfiles/zshrc as ~/.zshrc"
         sln ~/seartipy/dotfiles/zshrc ~/.zshrc
@@ -474,7 +574,7 @@ zsh_dotfiles() {
 bash_dotfiles() {
     if [ -f ~/seartipy/dotfiles/bashrc ]; then
         log "Moving ~/.bash_profile to $BACKUP_DIR"
-        mv ~/.bash_profile $BACKUP_DIR 2> /dev/null
+        smv ~/.bash_profile $BACKUP_DIR
         sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
 
         if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
@@ -488,7 +588,7 @@ bash_dotfiles() {
 tmux_dotfiles() {
     if [ -f ~/seartipy/dotfiles/tmux.conf ]; then
         log "Moving ~/.tmux.conf to $BACKUP_DIR"
-        mv ~/.tmux.conf $BACKUP_DIR 2> /dev/null
+        smv ~/.tmux.conf $BACKUP_DIR
 
         log "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
         sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
@@ -500,7 +600,7 @@ tmux_dotfiles() {
 amethyst_dotfiles() {
     if [ -f ~/seartipy/dotfiles/amethyst ]; then
         log "Moving ~/.amethyst to $BACKUP_DIR"
-        mv ~/.amethyst $BACKUP_DIR 2> /dev/null
+        smv ~/.amethyst $BACKUP_DIR
 
         log "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
         sln ~/seartipy/dotfiles/amethyst ~/.amethyst
@@ -511,22 +611,18 @@ amethyst_dotfiles() {
 
 clone_lean_dotfiles() {
     log "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
-    mv ~/seartipy/lean-dotfiles $BACKUP_DIR 2> /dev/null
+    smv ~/seartipy/lean-dotfiles $BACKUP_DIR
 
     log "Cloning lean dotfiles"
-    if ! git clone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles; then
-        warn 'cannot clone lean-dotfiles, skipping installing lean dotfiles'
-    fi
+    sclone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles
 }
 
 clone_dotfiles() {
     log "Backing up your current dotfiles(if exists) to $BACKUP_DIR"
-    mv ~/seartipy/dotfiles $BACKUP_DIR
+    smv ~/seartipy/dotfiles $BACKUP_DIR
 
     log "Cloning dotfiles"
-    if ! git clone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles; then
-        warn 'cannot clone dotfiles, skipping installing dotfiles'
-    fi
+    sclone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles
 }
 
 dotfiles_install() {
@@ -549,23 +645,12 @@ dotfiles_install() {
 }
 
 liquidprompt_install() {
-    if ! [ -d ~/seartipy/vendors/liquidprompt ]; then
-        log "Cloning liquidprompt to ~/seartipy/vendors/liquidprompt"
-        git clone https://github.com/nojhan/liquidprompt.git ~/seartipy/vendors/liquidprompt
-    fi
+    sclone https://github.com/nojhan/liquidprompt.git ~/seartipy/vendors/liquidprompt
 }
 
 zsh_install() {
-    if ! [ -d ~/.slimzsh ]; then
-        log "Cloning slimzsh to ~/.slimzsh"
-        git clone https://github.com/changs/slimzsh.git ~/.slimzsh
-    fi
-
-    if ! [ -d ~/seartipy/vendors/antigen ]; then
-        log "Cloning antigen to ~/seartipy/vendors/antigen"
-        git clone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
-    fi
-
+    sclone https://github.com/changs/slimzsh.git ~/.slimzsh
+    sclone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
     liquidprompt_install
 }
 
@@ -578,7 +663,7 @@ emacs_install() {
         log "Trashing /Applications/Emacs.app alias (if exists)"
         $trash '/Applications/Emacs.app alias' 2> /dev/null
 
-        log "Creating Emacs alias in /Applications..."
+        log "Creating Emacs alias in /Applications"
         # make emacs available from spotlight
         osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
@@ -587,6 +672,7 @@ emacs_install() {
         tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/${emacsversion}/share/emacs/24.5/etc/e/eterm-color.ti
 
     elif is_linux; then
+        export PATH="$HOME/.cask/bin:$PATH"
 	if ! has_cmd cask; then
 	    curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
 	fi
@@ -636,7 +722,34 @@ clojure_install() {
     fi
 }
 
+purescript_install() {
+    if is_linux; then
+        nvm_install
+        if ! has_cmd npm; then
+            warn "npm not installed, cannot install elm"
+            return 1
+        fi
+        log "Installing purescript"
+        npm install -g purescript elm@0.15.1-beta4 # elm would release a final version for npm 3
+    fi
+}
+
+idris_install() {
+    if is_linux; then
+        if ! has_cmd cabal; then
+            warn "cabal not installed; cannot install idris"
+            return 1
+        fi
+        cabal update
+        log "Installing idris"
+        cabal install idris
+    fi
+}
+
 haskell_install() {
+    purescript_install
+    idris_install
+
     if ! has_cmd stack; then
         warn "stack not installed, skipping haskell install"
         return 1
@@ -652,41 +765,13 @@ haskell_install() {
     stack install hasktags
     stack install hindent
     stack install hdevtools
-
-    if is_linux; then
-        nvm_install
-        if ! has_cmd npm; then
-            warn "npm not installed, cannot install elm"
-            return 2
-        fi
-        npm install -g  purescript elm@0.15.1-beta4 # elm would release a final version for npm 3
-
-        if ! has_cmd cabal; then
-            warn "cabal not installed; cannot install idris"
-            return 3
-        fi
-        cabal update
-        cabal install idris
-    fi
 }
 
 python_install() {
     if is_linux; then
-        if ! [ -d ~/.pyenv ]; then
-            log "Cloning pyenv"
-            git clone  https://github.com/yyuu/pyenv.git ~/.pyenv
-        fi
-
-        if ! [ -d ~/.pyenv/plugins/pyenv-pip-rehash ]; then
-            log "Cloning pyenv-pip-rehash"
-            git clone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
-        fi
-
-        if ! [ -d ~/.pyenv/plugins/pyenv-virtualenv ]; then
-            log "Cloning pyenv-virtualenv"
-            git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-        fi
-
+        sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
+        sclone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
+        sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
     fi
@@ -731,22 +816,20 @@ flow_install() {
 
 nvm_install() {
     log "Installing nvm"
-    has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+    if ! has_cmd nvm; then
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+    fi
 
     source ~/.nvm/nvm.sh
     nvm install stable
     nvm alias default stable
 }
 
-linux_web_install() {
+web_install() {
     if is_linux; then
         nvm_install
         flow_install
     fi
-}
-
-web_install() {
-    linux_web_install
 
     if ! has_cmd npm; then
         warn "npm not installed, skipping web install"
@@ -765,8 +848,13 @@ vim_install() {
 }
 
 fasd_install() {
+    if ! has_cmd make; then
+        warn "make does not exist, skipping fasd installation"
+        return 1
+    fi
+
     if ! has_cmd fasd; then
-        log "Installing fasd..."
+        log "Installing fasd"
         if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
             cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
             $trash ~/seartipy-installer-fasd 2> /dev/null
@@ -781,16 +869,20 @@ gibo_install() {
         log "Installing gibo"
         curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo
         chmod +x ~/bin/gibo
-	~/bin/gibo -u
+	gibo -u
     fi
 }
 
 sourcecodepro_install() {
+    if has_cmd fc-cache; then
+        warn "fc-cache command does not exist, skipping source code pro fonts installation"
+    fi
+
     if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
         log "Installing Source code pro fonts"
         wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
         unzip 1.030R-it.zip
-        md ~/.fonts
+        smd ~/.fonts
         cp source-code-pro*/OTF/*.otf ~/.fonts
         fc-cache -f -v
         $trash 1.030R-it.zip
@@ -798,8 +890,10 @@ sourcecodepro_install() {
     fi
 }
 
+# docker-osx-dev is old, must use docker-machine in future
 mac_docker_install() {
     if ! has_cmd docker-osx-dev; then
+        log "Installing docker"
         curl -o /usr/local/bin/docker-osx-dev https://raw.githubusercontent.com/brikis98/docker-osx-dev/master/src/docker-osx-dev
         chmod +x /usr/local/bin/docker-osx-dev
         docker-osx-dev install
@@ -807,12 +901,26 @@ mac_docker_install() {
 }
 
 xmonad_install() {
-    cabal update
-    sudo cabal install --global yeganesh
-    mv ~/.xmonad $BACKUP_DIR
-    git clone https://github.com/pervezfunctor/xmonad-config ~/.xmonad
-    sln ~/.xmonad/bin/xsession ~/.xinitrc
-    sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
+    if is_linux; then
+        if has_cmd cabal; then
+            log "Installing xmonad"
+            cabal update
+            sudo cabal install --global yeganesh
+
+            log "moving ~/.xmonad to $BACKUP_DIR"
+            smv ~/.xmonad $BACKUP_DIR
+
+            sclone https://github.com/pervezfunctor/xmonad-config ~/.xmonad
+
+            log "linking ~/.xmonad/bin/xsession to ~/.xinitrc"
+            sln ~/.xmonad/bin/xsession ~/.xinitrc
+        fi
+
+        if is_ubuntu; then
+            log "selecting dmenu.xft as default"
+            sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
+        fi
+    fi
 }
 
 additional_install() {
@@ -829,6 +937,7 @@ additional_install() {
 
 install_all() {
     [ -n "$ZSH" ] && zsh_install
+    [ -n "$BASH" ] && bash_install
     [ -n "$EMACS" ] && emacs_install
 
     [ -n "$CLOJURE" ] && clojure_install
@@ -844,6 +953,7 @@ install_all() {
         additional_install
     fi
 }
+
 hidpi_conf() {
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
     if [ $xres -ge 2800 ]; then
@@ -857,7 +967,7 @@ hidpi_conf() {
 }
 
 gnome_extensions() {
-    if has_cmd gnome-shell && [ -n "$SEARTIPY" ]; then
+    if has_cmd gsettings && [ -n "$SEARTIPY" ]; then
         gsettings set org.gnome.shell disable-extension-version-validation "true"
 
         gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"
@@ -880,14 +990,14 @@ gnome_extensions() {
 }
 
 gnome_settings() {
-    if has_cmd gnome-shell; then
+    if has_cmd gsettings; then
         dconf write /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell true
         gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
         gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
         gsettings set org.gnome.system.locale region 'en_US.UTF-8'
     fi
 
-    if has_cmd gnome-shell && [ -n "$SEARTIPY" ]; then
+    if has_cmd gsettings && [ -n "$SEARTIPY" ]; then
         gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
         gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
         gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
@@ -918,6 +1028,9 @@ linux_settings() {
 }
 
 mac_settings() {
+    if ! [ -n "$SEARTIPY" ]; then
+        return 1
+    fi
     # https://github.com/mathiasbynens/dotfiles/blob/978fb2696860ebe055a0caec425c67be0ad73319/.osx
 
     # Disable Resume system-wide
@@ -1056,11 +1169,10 @@ mac_settings() {
 settings() {
     if is_linux; then
         linux_settings
-    elif is_mac && [ -n "$SEARTIPY" ]; then
+    elif is_mac; then
         mac_settings
     fi
 }
-#!/bin/bash
 
 select_everything() {
     SCALA="scala"
@@ -1072,6 +1184,7 @@ select_everything() {
     CPP="cpp"
     ADDITIONAL="additional"
     VIM="vim"
+    XMONAD="xmonad"
 }
 
 script_options() {
@@ -1185,11 +1298,11 @@ setup_backup_dir() {
     BACKUP_DIR=~/seartipy.backups
 
     if [ -d "$BACKUP_DIR" ]; then
-        log "moving $BACKUP_DIR to trash..."
+        log "moving $BACKUP_DIR to trash"
         $trash $BACKUP_DIR 2> /dev/null
     fi
 
-    md $BACKUP_DIR
+    smd $BACKUP_DIR
 
     if ! [ -d "$BACKUP_DIR" ]; then
         err_exit "cannot create $BACKUP_DIR, quitting"
@@ -1198,8 +1311,8 @@ setup_backup_dir() {
 
 create_dirs() {
     setup_backup_dir
-    md ~/seartipy/{emacses,vendors}
-    md ~/bin
+    smd ~/seartipy/{emacses,vendors}
+    smd ~/bin
 }
 
 installer() {
@@ -1226,17 +1339,42 @@ installer() {
 
     export PATH="$HOME/bin:$PATH"
 
+    # pre_installer_check
+
     [ -n "$DOTFILES" ] && dotfiles_install
     install_all
 
     if [ -n "$ZSH" ]; then
-        echo "Set zsh as your default shell(this sometimes fails)..."
+        echo "Set zsh as your default shell(this sometimes fails)"
         chsh -s /bin/zsh
     fi
 
+    # post_installer_check
+
     echo "Installation done!"
+}
+
+pre_installer_check() {
+    pre_cmd_check git
+    pre_cmd_check curl
+    pre_cmd_check wget
+    pre_cmd_check unzip
+    pre_cmd_check $trash
+
+    [ -d "$BACKUP_DIR" ] || err_exit "cannot create $BACKUP_DIR, quitting"
+    [ -d ~/seartipy/emacses ] || err_exit "cannot create ~/seartipy/emacses, quitting"
+    [ -d ~/seartipy/vendors ] || err_exit "cannot create ~/seartipy/vendors, quitting"
+    [ -d ~/bin ] || err_exit "~/bin does not exist, quitting"
+
+    [ -n "$EMACS" ] && pre_cmd_check emacs
+    [ -n "$ZSH" ] && pre_cmd_check zsh
+}
+
+post_installer_check() {
+    :
 }
 
 curdir=`pwd`
 installer $*
 cd $curdir
+

@@ -64,6 +64,9 @@ if command -v pyenv > /dev/null; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
+#ruby
+export PATH="$HOME/.rvm/bin:$PATH"
+
 # utils
 
 colorize() {
@@ -81,12 +84,6 @@ log() {
 warn() {
     colorize "WARNING : "
     echo $1
-}
-
-err_exit() {
-    colorize "FATAL: "
-    echo $1
-    exit 1
 }
 
 is_linux() {
@@ -116,18 +113,30 @@ sln() {
             return
         fi
     fi
-    ln -s $1 $2 2>> ~/errors.log
+    ln -s $1 $2 2> /dev/null
 }
 
 # functions
 
 seartipy_fix_links() {
+    sln ~/seartipy/dotfiles/shellrc ~/.bash_profile
     sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+
+    smd ~/.lein
+    smd ~/.boot
+    smd ~/.sbt/0.13
+
     sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+    sln ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+
     sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+
     sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
     sln ~/seartipy/emacses/housemd ~/.emacs.d
+
+    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
 
 seartipy_upgrade_all() {

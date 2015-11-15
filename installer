@@ -27,7 +27,6 @@ is_ubuntu() {
     [[ "Ubuntu" == "$os" ]] || return 1
 }
 
-# FIX THIS: lsb_release might not be available in fedora
 is_fedora() {
     [ -f /etc/redhat-release ] || return 1
 }
@@ -1647,8 +1646,8 @@ web_check() {
 }
 
 haskell_check() {
-    # idris check
-    # purescript check
+    cmd_check idris
+    cmd_check psc
 
     cmd_check alex
     cmd_check happy

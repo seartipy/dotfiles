@@ -45,7 +45,7 @@ has_cmd() {
 }
 
 smv() {
-    mv $1 $2 > /dev/null
+    mv $1 $2 2> /dev/null
 }
 
 smd() {
@@ -459,7 +459,7 @@ ubuntu_packages_install() {
 
 packages_install() {
     if is_ubuntu; then
-        ubuntu-packages-install
+        ubuntu_packages_install
     elif is_fedora; then
         fedora_packages_install
     elif is_mac; then
@@ -817,7 +817,7 @@ flow_install() {
         log "Installing flow"
         cd ~/seartipy/vendors
         wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
-        unzip flow-linux64-latest.zip
+        unzip -o flow-linux64-latest.zip
         $trash flow-linux64-latest.zip
     fi
 }
@@ -889,7 +889,7 @@ sourcecodepro_install() {
     if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
         log "Installing Source code pro fonts"
         wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
-        unzip 1.030R-it.zip
+        unzip -o 1.030R-it.zip
         smd ~/.fonts
         cp source-code-pro*/OTF/*.otf ~/.fonts
         fc-cache -f -v
@@ -1347,7 +1347,7 @@ installer() {
 
     export PATH="$HOME/bin:$PATH"
 
-    # pre_installer_check
+    pre_installer_check
 
     [ -n "$DOTFILES" ] && dotfiles_install
     install_all
@@ -1357,7 +1357,7 @@ installer() {
         chsh -s /bin/zsh
     fi
 
-    # post_installer_check
+    post_installer_check
 
     echo "Installation done!"
 }
@@ -1595,6 +1595,7 @@ dotfiles_check() {
 
     if [ -n "$ADDITIONAL" ]; then
         is_mac && ln_check ~/seartipy/dotfiles/amethyst ~/.amethyst
+    fi
 }
 
 zsh_check() {

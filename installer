@@ -380,7 +380,7 @@ fedora_packages_install() {
 
     if [ -n "$ADDITIONAL" ]; then
         log "Installing additional packages"
-        sudo dnf install -y vlc youtube-dl google-chrome-stable
+        sudo dnf install -y vlc youtube-dl
         if ! has_cmd vmware-user-suid-wrapper; then
             sudo dnf install -y VirtualBox dkms
         fi
@@ -912,7 +912,7 @@ xmonad_install() {
     if is_linux; then
         if has_cmd cabal; then
             log "Installing xmonad"
-            cabal update
+            sudo cabal update
             sudo cabal install --global yeganesh
 
             log "moving ~/.xmonad to $BACKUP_DIR"

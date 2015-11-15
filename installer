@@ -1579,7 +1579,7 @@ dotfiles_check() {
 
         ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
 
-        ln_check ~/seartipy/dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+        ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
     fi
 
     if [ -n "$CLOJURE" ]; then

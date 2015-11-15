@@ -184,6 +184,11 @@ mac_packages_install() {
         brew cask install clion
     fi
 
+    if [ -n "$ELIXIR" ]; then
+        log "Installing elixir"
+        brew install elixir
+    fi
+
     if [ -n "$ADDITIONAL" ]; then
         log "Installing additional packages"
         brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
@@ -377,6 +382,11 @@ fedora_packages_install() {
         sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
     fi
 
+    if [ -n "$ELIXIR" ]; then
+        log "Installing elixir"
+        sudo dnf install -y elixir
+    fi
+
     if [ -n "$ADDITIONAL" ]; then
         log "Installing additional packages"
         sudo dnf install -y vlc youtube-dl
@@ -451,6 +461,11 @@ ubuntu_packages_install() {
     if [ -n "$XMONAD" ]; then
         log "Installing xmonad"
         sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
+    fi
+
+    if [ -n "$ELIXIR" ]; then
+        log "Installing elixir"
+        sudo apt-get install -y elixir
     fi
 
     sudo apt-get clean
@@ -1192,6 +1207,7 @@ select_everything() {
     ADDITIONAL="additional"
     VIM="vim"
     XMONAD="xmonad"
+    ELIXIR="elixir"
 }
 
 script_options() {
@@ -1269,6 +1285,10 @@ script_options() {
                 PYTHON="python"
                 shift
                 ;;
+            elixir)
+                ELIXIR="elixir"
+                shift
+                ;;
             additional)
                 ADDITIONAL="additional"
                 VIM="vim"
@@ -1332,7 +1352,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ADDITIONAL"
+    echo "Installing $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
 
     packages_install
 

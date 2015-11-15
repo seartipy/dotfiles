@@ -64,12 +64,27 @@ sln() {
     ln -s $1 $2 2> /dev/null
 }
 
+sclone() {
+    if ! [ -d "$2" ]; then
+        log "Cloning $1 to $2"
+        git clone $1 $2
+    fi
+}
+
 pre_cmd_check() {
     has_cmd "$1" || err_exit "$1 not installed"
 }
 
 cmd_check() {
     has_cmd "$1" || warn "$1 not installed"
+}
+
+pre_dir_check() {
+    [ -d "$1" ] || err_check  "$1 directory does not exist"
+}
+
+dir_check() {
+    [ -d "$1" ] || warn "$1 directory does not exist"
 }
 
 ln_check() {
@@ -222,7 +237,7 @@ add_ghc_ppa() {
 
 add_zeal_ppa() {
     if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu > /dev/null; then
-        echo "Adding zeal ppa"
+        log "Adding zeal ppa"
         sudo add-apt-repository ppa:zeal-developers/ppa -y
     fi
 }
@@ -314,7 +329,7 @@ add_ppas() {
 fedora_packages_install() {
     pre_cmd_check dnf
 
-    echo "Add rpmfusion free and non free packages"
+    log "Add rpmfusion free and non free packages"
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     log "Installing all packages, this will take a while"
@@ -384,7 +399,7 @@ ubuntu_packages_install() {
     add_ppas
 
     log "Installing all packages, this will take a while"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r` silversearcher-ag
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
 
     if [ -n "$EMACS" ]; then
         log "Installing emacs"
@@ -451,13 +466,6 @@ packages_install() {
         mac_packages_install
     else
         err_exit "Unknown OS, quitting"
-    fi
-}
-
-sclone() {
-    if ! [ -d "$2" ]; then
-        log "Cloning $1 to $2"
-        git clone $1 $2
     fi
 }
 
@@ -1370,11 +1378,353 @@ pre_installer_check() {
     [ -n "$ZSH" ] && pre_cmd_check zsh
 }
 
+mac_packages_check() {
+    cmd_check brew
+    cmd_check wget
+    cmd_check trash
+    cmd_check tree
+    cmd_check fasd
+    cmd_check unrar
+    cmd_check 7z
+    cmd_check gpg
+    cmd_check ag
+    cmd_check greadlink
+    cmd_check gibo
+    cmd_check gpg
+
+    # TODO: iterm2
+
+    if [ -n "$EMACS" ]; then
+        cmd_check emacs
+        cmd_check aspell
+        cmd_check editorconfig
+    fi
+
+    [ -n "$ZSH" ] && cmd_check zsh
+
+    if [ -n "$CLOJURE" ] || [ -n "$SCALA" ]; then
+       cmd_check javac # TODO java version 8
+    fi
+
+    if [ -n "$SCALA" ]; then
+        cmd_check sbt
+        cmd_check scala
+    fi
+
+    if [ -n "$CLOJURE" ]; then
+        cmd_check lein
+        cmd_check boot
+    fi
+
+    if [ -n "$HASKELL" ]; then
+        cmd_check ghc
+        cmd_check cabal
+    fi
+
+    if [ -n "$WEB" ]; then
+        cmd_check npm
+        cmd_check flow
+    fi
+
+    if [ -n "$CPP" ]; then
+        cmd_check cmake
+        cmd_check scons
+        cmd_check cppcheck
+    fi
+}
+
+
+ubuntu_packages_check() {
+    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
+        if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
+            warn 'java ppa not added'
+        fi
+    fi
+
+    if [ -n "$SCALA" ] && ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
+        warn 'sbt ppa not added'
+    fi
+
+    cmd_check curl
+    cmd_check wget
+    cmd_check git
+    cmd_check trash-put
+    cmd_check tree
+    cmd_check xsel
+    cmd_check xclip
+    cmd_check ag
+    cmd_check unrar
+    cmd_check p7zip
+    cmd_check dconf
+    cmd_check g++
+    cmd_check tmux
+
+    if [ -n "$EMACS" ]; then
+        cmd_check emacs
+        cmd_check aspell
+        cmd_check editorconfig
+        cmd_check ctags
+    fi
+
+    [ -n "$ZSH" ] && cmd_check zsh
+
+    if [ -n "$GIT" ]; then
+        cmd_check smartgit kdiff3 meld
+    fi
+
+    if [ -n "$VIM" ]; then
+        cmd_check vim
+    fi
+
+    if [ -n "$CLOJURE" ] || [ -n "$SCALA" ]; then
+       cmd_check javac
+    fi
+    [ -n "$SCALA" ] && cmd_check sbt
+
+    if [ -n "$HASKELL" ]; then
+        cmd_check ghc
+        cmd_check cabal
+        cmd_check stack
+    fi
+
+    if [ -n "$CPP" ]; then
+        cmd_check clang++
+        cmd_check g++
+        cmd_check scons
+        cmd_check cmake
+    fi
+
+    if [ -n "$XMONAD" ]; then
+        cmd_check xmonad dmenu
+    fi
+}
+
+fedora_packages_check() {
+    # TODO : rpmfusion check
+
+    cmd_check curl
+    cmd_check wget
+    cmd_check git
+    cmd_check trash
+    cmd_check tree
+    cmd_check xsel
+    cmd_check xclip
+    cmd_check ag
+    cmd_check unrar
+    cmd_check 7za
+    cmd_check dconf
+    cmd_check tmux
+
+    if [ -n "$EMACS" ]; then
+        cmd_check emacs
+        cmd_check aspell
+        cmd_check ctags
+    fi
+
+    [ -n "$ZSH" ] && cmd_check zsh
+
+    if [ -n "$CLOJURE" ] || [ -n "$SCALA" ]; then
+       cmd_check javac
+    fi
+
+    if [ -n "$GIT" ]; then
+        cmd_check kdiff3 meld
+    fi
+
+    if [ -n "$VIM" ]; then
+        cmd_check vim
+    fi
+
+    if [ -n "$SCALA" ]; then
+        cmd_check sbt
+        cmd_check scala
+    fi
+
+    if [ -n "$HASKELL" ]; then
+        cmd_check ghc
+        cmd_check cabal
+        cmd_check stack
+    fi
+
+    if [ -n "$CPP" ]; then
+        cmd_check clang++
+        cmd_check g++
+        cmd_check scons
+        cmd_check cmake
+    fi
+
+    if [ -n "$XMONAD" ]; then
+        cmd_check xmonad dmenu
+    fi
+}
+
+dotfiles_check() {
+
+    dir_check ~/seartipy/dotfiles
+    dir_check ~/seartipy/lean-dotfiles
+
+    if [ -n "$ZSH" ]; then
+        ln_check ~/seartipy/lean-dotfiles/zshrc ~/.zshrc
+        ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    fi
+
+    [ -n "$BASH" ] && ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
+    if [ -n "$EMACS" ]; then
+        dir_check ~/seartipy/emacses/spacemacs
+        dir_check ~/seartipy/emacses/housemd
+        dir_check ~/seartipy/emacses/lean-emacs
+
+        ln_check ~/seartipy/lean-dotfiles/spacemacs ~/.spacemacs
+
+        ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+
+        ln_check  ~/seartipy/emacses/lean-emacs ~/.emacs.d
+        ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+    fi
+
+    if [ -n "$CLOJURE" ]; then
+        ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+        ln_check ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+    fi
+
+    if [ -n "$SCALA" ]; then
+        ln_check ~/seartipy/lean-dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+        ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    fi
+
+    if [ -n "$ADDITIONAL" ]; then
+        is_mac && ln_check ~/seartipy/dotfiles/amethyst ~/.amethyst
+}
+
+zsh_check() {
+    dir_check ~/.slimzsh
+    dir_check ~/seartipy/vendors/antigen
+    dir_check ~/seartipy/vendors/liquidprompt
+}
+
+bash_check() {
+    dir_check ~/seartipy/vendors/liquidprompt
+}
+
+emacs_check() {
+    is_linux && cmd_check cask
+}
+
+clojure_check() {
+    if is_linux; then
+        cmd_check lein
+        cmd_check boot
+    fi
+}
+
+web_check() {
+    if is_mac; then
+        export PATH=$(npm config get prefix)/bin:$PATH
+    fi
+
+    if is_linux; then
+        cmd_check nvm
+    fi
+
+    cmd_check npm
+
+    if has_cmd npm; then
+        cmd_check budo
+        cmd_check browserify
+        cmd_check watchify
+        cmd_check coffee
+        cmd_check babel
+        cmd_check webpack
+        cmd_check eslint
+        cmd_check jshint
+        cmd_check coffeelint
+        cmd_check tern
+        cmd_check js-beautify
+        cmd_check webpack-dev-server
+    fi
+
+}
+
+haskell_check() {
+    # idris check
+    # purescript check
+
+    cmd_check alex
+    cmd_check happy
+    cmd_check hlint
+    cmd_check structured-haskell-mode
+    cmd_check stylish-haskell
+    cmd_check hasktags
+    cmd_check hindent
+    cmd_check hdevtools
+}
+
+python_check() {
+    cmd_check pyenv
+    if ! pyenv versions | grep anaconda > /dev/null; then
+        warn "anaconda not installed"
+    fi
+}
+
+ruby_check() {
+    cmd_check rvm
+    cmd_check pry
+    cmd_check sinatra
+    cmd_check thin
+    cmd_check guard
+    cmd_check watchr
+    cmd_check tmuxinator
+    cmd_check git-up
+    cmd_check sass
+}
+
+additional_check() {
+    if is_linux; then
+        cmd_check gibo
+        cmd_check fasd
+        if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
+            warn "source code pro not installed"
+        fi
+        cmd_check xmonad
+        cmd_check vim
+    fi
+
+    if is_mac; then
+        cmd_check docker
+    fi
+}
+
+settings_check() {
+    if has_cmd dconf && has_cmd gsettings; then
+        [ 'false' == $(dconf read /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell) ] || warn 'terminal not configured to run as login shell'
+
+        [ 'en_US.UTF-8' == $(gsettings set org.gnome.system.locale region 'en_US.UTF-8') ] || warn 'system locale not set to en_US UTF8'
+    fi
+}
+
 post_installer_check() {
-    :
+    if is_ubuntu; then
+        ubuntu_packages_check
+    elif is_fedora; then
+        fedora_packages_check
+    elif is_mac; then
+        mac_packages_check
+    fi
+
+    dotfiles_check
+
+    [ -n "$ZSH" ] && zsh_check
+    [ -n "$BASH" ] && bash_check
+    [ -n "$EMACS" ] && emacs_check
+    [ -n "$WEB_CHECK" ] && web_check
+    [ -n "$HASKELL" ] && haskell_check
+    [ -n "$PYTHPN" ] && python_check
+    [ -n "$RUBY" ] && ruby_check
+
+    settings_check
 }
 
 curdir=`pwd`
 installer $*
 cd $curdir
-

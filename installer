@@ -29,7 +29,7 @@ is_ubuntu() {
 
 # FIX THIS: lsb_release might not be available in fedora
 is_fedora() {
-    [ -f /etc/redhat-release ]] || return 1
+    [ -f /etc/redhat-release ] || return 1
 }
 
 is_linux() {
@@ -93,7 +93,7 @@ ln_check() {
         rl=greadlink
     fi
 
-    [ $($rl -f $2) == "$1" ] ||  warn "$2 not a link to $1"
+     [[ $($rl -f $2) == "$1" ]] ||  warn "$2 not a link to $1"
 }
 
 brew_install() {
@@ -548,7 +548,7 @@ scala_dotfiles() {
 
         smd ~/.sbt/0.13/plugins
 
-        log "Linking ~/seartipy/lean-dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
+        log "Linking ~/seartipy/dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
         sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     else
         warn "~/seartipy/dotfiles/sbt-plugins.sbt does not exist. skipping linking"
@@ -560,7 +560,7 @@ scala_dotfiles() {
 
         smd ~/.sbt/0.13/
 
-        log "Linking ~/seartipy/lean-dotfiles/sbt-global.sbt as ~/.sbt/0.13/global.sbt"
+        log "Linking ~/seartipy/dotfiles/sbt-global.sbt as ~/.sbt/0.13/global.sbt"
         sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
     else
         warn "~/seartipy/dotfiles/sbt-global.sbt does not exist. skipping linking"
@@ -572,7 +572,7 @@ zsh_dotfiles() {
         log "Moving ~/.zshrc to $BACKUP_DIR "
         smv ~/.zshrc $BACKUP_DIR
 
-        log "Linking ~/seartipy/lean-dotfiles/zshrc as ~/.zshrc"
+        log "Linking ~/seartipy/dotfiles/zshrc as ~/.zshrc"
         sln ~/seartipy/dotfiles/zshrc ~/.zshrc
     else
         warn "~/seartipy/dotfiles/zhrc does not exist, skipping zsh dotfiles"
@@ -1564,7 +1564,7 @@ dotfiles_check() {
     dir_check ~/seartipy/lean-dotfiles
 
     if [ -n "$ZSH" ]; then
-        ln_check ~/seartipy/lean-dotfiles/zshrc ~/.zshrc
+        ln_check ~/seartipy/dotfiles/zshrc ~/.zshrc
         ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
     fi
 
@@ -1575,21 +1575,20 @@ dotfiles_check() {
         dir_check ~/seartipy/emacses/housemd
         dir_check ~/seartipy/emacses/lean-emacs
 
-        ln_check ~/seartipy/lean-dotfiles/spacemacs ~/.spacemacs
+        ln_check ~/seartipy/dotfiles/spacemacs ~/.spacemacs
 
-        ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+        ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
 
-        ln_check  ~/seartipy/emacses/lean-emacs ~/.emacs.d
-        ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
+        ln_check ~/seartipy/dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
     fi
 
     if [ -n "$CLOJURE" ]; then
-        ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+        ln_check ~/seartipy/dotfiles/profiles.clj ~/.lein/profiles.clj
         ln_check ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
     fi
 
     if [ -n "$SCALA" ]; then
-        ln_check ~/seartipy/lean-dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+        ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
         ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
     fi
 
@@ -1700,7 +1699,7 @@ settings_check() {
     if has_cmd dconf && has_cmd gsettings; then
         [ 'false' == $(dconf read /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell) ] || warn 'terminal not configured to run as login shell'
 
-        [ 'en_US.UTF-8' == $(gsettings set org.gnome.system.locale region 'en_US.UTF-8') ] || warn 'system locale not set to en_US UTF8'
+        [[ 'en_US.UTF-8' == $(gsettings set org.gnome.system.locale region 'en_US.UTF-8') ]] || warn 'system locale not set to en_US UTF8'
     fi
 }
 

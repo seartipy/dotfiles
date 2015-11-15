@@ -4,37 +4,28 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 import           Control.Arrow                (second, (***))
-import qualified Data.Map                     as M
 import           Data.Maybe                   (maybe)
 import           System.Exit
-import           System.Exit
-import           System.IO
 import           System.IO
 import           System.Posix.Env             (getEnv)
 import           XMonad
 import           XMonad.Actions.WindowBringer
-import           XMonad.Hooks.DynamicLog
-import           XMonad.Hooks.InsertPosition
+
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.SetWMName
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.Spiral
-import           XMonad.Layout.Tabbed
 import           XMonad.Layout.ThreeColumns
 import qualified XMonad.StackSet              as W
 import           XMonad.Util.EZConfig         (additionalKeys)
 import           XMonad.Util.Run              (spawnPipe)
 
-import           XMonad
 import           XMonad.Config.Desktop
 import           XMonad.Config.Gnome
 import           XMonad.Config.Kde
 import           XMonad.Config.Xfce
-
-myTerminal = "/usr/bin/gnome-terminal"
 
 newtype Flip l a = Flip (l a) deriving (Show, Read)
 instance LayoutClass l a => LayoutClass (Flip l) a where
@@ -58,7 +49,6 @@ main = do
      session <- getEnv "DESKTOP_SESSION"
      xmonad  $ (maybe desktopConfig desktop session)
        {
-         terminal = myTerminal,
          layoutHook = smartBorders $ myLayout,
          modMask = mod4Mask     -- Rebind Mod to the Windows key
        }

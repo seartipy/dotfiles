@@ -727,8 +727,8 @@ boot_install() {
         boot -u
     else
         log "Installing boot"
-        curl -L https://github.com/boot-clj/boot/releases/download/2.3.0/boot.sh > ~/bin/boot
-        chmod +x ~/bin/boot
+        curl -L https://github.com/boot-clj/boot/releases/download/2.4.2/boot.sh > ~/bin/boot
+        chmod a+x ~/bin/boot
     fi
 }
 

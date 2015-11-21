@@ -7,7 +7,7 @@ colorize() {
 }
 
 log() {
-    echo $1 >> ~/seartipy_installer.log
+    echo $1 >> ~/seartipy-installer.log
 }
 
 warn() {
@@ -1361,7 +1361,7 @@ installer() {
     else
         trash=trash
     fi
-
+    $trash ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
     create_dirs
 
     export PATH="$HOME/bin:$PATH"
@@ -1745,5 +1745,6 @@ post_installer_check() {
 }
 
 curdir=`pwd`
-installer $*
+installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+
 cd $curdir

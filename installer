@@ -104,7 +104,7 @@ brew_install() {
         cmd_check ruby
 
         log "Installing homebrew"
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" > /dev/null
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
     if ! has_cmd brew; then
@@ -721,7 +721,7 @@ emacs_install() {
 lein_install() {
     if ! has_cmd lein; then
         log "Installing leiningen"
-        curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
+        curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
         chmod +x ~/bin/lein
     fi
 }

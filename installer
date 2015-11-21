@@ -523,16 +523,16 @@ emacs_dotfiles() {
 }
 
 boot_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/boot-profile.clj ]; then
-        log "Moving ~/.boot/profiles.clj to $BACKUP_DIR (if exists)"
-        smv ~/.boot/profile.clj $BACKUP_DIR
+    if [ -f ~/seartipy/dotfiles/boot-profile.boot ]; then
+        log "Moving ~/.boot/profile.boot to $BACKUP_DIR (if exists)"
+        smv ~/.boot/profile.boot $BACKUP_DIR
 
         smd ~/.boot
 
-        log "Linking ~/seartipy/dotfiles/boot-profile.clj as ~/.boot/profile.clj"
-        sln ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+        log "Linking ~/seartipy/dotfiles/boot-profile.boot as ~/.boot/profile.boot"
+        sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
     else
-        warn "~/seartipy/dotfiles/boot-profile.clj does not exist. skipping linking"
+        warn "~/seartipy/dotfiles/boot-profile.boot does not exist. skipping linking"
     fi
 }
 

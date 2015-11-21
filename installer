@@ -51,11 +51,15 @@ smd() {
     [ -d "$1" ] || mkdir -p "$1" 2> /dev/null
 }
 
+srm() {
+    $trash $1 $2
+}
+
 sln() {
     if ! [ -e "$1" ]; then
         warn "$1 does not exist, cannot create the link $2"
     elif [ -L "$2" ]; then
-        $trash "$2"
+        srm "$2"
     elif [ -e "$2" ]; then
         warn "$2 exists and not a symbolic link! not creating link"
         return
@@ -683,7 +687,7 @@ bash_install() {
 emacs_install() {
     if is_mac; then
         log "Trashing /Applications/Emacs.app alias (if exists)"
-        $trash '/Applications/Emacs.app alias' 2> /dev/null
+        srm '/Applications/Emacs.app alias'
 
         log "Creating Emacs alias in /Applications"
         # make emacs available from spotlight
@@ -832,7 +836,7 @@ flow_install() {
         cd ~/seartipy/vendors
         wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
         unzip -o flow-linux64-latest.zip
-        $trash flow-linux64-latest.zip
+        srm flow-linux64-latest.zip
     fi
 }
 
@@ -879,7 +883,7 @@ fasd_install() {
         log "Installing fasd"
         if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
             cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
-            $trash ~/seartipy-installer-fasd 2> /dev/null
+            srm ~/seartipy-installer-fasd
         else
             warn 'could not clone fasd, skipping fasd installation'
         fi
@@ -907,8 +911,8 @@ sourcecodepro_install() {
         smd ~/.fonts
         cp source-code-pro*/OTF/*.otf ~/.fonts
         fc-cache -f -v
-        $trash 1.030R-it.zip
-        $trash source-code-pro*
+        srm 1.030R-it.zip
+        srm source-code-pro*
     fi
 }
 
@@ -1326,7 +1330,7 @@ setup_backup_dir() {
 
     if [ -d "$BACKUP_DIR" ]; then
         log "moving $BACKUP_DIR to trash"
-        $trash $BACKUP_DIR 2> /dev/null
+        srm $BACKUP_DIR
     fi
 
     smd $BACKUP_DIR
@@ -1361,7 +1365,7 @@ installer() {
     else
         trash=trash
     fi
-    $trash ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
+    srm ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
     create_dirs
 
     export PATH="$HOME/bin:$PATH"

@@ -107,7 +107,7 @@ sln() {
         warn "$1 does not exist, cannot create the link $2"
     else
         if [ -L "$2" ]; then
-            trash "$2"
+            trash "$2" 2> /dev/null
         elif [ -e "$2" ]; then
             warn "$2 exists and not a symbolic link! not creating link"
             return

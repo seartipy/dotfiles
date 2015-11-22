@@ -127,7 +127,7 @@ seartipy_fix_links() {
     smd ~/.sbt/0.13
 
     sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
-    sln ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+    sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
 
     sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt

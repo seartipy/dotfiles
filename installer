@@ -756,7 +756,7 @@ purescript_install() {
             return 1
         fi
         log "Installing purescript"
-        npm install -g purescript elm@0.15.1-beta4 # elm would release a final version for npm 3
+        npm install -g purescript elm
     fi
 }
 

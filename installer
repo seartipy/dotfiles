@@ -7,7 +7,7 @@ colorize() {
 }
 
 log() {
-    echo $1 ! tee ~/seartipy-installer.log
+    echo $1 | tee ~/seartipy-installer.log
 }
 
 warn() {

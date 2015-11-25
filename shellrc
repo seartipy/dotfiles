@@ -97,7 +97,9 @@ export PATH="$HOME/.cask/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 
 #flow
-export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
+if is_linux; then
+    export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
+fi
 
 #python
 export PYENV_ROOT="$HOME/.pyenv"

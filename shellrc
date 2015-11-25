@@ -182,3 +182,13 @@ seartipy_lean_system() {
     sln ~/seartipy/lean-dotfiles/spacemacs ~/.spacemacs
     sln ~/seartipy/emacses/lean-emacs ~/.emacs.d
 }
+
+alias cas=seartipy_ctrl_alt_set
+alias car=seartipy_ctrl_alt_reset
+alias sse=seartipy_emacs_default spacemacs
+alias sle=seartipy_emacs_default lean-emacs
+alias she=seartipy_emacs_default housemd
+alias upa=upgrade_all
+alias sfl=seartipy_fix_links
+
+alias gs=git status

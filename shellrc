@@ -1,32 +1,87 @@
-# aliases
+colorize() {
+    if [ -t 1 ]; then
+        printf "\e[%sm%s\e[m" 1 "$2"
+    else
+        echo -n "$2"
+    fi
+}
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+log() {
+    echo $1 >> ~/seartipy_installer.log
+}
+
+warn() {
+    colorize "WARNING : "
+    echo $1
+}
+
+is_linux() {
+    [ "$OSTYPE" == "linux-gnu" ] || return 1
+}
+
+is_mac() {
+    [[ "$OSTYPE" == "darwin"* ]] || return 1
+}
+
+has_cmd() {
+    command -v $1 > /dev/null
+}
+
+smd() {
+    [ -d "$1" ] || mkdir -p "$1"
+}
+
+sln() {
+    if ! [ -e "$1" ]; then
+        warn "$1 does not exist, cannot create the link $2"
+    else
+        if [ -L "$2" ]; then
+            trash "$2"
+        elif [ -e "$2" ]; then
+            warn "$2 exists and not a symbolic link! not creating link"
+            return
+        fi
+    fi
+    ln -s $1 $2
+}
+
+if is_linux; then
     alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
     alias pbcopy="xsel --clipboard --input"
     alias pbpaste="xsel --clipboard --output"
     alias open="xdg-open"
-    alias trash=trash-put
 
     alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
 
     #to support xterm key bindings in emacs
     alias e="TERM=xterm-256color emacs -nw"
-
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    alias upgrade="brew update && brew upgrade"
 fi
 
-# exports
+if is_ubuntu; then
+    alias trash=trash-put
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
     #java
     export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
     export JDK_HOME="/usr/lib/jvm/java-8-oracle"
+fi
 
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+if is_fedora; then
+    alias upgrade="sudo dnf upgrade"
+
+    export JAVA_HOME="/etc/alternatives/java_sdk"
+    export JDK_HOME="/etc/alternatives/java_sdk"
+fi
+
+if is_mac; then
+    alias upgrade="brew update && brew upgrade"
+
     #java
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`
+
+    if has_cmdd npm; then
+        export PATH=$(npm config get prefix)/bin:$PATH
+    fi
 fi
 
 #haskell
@@ -66,57 +121,6 @@ fi
 
 #ruby
 export PATH="$HOME/.rvm/bin:$PATH"
-
-# utils
-
-colorize() {
-    if [ -t 1 ]; then
-        printf "\e[%sm%s\e[m" 1 "$2"
-    else
-        echo -n "$2"
-    fi
-}
-
-log() {
-    echo $1 >> ~/seartipy_installer.log
-}
-
-warn() {
-    colorize "WARNING : "
-    echo $1
-}
-
-is_linux() {
-    [ "$OSTYPE" == "linux-gnu" ] || return 1
-}
-
-is_mac() {
-    [[ "$OSTYPE" == "darwin"* ]] || return 1
-}
-
-has_cmd() {
-    command -v $1 > /dev/null
-}
-
-smd() {
-    [ -d "$1" ] || mkdir -p "$1"
-}
-
-sln() {
-    if ! [ -e "$1" ]; then
-        warn "$1 does not exist, cannot create the link $2"
-    else
-        if [ -L "$2" ]; then
-            trash "$2" 2> /dev/null
-        elif [ -e "$2" ]; then
-            warn "$2 exists and not a symbolic link! not creating link"
-            return
-        fi
-    fi
-    ln -s $1 $2 2> /dev/null
-}
-
-# functions
 
 seartipy_fix_links() {
     sln ~/seartipy/dotfiles/shellrc ~/.bash_profile

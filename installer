@@ -624,14 +624,17 @@ tmux_dotfiles() {
 }
 
 amethyst_dotfiles() {
-    if [ -f ~/seartipy/dotfiles/amethyst ]; then
-        log "Moving ~/.amethyst to $BACKUP_DIR"
-        smv ~/.amethyst $BACKUP_DIR
+    if is_mac; then
+        if [ -f ~/seartipy/dotfiles/amethyst ]; then
+            log "Moving ~/.amethyst to $BACKUP_DIR"
+            smv ~/.amethyst $BACKUP_DIR
 
-        log "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
-        sln ~/seartipy/dotfiles/amethyst ~/.amethyst
-    else
-        warn "~/seartipy/dotfiles/amethyst doesnt not exist, skipping amethyst dotfiles"
+            log "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
+
+            sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+        else
+            warn "~/seartipy/dotfiles/amethyst doesnt not exist, skipping amethyst dotfiles"
+        fi
     fi
 }
 

@@ -7,7 +7,7 @@ colorize() {
 }
 
 log() {
-    echo $1 >> ~/seartipy-installer.log
+    echo $1 ! tee ~/seartipy-installer.log
 }
 
 warn() {
@@ -52,7 +52,7 @@ smd() {
 }
 
 srm() {
-    $trash $1 $2
+    $trash $1 $2 2> /dev/null
 }
 
 sln() {
@@ -64,7 +64,7 @@ sln() {
         warn "$2 exists and not a symbolic link! not creating link"
         return
     fi
-    ln -s $1 $2 2> /dev/null
+    ln -s $1 $2
 }
 
 sclone() {
@@ -96,7 +96,7 @@ ln_check() {
         rl=greadlink
     fi
 
-     [[ $($rl -f $2) == "$1" ]] ||  warn "$2 not a link to $1"
+     [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
 brew_install() {
@@ -107,9 +107,7 @@ brew_install() {
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    if ! has_cmd brew; then
-        err_exit "could not install brew, quitting"
-    fi
+    pre_cmd_check brew
 
     log "Installing brew cask"
     brew install caskroom/cask/brew-cask
@@ -473,6 +471,8 @@ ubuntu_packages_install() {
     fi
 
     sudo apt-get clean
+    sudo apt-get autoclean
+    sudo apt-get autoremove -y
 }
 
 packages_install() {
@@ -655,7 +655,7 @@ dotfiles_install() {
     clone_dotfiles
     clone_lean_dotfiles
 
-    [ -d "$HOME/seartipy/dotfiles" ] || err_exit "~/seartipy/dotfiles/ does not exist, quitting"
+    pre_dir_check ~/seartipy/dotfiles
 
     if [ -n "$ZSH" ]; then
         zsh_dotfiles
@@ -731,7 +731,7 @@ boot_install() {
         boot -u
     else
         log "Installing boot"
-        curl -L https://github.com/boot-clj/boot/releases/download/2.4.2/boot.sh > ~/bin/boot
+        curl -L https://github.com/boot-clj/boot-bin/releases/download/2.4.2/boot.sh > ~/bin/boot
         chmod a+x ~/bin/boot
     fi
 }
@@ -798,9 +798,10 @@ python_install() {
         sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
         sclone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
         sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-        export PYENV_ROOT="$HOME/.pyenv"
-        export PATH="$PYENV_ROOT/bin:$PATH"
     fi
+
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
 
     if has_cmd pyenv; then
         if ! pyenv versions | grep anaconda > /dev/null; then
@@ -1342,7 +1343,8 @@ setup_backup_dir() {
 
 create_dirs() {
     setup_backup_dir
-    smd ~/seartipy/{emacses,vendors}
+    smd ~/seartipy/emacses
+    smd ~/seartipy/vendors
     smd ~/bin
 }
 
@@ -1647,6 +1649,7 @@ web_check() {
     fi
 
     if is_linux; then
+        source ~/.nvm/nvm.sh
         cmd_check nvm
     fi
 

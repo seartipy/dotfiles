@@ -1719,8 +1719,8 @@ dotfiles_check() {
     fi
 
     if [ -n "$CLOJURE" ]; then
-        ln_check ~/seartipy/dotfiles/profiles.clj ~/.lein/profiles.clj
-        ln_check ~/seartipy/dotfiles/boot-profile.clj ~/.boot/profile.clj
+        ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+        ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
     fi
 
     if [ -n "$SCALA" ]; then

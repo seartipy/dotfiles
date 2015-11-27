@@ -84,7 +84,7 @@ cmd_check() {
 }
 
 pre_dir_check() {
-    [ -d "$1" ] || err_check  "$1 directory does not exist"
+    [ -d "$1" ] || err_exit  "$1 directory does not exist"
 }
 
 dir_check() {

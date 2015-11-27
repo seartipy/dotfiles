@@ -1418,14 +1418,24 @@ setup_backup_dir() {
 fresh_install() {
     if [ -n "$DOTFILES" ]; then
         srm ~/seartipy/dotfiles
+        srm ~/seartipy/lean-dotfiles
+        srm ~/.tmux.conf
+        srm ~/.amethyst
     fi
 
-    if [ -n "$LEANDOTFILES" ]; then
-        srm ~/seartipy/lean-dotfiles
+    if [ -n "$ZSH" ]; then
+        srm ~/.zshrc
+        srm ~/seartipy/vendors/antigen
+    fi
+
+    if [ -n "$BASH" ]; then
+        srm ~/.bash_profile
+        srm ~/seartipy/vendors/liquidprompt
     fi
 
     if [ -n "$SCALA" ]; then
         srm ~/.sbt
+        srm ~/.ivy2
     fi
 
     if [ -n "$HASKELL" ]; then
@@ -1433,12 +1443,16 @@ fresh_install() {
     fi
 
     if [ -n "$EMACS" ]; then
+        srm ~/.emacs.d
         srm ~/seartipy/emacses
+        srm "/Applications/Emacs.app alias"
+        rm -rf ~/.cask
     fi
 
     if [ -n "$CLOJURE" ]; then
         srm ~/.len
         srm ~/.boot
+        srm ~/.m2
     fi
 
     if [ -n "$XMONAD" ]; then
@@ -1449,6 +1463,18 @@ fresh_install() {
         srm ~/.npm
         srm ~/.nvm
         srm ~/.node-gyp
+    fi
+
+    if [ -n "$PYTHON" ]; then
+        srm ~/.pyenv
+    fi
+
+    if [ -n "$RUBY" ]; then
+        srm ~/.rvm
+    fi
+
+    if [ -n "$VIM" ]; then
+        srm ~/.spf13-vim-3
     fi
 }
 
@@ -1509,9 +1535,6 @@ pre_installer_check() {
     [ -d ~/seartipy/emacses ] || err_exit "cannot create ~/seartipy/emacses, quitting"
     [ -d ~/seartipy/vendors ] || err_exit "cannot create ~/seartipy/vendors, quitting"
     [ -d ~/bin ] || err_exit "~/bin does not exist, quitting"
-
-    [ -n "$EMACS" ] && pre_cmd_check emacs
-    [ -n "$ZSH" ] && pre_cmd_check zsh
 }
 
 mac_packages_check() {

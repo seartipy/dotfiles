@@ -455,74 +455,95 @@ fedora_packages_install() {
     fedora_packages_cleanup
 }
 
+essential_ubuntu_install() {
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
+}
+
+emacs_ubuntu_install() {
+    log "Installing emacs"
+    sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
+}
+
+vim_ubuntu_install() {
+    log "Installing vim"
+    sudo apt-get install -y vim-gnome
+}
+
+zsh_ubuntu_install() {
+    log "Installing zsh"
+    sudo apt-get install -y zsh
+}
+
+git_ubuntu_install() {
+    log "Installing git"
+    sudo apt-get install -y smartgit kdiff3 git-extras meld
+}
+
+java_ubuntu_install() {
+    log "Installing Java"
+    sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+}
+
+scala_ubuntu_install() {
+    log "Install scala"
+    sudo apt-get -y install sbt
+}
+
+haskell_ubuntu_install() {
+    log "Installing haskell"
+    sudo apt-get install -y stack
+    sudo apt-get install -y cabal-install ghc
+}
+
+cpp_ubuntu_install() {
+    log "Installing C++"
+    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
+}
+
+additional_ubuntu_install() {
+    log "Installing additional"
+    sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
+    if ! has_cmd vmware-user-suid-wrapper; then
+        sudo apt-get install -y virtualbox-5.0 dkms
+    fi
+}
+
+xmonad_ubuntu_install() {
+    log "Installing xmonad"
+    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
+}
+
+elixir_ubuntu_install() {
+    log "Installing elixir"
+    sudo apt-get install -y elixir
+}
+
+ubuntu_cleanup() {
+    sudo apt-get clean
+    sudo apt-get autoclean
+    sudo apt-get autoremove -y
+}
+
 ubuntu_packages_install() {
     pre_cmd_check apt-get
     add_ppas
 
     log "Installing all packages, this will take a while"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
 
-    if [ -n "$EMACS" ]; then
-        log "Installing emacs"
-        sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
-    fi
-    if [ -n "$ZSH" ]; then
-        log "Installing zsh"
-        sudo apt-get install -y zsh
-    fi
-
-    if [ -n "$GIT" ]; then
-        log "Installing git"
-        sudo apt-get install -y smartgit kdiff3 git-extras meld
-    fi
-
+    [ -n "$EMACS" ] && emacs_ubuntu_install
+    [ -n "$ZSH" ] && zsh_ubuntu_install
+    [ -n "$GIT" ] && git_ubuntu_install
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        log "Installing Java"
-        sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+        java_ubuntu_install
     fi
 
-    if [ -n "$SCALA" ]; then
-        log "Install scala"
-        sudo apt-get -y install sbt
-    fi
-
-    if [ -n "$HASKELL" ]; then
-        log "Installing haskell"
-        sudo apt-get install -y stack
-        sudo apt-get install -y cabal-install ghc
-    fi
-
-    if [ -n "$VIM" ]; then
-        log "Installing vim"
-        sudo apt-get install -y vim-gnome
-    fi
-
-    if [ -n "$CPP" ]; then
-        log "Installing C++"
-        sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
-    fi
-
-    if [ -n "$ADDITIONAL" ]; then
-        log "Installing additional"
-        sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
-        if ! has_cmd vmware-user-suid-wrapper; then
-            sudo apt-get install -y virtualbox-5.0 dkms
-        fi
-    fi
-
-    if [ -n "$XMONAD" ]; then
-        log "Installing xmonad"
-        sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
-    fi
-
-    if [ -n "$ELIXIR" ]; then
-        log "Installing elixir"
-        sudo apt-get install -y elixir
-    fi
-
-    sudo apt-get clean
-    sudo apt-get autoclean
-    sudo apt-get autoremove -y
+    [ -n "$SCALA" ] && scala_ubuntu_install
+    [ -n "$HASKELL" ] && haskell_ubuntu_install
+    [ -n "$VIM" ] && vim_ubuntu_install
+    [ -n "$CPP" ] && cpp_ubuntu_install
+    [ -n "$ADDITIONAL" ] && additional_ubuntu_install
+    [ -n "$XMONAD" ] && xmonad_ubuntu_install
+    [ -n "$ELIXIR" ] && elixir_ubuntu_install
 }
 
 packages_install() {

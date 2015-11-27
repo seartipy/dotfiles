@@ -120,88 +120,111 @@ brew_install() {
     brew update && brew upgrade
 }
 
+emacs_mac_packages_install() {
+    log "Installing emacs packages"
+    brew install emacs-mac ---with-spacemacs-icon
+    brew install editorconfig cask
+    # TODO : ctags
+    brew install aspell --with-lang-en
+}
+
+vim_mac_packages_install() {
+    log "Installing vim packages"
+    brew install macvim --override-system-vim --with-lua --with-luajit
+    brew linkapps macvim
+}
+
+git_mac_packages_install() {
+    log "Installing git packages"
+    brew cask install smartgit
+    brew install kdiff3 git-extras
+}
+
+haskell_mac_packages_install() {
+    log "Installing haskell packages"
+    brew install ghc cabal-install haskell-stack
+    brew cask install elm-platform idris purescript
+}
+
+java_mac_packages_install() {
+    log "Installing java"
+    brew cask install java caskroom/homebrew-versions/java6 intellij-idea
+}
+
+python_mac_packages_install() {
+    log "Installing python packages"
+    brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
+}
+
+scala_mac_packages_install() {
+    log "Installing scala packages"
+    brew install sbt scala
+    brew cask install scala-ide
+}
+
+clojure_mac_packages_install() {
+    log "Installing clojure packages"
+    brew install leiningen boot-clj
+}
+
+web_mac_packages_install() {
+    log "Installing web packages"
+    brew install node flow
+    brew cask install webstorm
+}
+
+cpp_mac_packages_install() {
+    log "Installing c++ packages"
+    brew install boost --c++11
+    brew install cmake scons boost-build cppcheck
+    brew cask install clion
+}
+
+elixir_mac_packages_install() {
+    log "Installing elixir"
+    brew install elixir
+}
+
+additional_mac_packages_install() {
+    log "Installing additional packages"
+    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
+    brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook xquartz
+    brew install youtube-dl
+}
+
+essential_mac_packages_install() {
+    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gibo gpg
+    brew cask install iterm2
+}
+
+brew_cleanup() {
+    log "cleanup brew"
+    brew cleanup
+    brew cask cleanup
+}
+
 mac_packages_install() {
     brew_install
 
     log "Installing all packages, this will take a while..."
-    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gibo gpg
-    brew cask install iterm2
+    essential_mac_packages_install
 
-    if [ -n "$EMACS" ]; then
-        log "Installing emacs packages"
-        brew install emacs-mac ---with-spacemacs-icon
-        brew install editorconfig cask
-        # TODO : ctags
-        brew install aspell --with-lang-en
-    fi
-
-    if [ -n "$VIM" ]; then
-        log "Installing vim packages"
-        brew install macvim --override-system-vim --with-lua --with-luajit
-        brew linkapps macvim
-    fi
-
-    if [ -n "$GIT" ]; then
-        log "Installing git packages"
-        brew cask install smartgit
-        brew install kdiff3 git-extras
-    fi
-
-    if [ -n "$HASKELL" ]; then
-        log "Installing haskell packages"
-        brew install ghc cabal-install haskell-stack
-        brew cask install elm-platform idris purescript
-    fi
+    [ -n "$EMACS" ] && emacs_mac_packages_install
+    [ -n "$VIM" ] && vim_mac_packages_install
+    [ -n "$GIT" ] && git_mac_packages_install
+    [ -n "$HASKELL" ] && haskell_mac_packages_install
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        log "Installing java"
-        brew cask install java caskroom/homebrew-versions/java6 intellij-idea
+        java_mac_packages_install
     fi
 
-    if [ -n "$PYTHON" ]; then
-        log "Installing python packages"
-        brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
-    fi
-
-    if [ -n "$SCALA" ]; then
-        log "Installing scala packages"
-        brew install sbt scala
-        brew cask install scala-ide
-    fi
-
-    if [ -n "$CLOJURE" ]; then
-        log "Installing clojure packages"
-        brew install leiningen boot-clj
-    fi
-
-    if [ -n "$WEB" ]; then
-        log "Installing web packages"
-        brew install node flow
-        brew cask install webstorm
-    fi
-
-    if [ -n "$CPP" ]; then
-        log "Installing c++ packages"
-        brew install boost --c++11
-        brew install cmake scons boost-build cppcheck
-        brew cask install clion
-    fi
-
-    if [ -n "$ELIXIR" ]; then
-        log "Installing elixir"
-        brew install elixir
-    fi
-
-    if [ -n "$ADDITIONAL" ]; then
-        log "Installing additional packages"
-        brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
-        brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook xquartz
-        brew install youtube-dl
-    fi
-
-    log "cleanup brew"
-    brew cleanup
-    brew cask cleanup
+    [ -n "$PYTHON" ] && python_mac_packages_install
+    [ -n "$SCALA" ] && scala_mac_packages_install
+    [ -n "$CLOJURE" ] && clojure_mac_packages_install
+    [ -n "$WEB" ] && web_mac_packages_install
+    [ -n "$CPP" ] && cpp_mac_packages_install
+    [ -n "$ELIXIR" ] && elixir_mac_packages_install
+    [ -n "$ADDITIONAL" ] && additional_mac_packages_install
 }
 
 add_java_ppa() {

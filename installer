@@ -1415,6 +1415,43 @@ setup_backup_dir() {
     fi
 }
 
+fresh_install() {
+    if [ -n "$DOTFILES" ]; then
+        srm ~/seartipy/dotfiles
+    fi
+
+    if [ -n "$LEANDOTFILES" ]; then
+        srm ~/seartipy/lean-dotfiles
+    fi
+
+    if [ -n "$SCALA" ]; then
+        srm ~/.sbt
+    fi
+
+    if [ -n "$HASKELL" ]; then
+        srm ~/.cabal
+    fi
+
+    if [ -n "$EMACS" ]; then
+        srm ~/seartipy/emacses
+    fi
+
+    if [ -n "$CLOJURE" ]; then
+        srm ~/.len
+        srm ~/.boot
+    fi
+
+    if [ -n "$XMONAD" ]; then
+        srm ~/.xmonad
+    fi
+
+    if [ -n "$WEB" ]; then
+        srm ~/.npm
+        srm ~/.nvm
+        srm ~/.node-gyp
+    fi
+}
+
 create_dirs() {
     setup_backup_dir
     smd ~/seartipy/emacses

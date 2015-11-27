@@ -356,6 +356,74 @@ add_ppas() {
     fi
 }
 
+essential_fedora_packages_install() {
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unrar p7zip dconf tmux exfat-utils
+}
+emacs_fedora_packages_install() {
+    log "Installing emacs"
+    sudo dnf install -y emacs aspell aspell-en ctags-etags
+}
+
+zsh_fedora_packages_install() {
+    log "Installing zsh"
+    sudo dnf install -y zsh
+}
+
+git_fedora_packages_install() {
+    log "Installing git"
+    sudo dnf install -y kdiff3 git-extras meld
+}
+
+java_fedora_packages_install() {
+    log "Installing java"
+    sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
+}
+
+scala_fedora_packages_install() {
+    log "Installing scala"
+    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+    sudo dnf install -y scala sbt
+}
+
+haskell_fedora_packages_install() {
+    log "Installing haskell"
+    sudo dnf install -y ghc cabal-install
+    sudo dnf copr -y enable petersen/stack
+    sudo dnf install -y stack
+}
+
+vim_fedora_packages_install() {
+    log "Installing vim"
+    sudo dnf install -y vim-enhanced
+}
+
+cpp_fedora_packages_install() {
+    log "Installing C++"
+    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
+}
+
+elixir_fedora_packages_install() {
+    log "Installing elixir"
+    sudo dnf install -y elixir
+}
+
+additional_fedora_packages_install() {
+    log "Installing additional packages"
+    sudo dnf install -y vlc youtube-dl
+    if ! has_cmd vmware-user-suid-wrapper; then
+        sudo dnf install -y VirtualBox dkms
+    fi
+}
+
+xmonad_fedora_packages_install() {
+    log "Installing xmonad"
+    sudo dnf install -y xmonad ghc-xmonad-contrib xmonad-mate ghc-xmonad-devel ghc-xmonad-contrib-devel xmobar stalonetray dmenu scrot cabal-install xcompmgr
+}
+
+fedora_packages_cleanup() {
+    sudo dnf clean all
+}
+
 fedora_packages_install() {
     pre_cmd_check dnf
 
@@ -363,70 +431,28 @@ fedora_packages_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     log "Installing all packages, this will take a while"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unrar p7zip dconf tmux exfat-utils
+    essential_fedora_packages_install
 
-    if [ -n "$EMACS" ]; then
-        log "Installing emacs"
-        sudo dnf install -y emacs aspell aspell-en ctags-etags
-    fi
+    [ -n "$EMACS" ] && emacs_fedora_packages_install
 
-    if [ -n "$ZSH" ]; then
-        log "Installing zsh"
-        sudo dnf install -y zsh
-    fi
 
-    if [ -n "$GIT" ]; then
-        log "Installing git"
-        sudo dnf install -y kdiff3 git-extras meld
-    fi
+    [ -n "$ZSH" ] && emacs_zsh_fedora_packages_install
+    [ -n "$GIT" ] && git_fedora_packages_install
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        log "Installing java"
-        sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
+        java_fedora_packages_install
     fi
 
-    if [ -n "$SCALA" ]; then
-        log "Installing scala"
-        curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-        sudo dnf install -y scala sbt
-    fi
+    [ -n "$SCALA" ] && scala_fedora_packages_install
+    [ -n "$HASKELL" ] && haskell_fedora_packages_install
+    [ -n "$VIM" ] && vim_fedora_packages_install
+    [ -n "$CPP" ] && cpp_fedora_packages_install
+    [ -n "$ELIXIR" ] && elixir_fedora_packages_install
+    [ -n "$ADDITIONAL" ] && additional_fedora_packages_install
 
-    if [ -n "$HASKELL" ]; then
-        log "Installing haskell"
-        sudo dnf install -y ghc cabal-install
-        sudo dnf copr -y enable petersen/stack
-        sudo dnf install -y stack
-    fi
+    [ -n "$XMONAD" ] && xmonad_fedora_packages_install
 
-    if [ -n "$VIM" ]; then
-        log "Installing vim"
-        sudo dnf install -y vim-enhanced
-    fi
-
-    if [ -n "$CPP" ]; then
-        log "Installing C++"
-        sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
-    fi
-
-    if [ -n "$ELIXIR" ]; then
-        log "Installing elixir"
-        sudo dnf install -y elixir
-    fi
-
-    if [ -n "$ADDITIONAL" ]; then
-        log "Installing additional packages"
-        sudo dnf install -y vlc youtube-dl
-        if ! has_cmd vmware-user-suid-wrapper; then
-            sudo dnf install -y VirtualBox dkms
-        fi
-    fi
-
-    if [ -n "$XMONAD" ]; then
-        log "Installing xmonad"
-        sudo dnf install -y xmonad ghc-xmonad-contrib xmonad-mate ghc-xmonad-devel ghc-xmonad-contrib-devel xmobar stalonetray dmenu scrot cabal-install xcompmgr
-    fi
-
-    sudo dnf clean all
+    fedora_packages_cleanup
 }
 
 ubuntu_packages_install() {

@@ -856,6 +856,8 @@ idris_install() {
 # elm
 
 elm_mac_install() {
+    is_mac || return 1
+
     brew cask install elm-platform
 }
 
@@ -1767,7 +1769,9 @@ pre_installer_check() {
     [ -d ~/bin ] || err_exit "~/bin does not exist, quitting"
 }
 
-mac_essential_check() {
+essential_mac_check() {
+    is_mac || return 1
+
     cmd_check brew
     cmd_check trash
     cmd_check 7z
@@ -1775,6 +1779,8 @@ mac_essential_check() {
  }
 
 ppas_check() {
+    is_ubuntu || return 1
+
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
         if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
             warn 'java ppa not added'
@@ -1786,7 +1792,9 @@ ppas_check() {
     fi
 }
 
-ubuntu_essential_check() {
+essential_mac_check() {
+    is_ubuntu || return 1
+
     ppas_check
 
     cmd_check xsel
@@ -1795,7 +1803,9 @@ ubuntu_essential_check() {
     cmd_check dconf
 }
 
-fedora_essential_check() {
+essential_fedora_check() {
+    is_fedora || return 1
+
     cmd_check xsel
     cmd_check xclip
     cmd_check 7za
@@ -1816,13 +1826,9 @@ essential_check() {
     cmd_check gpg
     cmd_check tmux
 
-    if is_ubuntu; then
-        ubuntu_check
-    elif is_fedora; then
-        fedora_check
-    elif is_mac; then
-        mac_check
-    fi
+    ubuntu_essential_check
+    fedora_essential_check
+    mac_essential_check
 }
 
 dotfiles_check() {

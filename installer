@@ -1085,6 +1085,10 @@ xmonad_ubuntu_install() {
 
 xmonad_install() {
     is_linux || return 1
+
+    xmonad_fedora_install
+    xmonad_ubuntu_install
+
     has_cmd cabal || return 1
 
     slog "Installing xmonad"

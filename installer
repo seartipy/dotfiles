@@ -830,6 +830,8 @@ purescript_install() {
 # idris
 
 idris_mac_install() {
+    is_mac || return 1
+
     brew cask install idris
 }
 

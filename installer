@@ -1013,8 +1013,8 @@ gibo_install() {
 
 sourcecodepro_install() {
     is_linux || return 1
-
     has_cmd fc-cache || return 1
+
     if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
         slog "Installing Source code pro fonts"
         wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
@@ -1733,7 +1733,6 @@ installer() {
     else
         trash=trash
     fi
-    srm ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
     create_dirs
 
     export PATH="$HOME/bin:$PATH"
@@ -2037,6 +2036,9 @@ post_installer_check() {
 }
 
 curdir=`pwd`
+
+rm -f ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
+
 installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
 
 cd $curdir

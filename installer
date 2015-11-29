@@ -1114,14 +1114,14 @@ cpp_ubuntu_install() {
 }
 
 cpp_fedora_install() {
-    is_fedora || retur 1
+    is_fedora || return 1
 
     slog "Installing C++"
     sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
 }
 
 cpp_mac_install() {
-    is_mac || retur 1
+    is_mac || return 1
 
     slog "Installing c++ packages"
     brew install boost --c++11

@@ -1034,8 +1034,9 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text3 vlc karabiner seil spectacle skype gitup discord amethyst
-    brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json suspicious-package webpquicklook xquartz
+    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text vlc karabiner seil spectacle skype gitup discord amethyst
+    brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    # brew cask install suspicious-package
     brew install youtube-dl
 }
 

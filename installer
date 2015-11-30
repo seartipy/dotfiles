@@ -1946,6 +1946,8 @@ r_check() {
 }
 
 haskell_check() {
+    export PATH="$HOME/.local/bin:$PATH"
+
     cmd_check ghc
     cmd_check cabal
     cmd_check stack

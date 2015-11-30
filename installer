@@ -1702,9 +1702,9 @@ install_all() {
     [ -n "$HASKELL" ] && haskell_install
 
     [ -n "$RUBY" ] && ruby_install
-    [ -n "$RUST" ] && rust_install
+    # [ -n "$RUST" ] && rust_install
     [ -n "$ELIXIR" ] && elixir_install
-    [ -n "$R" ] && r_install
+    # [ -n "$R" ] && r_install
     [ -n "$PURESCRIPT" ] && purescript_install
     [ -n "$IDRIS" ] && idris_install
     [ -n "ELM" ] && elm_install
@@ -1930,7 +1930,7 @@ web_check() {
 }
 
 elixir_check() {
-    :
+    cmd_check elixir
 }
 
 purescript_check() {
@@ -2030,6 +2030,11 @@ xmonad_check() {
     cmd_check xmonad dmenu
 }
 
+xmonad_check() {
+    # check ~/.xmonad/xmonad.hs exists
+    cmd_check xmonad
+}
+
 post_installer_check() {
     essential_check
     dotfiles_check
@@ -2037,12 +2042,30 @@ post_installer_check() {
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check
     [ -n "$EMACS" ] && emacs_check
-    [ -n "$WEB_CHECK" ] && web_check
-    [ -n "$HASKELL" ] && haskell_check
-    [ -n "$PYTHON" ] && python_check
-    [ -n "$RUBY" ] && ruby_check
+    git_check
 
-    settings_check
+    [ -n "$CLOJURE" ] && clojure_check
+    [ -n "$SCALA" ] && scala_check
+
+    [ -n "$WEB_CHECK" ] && web_check
+    [ -n "$CPP" ] && cpp_check
+    [ -n "$PYTHON" ] && python_check
+    [ -n "$HASKELL" ] && haskell_check
+
+    [ -n "$RUBY" ] && ruby_check
+    # [ -n "$RUST" ] && rust_check
+    [ -n "$ELIXIR" ] && elixir_check
+    # [ -n "$R" ] && r_check
+    [ -n "$PURESCRIPT" ] && purescript_check
+    [ -n "$IDRIS" ] && idris_check
+    [ -n "$ELM" ] && elm_check
+
+    if [ -n "$ADDITIONAL" ]; then
+        additional_check
+        settings_check
+    fi
+    [ -n "$XMONAD" ] && xmonad_check
+    [ -n "$VIM" ] && vim_check
 }
 
 curdir=`pwd`

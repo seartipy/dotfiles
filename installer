@@ -1828,9 +1828,9 @@ essential_check() {
     cmd_check gpg
     cmd_check tmux
 
-    ubuntu_essential_check
-    fedora_essential_check
-    mac_essential_check
+    essential_mac_check
+    essential_fedora_check
+    essential_ubuntu_check
 }
 
 dotfiles_check() {

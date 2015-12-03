@@ -1795,7 +1795,7 @@ ppas_check() {
     fi
 }
 
-essential_mac_check() {
+essential_ubuntu_check() {
     is_ubuntu || return 1
 
     ppas_check

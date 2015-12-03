@@ -1691,6 +1691,7 @@ install_all() {
     [ -n "$ZSH" ] && zsh_install
     [ -n "$BASH" ] && bash_install
     [ -n "$EMACS" ] && emacs_install
+    [ -n "$GIT" ] && git_install
 
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install

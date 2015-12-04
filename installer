@@ -2053,7 +2053,7 @@ post_installer_check() {
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check
     [ -n "$EMACS" ] && emacs_check
-    git_check
+    [ -n "$GIT" ] && git_check
 
     [ -n "$CLOJURE" ] && clojure_check
     [ -n "$SCALA" ] && scala_check

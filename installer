@@ -900,10 +900,10 @@ python_install() {
     python_mac_install
     python_linux_install
 
-    has_cmd pyenv || return 1
-
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
+
+    has_cmd pyenv || return 1
 
     if ! pyenv versions | grep anaconda > /dev/null; then
         slog "Installing anaconda"

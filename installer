@@ -1939,7 +1939,12 @@ purescript_check() {
 }
 
 idris_check() {
+    export PATH="$HOME/.cabal/bin"
     cmd_check idris
+}
+
+elm_check() {
+    cmd_check elm
 }
 
 r_check() {
@@ -1964,7 +1969,13 @@ haskell_check() {
 }
 
 python_check() {
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+
     cmd_check pyenv
+
+    has_cmd pyenv || return 1
+
     if ! pyenv versions | grep anaconda > /dev/null; then
         warn "anaconda not installed"
     fi
@@ -1975,7 +1986,6 @@ ruby_check() {
     cmd_check ruby
 
     cmd_check pry
-    cmd_check sinatra
     cmd_check thin
     cmd_check guard
     cmd_check watchr

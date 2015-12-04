@@ -688,7 +688,7 @@ scala_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Install scala"
-    sudo apt-get -y install sbt
+    sudo apt-get -y install sbt scala
 }
 
 sbt_plugins() {

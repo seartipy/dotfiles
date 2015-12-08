@@ -1,5 +1,5 @@
 {:user {
-        :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"] ; nrepl server for cider in emacs
+        :plugins [[cider/cider-nrepl "0.11.0-SNAPSHOT"] ; nrepl server for cider in emacs
                   [refactor-nrepl "2.0.0-SNAPSHOT"] ; refactor in emacs using clj-refactor
                   [com.jakemccrary/lein-test-refresh "0.11.0"]
                   [lein-midje "3.2"] ; midje plugin for continous testing

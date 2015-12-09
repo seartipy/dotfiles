@@ -2007,9 +2007,11 @@ additional_check() {
     if is_linux; then
         cmd_check gibo
         cmd_check fasd
-        if ! ls ~/.fonts | grep SourceCodePro > /dev/null; then
+
+        if ! ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null; then
             warn "source code pro not installed"
         fi
+
         cmd_check xmonad
         cmd_check vim
     fi

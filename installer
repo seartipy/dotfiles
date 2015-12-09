@@ -1939,11 +1939,12 @@ purescript_check() {
 }
 
 idris_check() {
-    export PATH="$HOME/.cabal/bin"
+    export PATH="$HOME/.cabal/bin:$PATH"
     cmd_check idris
 }
 
 elm_check() {
+    source ~/.nvm/nvm.sh
     cmd_check elm
 }
 

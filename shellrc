@@ -181,6 +181,12 @@ seartipy_emacs_default() {
     sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
 }
 
+seartipy_emacs_launch() {
+    seartipy_emacs_default $*
+    is_mac && open -a /Applications/Emacs.app
+    is_linux && emacs&
+}
+
 seartipy_ctrl_alt_set() {
     is_mac || return 1
     has_cmd gnome-session && gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
@@ -206,6 +212,11 @@ alias car=seartipy_ctrl_alt_reset
 alias sse="seartipy_emacs_default spacemacs"
 alias sle="seartipy_emacs_default lean-emacs"
 alias she="seartipy_emacs_default housemd"
+
+alias es="seartipy_emacs_launch spacemacs"
+alias el="seartipy_emacs_launch lean-emacs"
+alias eh="seartipy_emacs_launch housemd"
+
 alias upa=seartipy_upgrade_all
 alias sfl=seartipy_fix_links
 

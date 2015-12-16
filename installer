@@ -1267,10 +1267,48 @@ gnome_settings() {
     gsettings set org.gnome.desktop.session idle-delay 180
 }
 
+mate_settings() {
+    is_linux || return 1
+    has_cmd mate-session || return 1
+    [ -n "$SEARTIPY" ] || return 1
+
+    dconf write /org/mate/desktop/font-rendering/dpi "192.0"
+    dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
+    dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
+
+    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
+    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options '@as []'
+
+    dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"
+    dconf write /org/mate/marco/window-keybindings/tile-to-side-w "'<Mod4>Left'"
+
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-1 "'<Primary>1'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-2 "'<Primary>2'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-3 "'<Primary>3'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-4 "'<Primary>4'"
+
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-left "'<Primary><Mod4>Left'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-right "'<Primary><Mod4>Right'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-up "'<Primary><Mod4>Up'"
+    dconf write /org/mate/marco/global-keybindings/switch-to-workspace-down "'<Primary><Mod4>Down'"
+
+    dconf write /org/mate/marco/window-keybindings/toggle-fullscreen "'F11'"
+    dconf write /org/mate/marco/window-keybindings/toggle-maximized "'<Mod4>F11'"
+    dconf write /org/mate/marco/window-keybindings/activate-window-menu "'disabled'"
+
+    dconf write /org/mate/caja/preferences/click-policy "'single'"
+    dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"
+
+    dconf write /org/mate/power-manager/sleep-computer-ac "1800"
+    dconf write /org/mate/power-manager/sleep-display-ac "300"
+}
+
 linux_settings() {
     gnome_hidpi_conf
     gnome_settings
     gnome_extensions
+
+    mate_settings
 }
 
 mac_settings() {

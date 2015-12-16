@@ -1196,8 +1196,9 @@ ruby_install() {
 #
 # settings
 
-hidpi_conf() {
+gnome_hidpi_conf() {
     is_linux || return 1
+    has_cmd gnome-session || return 1
 
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
     if [ $xres -ge 2800 ]; then
@@ -1212,7 +1213,7 @@ hidpi_conf() {
 
 gnome_extensions() {
     is_linux || return 1
-    has_cmd gsettings || return 1
+    has_cmd gnome-session || return 1
     [ -n "$SEARTIPY" ] || return 1
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
@@ -1236,7 +1237,7 @@ gnome_extensions() {
 
 gnome_settings() {
     is_linux || return 1
-    has_cmd gsettings || return 1
+    has_cmd gnome-session || return 1
 
     dconf write /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell true
     gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
@@ -1267,7 +1268,7 @@ gnome_settings() {
 }
 
 linux_settings() {
-    hidpi_conf
+    gnome_hidpi_conf
     gnome_settings
     gnome_extensions
 }
@@ -2022,7 +2023,7 @@ additional_check() {
 }
 
 settings_check() {
-    if has_cmd dconf && has_cmd gsettings; then
+    if has_cmd gnome-session; then
         [ 'false' == $(dconf read /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/login-shell) ] || warn 'terminal not configured to run as login shell'
 
         [[ 'en_US.UTF-8' == $(gsettings set org.gnome.system.locale region 'en_US.UTF-8') ]] || warn 'system locale not set to en_US UTF8'

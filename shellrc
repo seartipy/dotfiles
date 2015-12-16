@@ -155,13 +155,22 @@ seartipy_fix_links() {
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
 
-seartipy_upgrade_all() {
-    upgrade
-    cd ~/seartipy/dotfiles && git-up
-    cd ~/seartipy/lean-dotfiles && git-up
+seartipy_upgrade_emacs() {
     cd ~/seartipy/emacses/housemd && git-up
     cd ~/seartipy/emacses/spacemacs && git-up
     has_cmd cask && cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
+}
+
+seartipy_upgrade_dotfiles() {
+    cd ~/seartipy/dotfiles && git-up
+    cd ~/seartipy/lean-dotfiles && git-up
+}
+
+seartipy_upgrade_all() {
+    upgrade
+    seartipy_upgrade_dotfiles
+    seartipy_upgrade_emacs
+
     has_cmd sbt && sbt console -batch
     has_cmd lein && lein
     has_cmd npm && npm update -g

@@ -1279,6 +1279,7 @@ mate_settings() {
     dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
     dconf write /org/mate/desktop/peripherals/keyboard/kbd/options '@as []'
 
+    dconf write /org/mate/marco/global-keybindings/panel-run-dialog "'<Mod4>space'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-w "'<Mod4>Left'"
 
@@ -1301,6 +1302,12 @@ mate_settings() {
 
     dconf write /org/mate/power-manager/sleep-computer-ac "1800"
     dconf write /org/mate/power-manager/sleep-display-ac "300"
+
+    dconf write /org/mate/power-manager/lock-use-screensaver "false"
+    dconf write /org/mate/power-manager/lock-suspend "false"
+    dconf write /org/mate/terminal/profiles/default/login-shell "true"
+    dconf write /org/mate/terminal/global/use-menu-accelerators "false"
+    dconf write /org/mate/terminal/profiles/default/default-show-menubar "false"
 }
 
 linux_settings() {

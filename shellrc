@@ -165,6 +165,7 @@ seartipy_upgrade_all() {
     has_cmd sbt && sbt console -batch
     has_cmd lein && lein
     has_cmd npm && npm update -g
+    has_cmd cabal && cabal update
 }
 
 seartipy_emacs_default() {

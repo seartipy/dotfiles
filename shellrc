@@ -172,19 +172,15 @@ seartipy_emacs_default() {
 }
 
 seartipy_ctrl_alt_set() {
-    if is_linux && has_cmd gsettings; then
-        gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
-    else
-        warn "this command works in linux when gsettings is available"
-    fi
+    is_mac || return 1
+    has_cmd gnome-session && gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
+    has_cmd mate-session && dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
 }
 
 seartipy_ctrl_alt_reset() {
-    if is_linux && has_cmd gsettings; then
-        gsettings set org.gnome.desktop.input-sources xkb-options "@as []"
-    else
-        warn "this command works only in linux when gsettings is available"
-    fi
+    is_mac || return 1
+    has_cmd gnome-session && gsettings set org.gnome.desktop.input-sources xkb-options "@as []"
+    has_cmd mate-session && dconf write /org/mate/desktop/peripherals/keyboard/kbd/options '@as []'
 }
 
 seartipy_lean_system() {

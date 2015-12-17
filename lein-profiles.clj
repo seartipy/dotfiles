@@ -13,4 +13,6 @@
                   [lein-ancient "0.6.8"]] ; upgrade packages
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]
-                       [acyclic/squiggly-clojure "0.1.4"]]}} ; flycheck using eastwood
+                       [spyscope "0.1.5"] ; lodash tap like macro
+                       [acyclic/squiggly-clojure "0.1.4"]]
+        :injections [(require 'spyscope.core)]}} ; flycheck using eastwood

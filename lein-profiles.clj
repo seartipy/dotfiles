@@ -14,5 +14,20 @@
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]
                        [spyscope "0.1.5"] ; lodash tap like macro
-                       [acyclic/squiggly-clojure "0.1.4"]]
-        :injections [(require 'spyscope.core)]}} ; flycheck using eastwood
+                       [im.chit/vinyasa "0.4.2"]
+                       [io.aviso/pretty "0.1.20"]
+                       [acyclic/squiggly-clojure "0.1.4"]] ; flycheck using eastwood
+        :injections [(require 'spyscope.core)
+                     (require 'io.aviso.repl)
+                     (require '[vinyasa.inject :as inject])
+                     (inject/in [vinyasa.inject :refer [inject [in inject-in]]]
+                                clojure.core
+                                [vinyasa.reflection .> .? .* .% .%> .& .>ns .>var]
+
+                                ;; inject into clojure.core with prefix
+                                clojure.core >
+                                [clojure.pprint pprint]
+                                [clojure.java.shell sh]
+                                [clojure.repl doc source]
+                                [clojure.pprint pprint pp]
+                                )]}}

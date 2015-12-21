@@ -76,7 +76,7 @@ if is_ubuntu; then
 fi
 
 if is_fedora; then
-    alias upgrade="sudo dnf upgrade"
+    alias upgrade="sudo dnf upgrade -y"
 
     export JAVA_HOME="/etc/alternatives/java_sdk"
     export JDK_HOME="/etc/alternatives/java_sdk"

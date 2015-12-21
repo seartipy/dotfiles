@@ -92,6 +92,7 @@ if is_mac; then
     if has_cmd npm; then
         export PATH=$(npm config get prefix)/bin:$PATH
     fi
+    export PATH="/usr/local/bin:$PATH"
 fi
 
 #haskell

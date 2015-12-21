@@ -167,15 +167,19 @@ seartipy_upgrade_dotfiles() {
     cd ~/seartipy/lean-dotfiles && git-up
 }
 
-seartipy_upgrade_all() {
+seartipy_upgrade_mean() {
     upgrade
     seartipy_upgrade_dotfiles
     seartipy_upgrade_emacs
+}
 
+seartipy_upgrade_all() {
+    seartipy_upgrade_mean
     has_cmd sbt && sbt console -batch
     has_cmd lein && lein
     has_cmd npm && npm update -g
     has_cmd cabal && cabal update
+    has_cmd stack && stack update
 }
 
 seartipy_emacs_default() {
@@ -220,6 +224,8 @@ alias el="seartipy_emacs_launch lean-emacs"
 alias eh="seartipy_emacs_launch housemd"
 
 alias upa=seartipy_upgrade_all
+alias upm=seartipy_upgrade_mean
+alias ups=upgrade
 alias upe=seartipy_upgrade_emacs
 alias upd=seartipy_upgrade_dotfiles
 

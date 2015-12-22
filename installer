@@ -192,15 +192,6 @@ add_virtualbox_ppa() {
     fi
 }
 
-add_sublime_ppa() {
-    is_ubuntu || return 1
-
-    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-sublime-text-3 > /dev/null; then
-        slog "Adding sublime ppa"
-        sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
-    fi
-}
-
 add_atom_ppa() {
     is_ubuntu || return 1
 
@@ -223,7 +214,6 @@ add_docker_ppa() {
 add_additional_ppas() {
     # add_zeal_ppa
     add_atom_ppa
-    add_sublime_ppa
     add_virtualbox_ppa
     add_docker_ppa
     add_chrome_ppa
@@ -1049,7 +1039,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown github-desktop sublime-text vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
@@ -1069,7 +1059,7 @@ additional_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing additional"
-    sudo apt-get install -y vlc youtube-dl sublime-text-installer atom google-chrome-stable
+    sudo apt-get install -y vlc youtube-dl atom google-chrome-stable
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox-5.0 dkms
     fi

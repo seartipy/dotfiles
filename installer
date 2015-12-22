@@ -562,7 +562,7 @@ java_mac_install() {
     is_mac || return 1
 
     slog "Installing java"
-    brew cask install java caskroom/homebrew-versions/java6 intellij-idea
+    brew cask install java caskroom/homebrew-versions/java6
 }
 
 java_fedora_install() {
@@ -934,7 +934,6 @@ web_mac_install() {
 
     slog "Installing web packages"
     brew install node flow
-    brew cask install webstorm
 }
 
 flow_install() {
@@ -1138,8 +1137,7 @@ cpp_mac_install() {
 
     slog "Installing c++ packages"
     brew install boost --c++11
-    brew install cmake scons boost-build cppcheck
-    brew cask install clion
+    brew install cmake scons boost-build cppcheck clang-format
 }
 
 cpp_install() {

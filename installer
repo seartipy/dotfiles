@@ -785,6 +785,19 @@ stack_install() {
     stack_ubuntu_install
 }
 
+ihaskell_install() {
+    has_cmd stack || return 1
+
+    is_mac && brew install zeromq
+    is_linux && sudo apt-get install -y libzmq3-dev
+    is_fedora && sudo dnf install -y zeromq zeromq-dev
+    stack install alex happy cpphs
+    stack install ihaskell
+
+    has_cmd ihaskell || return 1
+    ihaskell install
+}
+
 haskell_install() {
     cabal_install
     stack_install
@@ -799,6 +812,8 @@ haskell_install() {
     stack install hasktags
     stack install hindent
     stack install hdevtools
+
+    ihaskell_install
 }
 
 #

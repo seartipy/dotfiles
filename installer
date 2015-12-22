@@ -662,8 +662,14 @@ scala_mac_install() {
     is_mac || return 1
 
     slog "Installing scala packages"
-    brew install sbt scala
+    brew install sbt scala ammonite-repl
     brew cask install scala-ide
+}
+
+ammonite_install() {
+    is_linux || return 1
+
+     curl -L https://git.io/v0FGO > ~/bin/amm && chmod +x ~/bin/amm
 }
 
 scala_fedora_install() {
@@ -672,6 +678,8 @@ scala_fedora_install() {
     slog "Installing scala"
     curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
     sudo dnf install -y scala sbt
+
+    ammonite_install
 }
 
 scala_ubuntu_install() {
@@ -679,6 +687,7 @@ scala_ubuntu_install() {
 
     slog "Install scala"
     sudo apt-get -y install sbt scala
+    ammonite_install
 }
 
 sbt_plugins() {

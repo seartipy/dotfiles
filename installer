@@ -283,7 +283,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gibo gpg
+    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gpg
     brew cask install iterm2
 
     slog "cleanup brew"
@@ -1009,16 +1009,6 @@ fasd_install() {
     fi
 }
 
-gibo_install() {
-    is_linux || return 1
-
-    has_cmd gibo && return 1
-    slog "Installing gibo"
-    curl -L https://raw.github.com/simonwhitaker/gibo/master/gibo -so ~/bin/gibo
-    chmod +x ~/bin/gibo
-    gibo -u
-}
-
 sourcecodepro_install() {
     is_linux || return 1
     has_cmd fc-cache || return 1
@@ -1071,7 +1061,6 @@ additional_install() {
     additional_ubuntu_install
 
     sourcecodepro_install
-    gibo_install
     fasd_install
 }
 
@@ -1876,7 +1865,6 @@ essential_check() {
     cmd_check unrar
     cmd_check 7z
     cmd_check gpg
-    cmd_check gibo
     cmd_check gpg
     cmd_check tmux
 
@@ -2056,7 +2044,6 @@ cpp_check() {
 
 additional_check() {
     if is_linux; then
-        cmd_check gibo
         cmd_check fasd
 
         if ! ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null; then

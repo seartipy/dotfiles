@@ -872,8 +872,12 @@ idris_install() {
 
 elm_mac_install() {
     is_mac || return 1
-
     brew cask install elm-platform
+
+    web_mac_install
+    has_cmd npm || return 1
+
+    npm install -g elm-oracle
 }
 
 elm_linux_install() {
@@ -884,7 +888,7 @@ elm_linux_install() {
     has_cmd npm || return 1
 
     slog "Installing elm"
-    npm install -g elm
+    npm install -g elm elm-oracle
 }
 
 elm_install() {
@@ -1037,7 +1041,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install atom google-chrome dash android-file-transfer virtualbox transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew cask install atom google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl

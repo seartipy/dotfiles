@@ -531,7 +531,7 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit
+    brew cask install smartgit hub github-desktop
     brew install kdiff3 git-extras
 }
 

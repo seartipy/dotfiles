@@ -811,6 +811,7 @@ haskell_install() {
     stack install hasktags
     stack install hindent
     stack install hdevtools
+    stack install ghc-mod
     stack install ghci-ng
     ihaskell_install
 }

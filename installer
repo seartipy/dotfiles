@@ -349,7 +349,7 @@ mac_bash_dotfiles() {
 }
 
 linux_bash_dotfiles() {
-    is_linux || retur n1
+    is_linux || return 1
     [ -f ~/seartipy/dotfiles/bashrc ] || return 1
 
     slog "Moving ~/.bash_profile to $BACKUP_DIR"

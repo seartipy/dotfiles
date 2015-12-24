@@ -39,11 +39,12 @@ instance LayoutClass l a => LayoutClass (Flip l) a where
 myLayout = avoidStruts (
     Flip (ResizableTall 1 (3/100) (1/2) []) |||
     ThreeColMid 1 (3/100) (1/2) |||
+    noBorders (fullscreenFull Full))
+
     -- ResizableTall 1 (3/100) (1/2) [] |||
     -- Mirror (Tall 1 (3/100) (1/2)) |||
     -- Full |||
-    -- spiral (6/7)) |||
-    noBorders (fullscreenFull Full)
+    -- spiral (6/7)
 
 main = do
      session <- getEnv "DESKTOP_SESSION"

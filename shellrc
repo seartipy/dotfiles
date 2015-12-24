@@ -234,3 +234,21 @@ alias upd=seartipy_upgrade_dotfiles
 alias sfl=seartipy_fix_links
 
 alias gs="git status"
+
+if is_ubuntu; then
+    alias si="sudo apt-get install -y"
+    alias ss="sudo apt-cache search"
+    alias sr="sudo apt-get purge"
+fi
+
+if is_mac; then
+    alias si="brew install"
+    alias ss="brew search"
+    alias sr="brew uninstall"
+fi
+
+if is_fedora; then
+    alias si="sudo dnf install -y"
+    alias ss="sudo dnf search"
+    alias sr="sudo dnf remove"
+fi

@@ -46,13 +46,25 @@ myLayout = avoidStruts (
     -- Full |||
     -- spiral (6/7)
 
+myModMask = mod4Mask
 main = do
      session <- getEnv "DESKTOP_SESSION"
      xmonad  $ (maybe desktopConfig desktop session)
        {
          layoutHook = smartBorders $ myLayout,
-         modMask = mod4Mask     -- Rebind Mod to the Windows key
-       }
+         modMask = myModMask     -- Rebind Mod to the Windows key
+       } `additionalKeys` [
+       -- Shring non master area
+       ((myModMask, xK_a), sendMessage MirrorShrink)
+
+         -- Expand non master area
+       , ((myModMask, xK_z), sendMessage MirrorExpand)
+         -- open a dmenu with window titles, switch to workspace of the chosen one
+       , ((myModMask, xK_g), gotoMenuArgs' "dmenu" [ "-fn",  "'Ubuntu Mono 13'" ])
+
+         -- Chosen one, will be brought into current workspace
+       , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 14'" ])
+       ]
 
 desktop "gnome" = gnomeConfig
 desktop "kde" = kde4Config

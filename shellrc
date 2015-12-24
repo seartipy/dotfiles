@@ -180,6 +180,8 @@ seartipy_upgrade_all() {
     has_cmd npm && npm update -g
     has_cmd cabal && cabal update
     has_cmd stack && stack update
+    has_cmd boot && boot -u && boot
+    has_cmd stack && stack update
 }
 
 seartipy_emacs_default() {

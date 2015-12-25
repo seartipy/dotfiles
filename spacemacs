@@ -236,7 +236,12 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-)
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+  (when (file-exists-p custom-file)
+    (load custom-file))
+
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

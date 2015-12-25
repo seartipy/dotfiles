@@ -8,6 +8,7 @@ antigen bundle git
 antigen bundle gitfast
 antigen bundle git-extras
 antigen bundle github
+
 antigen bundle jsontools
 
 antigen bundle command-not-found
@@ -25,8 +26,6 @@ antigen bundle ruby
 antigen bundle pip
 antigen bundle coffee
 
-# antigen bundle atom
-antigen bundle sublime
 antigen bundle web-search
 
 antigen bundle fasd

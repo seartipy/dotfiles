@@ -20,19 +20,20 @@ if ! zgen saved; then
     # prezto and modules
     zgen prezto
     zgen prezto environment
-    zgen prezto utility
-    zgen prezto spectrum
-    zgen prezto archive
     zgen prezto terminal
+    zgen prezto editor
+    zgen prezto history
     zgen prezto directory
+    zgen prezto spectrum
+    zgen prezto utility
+    zgen prezto completion
+    zgen prezto archive
     zgen prezto emacs
     zgen prezto git
     zgen prezto command-not-found
-    zgen prezto completion
     zgen prezto fasd
     zgen prezto gnu-utility
     zgen prezto osx
-    zgen prezto history
     zgen prezto history-substring-search
     zgen prezto syntax-highlighting
     zgen prezto tmux
@@ -42,6 +43,8 @@ if ! zgen saved; then
     # plugins
     # zgen load /path/to/super-secret-private-plugin
     zgen load djui/alias-tips
+    zgen load rimraf/k
+    zgen load unixorn/git-extra-commands
 
     # save all to init script
     zgen save

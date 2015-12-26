@@ -38,8 +38,6 @@ if ! zgen saved; then
     zgen prezto syntax-highlighting
     zgen prezto tmux
 
-    source ~/seartipy/dotfiles/shellrc
-
     # plugins
     # zgen load /path/to/super-secret-private-plugin
     zgen load djui/alias-tips
@@ -49,5 +47,7 @@ if ! zgen saved; then
     # save all to init script
     zgen save
 fi
+
+source "$HOME/seartipy/dotfiles/shellrc"
 
 [ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local

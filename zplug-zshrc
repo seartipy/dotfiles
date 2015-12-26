@@ -1,5 +1,7 @@
 [ -f ~/.zplug/zplug ] || curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
 
+ZSH_TMUX_AUTOSTART=true # can override in ~/.zshrc-pre.local
+
 [ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
 
 source ~/.zplug/zplug

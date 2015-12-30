@@ -3,7 +3,7 @@ if ! [ -f ~/.zplug/zplug ]; then
     source ~/.zplug/zplug && zplug update --self
 fi
 
-ZSH_TMUX_AUTOSTART=true # can override in ~/.zshrc-pre.local
+ZSH_TMUX_AUTOSTART=false # can override in ~/.zshrc-pre.local
 
 [ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
 

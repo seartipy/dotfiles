@@ -212,7 +212,7 @@ add_docker_ppa() {
 }
 
 add_additional_ppas() {
-    # add_zeal_ppa
+    add_zeal_ppa
     add_atom_ppa
     add_virtualbox_ppa
     add_docker_ppa
@@ -258,7 +258,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal
 
     sudo apt-get clean
     sudo apt-get autoclean

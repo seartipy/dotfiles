@@ -453,7 +453,7 @@ emacs_mac_install() {
     osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
     slog "Generating terminfo for terminal in emacs"
-    local emacsversion=`ls /usr/local/Cellar/emacs-mac`
+    local emacsversion=`ls -r /usr/local/Cellar/emacs-mac | head -1`
     tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/${emacsversion}/share/emacs/24.5/etc/e/eterm-color.ti
 }
 

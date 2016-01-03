@@ -1,26 +1,15 @@
 # utils
 
-colorize() {
-    if [ -t 1 ]; then
-        printf "\e[%sm%s\e[m" 1 "$2"
-    else
-        echo -n "$2"
-    fi
-}
-
 slog() {
-    colorize "SEARTIPY : "
-    echo $1
+    echo "SEARTIPY : $1"
 }
 
 warn() {
-    colorize "WARNING : "
-    echo $1
+    echo "WARNING : $1"
 }
 
 err_exit() {
-    colorize "FATAL: "
-    echo $1
+    echo "FATAL: $1"
     exit 1
 }
 

@@ -1506,22 +1506,28 @@ select_everything() {
     ZSH="zsh"
     BASH="bash"
     EMACS="emacs"
+    GIT="git"
     DOTFILES="dotfiles"
+
     JAVA="java"
     SCALA="scala"
     CLOJURE="clojure"
+
     WEB="web"
+    CPP="cpp"
     PYTHON="python"
     HASKELL="haskell"
+
     RUBY="ruby"
-    CPP="cpp"
-    ADDITIONAL="additional"
-    VIM="vim"
-    XMONAD="xmonad"
     ELIXIR="elixir"
     PURESCRIPT="purescript"
-    ELM="elm"
     IDRIS="idris"
+    ELM="elm"
+
+    ADDITIONAL="additional"
+
+    VIM="vim"
+    XMONAD="xmonad"
     RUST="rust"
     R="r"
 }
@@ -1534,6 +1540,7 @@ script_options() {
         BASH="bash"
         EMACS="emacs"
         DOTFILES="dotfiles"
+        GIT="$GIT"
     fi
 
     if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
@@ -1775,7 +1782,8 @@ install_all() {
     [ -n "$BASH" ] && bash_install
     [ -n "$EMACS" ] && emacs_install
     [ -n "$GIT" ] && git_install
-
+    [ -n "$DOTFILES" ] && dotfiles_install
+ 
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
     [ -n "$SCALA" ] && scala_install
@@ -1786,12 +1794,13 @@ install_all() {
     [ -n "$HASKELL" ] && haskell_install
 
     [ -n "$RUBY" ] && ruby_install
-    # [ -n "$RUST" ] && rust_install
     [ -n "$ELIXIR" ] && elixir_install
-    # [ -n "$R" ] && r_install
     [ -n "$PURESCRIPT" ] && purescript_install
     [ -n "$IDRIS" ] && idris_install
     [ -n "ELM" ] && elm_install
+
+    # [ -n "$RUST" ] && rust_install
+    # [ -n "$R" ] && r_install
 
     if [ -n "$ADDITIONAL" ]; then
         settings
@@ -1812,7 +1821,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install
@@ -1822,6 +1831,7 @@ installer() {
     else
         trash=trash
     fi
+
     create_dirs
 
     export PATH="$HOME/bin:$PATH"

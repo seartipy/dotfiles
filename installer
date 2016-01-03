@@ -1251,7 +1251,7 @@ gnome_extensions() {
 
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
-    shell-extension-install $gnomever 294 # shellshape
+    # shell-extension-install $gnomever 294 # shellshape
     shell-extension-install $gnomever 97  # coverflow alt-tab
     shell-extension-install $gnomever 442 # drop down terminal
     shell-extension-install $gnomever 413 # app keys

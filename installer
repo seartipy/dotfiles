@@ -484,6 +484,12 @@ emacs_ubuntu_install() {
 
 spacemacs_dotfiles() {
     sclone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
+
+    [ -f ~/seartipy/dotfiles/spacemacs ] || return 1
+
+    slog "Moving ~/.spacemacs to $BACKUP_DIR"
+    smv ~/.spacemacs $BACKUP_DIR
+
     slog "Linking ~/seartipy/dotfiles/spacemacs as ~/.spacemacs"
     sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
 }

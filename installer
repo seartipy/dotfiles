@@ -99,6 +99,22 @@ ln_check() {
      [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
+apmi() {
+    has_cmd apm || return 1
+
+    for p in $*; do
+        apm ls --installed --bare | cut -d "@" -f 1 | grep "^$p$" > /dev/null || apm install $p
+    done
+}
+
+npmi() {
+    has_cmd npm || return 1
+
+    for p in $*; do
+        npm list -g $p > /dev/null || npm install -g $p
+    done
+}
+
 #
 # PPAs
 

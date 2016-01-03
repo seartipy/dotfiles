@@ -99,7 +99,7 @@ ln_check() {
      [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
-apmi() {
+apm() {
     has_cmd apm || return 1
 
     for p in $*; do
@@ -235,10 +235,7 @@ add_additional_ppas() {
 }
 
 add_ppas() {
-    pre_cmd_check debconf-set-selections
-    pre_cmd_check add-apt-repository
-    pre_cmd_check apt-key
-    pre_cmd_check wget
+    pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
         add_java_ppa
@@ -855,10 +852,8 @@ purescript_linux_install() {
 
     node_linux_install
 
-    has_cmd npm || return 1
-
     slog "Installing purescript"
-    npm install -g purescript
+    npmi  purescript
 }
 
 purescript_install() {
@@ -900,9 +895,8 @@ elm_mac_install() {
     brew cask install elm-platform
 
     web_mac_install
-    has_cmd npm || return 1
 
-    npm install -g elm-oracle
+    npmi elm-oracle
 }
 
 elm_linux_install() {
@@ -910,10 +904,8 @@ elm_linux_install() {
 
     node_linux_install
 
-    has_cmd npm || return 1
-
     slog "Installing elm"
-    npm install -g elm elm-oracle
+    npmi elm elm-oracle
 }
 
 elm_install() {
@@ -992,10 +984,8 @@ web_install() {
     node_linux_install
     flow_install
 
-    has_cmd npm || return 1
-
     slog "Installing npm packages for web development"
-    npm install -g coffee-script typescript babel webpack karma-cli eslint jshint coffeelint tern js-beautify webpack-dev-server eslint-plugin-react babel-eslint browserify watchify babelify budo gulp grunt-cli
+    npmi coffee-script typescript babel webpack karma-cli eslint jshint coffeelint tern js-beautify webpack-dev-server eslint-plugin-react babel-eslint browserify watchify babelify budo gulp grunt-cli
 }
 
 #
@@ -1801,6 +1791,7 @@ install_all() {
         settings
         additional_install
     fi
+
     [ -n "$XMONAD" ] && xmonad_install
     [ -n "$VIM" ] && vim_install
 }
@@ -1847,25 +1838,14 @@ installer() {
 # diagnostics
 
 pre_installer_check() {
-    pre_cmd_check git
-    pre_cmd_check curl
-    pre_cmd_check wget
-    pre_cmd_check unzip
-    pre_cmd_check $trash
-
-    [ -d "$BACKUP_DIR" ] || err_exit "cannot create $BACKUP_DIR, quitting"
-    [ -d ~/seartipy/emacses ] || err_exit "cannot create ~/seartipy/emacses, quitting"
-    [ -d ~/seartipy/vendors ] || err_exit "cannot create ~/seartipy/vendors, quitting"
-    [ -d ~/bin ] || err_exit "~/bin does not exist, quitting"
+    pre_cmd_check git curl wget unzip $trash
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
 }
 
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew
-    cmd_check trash
-    cmd_check 7z
-    cmd_check greadlink
+    cmd_check brew trash 7z greadlink
  }
 
 ppas_check() {
@@ -1887,33 +1867,17 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check xsel
-    cmd_check xclip
-    cmd_check p7zip
-    cmd_check dconf
+    cmd_check xsel xclip p7zip dconf
 }
 
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel
-    cmd_check xclip
-    cmd_check 7za
-    cmd_check dconf
+    cmd_check xsel xclip 7za dconf
 }
 
 essential_check() {
-    cmd_check curl
-    cmd_check wget
-    cmd_check git
-    cmd_check $trash
-    cmd_check tree
-    cmd_check fasd
-    cmd_check unrar
-    cmd_check 7z
-    cmd_check gpg
-    cmd_check gpg
-    cmd_check tmux
+    cmd_check curl wget git $trash tree fasd unrar 7z gpg tmux
 
     essential_mac_check
     essential_fedora_check
@@ -1921,8 +1885,7 @@ essential_check() {
 }
 
 dotfiles_check() {
-    dir_check ~/seartipy/dotfiles
-    dir_check ~/seartipy/lean-dotfiles
+    dir_check ~/seartipy/dotfiles ~/seartipy/lean-dotfiles
 }
 
 zsh_check() {
@@ -1931,9 +1894,7 @@ zsh_check() {
     ln_check ~/seartipy/dotfiles/zshrc ~/.zshrc
     ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 
-    dir_check ~/.slimzsh
-    dir_check ~/seartipy/vendors/antigen
-    dir_check ~/seartipy/vendors/liquidprompt
+    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/seartipy/vendors/liquidprompt
 }
 
 bash_check() {
@@ -1942,47 +1903,35 @@ bash_check() {
 }
 
 emacs_check() {
-    cmd_check emacs
-    cmd_check aspell
+    cmd_check emacs aspell
     if is_ubuntu || is_mac; then
         cmd_check editorconfig
     fi
     is_linux && cmd_check ctags
 
-    dir_check ~/seartipy/emacses/spacemacs
-    dir_check ~/seartipy/emacses/housemd
-    dir_check ~/seartipy/emacses/lean-emacs
+    dir_check ~/seartipy/emacses/spacemacs ~/seartipy/emacses/housemd ~/seartipy/emacses/lean-emacs
 
     ln_check ~/seartipy/dotfiles/spacemacs ~/.spacemacs
-
     ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
-
     ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
 
     is_linux && cmd_check cask
 }
 
 scala_check() {
-    cmd_check javac
-    cmd_check sbt
-    cmd_check scala
+    cmd_check javac sbt scala
 
     ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
 }
 
 clojure_check() {
-    cmd_check javac
-    cmd_check lein
-    cmd_check boot
+    cmd_check javac lein boot
 
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
 
-    if is_linux; then
-        cmd_check lein
-        cmd_check boot
-    fi
+    is_linux && cmd_check lein boot
 }
 
 web_check() {
@@ -1999,21 +1948,7 @@ web_check() {
 
     cmd_check npm
 
-    if has_cmd npm; then
-        cmd_check budo
-        cmd_check browserify
-        cmd_check watchify
-        cmd_check coffee
-        cmd_check babel
-        cmd_check webpack
-        cmd_check eslint
-        cmd_check jshint
-        cmd_check coffeelint
-        cmd_check tern
-        cmd_check js-beautify
-        cmd_check webpack-dev-server
-    fi
-
+    has_cmd npm && cmd_check budo browserify watchify coffee babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server
 }
 
 elixir_check() {
@@ -2041,18 +1976,9 @@ r_check() {
 haskell_check() {
     export PATH="$HOME/.local/bin:$PATH"
 
-    cmd_check ghc
-    cmd_check cabal
-    cmd_check stack
+    cmd_check ghc cabal stack 
 
-    cmd_check alex
-    cmd_check happy
-    cmd_check hlint
-    cmd_check structured-haskell-mode
-    cmd_check stylish-haskell
-    cmd_check hasktags
-    cmd_check hindent
-    cmd_check hdevtools
+    cmd_check alex happy hlint structured-haskell-mode stylish-haskell hasktags hindent hdevtools
 }
 
 python_check() {
@@ -2069,41 +1995,22 @@ python_check() {
 }
 
 ruby_check() {
-    cmd_check rvm
-    cmd_check ruby
-
-    cmd_check pry
-    cmd_check thin
-    cmd_check guard
-    cmd_check watchr
-    cmd_check tmuxinator
-    cmd_check git-up
-    cmd_check sass
+    cmd_check rvm ruby
+    cmd_check pry thin guard watchr tmuxinator git-up sass
 }
 
 cpp_check() {
-    cmd_check cmake
-    cmd_check scons
-    cmd_check cppcheck
-    cmd_check clang++
+    cmd_check cmake scons cppcheck clang++
     is_linux && cmd_check g++
 }
 
 additional_check() {
     if is_linux; then
         cmd_check fasd
-
-        if ! ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null; then
-            warn "source code pro not installed"
-        fi
-
-        cmd_check xmonad
-        cmd_check vim
+        ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "source code pro not installed"
+        cmd_check xmonad vim
     fi
-
-    if is_mac; then
-        cmd_check docker
-    fi
+    is_mac && cmd_check docker
 }
 
 settings_check() {
@@ -2115,9 +2022,7 @@ settings_check() {
 }
 
 git_check() {
-    cmd_check smartgit
-    cmd_check kdiff3
-    cmd_check meld
+    cmd_check smartgit kdiff3 meld
 }
 
 vim_check() {

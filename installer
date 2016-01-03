@@ -67,19 +67,27 @@ sclone() {
 }
 
 pre_cmd_check() {
-    has_cmd "$1" || err_exit "$1 not installed"
-}
-
-cmd_check() {
-    has_cmd "$1" || warn "$1 not installed"
+    for cmd in $*; do
+        has_cmd "$cmd" || err_exit "$cmd not be installed, quitting"
+    done
 }
 
 pre_dir_check() {
-    [ -d "$1" ] || err_exit  "$1 directory does not exist"
+    for dir in $*; do
+        [ -d "$dir" ] || err_exit "$dir does not exist, quitting"
+    done
+}
+
+cmd_check() {
+    for cmd in $*; do
+        has_cmd "$cmd" || warn "$cmd not installed"
+    done
 }
 
 dir_check() {
-    [ -d "$1" ] || warn "$1 directory does not exist"
+    for dir in $*; do
+        [ -d "$dir" ] || warn "$dir does not exist"
+    done
 }
 
 ln_check() {

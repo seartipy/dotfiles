@@ -1129,10 +1129,10 @@ xmonad_install() {
     slog "moving ~/.xmonad to $BACKUP_DIR"
     smv ~/.xmonad $BACKUP_DIR
 
-    sclone https://github.com/pervezfunctor/xmonad-config ~/.xmonad
+    smd ~/.xmonad
 
-    slog "linking ~/.xmonad/bin/xsession to ~/.xinitrc"
-    sln ~/.xmonad/bin/xsession ~/.xinitrc
+    slog "Linking ~/seartipy/dotfiles/xmonad.hs to ~/.xmonad/xmonad.hs"
+    sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 
     is_ubuntu || return 1
 

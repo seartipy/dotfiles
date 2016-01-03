@@ -1298,7 +1298,7 @@ mate_settings() {
     has_cmd mate-session || return 1
     [ -n "$SEARTIPY" ] || return 1
 
-    dconf write /org/mate/desktop/font-rendering/dpi "192.0"
+    dconf write /org/mate/desktop/font-rendering/dpi "160.0"
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 

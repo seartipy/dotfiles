@@ -1303,7 +1303,6 @@ mate_settings() {
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
     dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
-    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options '@as []'
 
     dconf write /org/mate/marco/global-keybindings/panel-run-dialog "'<Mod4>space'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"

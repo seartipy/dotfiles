@@ -12,7 +12,7 @@ if ! zgen saved; then
     # prezto options
     zgen prezto editor key-bindings 'emacs'
     zgen prezto editor dot-expansion 'yes'
-    zgen prezto tmux:auto-start local 'yes'
+    zgen prezto tmux:auto-start local 'no'
 
     zgen prezto prompt theme 'pure'
     # zgen prezto prompt theme 'peepcode' "❯"

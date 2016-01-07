@@ -99,7 +99,7 @@ ln_check() {
      [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
-apm() {
+apmi() {
     has_cmd apm || return 1
 
     for p in $*; do
@@ -549,6 +549,39 @@ emacs_install() {
     else
         warn "cask command absent, skipping emacs install"
     fi
+}
+
+@
+# atom
+
+ubuntu_atom_install() {
+    is_ubuntu || return 1
+    install atom
+}
+
+fedora_atom_install() {
+    is_fedora || return 1
+    sudo dnf -y copr enable helber/atom
+    install atom
+}
+
+mac_atom_install() {
+    is_mac || return 1
+    brew cask install atom
+}
+
+atom_install() {
+    ubuntu_atom_install
+    mac_atom_install
+    fedora_atom_install
+
+    apmi file-icons linter atom-beautify terminal-plus jumpy hyperclick project-manager last-cursor-position git-plus atomatigit blame merge-conflicts git-history language-diff script atom-fix-path
+
+    apmi language-scala ensime
+    apmi language-haskell ide-haskell haskell-ghc-mod autocomplete-haskell ide-haskell-repl ide-haskell-cabal
+    apmi Parinfer proto-repl linter-clojure lisp-paredit
+    apmi language-babel linter-eslint emmet
+    apmi clang-format linter-clang autocomplete-clang
 }
 
 #
@@ -1062,7 +1095,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install atom google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew cask install google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
@@ -1082,7 +1115,7 @@ additional_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing additional"
-    sudo apt-get install -y vlc youtube-dl atom google-chrome-stable
+    sudo apt-get install -y vlc youtube-dl google-chrome-stable
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox-5.0 dkms
     fi
@@ -1548,6 +1581,10 @@ script_options() {
 
     while [[ $# > 0 ]]; do
         case $1 in
+            atom)
+                ATOM="ATOM"
+                shift
+                ;;
             java)
                 JAVA="java"
                 shift
@@ -1779,10 +1816,14 @@ install_all() {
 
     [ -n "$ZSH" ] && zsh_install
     [ -n "$BASH" ] && bash_install
+
     [ -n "$EMACS" ] && emacs_install
+    [ -n "$ATOM" ] && atom_install
+
     [ -n "$GIT" ] && git_install
+
     [ -n "$DOTFILES" ] && dotfiles_install
- 
+
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
     [ -n "$SCALA" ] && scala_install
@@ -1931,6 +1972,10 @@ emacs_check() {
     ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
 
     is_linux && cmd_check cask
+}
+
+atom_check() {
+    cmd_check atom apm
 }
 
 scala_check() {

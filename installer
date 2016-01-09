@@ -2107,7 +2107,9 @@ settings_check() {
 }
 
 git_check() {
-    cmd_check smartgit kdiff3 meld
+    cmd_check kdiff3 meld
+    is_ubuntu && cmd_check smartgit
+    is_mac && cmd_check smartgit
 }
 
 vim_check() {

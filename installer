@@ -334,9 +334,34 @@ clone_dotfiles() {
     sclone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles
 }
 
+tmux_dotfiles() {
+    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
+
+    slog "Moving ~/.tmux.conf to $BACKUP_DIR"
+    smv ~/.tmux.conf $BACKUP_DIR
+
+    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
+    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+}
+
+amethyst_dotfiles() {
+    is_mac || return 1
+    [ -f ~/seartipy/dotfiles/amethyst ] || return 1
+
+    slog "Moving ~/.amethyst to $BACKUP_DIR"
+    smv ~/.amethyst $BACKUP_DIR
+
+    slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
+
+    sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+}
+
 dotfiles_install() {
     clone_lean_dotfiles
     clone_dotfiles
+
+    tmux_dotfiles
+    amethyst_dotfiles
 }
 
 #
@@ -388,28 +413,6 @@ zsh_ubuntu_install() {
     sudo apt-get install -y zsh
 }
 
-tmux_dotfiles() {
-    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
-
-    slog "Moving ~/.tmux.conf to $BACKUP_DIR"
-    smv ~/.tmux.conf $BACKUP_DIR
-
-    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-}
-
-amethyst_dotfiles() {
-    is_mac || return 1
-    [ -f ~/seartipy/dotfiles/amethyst ] || return 1
-
-    slog "Moving ~/.amethyst to $BACKUP_DIR"
-    smv ~/.amethyst $BACKUP_DIR
-
-    slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
-
-    sln ~/seartipy/dotfiles/amethyst ~/.amethyst
-}
-
 zsh_dotfiles() {
     [ -f ~/seartipy/dotfiles/zshrc ] || return 1
 
@@ -418,9 +421,6 @@ zsh_dotfiles() {
 
     slog "Linking ~/seartipy/dotfiles/zshrc as ~/.zshrc"
     sln ~/seartipy/dotfiles/zshrc ~/.zshrc
-
-    tmux_dotfiles
-    amethyst_dotfiles
 }
 
 zsh_install() {

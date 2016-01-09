@@ -860,7 +860,7 @@ haskell_install() {
     stack install alex
     stack install happy
     stack install hlint
-    stack install structured-haskell-mode
+    # stack install structured-haskell-mode
     stack install stylish-haskell
     stack install hasktags
     stack install hindent

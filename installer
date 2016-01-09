@@ -1860,8 +1860,6 @@ installer() {
 
     essential_install
 
-    export PATH="$HOME/bin:$PATH"
-
     pre_installer_check
 
     install_all
@@ -2120,8 +2118,37 @@ post_installer_check() {
 
 curdir=`pwd`
 
-rm -f ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
+if is_ubuntu; then
+    trash=trash-put
+else
+    trash=trash
+fi
 
-installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+keep_sudo_running
+
+create_dirs
+
+export PATH="$HOME/bin:$PATH"
+
+try_trash() {
+    if has_cmd trash; then
+        trash $* 2> /dev/null
+    elif has_cmd trash-put; then
+        trash-put $* 2> /dev/null
+    else
+        rm -rf $*
+    fi
+}
+
+try_trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+
+if [[ $- = *i* ]]; then
+    log "Running pre installer check..."
+    log "if this does not succeed you must first at least install essentials by running this script without parameters"
+    pre_installer_check
+    log "installer check succeeded, you could run functions in this script for testing"
+else
+    installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+fi
 
 cd $curdir

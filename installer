@@ -1244,6 +1244,8 @@ golang_ubuntu_install() {
 }
 
 golang_fedora_install() {
+    is_fedora || return 1
+
     sudo dnf install -y golang
 }
 

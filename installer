@@ -224,28 +224,21 @@ add_docker_ppa() {
     fi
 }
 
-add_additional_ppas() {
-    add_zeal_ppa
-    add_atom_ppa
-    add_virtualbox_ppa
-    add_docker_ppa
-    add_chrome_ppa
-    add_webupd8_ppa
-    add_smartgit_ppa
-}
-
 add_ppas() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
-    if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        add_java_ppa
-    fi
-    [ -n "$SCALA" ] && add_scala_ppa
-    [ -n "$GIT" ] && add_smartgit_ppa
+    add_java_ppa
+    add_scala_ppa
+    add_smartgit_ppa
     # [ -n "$HASKELL" ] && add_ghc_ppa
-    [ -n "$HASKELL" ] && add_haskell_stack_ppa
+    add_haskell_stack_ppa
 
-    [ -n "$ADDITIONAL" ] && add_additional_ppas
+    add_zeal_ppa
+    add_atom_ppa
+    add_virtualbox_ppa
+    add_chrome_ppa
+    add_webupd8_ppa
+    add_docker_ppa
 }
 
 #

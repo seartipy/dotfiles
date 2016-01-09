@@ -2048,6 +2048,10 @@ cpp_check() {
     is_linux && cmd_check g++
 }
 
+go_check() {
+    cmdcheck go golint gocode godef goimports
+}
+
 additional_check() {
     if is_linux; then
         cmd_check fasd

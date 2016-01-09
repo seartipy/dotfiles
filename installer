@@ -2057,7 +2057,7 @@ r_check() {
 haskell_check() {
     export PATH="$HOME/.local/bin:$PATH"
 
-    cmd_check ghc cabal stack 
+    cmd_check ghc cabal stack
 
     cmd_check alex happy hlint structured-haskell-mode stylish-haskell hasktags hindent hdevtools
 }
@@ -2138,6 +2138,7 @@ post_installer_check() {
 
     [ -n "$WEB_CHECK" ] && web_check
     [ -n "$CPP" ] && cpp_check
+    [ -n "$GO" ] && go_check
     [ -n "$PYTHON" ] && python_check
     [ -n "$HASKELL" ] && haskell_check
 

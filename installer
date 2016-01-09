@@ -1,7 +1,7 @@
 # utils
 
 slog() {
-    echo "SEARTIPY : $1"
+    echo "SEARTIPY : $1" | tee ~/seartipy-installer.log
 }
 
 warn() {
@@ -1848,8 +1848,6 @@ install_all() {
 }
 
 installer() {
-    keep_sudo_running
-
     script_options $*
 
     if [ -n "$DIAGNOSTICS" ]; then

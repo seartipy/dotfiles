@@ -1565,7 +1565,10 @@ settings() {
 select_everything() {
     ZSH="zsh"
     BASH="bash"
+
     EMACS="emacs"
+    ATOM="atom"
+
     GIT="git"
     DOTFILES="dotfiles"
 
@@ -1575,6 +1578,8 @@ select_everything() {
 
     WEB="web"
     CPP="cpp"
+    GO="go"
+
     PYTHON="python"
     HASKELL="haskell"
 

@@ -1954,7 +1954,7 @@ essential_fedora_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git $trash tree fasd unrar 7z gpg tmux
+    cmd_check curl wget git $trash tree fasd unrar gpg tmux
 
     essential_mac_check
     essential_fedora_check

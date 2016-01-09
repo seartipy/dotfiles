@@ -575,13 +575,14 @@ atom_install() {
     mac_atom_install
     fedora_atom_install
 
-    apmi file-icons linter atom-beautify terminal-plus jumpy hyperclick project-manager last-cursor-position git-plus atomatigit blame merge-conflicts git-history language-diff script atom-fix-path
+    apmi file-icons linter atom-beautify terminal-plus jumpy hyperclick project-manager last-cursor-position git-plus atomatigit blame merge-conflicts git-history language-diff script atom-fix-path #essential
 
-    apmi language-scala ensime
-    apmi language-haskell ide-haskell haskell-ghc-mod autocomplete-haskell ide-haskell-repl ide-haskell-cabal
-    apmi Parinfer proto-repl linter-clojure lisp-paredit
-    apmi language-babel linter-eslint emmet
-    apmi clang-format linter-clang autocomplete-clang
+    apmi language-scala ensime # scala
+    apmi language-haskell ide-haskell haskell-ghc-mod autocomplete-haskell ide-haskell-repl ide-haskell-cabal # haskell
+    apmi Parinfer proto-repl linter-clojure lisp-paredit # clojure
+    apmi language-babel linter-eslint emmet # web
+    apmi clang-format linter-clang autocomplete-clang # C++
+    apmi go-plus # go
 }
 
 #

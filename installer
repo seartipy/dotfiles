@@ -549,13 +549,13 @@ emacs_install() {
 
 ubuntu_atom_install() {
     is_ubuntu || return 1
-    install atom
+    sudo apt-get install -y atom
 }
 
 fedora_atom_install() {
     is_fedora || return 1
     sudo dnf -y copr enable helber/atom
-    install atom
+    sudo dnf install -y atom
 }
 
 mac_atom_install() {
@@ -1867,7 +1867,7 @@ install_all() {
 
     [ -n "$WEB" ] && web_install
     [ -n "$CPP" ] && cpp_install
-    [ -n "$GO" ] && go_install
+    [ -n "$GO" ] && golang_install
     [ -n "$PYTHON" ] && python_install
     [ -n "$HASKELL" ] && haskell_install
 

@@ -2194,12 +2194,13 @@ try_trash() {
 try_trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
 
 if [[ $- = *i* ]]; then
-    log "Running pre installer check..."
-    log "if this does not succeed you must first at least install essentials by running this script without parameters"
+    slog "Running pre installer check..."
+    slog "if this does not succeed you must first at least install essentials by running this script without parameters"
     pre_installer_check
-    log "installer check succeeded, you could run functions in this script for testing"
+    slog "installer check succeeded, you could run functions in this script for testing"
 else
     installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
 fi
 
 cd $curdir
+

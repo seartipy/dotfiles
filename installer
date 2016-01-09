@@ -1202,6 +1202,38 @@ elixir_install() {
 }
 
 #
+# golang
+
+golang_mac_install() {
+    is_mac || return 1
+
+    brew install golang
+}
+
+golang_ubuntu_install() {
+    is_ubuntu || return 1
+
+    sudo apt-get install -y golang
+}
+
+golang_fedora_install() {
+    sudo dnf install -y golang
+}
+
+golang_install() {
+    golang_mac_install
+    golang_ubuntu_install
+    golang_fedora_install
+
+    has_cmd go || return 1
+
+    go get -u golang.org/x/tools/cmd/...
+    go get -u github.com/golang/lint/golint
+    go get -u github.com/nsf/gocode
+    go get -u github.com/rogpeppe/godef
+}
+
+#
 # ruby
 
 ruby_install() {
@@ -1548,6 +1580,10 @@ script_options() {
 
     while [[ $# > 0 ]]; do
         case $1 in
+            go)
+                GO="go"
+                shift
+                ;;
             java)
                 JAVA="java"
                 shift
@@ -1789,6 +1825,7 @@ install_all() {
 
     [ -n "$WEB" ] && web_install
     [ -n "$CPP" ] && cpp_install
+    [ -n "$GO" ] && go_install
     [ -n "$PYTHON" ] && python_install
     [ -n "$HASKELL" ] && haskell_install
 
@@ -1820,18 +1857,10 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install
-
-    if is_ubuntu; then
-        trash=trash-put
-    else
-        trash=trash
-    fi
-
-    create_dirs
 
     export PATH="$HOME/bin:$PATH"
 

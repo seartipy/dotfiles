@@ -544,7 +544,7 @@ emacs_install() {
     fi
 }
 
-@
+#
 # atom
 
 ubuntu_atom_install() {

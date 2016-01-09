@@ -5,11 +5,11 @@ slog() {
 }
 
 warn() {
-    echo "WARNING : $1"
+    echo "WARNING : $1" | tee ~/seartipy-installer.log
 }
 
 err_exit() {
-    echo "FATAL: $1"
+    echo "FATAL: $1" | tee ~/seartipy-installer.log
     exit 1
 }
 

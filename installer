@@ -1,7 +1,7 @@
 # utils
 
 slog() {
-    echo "SEARTIPY : $1"
+    echo "SEARTIPY : $1" | tee ~/seartipy-installer.log
 }
 
 warn() {
@@ -1235,6 +1235,39 @@ elixir_install() {
 }
 
 #
+# golang
+
+golang_mac_install() {
+    is_mac || return 1
+
+    brew install golang
+}
+
+golang_ubuntu_install() {
+    is_ubuntu || return 1
+
+    sudo apt-get install -y golang
+}
+
+golang_fedora_install() {
+    sudo dnf install -y golang
+}
+
+golang_install() {
+    golang_mac_install
+    golang_ubuntu_install
+    golang_fedora_install
+
+    smd ~/golang-ws
+    has_cmd go || return 1
+
+    go get -u golang.org/x/tools/cmd/...
+    go get -u github.com/golang/lint/golint
+    go get -u github.com/nsf/gocode
+    go get -u github.com/rogpeppe/godef
+}
+
+#
 # ruby
 
 ruby_install() {
@@ -1585,6 +1618,10 @@ script_options() {
                 ATOM="ATOM"
                 shift
                 ;;
+            go)
+                GO="go"
+                shift
+                ;;
             java)
                 JAVA="java"
                 shift
@@ -1830,6 +1867,7 @@ install_all() {
 
     [ -n "$WEB" ] && web_install
     [ -n "$CPP" ] && cpp_install
+    [ -n "$GO" ] && go_install
     [ -n "$PYTHON" ] && python_install
     [ -n "$HASKELL" ] && haskell_install
 
@@ -1852,8 +1890,6 @@ install_all() {
 }
 
 installer() {
-    keep_sudo_running
-
     script_options $*
 
     if [ -n "$DIAGNOSTICS" ]; then
@@ -1861,20 +1897,10 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install
-
-    if is_ubuntu; then
-        trash=trash-put
-    else
-        trash=trash
-    fi
-
-    create_dirs
-
-    export PATH="$HOME/bin:$PATH"
 
     pre_installer_check
 
@@ -2064,6 +2090,10 @@ cpp_check() {
     is_linux && cmd_check g++
 }
 
+go_check() {
+    cmdcheck go golint gocode godef goimports
+}
+
 additional_check() {
     if is_linux; then
         cmd_check fasd
@@ -2134,8 +2164,37 @@ post_installer_check() {
 
 curdir=`pwd`
 
-rm -f ~/seartipy-installer.log  ~/seartipy-error.log ~/seartipy-output.log
+if is_ubuntu; then
+    trash=trash-put
+else
+    trash=trash
+fi
 
-installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+keep_sudo_running
+
+create_dirs
+
+export PATH="$HOME/bin:$PATH"
+
+try_trash() {
+    if has_cmd trash; then
+        trash $* 2> /dev/null
+    elif has_cmd trash-put; then
+        trash-put $* 2> /dev/null
+    else
+        rm -rf $*
+    fi
+}
+
+try_trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+
+if [[ $- = *i* ]]; then
+    log "Running pre installer check..."
+    log "if this does not succeed you must first at least install essentials by running this script without parameters"
+    pre_installer_check
+    log "installer check succeeded, you could run functions in this script for testing"
+else
+    installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+fi
 
 cd $curdir

@@ -1225,6 +1225,7 @@ golang_install() {
     golang_ubuntu_install
     golang_fedora_install
 
+    smd ~/golang-ws
     has_cmd go || return 1
 
     go get -u golang.org/x/tools/cmd/...

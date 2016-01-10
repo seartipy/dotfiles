@@ -1274,6 +1274,33 @@ golang_install() {
 }
 
 #
+# rust
+
+rust_linux_install() {
+    is_linux || return 1
+
+    curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y
+}
+
+rust_mac_install() {
+    is_mac || return 1
+
+    brew install rust
+}
+
+rust_install() {
+    rust_linux_install
+    rust_mac_install
+}
+
+#
+# r
+
+r_ubuntu_install() {
+    # ppa:marutter/rrutter
+}
+
+#
 # ruby
 
 ruby_install() {
@@ -1888,8 +1915,8 @@ install_all() {
     [ -n "$IDRIS" ] && idris_install
     [ -n "ELM" ] && elm_install
 
-    # [ -n "$RUST" ] && rust_install
     # [ -n "$R" ] && r_install
+    [ -n "$RUST" ] && rust_install
 
     if [ -n "$ADDITIONAL" ]; then
         settings

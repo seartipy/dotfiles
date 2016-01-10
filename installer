@@ -1929,26 +1929,27 @@ install_all() {
 
     [ -n "$GIT" ] && git_install
 
-    [ -n "$DOTFILES" ] && dotfiles_install
-
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
     [ -n "$SCALA" ] && scala_install
 
     [ -n "$WEB" ] && web_install
-    [ -n "$CPP" ] && cpp_install
-    [ -n "$GO" ] && golang_install
-    [ -n "$PYTHON" ] && python_install
-    [ -n "$HASKELL" ] && haskell_install
 
-    [ -n "$RUBY" ] && ruby_install
-    [ -n "$ELIXIR" ] && elixir_install
+    [ -n "$PYTHON" ] && python_install
+
+    [ -n "$HASKELL" ] && haskell_install
     [ -n "$PURESCRIPT" ] && purescript_install
     [ -n "$IDRIS" ] && idris_install
     [ -n "$ELM" ] && elm_install
 
-    [ -n "$RUST" ] && rust_install
+    [ -n "$ELIXIR" ] && elixir_install
     [ -n "$R" ] && r_install
+
+    [ -n "$CPP" ] && cpp_install
+    [ -n "$RUST" ] && rust_install
+    [ -n "$GO" ] && golang_install
+
+    [ -n "$RUBY" ] && ruby_install
 
     if [ -n "$ADDITIONAL" ]; then
         settings
@@ -1956,6 +1957,7 @@ install_all() {
     fi
 
     [ -n "$XMONAD" ] && xmonad_install
+
     [ -n "$VIM" ] && vim_install
 }
 

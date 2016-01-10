@@ -107,6 +107,14 @@ apmi() {
     done
 }
 
+stackexei() {
+    has_cmd stack || return 1
+
+    for p in $*; do
+        stack install $p
+    done
+}
+
 npmi() {
     has_cmd npm || return 1
 
@@ -844,11 +852,12 @@ ihaskell_install() {
     is_mac && brew install zeromq
     is_ubuntu && sudo apt-get install -y libzmq3-dev
     is_fedora && sudo dnf install -y zeromq zeromq-devel
-    stack install alex happy cpphs
-    stack install ihaskell
 
-    has_cmd ihaskell || return 1
-    ihaskell install
+    stackexei  alex happy cpphs
+    stackexei install ihaskell
+
+    # has_cmd ihaskell || return 1
+    # ihaskell install
 }
 
 haskell_install() {
@@ -857,16 +866,16 @@ haskell_install() {
 
     slog "Installing stack packages"
     stack setup
-    stack install alex
-    stack install happy
-    stack install hlint
+    stackexei install alex
+    stackexei install happy
+    stackexei install hlint
     # stack install structured-haskell-mode
-    stack install stylish-haskell
-    stack install hasktags
-    stack install hindent
-    stack install hdevtools
-    stack install ghc-mod
-    stack install ghci-ng
+    stackexei install stylish-haskell
+    stackexei install hasktags
+    stackexei install hindent
+    stackexei install hdevtools
+    # stackexei install ghc-mod
+    stackexei install ghci-ng
     ihaskell_install
 }
 

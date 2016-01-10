@@ -167,7 +167,6 @@ seartipy_fix_links() {
 
 seartipy_upgrade_emacs() {
     cd ~/seartipy/emacses/housemd && git-up
-    cd ~/seartipy/emacses/spacemacs && git-up
     has_cmd cask && cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
 }
 

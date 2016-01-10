@@ -1945,7 +1945,7 @@ install_all() {
     [ -n "$ELIXIR" ] && elixir_install
     [ -n "$PURESCRIPT" ] && purescript_install
     [ -n "$IDRIS" ] && idris_install
-    [ -n "ELM" ] && elm_install
+    [ -n "$ELM" ] && elm_install
 
     [ -n "$RUST" ] && rust_install
     [ -n "$R" ] && r_install

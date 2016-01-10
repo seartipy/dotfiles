@@ -185,7 +185,7 @@ add_zeal_ppa() {
 add_chrome_ppa() {
     is_ubuntu || return 1
 
-    if ! ls /etc/apt/sources.list.d | grep google.list > /dev/null; then
+    if ! ls /etc/apt/sources.list.d | grep google-chrome.list > /dev/null; then
         slog "Adding google chrome ppa"
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'

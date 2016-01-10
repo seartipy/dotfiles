@@ -2129,7 +2129,7 @@ cpp_check() {
 }
 
 go_check() {
-    cmdcheck go golint gocode godef goimports
+    cmd_check go golint gocode godef goimports
 }
 
 additional_check() {

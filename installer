@@ -1935,7 +1935,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install

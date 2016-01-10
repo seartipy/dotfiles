@@ -232,6 +232,15 @@ add_docker_ppa() {
     fi
 }
 
+add_r_ppa() {
+    is_ubuntu || return 1
+
+    if ! ls /etc/apt/sources.list.d | grep rutter > /dev/null; then
+        slog "Adding r ppa"
+        sudo add-apt-repository ppa:marutter/rrutter -y
+    fi
+}
+
 add_ppas() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
@@ -247,6 +256,7 @@ add_ppas() {
     add_chrome_ppa
     add_webupd8_ppa
     add_docker_ppa
+    add_r_ppa
 }
 
 #
@@ -1297,7 +1307,29 @@ rust_install() {
 # r
 
 r_ubuntu_install() {
-    # ppa:marutter/rrutter
+    is_ubuntu || return 1
+
+    sudo apt-get install -y r-base r-base-dev # currently using rutter ppa, use cran instead?
+}
+
+r_mac_install() {
+    is_mac || return 1
+
+    brew tap homebrew/science
+    brew install R
+    brew cask install rstudio
+}
+
+r_fedora_install() {
+    is_fedora || return 1
+
+    sudo dnf install -y R
+}
+
+r_install() {
+    r_ubuntu_install
+    r_mac_install
+    r_fedora_install
 }
 
 #
@@ -1915,8 +1947,8 @@ install_all() {
     [ -n "$IDRIS" ] && idris_install
     [ -n "ELM" ] && elm_install
 
-    # [ -n "$R" ] && r_install
     [ -n "$RUST" ] && rust_install
+    [ -n "$R" ] && r_install
 
     if [ -n "$ADDITIONAL" ]; then
         settings
@@ -1935,7 +1967,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install

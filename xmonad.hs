@@ -57,6 +57,8 @@ main = do
        -- Shring non master area
        ((myModMask, xK_a), sendMessage MirrorShrink)
 
+       , ((myModMask, xK_p), spawn "dmenu_run -fn 'Ubuntu Mono 13'")
+
          -- Expand non master area
        , ((myModMask, xK_z), sendMessage MirrorExpand)
          -- open a dmenu with window titles, switch to workspace of the chosen one

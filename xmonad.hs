@@ -9,6 +9,7 @@ import           System.Exit
 import           System.IO
 import           System.Posix.Env             (getEnv)
 import           XMonad
+import XMonad.Hooks.DynamicLog
 import           XMonad.Actions.WindowBringer
 
 import           XMonad.Hooks.ManageDocks
@@ -66,6 +67,9 @@ main = do
 
          -- Chosen one, will be brought into current workspace
        , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 14'" ])
+
+       , ((myModMask, xK_m), (dynamicLogString defaultPP >>= \d->spawn $"notify-send \"" ++ d ++ "\"" ++ " -t 1000"))
+
        ]
 
 desktop "gnome" = gnomeConfig

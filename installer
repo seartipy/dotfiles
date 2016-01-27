@@ -1683,7 +1683,7 @@ script_options() {
         BASH="bash"
         EMACS="emacs"
         DOTFILES="dotfiles"
-        GIT="$GIT"
+        GIT="git"
     fi
 
     if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
@@ -1716,6 +1716,10 @@ script_options() {
                 ;;
             web)
                 WEB="web"
+                shift
+                ;;
+            settings)
+                SETTINGS="settings"
                 shift
                 ;;
             nodefaults)
@@ -1775,11 +1779,12 @@ script_options() {
                 ;;
             additional)
                 ADDITIONAL="additional"
+                SETTINGS="settings"
                 VIM="vim"
                 shift
                 ;;
             xmonad)
-                XMONAD="xmonaad"
+                XMONAD="xmonad"
                 shift
                 ;;
             seartipy)
@@ -1959,10 +1964,8 @@ install_all() {
 
     [ -n "$RUBY" ] && ruby_install
 
-    if [ -n "$ADDITIONAL" ]; then
-        settings
-        additional_install
-    fi
+    [ -n "$ADDITIONAL" ] && additional_install
+    [ -n "$ADDITIONAL" ] && settings
 
     [ -n "$XMONAD" ] && xmonad_install
 
@@ -1977,7 +1980,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $SETTINGS $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     essential_install
@@ -2008,7 +2011,7 @@ essential_mac_check() {
     is_mac || return 1
 
     cmd_check brew trash 7z greadlink
- }
+}
 
 ppas_check() {
     is_ubuntu || return 1
@@ -2237,10 +2240,8 @@ post_installer_check() {
     [ -n "$IDRIS" ] && idris_check
     [ -n "$ELM" ] && elm_check
 
-    if [ -n "$ADDITIONAL" ]; then
-        additional_check
-        settings_check
-    fi
+    [ -n "$ADDITIONAL" ] && additional_check
+    [ -n "$SETTINGS" ] && settings_check
     [ -n "$XMONAD" ] && xmonad_check
     [ -n "$VIM" ] && vim_check
 }

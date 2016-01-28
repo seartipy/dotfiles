@@ -342,6 +342,8 @@ clone_lean_dotfiles() {
 
     slog "Cloning lean dotfiles"
     sclone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles
+
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop
 }
 
 clone_dotfiles() {
@@ -350,6 +352,8 @@ clone_dotfiles() {
 
     slog "Cloning dotfiles"
     sclone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles
+
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop
 }
 
 tmux_dotfiles() {
@@ -522,6 +526,9 @@ housemd_dotfiles() {
 
     [ -d "$HOME/seartipy/emacses/housemd" ] || return 1
 
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/emacses/housemd && git checkout develop
+    cd
+
     slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
     smv ~/.emacs.d $BACKUP_DIR
 
@@ -553,13 +560,13 @@ emacs_install() {
 
     cd ~/seartipy/emacses/housemd || return 1
 
-    [ -n "$SEARTIPY" ] && git checkout seartipy
-
     if has_cmd cask; then
         cask install && cask update
     else
         warn "cask command absent, skipping emacs install"
     fi
+
+    cd
 }
 
 #

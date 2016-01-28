@@ -2226,7 +2226,7 @@ post_installer_check() {
     [ -n "$CLOJURE" ] && clojure_check
     [ -n "$SCALA" ] && scala_check
 
-    [ -n "$WEB_CHECK" ] && web_check
+    [ -n "$WEB" ] && web_check
     [ -n "$CPP" ] && cpp_check
     [ -n "$GO" ] && go_check
     [ -n "$PYTHON" ] && python_check

@@ -241,6 +241,21 @@ add_r_ppa() {
     fi
 }
 
+add_numix_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep numix > /dev/null; then
+        slog "Adding numix ppa"
+        sudo add-apt-repository ppa:numix/ppa -y
+    fi
+}
+
+add_arc_theme_ppa() {
+    if ! ls /etc/apt/sources.list.d | grep arc-theme > /dev/null; then
+        slog "Adding arc theme ppa"
+        wget -q0- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
+        echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
+    fi
+
+}
 add_ppas() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
@@ -1383,7 +1398,7 @@ gnome_extensions() {
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 
-    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com']"
+    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'workspace_wraparound@crister.tk', 'all-windows@ezix.org']"
 
     wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install
     chmod +x ~/bin/shell-extension-install
@@ -1391,6 +1406,7 @@ gnome_extensions() {
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
     shell-extension-install $gnomever 10   # window navigator
+    shell-extension-install $gnomever 21   # workspace indicator
     shell-extension-install $gnomever 97   # coverflow alt-tab
     shell-extension-install $gnomever 413  # app keys like unity
     shell-extension-install $gnomever 442  # drop down terminal
@@ -1644,6 +1660,42 @@ settings() {
 }
 
 #
+# themes
+
+fedora_themes_install() {
+    is_fedora || return 1
+
+    sudo dnf copr -y enable satya164/numix
+    sudo dnf install -y numix-*
+
+    curl -L http://download.opensuse.org/repositories/home:Horst3180/Fedora_23/home:Horst3180.repo > /etc/yum.repos.d/Horst3180.repo
+    sudo dnf install -y arc-theme
+}
+
+ubuntu_themes_install() {
+    is_ubuntu || return 1
+
+    sudo apt-get install -y numix-*
+    sudo apt-get install -y arc-theme
+}
+
+themes_install() {
+    ubuntu_themes_install
+    fedora_themes_install
+
+    if has_cmd gnome-shell; then
+        gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Dark'
+        gsettings set org.gnome.desktop.interface icon-theme 'Numix-Circle'
+        gsettings set org.gnome.shell.extensions.user-theme name 'Arc-Dark'
+    fi
+
+    if has_cmd mate-session; then
+      dconf write /org/mate/marco/general/theme "'Arc-Dark'"
+      dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
+    fi
+}
+
+#
 # installer
 
 select_everything() {
@@ -1674,6 +1726,8 @@ select_everything() {
     ELM="elm"
 
     ADDITIONAL="additional"
+
+    THEMES="themes"
 
     VIM="vim"
     XMONAD="xmonad"
@@ -1829,6 +1883,10 @@ script_options() {
                 ELIXIR="elixir"
                 shift
                 ;;
+            themes)
+                THEMES="themes"
+                shift
+                ;;
             everything)
                 select_everything
                 shift
@@ -1972,6 +2030,8 @@ install_all() {
 
     [ -n "$ADDITIONAL" ] && additional_install
     [ -n "$ADDITIONAL" ] && settings
+
+    [ -n "$THEMES" ] && themes_install
 
     [ -n "$XMONAD" ] && xmonad_install
 

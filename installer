@@ -1390,11 +1390,17 @@ gnome_extensions() {
 
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
-    # shell-extension-install $gnomever 294 # shellshape
-    shell-extension-install $gnomever 97  # coverflow alt-tab
-    shell-extension-install $gnomever 442 # drop down terminal
-    shell-extension-install $gnomever 413 # app keys
-    shell-extension-install $gnomever 361 # emacs manager
+    shell-extension-install $gnomever 10   # window navigator
+    shell-extension-install $gnomever 97   # coverflow alt-tab
+    shell-extension-install $gnomever 413  # app keys like unity
+    shell-extension-install $gnomever 442  # drop down terminal
+    shell-extension-install $gnomever 657  # shelltile
+    shell-extension-install $gnomever 690  # easy screen casting
+    shell-extension-install $gnomever 704  # all windows in top bar
+    shell-extension-install $gnomever 885  # transparent top bar
+    shell-extension-install $gnomever 971  # worskpace wraparound
+    shell-extension-install $gnomever 973  # app switcher
+    shell-extension-install $gnomever 1018 # text scaler
 
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F10']"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.prefs default-layout 'vertical'

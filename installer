@@ -1800,6 +1800,7 @@ script_options() {
                 BASH=""
                 EMACS=""
                 DOTFILES=""
+                GIT=""
                 shift
                 ;;
             nozsh)

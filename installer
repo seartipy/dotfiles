@@ -1175,14 +1175,14 @@ xmonad_fedora_install() {
     is_fedora || return 1
 
     slog "Installing xmonad"
-    sudo dnf install -y xmonad ghc-xmonad-contrib xmonad-mate ghc-xmonad-devel ghc-xmonad-contrib-devel xmobar stalonetray dmenu scrot cabal-install xcompmgr
+    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu
 }
 
 xmonad_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing xmonad"
-    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar stalonetray suckless-tools scrot cabal-install xcompmgr
+    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools
 }
 
 xmonad_install() {
@@ -1193,10 +1193,6 @@ xmonad_install() {
 
     has_cmd cabal || return 1
 
-    slog "Installing xmonad"
-    sudo cabal update
-    sudo cabal install --global yeganesh
-
     slog "moving ~/.xmonad to $BACKUP_DIR"
     smv ~/.xmonad $BACKUP_DIR
 
@@ -1204,6 +1200,8 @@ xmonad_install() {
 
     slog "Linking ~/seartipy/dotfiles/xmonad.hs to ~/.xmonad/xmonad.hs"
     sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
+
+    has_cmd mate-session && dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
 
     is_ubuntu || return 1
 

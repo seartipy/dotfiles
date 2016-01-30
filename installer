@@ -272,6 +272,9 @@ add_ppas() {
     add_webupd8_ppa
     add_docker_ppa
     add_r_ppa
+
+    add_numix_ppa
+    add_arc_theme_ppa
 }
 
 #

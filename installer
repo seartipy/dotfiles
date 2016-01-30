@@ -2241,6 +2241,11 @@ cpp_check() {
 }
 
 go_check() {
+    is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
+
+    export GOPATH="$HOME/golang-ws"
+    export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
+
     cmd_check go golint gocode godef goimports
 }
 

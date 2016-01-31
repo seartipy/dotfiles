@@ -2043,7 +2043,7 @@ install_all() {
     [ -n "$RUBY" ] && ruby_install
 
     [ -n "$ADDITIONAL" ] && additional_install
-    [ -n "$ADDITIONAL" ] && settings
+    [ -n "$SETTINGS" ] && settings
 
     [ -n "$THEMES" ] && themes_install
 

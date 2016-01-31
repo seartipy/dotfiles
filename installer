@@ -1453,8 +1453,8 @@ gnome_settings() {
 
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
-    gsettings set  org.gnome.desktop.screensaver lock-enabled false
-    gsettings set  org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+    gsettings set org.gnome.desktop.screensaver lock-enabled false
+    gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
     gsettings set org.gnome.desktop.interface clock-show-date true
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
     gsettings set org.gnome.shell.calendar show-weekdate true
@@ -1712,6 +1712,8 @@ themes_install() {
 # installer
 
 select_everything() {
+    ESSENTIAL="essential"
+
     ZSH="zsh"
     BASH="bash"
 
@@ -1752,6 +1754,7 @@ script_options() {
     if [ $# -eq 0 ]; then
         select_everything
     else
+        ESSENTIAL="essential"
         ZSH="zsh"
         BASH="bash"
         EMACS="emacs"
@@ -1801,6 +1804,10 @@ script_options() {
                 EMACS=""
                 DOTFILES=""
                 GIT=""
+                shift
+                ;;
+            noessential)
+                ESSENTIAL=""
                 shift
                 ;;
             nozsh)
@@ -2063,7 +2070,7 @@ installer() {
     echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $SETTINGS $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
-    essential_install
+    [ -n "$ESSENTIAL" ] && essential_install
 
     pre_installer_check
 

@@ -1675,7 +1675,7 @@ settings() {
 fedora_themes_install() {
     is_fedora || return 1
 
-    sudo dnf copr -y enable satya164/numix
+    sudo dnf copr -y enable numix/numix
     sudo dnf install -y numix-*
 
     curl -L http://download.opensuse.org/repositories/home:Horst3180/Fedora_23/home:Horst3180.repo | sudo tee /etc/yum.repos.d/Horst3180.repo

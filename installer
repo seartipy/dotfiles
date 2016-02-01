@@ -251,7 +251,7 @@ add_numix_ppa() {
 add_arc_theme_ppa() {
     if ! ls /etc/apt/sources.list.d | grep arc-theme > /dev/null; then
         slog "Adding arc theme ppa"
-        wget -q0- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
+        wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
         echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
     fi
 

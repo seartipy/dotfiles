@@ -1045,7 +1045,7 @@ web_mac_install() {
 
 flow_install() {
     is_linux || return 1
-    has_cmd flow || return 1
+    has_cmd flow && return 1
 
     slog "Installing flow"
     cd ~/seartipy/vendors

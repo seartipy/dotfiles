@@ -125,7 +125,7 @@ export PATH="$HOME/bin:$PATH"
 
 #go
 export GOPATH="$HOME/golang-ws"
-export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
+export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
 
 # sources
 

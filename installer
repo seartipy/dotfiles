@@ -433,7 +433,7 @@ linux_bash_dotfiles() {
     smv ~/.bash_profile $BACKUP_DIR
     sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
 
-    if grep .bash_profile ~/.bashrc > /dev/null; then
+    if ! grep .bash_profile ~/.bashrc > /dev/null; then
         echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
     fi
 }

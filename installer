@@ -1194,6 +1194,11 @@ xmonad_ubuntu_install() {
     sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools
 }
 
+xmonad_fix() {
+    rm -rf ~/.ghc
+    xmonad --recompile
+}
+
 xmonad_install() {
     is_linux || return 1
 
@@ -1216,6 +1221,8 @@ xmonad_install() {
 
     slog "selecting dmenu.xft as default"
     sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
+
+    xmonad_fix
 }
 
 #
@@ -1706,8 +1713,11 @@ themes_install() {
     fi
 
     if has_cmd mate-session; then
-      dconf write /org/mate/marco/general/theme "'Arc-Dark'"
-      dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
+        echo "hello mate themes"
+        dconf write /org/mate/desktop/peripherals/mouse/cursor-theme "'DMZ-Black'"
+        dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
+        dconf write /org/mate/marco/general/theme "'Arc-Dark'"
+        echo "bye mate themes"
     fi
 }
 

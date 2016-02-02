@@ -1,15 +1,15 @@
 # utils
 
 slog() {
-    echo "SEARTIPY : $1" | tee ~/seartipy-installer.log
+    echo "SEARTIPY : $1" | tee -a ~/seartipy-installer.log
 }
 
 warn() {
-    echo "WARNING : $1" | tee ~/seartipy-installer.log
+    echo "WARNING : $1" | tee -a ~/seartipy-installer.log
 }
 
 err_exit() {
-    echo "FATAL: $1" | tee ~/seartipy-installer.log
+    echo "FATAL: $1" | tee -a ~/seartipy-installer.log
     exit 1
 }
 
@@ -1713,11 +1713,9 @@ themes_install() {
     fi
 
     if has_cmd mate-session; then
-        echo "hello mate themes"
         dconf write /org/mate/desktop/peripherals/mouse/cursor-theme "'DMZ-Black'"
         dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
         dconf write /org/mate/marco/general/theme "'Arc-Dark'"
-        echo "bye mate themes"
     fi
 }
 
@@ -2080,7 +2078,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $SETTINGS $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $SETTINGS $THEMES $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     [ -n "$ESSENTIAL" ] && essential_install

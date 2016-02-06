@@ -148,7 +148,7 @@ export PATH="$HOME/.rvm/bin:$PATH"
 
 seartipy_fix_links() {
     sln ~/seartipy/dotfiles/shellrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
 
     smd ~/.lein
     smd ~/.boot

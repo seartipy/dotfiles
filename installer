@@ -468,8 +468,8 @@ zsh_dotfiles() {
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc $BACKUP_DIR
 
-    slog "Linking ~/seartipy/dotfiles/zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    slog "Linking ~/seartipy/dotfiles/zplug-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
 }
 
 zsh_install() {
@@ -480,6 +480,8 @@ zsh_install() {
 
     sclone https://github.com/changs/slimzsh.git ~/.slimzsh
     sclone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
+    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
+    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
 }
 
 #

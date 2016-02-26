@@ -463,7 +463,7 @@ zsh_ubuntu_install() {
 }
 
 zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zshrc ] || return 1
+    [ -f ~/seartipy/dotfiles/zplug-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc $BACKUP_DIR

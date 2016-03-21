@@ -1,0 +1,60 @@
+{
+  :layers
+  [
+    :core
+    :tools/git
+    :tools/linter
+    :lang/clojure
+    :lang/haskell
+    :lang/python
+    :lang/markdown
+    :lang/rust
+    :lang/javascript
+    :lang/json
+  ]
+
+  :additional-packages
+  [
+    :browser-plus
+    :hyperclick
+    :language-scala
+    :Ensime
+    :script
+
+    :terminal-plus
+    :jumpy
+    :last-cursor-position
+
+    :language-haskell
+    :ide-haskell
+    :haskell-ghc-mod
+    :autocomplete-haskell
+    :ide-haskell-repl
+    :ide-haskell-cabal
+
+    :language-babel
+    :emmet
+
+    :clang-format
+    :linter-clang
+    :autocomplete-clang
+  ]
+
+  :configuration
+  [
+    ["editor.fontFamily" "Ubuntu Mono"]
+    [ "editor.fontSize" "18" ]
+    ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
+
+    ["proton.core.showTabBar" true]
+    ["proton.core.relativeLineNumbers" true]
+
+    ["proton.core.vim-provider" :vim-mode-plus]
+  ]
+
+  :keybindings {}
+
+  :keymaps [{:selector ".tree-view" :keymap [["escape" "tree-view:toggle"]]}
+            {:selector "atom-text-editor.vim-mode-plus.insert-mode" :keymap [["f d" "vim-mode-plus:activate-normal-mode"]]}
+  ]
+}

@@ -18,6 +18,7 @@
     :browser-plus
     :hyperclick
     :language-scala
+    :intentions
     :Ensime
     :script
 

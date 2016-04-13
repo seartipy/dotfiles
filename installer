@@ -1207,8 +1207,6 @@ xmonad_install() {
     xmonad_fedora_install
     xmonad_ubuntu_install
 
-    has_cmd cabal || return 1
-
     slog "moving ~/.xmonad to $BACKUP_DIR"
     smv ~/.xmonad $BACKUP_DIR
 

@@ -27,7 +27,6 @@ import           XMonad.Config.Desktop
 import           XMonad.Config.Gnome
 import           XMonad.Config.Kde
 import           XMonad.Config.Xfce
-import           XMonad.Config.Mate
 
 newtype Flip l a = Flip (l a) deriving (Show, Read)
 instance LayoutClass l a => LayoutClass (Flip l) a where
@@ -76,6 +75,6 @@ main = do
 desktop "gnome" = gnomeConfig
 desktop "kde" = kde4Config
 desktop "xfce" = xfceConfig
-desktop "mate" = mateConfig
-desktop "xmonad-mate" = mateConfig
+desktop "mate" = gnomeConfig
+desktop "xmonad-mate" = gnomeConfig
 desktop _ = desktopConfig

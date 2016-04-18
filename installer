@@ -19,6 +19,12 @@ is_ubuntu() {
     [[ "Ubuntu" == "$os" ]] || return 1
 }
 
+is_xenial() {
+    has_cmd lsb_release || return 1
+    local os=`echo $(lsb_release -c | cut -d ':' -f2)`
+    [[ "xenial" == "$os" ]] || return 1
+}
+
 is_fedora() {
     [ -f /etc/redhat-release ] || return 1
 }
@@ -273,13 +279,13 @@ add_ppas() {
     # [ -n "$HASKELL" ] && add_ghc_ppa
     add_haskell_stack_ppa
 
-    add_zeal_ppa
+    is_xenial || add_zeal_ppa
     add_atom_ppa
     add_virtualbox_ppa
     add_chrome_ppa
     add_webupd8_ppa
     add_docker_ppa
-    add_r_ppa
+    is_xenial || add_r_ppa
 
     add_numix_ppa
     add_arc_theme_ppa
@@ -306,7 +312,13 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
+    
+    if is_xenial; then
+        warn "cannot install zeal on xenial"
+    else
+        sudo apt-get install -y zeal
+    fi
 
     sudo apt-get clean
     sudo apt-get autoclean
@@ -1350,6 +1362,9 @@ rust_install() {
 # r
 
 r_ubuntu_install() {
+    if is_xenial; then
+        warn "cannot install r on xenial, quitting"
+    fi
     is_ubuntu || return 1
 
     sudo apt-get install -y r-base r-base-dev # currently using rutter ppa, use cran instead?

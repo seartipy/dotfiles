@@ -228,6 +228,8 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (setq-default dotspacemacs-line-numbers 'relative)
+  (setq-default dotspacemacs-smartparens-strict-mode t)
   )
 
 (defun dotspacemacs/user-config ()

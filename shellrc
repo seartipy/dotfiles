@@ -148,7 +148,7 @@ export PATH="$HOME/.rvm/bin:$PATH"
 
 seartipy_fix_links() {
     sln ~/seartipy/dotfiles/shellrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
 
     smd ~/.lein
     smd ~/.boot
@@ -187,13 +187,13 @@ seartipy_upgrade_mean() {
 
 seartipy_upgrade_all() {
     seartipy_upgrade_mean
-    has_cmd sbt && sbt console -batch
-    has_cmd lein && lein
-    has_cmd npm && npm update -g
-    has_cmd cabal && cabal update
-    has_cmd stack && stack update
-    has_cmd boot && boot -u && boot
-    has_cmd stack && stack update
+    cd && has_cmd sbt && sbt console -batch
+    cd && has_cmd lein && lein
+    cd && has_cmd npm && npm update -g
+    cd && has_cmd cabal && cabal update
+    cd && has_cmd stack && stack update
+    cd && has_cmd boot && boot -u && boot
+    cd && has_cmd stack && stack update
 }
 
 seartipy_emacs_default() {

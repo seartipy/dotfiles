@@ -463,13 +463,13 @@ zsh_ubuntu_install() {
 }
 
 zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zshrc ] || return 1
+    [ -f ~/seartipy/dotfiles/zplug-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc $BACKUP_DIR
 
-    slog "Linking ~/seartipy/dotfiles/zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    slog "Linking ~/seartipy/dotfiles/zplug-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
 }
 
 zsh_install() {
@@ -480,6 +480,8 @@ zsh_install() {
 
     sclone https://github.com/changs/slimzsh.git ~/.slimzsh
     sclone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
+    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
+    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
 }
 
 #
@@ -1204,8 +1206,6 @@ xmonad_install() {
 
     xmonad_fedora_install
     xmonad_ubuntu_install
-
-    has_cmd cabal || return 1
 
     slog "moving ~/.xmonad to $BACKUP_DIR"
     smv ~/.xmonad $BACKUP_DIR

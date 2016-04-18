@@ -36,8 +36,8 @@ values."
      syntax-checking
      version-control
 
-     scala
-     clojure
+     (scala :variables scala-enable-eldoc-mode t)
+     (clojure :variables clojure-enable-fancify-symbols t)
 
      html
      javascript

@@ -2266,7 +2266,8 @@ haskell_check() {
 
     cmd_check ghc cabal stack
 
-    cmd_check alex happy hlint structured-haskell-mode stylish-haskell hasktags hindent hdevtools
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools
+    # cmd_check structured-haskell-mode
 }
 
 python_check() {

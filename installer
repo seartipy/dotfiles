@@ -1085,7 +1085,13 @@ web_install() {
     flow_install
 
     slog "Installing npm packages for web development"
-    npmi coffee-script typescript babel webpack karma-cli eslint jshint coffeelint tern js-beautify webpack-dev-server eslint-plugin-react babel-eslint browserify watchify babelify budo gulp grunt-cli
+    npmi coffee-script typescript
+    npmi eslint jshint coffeelint eslint-plugin-react
+    npmi gulp grunt-cli
+    npmi babel-cli babel-eslint
+    npmi browserify watchify babelify budo
+    npmi webpack webpack-dev-server
+    npmi tern js-beautify karma-cli
 }
 
 #

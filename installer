@@ -725,13 +725,12 @@ lein_install() {
 boot_install() {
     is_linux || return 1
 
-    if has_cmd boot; then
-        boot -u
-    else
+    if ! has_cmd boot; then
         slog "Installing boot"
         curl -L https://github.com/boot-clj/boot-bin/releases/download/2.4.2/boot.sh > ~/bin/boot
         chmod a+x ~/bin/boot
     fi
+    boot -u
 }
 
 clojure_mac_install() {

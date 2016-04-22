@@ -1062,15 +1062,16 @@ web_mac_install() {
     brew install node flow
 }
 
+# perhaps using opam is a better idea
 flow_install() {
     is_linux || return 1
     has_cmd flow && return 1
 
     slog "Installing flow"
     cd ~/seartipy/vendors
-    wget https://facebook.github.io/flow/downloads/flow-linux64-latest.zip
-    unzip -o flow-linux64-latest.zip
-    srm flow-linux64-latest.zip
+    wget https://github.com/facebook/flow/releases/download/v0.23.1/flow-linux64-v0.23.1.zip
+    unzip -o flow-linux64-*.zip
+    srm flow-linux64-*.zip
 }
 
 node_linux_install() {

@@ -2181,7 +2181,7 @@ dotfiles_check() {
 zsh_check() {
     cmd_check zsh
 
-    ln_check ~/seartipy/dotfiles/zshrc ~/.zshrc
+    ln_check ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
     ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 
     dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/seartipy/vendors/liquidprompt

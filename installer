@@ -313,7 +313,7 @@ essential_ubuntu_install() {
 
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
-    
+
     if is_xenial; then
         warn "cannot install zeal on xenial"
     else
@@ -1375,6 +1375,7 @@ rust_install() {
 r_ubuntu_install() {
     if is_xenial; then
         warn "cannot install r on xenial, quitting"
+        return 1
     fi
     is_ubuntu || return 1
 

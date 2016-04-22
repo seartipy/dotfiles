@@ -917,7 +917,7 @@ ihaskell_install() {
     is_fedora && sudo dnf install -y zeromq zeromq-devel
 
     stackexei  alex happy cpphs
-    stackexei install ihaskell
+    stackexei ihaskell
 
     # has_cmd ihaskell || return 1
     # ihaskell install
@@ -929,16 +929,16 @@ haskell_install() {
 
     slog "Installing stack packages"
     stack setup
-    stackexei install alex
-    stackexei install happy
-    stackexei install hlint
+    stackexei alex
+    stackexei happy
+    stackexei hlint
     # stack install structured-haskell-mode
-    stackexei install stylish-haskell
-    stackexei install hasktags
-    stackexei install hindent
-    stackexei install hdevtools
+    stackexei  stylish-haskell
+    stackexei hasktags
+    stackexei hindent
+    stackexei hdevtools
     # stackexei install ghc-mod
-    stackexei install ghci-ng
+    stackexei ghci-ng
     ihaskell_install
 }
 

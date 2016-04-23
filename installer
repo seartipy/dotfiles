@@ -208,6 +208,7 @@ add_webupd8_ppa() {
 }
 
 add_virtualbox_ppa() {
+    is_xenial && return 1
     is_ubuntu || return 1
 
     if ! has_cmd vmware-user-suid-wrapper; then
@@ -1189,7 +1190,8 @@ additional_ubuntu_install() {
     slog "Installing additional"
     sudo apt-get install -y vlc youtube-dl google-chrome-stable
     if ! has_cmd vmware-user-suid-wrapper; then
-        sudo apt-get install -y virtualbox-5.0 dkms
+        is_xenial && sudo apt-get install -y virtualbox virtualbox-dkms
+        is_xenial || sudo apt-get install -y virtualbox-5.0 dkms
     fi
 }
 

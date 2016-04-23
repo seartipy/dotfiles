@@ -1242,8 +1242,10 @@ xmonad_install() {
 
     is_ubuntu || return 1
 
-    slog "selecting dmenu.xft as default"
-    sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
+    if ! is_xenial; then
+        slog "selecting dmenu.xft as default"
+        sudo update-alternatives --set dmenu /usr/bin/dmenu.xft
+    fi
 
     xmonad_fix
 }

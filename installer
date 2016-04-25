@@ -1074,6 +1074,15 @@ flow_install() {
     srm flow-linux64-v0.23.1.zip
 }
 
+tern_install() {
+    slog "Installing tern"
+    sclone https://github.com/ternjs/tern.git ~/seartipy/vendors/tern
+    if cd ~/seartipy/vendors/tern; then
+        has_cmd npm || warn "npm not found, skipping tern install"
+        npm install
+    fi
+}
+
 node_linux_install() {
     is_linux || return 1
 
@@ -1089,6 +1098,7 @@ web_install() {
     web_mac_install
     node_linux_install
     flow_install
+    tern_install
 
     slog "Installing npm packages for web development"
     npmi coffee-script typescript

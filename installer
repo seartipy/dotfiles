@@ -1070,8 +1070,8 @@ flow_install() {
     slog "Installing flow"
     cd ~/seartipy/vendors
     wget https://github.com/facebook/flow/releases/download/v0.23.1/flow-linux64-v0.23.1.zip
-    unzip -o flow-linux64-*.zip
-    srm flow-linux64-*.zip
+    unzip -o flow-linux64-v0.23.1.zip
+    srm flow-linux64-v0.23.1.zip
 }
 
 node_linux_install() {

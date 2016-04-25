@@ -1574,6 +1574,10 @@ linux_settings() {
     gnome_extensions
 
     mate_settings
+
+    is_ubuntu || return 1
+
+    echo "enabled=0" | sudo tee /etc/default/apport > /dev/null
 }
 
 mac_settings() {

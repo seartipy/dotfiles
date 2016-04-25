@@ -2281,6 +2281,9 @@ web_check() {
     cmd_check npm
 
     has_cmd npm && cmd_check budo browserify watchify coffee babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server
+
+    dir_check ~/seartipy/vendors/tern
+    dir_check ~/seartipy/vendors/tern/node_modules
 }
 
 elixir_check() {

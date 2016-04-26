@@ -371,6 +371,8 @@ essential_install() {
     essential_ubuntu_install
     essential_fedora_install
     essential_mac_install
+
+    fasd_install
 }
 
 #
@@ -1211,7 +1213,6 @@ additional_install() {
     additional_ubuntu_install
 
     sourcecodepro_install
-    fasd_install
 }
 
 #
@@ -2328,7 +2329,6 @@ golang_check() {
 
 additional_check() {
     if is_linux; then
-        cmd_check fasd
         ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "source code pro not installed"
         cmd_check xmonad vim
     fi

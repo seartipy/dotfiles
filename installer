@@ -980,13 +980,7 @@ idris_mac_install() {
 idris_linux_install() {
     is_linux || return 1
 
-    cabal_install
-
-    has_cmd cabal || return 1
-
-    cabal update
-    slog "Installing idris"
-    cabal install idris
+    stack install idris
 }
 
 idris_install() {
@@ -2274,7 +2268,6 @@ purescript_check() {
 }
 
 idris_check() {
-    export PATH="$HOME/.cabal/bin:$PATH"
     cmd_check idris
 }
 

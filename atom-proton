@@ -4,12 +4,26 @@
     :core
     :tools/git
     :tools/linter
+    :tools/terminal
+    :tools/bookmarks
+    :tools/todo
+
+    :lang/markdown
+
     :lang/clojure
     :lang/haskell
     :lang/python
-    :lang/markdown
+
     :lang/rust
+    :lang/swift
+
     :lang/javascript
+    :lang/html
+    :lang/css
+    :lang/less
+    :lang/sass
+    :lang/jade
+    :lang/stylus
     :lang/json
   ]
 
@@ -17,34 +31,29 @@
   [
     :browser-plus
     :hyperclick
+
     :language-scala
     :intentions
     :Ensime
     :script
 
-    :terminal-plus
     :jumpy
     :last-cursor-position
-
-    :language-haskell
-    :ide-haskell
-    :haskell-ghc-mod
-    :autocomplete-haskell
-    :ide-haskell-repl
-    :ide-haskell-cabal
-
-    :language-babel
-    :emmet
 
     :clang-format
     :linter-clang
     :autocomplete-clang
+
+    :language-elm
+    :linter-elm-make
+
+    :git-time-machine
   ]
 
   :configuration
   [
-    ["editor.fontFamily" "Ubuntu Mono"]
-    [ "editor.fontSize" "18" ]
+    ["editor.fontFamily" "Monaco"]
+    [ "editor.fontSize" "14" ]
     ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
 
     ["proton.core.showTabBar" true]

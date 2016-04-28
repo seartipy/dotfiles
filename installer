@@ -1428,6 +1428,19 @@ ruby_install() {
         gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
     fi
     gem install pry sinatra thin guard watchr tmuxinator git-up sass  --no-ri --no-rdoc
+#
+# swift
+
+swift_mac_install() {
+    is_mac || return 1
+
+    curl -fsSL https://raw.github.com/alcatraz/Alcatraz/master/Scripts/install.sh | sh # xcode plugin manager
+
+    brew install swiftlint tailor cocoapods carthage
+}
+
+swift_install() {
+    swift_mac_install
 }
 
 #
@@ -1791,6 +1804,7 @@ select_everything() {
     PURESCRIPT="purescript"
     IDRIS="idris"
     ELM="elm"
+    SWIFT="swift"
 
     ADDITIONAL="additional"
     SETTINGS="settings"
@@ -1891,6 +1905,10 @@ script_options() {
                 ;;
             ruby)
                 RUBY="ruby"
+                shift
+                ;;
+            swift)
+                SWIFT="swift"
                 shift
                 ;;
             cpp)
@@ -2101,6 +2119,8 @@ install_all() {
 
     [ -n "$RUBY" ] && ruby_install
 
+    [ -n "$SWIFT" ] && swift_install
+
     [ -n "$ADDITIONAL" ] && additional_install
     [ -n "$SETTINGS" ] && settings
 
@@ -2119,7 +2139,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $ELIXIR $R $XMONAD $VIM $SETTINGS $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $XMONAD $VIM $SETTINGS $THEMES $ADDITIONAL"
     [ -n "$FRESH" ]  && fresh_install
 
     [ -n "$ESSENTIAL" ] && essential_install
@@ -2305,6 +2325,9 @@ python_check() {
 ruby_check() {
     cmd_check rvm ruby
     cmd_check pry thin guard watchr tmuxinator git-up sass
+
+swift_check() {
+    cmd_check swiftlint tailor pod carthage
 }
 
 cpp_check() {
@@ -2376,6 +2399,8 @@ post_installer_check() {
     [ -n "$HASKELL" ] && haskell_check
 
     [ -n "$RUBY" ] && ruby_check
+    [ -n "$SWIFT" ] && swift_check
+
     # [ -n "$RUST" ] && rust_check
     [ -n "$ELIXIR" ] && elixir_check
     # [ -n "$R" ] && r_check

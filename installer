@@ -1427,7 +1427,11 @@ ruby_install() {
     if is_mac; then
         gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
     fi
-    gem install pry sinatra thin guard watchr tmuxinator git-up sass  --no-ri --no-rdoc
+    gem install pry sinatra thin guard watchr tmuxinator git-up sass  overcommit --no-ri --no-rdoc
+
+    is_mac && gem install xcpretty -no-ri --no-rdoc
+}
+
 #
 # swift
 
@@ -2324,7 +2328,9 @@ python_check() {
 
 ruby_check() {
     cmd_check rvm ruby
-    cmd_check pry thin guard watchr tmuxinator git-up sass
+    cmd_check pry thin guard watchr tmuxinator git-up sass overcommit
+    is_mac && cmd_check xcpretty
+}
 
 swift_check() {
     cmd_check swiftlint tailor pod carthage

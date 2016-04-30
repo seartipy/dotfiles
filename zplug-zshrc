@@ -58,3 +58,6 @@ zplug load
 source ~/seartipy/dotfiles/shellrc
 
 [ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local
+
+export NVM_DIR="/home/pervez/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

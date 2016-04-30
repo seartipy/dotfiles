@@ -40,6 +40,24 @@
     :jumpy
     :last-cursor-position
 
+    :split-diff
+    :toggle-quotes
+    :editorconfig
+    :sync-settings
+    :fonts
+    :Sublime-Style-Column-Selection
+    :autoclose-html
+
+    :language-haskell
+    :ide-haskell
+    :haskell-ghc-mod
+    :autocomplete-haskell
+    :ide-haskell-repl
+    :ide-haskell-cabal
+
+    :language-babel
+    :emmet
+
     :clang-format
     :linter-clang
     :autocomplete-clang

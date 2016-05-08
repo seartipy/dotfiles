@@ -9,7 +9,7 @@ import           System.Exit
 import           System.IO
 import           System.Posix.Env             (getEnv)
 import           XMonad
-import XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.DynamicLog
 import           XMonad.Actions.WindowBringer
 
 import           XMonad.Hooks.ManageDocks

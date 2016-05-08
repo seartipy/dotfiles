@@ -127,11 +127,31 @@ ppa_check() {
     ppa_exists || warn "$1 ppa not added"
 }
 
+apm_exists() {
+    apm ls --installed --bare | cut -d "@" -f 1 | grep "^$1$" > /dev/null || return 1
+}
+
+apm_check() {
+    for p in $*; do
+        apm_exists "$p" || warn "$p atom package not installed"
+    done
+}
+
 apmi() {
     has_cmd apm || return 1
 
     for p in $*; do
-        apm ls --installed --bare | cut -d "@" -f 1 | grep "^$p$" > /dev/null || apm install $p
+        apm_exists "$p" || apm install $p
+    done
+}
+
+npm_exists() {
+    npm list --global --depth=0 "$1" &> /dev/null || return 1
+}
+
+npm_check() {
+    for p in $*; do
+        npm_exists "$p" || warn "$p atom package not installed"
     done
 }
 
@@ -646,15 +666,6 @@ atom_install() {
 
     slog "Linking ~/seartipy/dotfiles/atom-proton to ~/.proton"
     sln ~/seartipy/dotfiles/atom-proton ~/.proton
-
-    # apmi file-icons linter atom-beautify terminal-plus jumpy hyperclick project-manager last-cursor-position git-plus atomatigit blame merge-conflicts git-history language-diff script atom-fix-path #essential
-
-    # apmi language-scala ensime # scala
-    # apmi language-haskell ide-haskell haskell-ghc-mod autocomplete-haskell ide-haskell-repl ide-haskell-cabal # haskell
-    # apmi Parinfer proto-repl linter-clojure lisp-paredit # clojure
-    # apmi language-babel linter-eslint emmet # web
-    # apmi clang-format linter-clang autocomplete-clang # C++
-    # apmi go-plus # go
 }
 
 #
@@ -2268,6 +2279,8 @@ emacs_check() {
 
 atom_check() {
     cmd_check atom apm
+    apm_check proton-mode
+    ln_check ~/seartipy/dotfiles/atom-proton ~/.proton
 }
 
 scala_check() {

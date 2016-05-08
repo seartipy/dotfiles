@@ -460,7 +460,6 @@ clone_lean_dotfiles() {
     slog "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
     smv ~/seartipy/lean-dotfiles $BACKUP_DIR
 
-    slog "Cloning lean dotfiles"
     sclone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles
 
     [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop
@@ -470,7 +469,6 @@ clone_dotfiles() {
     slog "Backing up your current dotfiles(if exists) to $BACKUP_DIR"
     smv ~/seartipy/dotfiles $BACKUP_DIR
 
-    slog "Cloning dotfiles"
     sclone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles
 
     [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop
@@ -1035,7 +1033,8 @@ purescript_linux_install() {
 
 purescript_install() {
     purescript_mac_install
-    purescript_linux_install
+    # currently does not work with node 6.0
+    # purescript_linux_install
 }
 
 #
@@ -1050,7 +1049,7 @@ idris_mac_install() {
 idris_linux_install() {
     is_linux || return 1
 
-    stack install idris
+    stackexei idris
 }
 
 idris_install() {
@@ -2364,7 +2363,7 @@ web_check() {
     fi
 
     if is_linux; then
-        source ~/.nvm/nvm.sh
+        [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
         cmd_check nvm
     fi
 
@@ -2379,15 +2378,17 @@ elixir_check() {
 }
 
 purescript_check() {
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
     cmd_check psc
 }
 
 idris_check() {
+    export PATH="$HOME/.local/bin:$PATH"
     cmd_check idris
 }
 
 elm_check() {
-    source ~/.nvm/nvm.sh
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
     cmd_check elm elm-oracle
 }
 
@@ -2408,7 +2409,8 @@ python_check() {
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
 
-    cmd_check pyenv pyenv-virtualenv
+    cmd_check pyenv
+    is_mac && cmd_check pyenv-virtualenv
 
     is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-pip-rehash ~/.pyenv/plugins/pyenv-virtualenv
 
@@ -2428,7 +2430,7 @@ ruby_check() {
 }
 
 swift_check() {
-    cmd_check swiftlint tailor pod carthage
+    is_mac && cmd_check swiftlint tailor pod carthage
 }
 
 cpp_check() {
@@ -2451,7 +2453,7 @@ additional_check() {
         cmd_check xmonad vim
     fi
     is_mac && cmd_check docker
-    brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    is_mac && brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     cmd_check youtube-dl
 
     is_linux || return 0

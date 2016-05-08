@@ -167,7 +167,7 @@ npmi() {
     has_cmd npm || return 1
 
     for p in $*; do
-        npm list -g $p > /dev/null || npm install -g $p
+        npm_exists "$p" || npm install -g "$p"
     done
 }
 
@@ -2313,7 +2313,9 @@ web_check() {
 
     cmd_check npm
 
-    has_cmd npm && cmd_check budo browserify watchify coffee babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server
+    has_cmd npm && cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
+    npm_check eslint-plugin-react babel-eslint babelify
+
 }
 
 elixir_check() {

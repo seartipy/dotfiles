@@ -206,7 +206,7 @@ add_java_ppa() {
 
 add_scala_ppa() {
     is_ubuntu || return 1
-    ppa_exists sbt > /dev/null && return 0
+    ppa_exists sbt && return 0
 
     slog "Adding scala ppa"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
@@ -215,7 +215,7 @@ add_scala_ppa() {
 
 add_smartgit_ppa() {
     is_ubuntu || return 1
-    ppa_exists grep eugenesan-ubuntu-ppa > /dev/null && return 0
+    ppa_exists eugenesan-ubuntu-ppa && return 0
 
     slog "Adding smartgit ppa"
     sudo add-apt-repository ppa:eugenesan/ppa -y

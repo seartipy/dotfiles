@@ -2071,6 +2071,9 @@ setup_backup_dir() {
 
 fresh_ppas() {
     is_linux || return 1
+    has_cmd $trash || err_exit "no $trash, cannot reset, quitting"
+    cd
+    is_linux && sudo $trash /etc/apt/sources.list.d/*
 }
 
 fresh_install() {
@@ -2084,6 +2087,8 @@ fresh_install() {
     if [ -n "$ZSH" ]; then
         srm ~/.zshrc
         srm ~/seartipy/vendors/antigen
+        srm ~/.zgen
+        srm ~/.slimzsh
     fi
 
     if [ -n "$BASH" ]; then
@@ -2097,6 +2102,8 @@ fresh_install() {
     fi
 
     if [ -n "$HASKELL" ]; then
+        srm ~/.ghc
+        srm ~/.stack
         srm ~/.cabal
     fi
 
@@ -2104,7 +2111,12 @@ fresh_install() {
         srm ~/.emacs.d
         srm ~/seartipy/emacses
         srm "/Applications/Emacs.app alias"
-        rm -rf ~/.cask
+        rm -rf ~/.emacs.d/.cask
+    fi
+
+    if [ -n "$ATOM" ]; then
+        srm ~/.atom
+        srm ~/.proton
     fi
 
     if [ -n "$CLOJURE" ]; then
@@ -2132,7 +2144,7 @@ fresh_install() {
     fi
 
     if [ -n "$VIM" ]; then
-        srm ~/.spf13-vim-3
+        srm ~/.vim
     fi
 }
 

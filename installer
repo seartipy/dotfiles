@@ -864,7 +864,7 @@ scala_mac_install() {
 
 ammonite_install() {
     is_linux || return 1
-    has_cmd amm || return 0
+    has_cmd amm && return 0
 
      curl -L https://git.io/v0FGO > ~/bin/amm && chmod +x ~/bin/amm
 }

@@ -155,6 +155,27 @@ npm_check() {
     done
 }
 
+
+brew_exists() {
+    brew list | grep "$1" || return 1
+}
+
+brew_check() {
+    for p in $*; do
+        brew_exists "$p" || warn "$p brew cask package not installed"
+    done
+}
+
+brew_cask_exists() {
+    brew cask list | grep "$1" || return 1
+}
+
+brew_cask_check() {
+    for p in $*; do
+        brew_cask_exists "$p" || warn "$p brew cask package not installed"
+    done
+}
+
 stackexei() {
     has_cmd stack || return 1
 
@@ -219,7 +240,7 @@ add_zeal_ppa() {
 
 add_chrome_ppa() {
     is_ubuntu || return 1
-    ppa_exists google-chrome.list && return 0
+    ppa_exists google-chrome && return 0
 
     slog "Adding google chrome ppa"
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -338,17 +359,13 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential chromium-browser tmux exfat-fuse exfat-utils linux-headers-`uname -r`
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r`
 
     if is_xenial; then
         warn "cannot install zeal on xenial"
     else
         sudo apt-get install -y zeal
     fi
-
-    sudo apt-get clean
-    sudo apt-get autoclean
-    sudo apt-get autoremove -y
 }
 
 essential_mac_install() {
@@ -372,9 +389,6 @@ essential_mac_install() {
     brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gpg
     brew cask install iterm2
 
-    slog "cleanup brew"
-    brew cleanup
-    brew cask cleanup
 }
 
 essential_fedora_install() {
@@ -388,8 +402,17 @@ essential_fedora_install() {
     slog "Installing essential packages"
     sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unrar p7zip dconf tmux exfat-utils
 
-    slog "dnf cleanup"
-    sudo dnf clean all
+}
+
+fasd_install() {
+    is_linux || return 1
+    has_cmd fasd && return 0
+
+    slog "Installing fasd"
+    if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
+        cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
+        srm ~/seartipy-installer-fasd
+    fi
 }
 
 essential_install() {
@@ -398,6 +421,33 @@ essential_install() {
     essential_mac_install
 
     fasd_install
+}
+
+#
+# cleanup
+
+cleanup_ubuntu() {
+    is_ubuntu || return 1
+    sudo apt-get clean
+    sudo apt-get autoclean
+    sudo apt-get autoremove -y
+}
+
+cleanup_mac() {
+    is_mac || return 1
+
+    slog "cleanup brew"
+    brew cleanup
+    brew cask cleanup
+}
+cleanup_fedora() {
+    is_fedora || return 1
+
+    slog "dnf cleanup"
+    sudo dnf clean all
+}
+
+cleanup() {
 }
 
 #
@@ -503,13 +553,13 @@ zsh_ubuntu_install() {
 }
 
 zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zplug-zshrc ] || return 1
+    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc $BACKUP_DIR
 
-    slog "Linking ~/seartipy/dotfiles/zplug-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
+    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
 }
 
 zsh_install() {
@@ -521,7 +571,6 @@ zsh_install() {
     sclone https://github.com/changs/slimzsh.git ~/.slimzsh
     sclone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
     sclone https://github.com/tarjoilija/zgen.git ~/.zgen
-    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
 }
 
 #
@@ -706,7 +755,7 @@ java_mac_install() {
     is_mac || return 1
 
     slog "Installing java"
-    brew cask install java caskroom/homebrew-versions/java6
+    brew cask install java
 }
 
 java_fedora_install() {
@@ -732,7 +781,7 @@ java_install() {
 #
 # clojure
 
-lein_install() {
+linux_lein_install() {
     is_linux || return 1
     has_cmd lein && return 1
 
@@ -741,12 +790,13 @@ lein_install() {
     chmod +x ~/bin/lein
 }
 
-boot_install() {
-    is_linux || return 1
-
+linux_boot_install() {
+    is_ubuntu || return 1
     if ! has_cmd boot; then
-        slog "Installing boot"
-        curl -L https://github.com/boot-clj/boot-bin/releases/download/2.4.2/boot.sh > ~/bin/boot
+        if cd ~/bin; then
+            curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
+            chmod 755 boot
+        fi
         chmod a+x ~/bin/boot
     fi
     boot -u
@@ -792,8 +842,8 @@ clojure_install() {
     cmd_check javac
 
     clojure_mac_install
-    lein_install
-    boot_install
+    linux_lein_install
+    linux_boot_install
 
     clojure_dotfiles
 }
@@ -811,6 +861,7 @@ scala_mac_install() {
 
 ammonite_install() {
     is_linux || return 1
+    has_cmd amm || return 0
 
      curl -L https://git.io/v0FGO > ~/bin/amm && chmod +x ~/bin/amm
 }
@@ -821,8 +872,6 @@ scala_fedora_install() {
     slog "Installing scala"
     curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
     sudo dnf install -y scala sbt
-
-    ammonite_install
 }
 
 scala_ubuntu_install() {
@@ -830,7 +879,6 @@ scala_ubuntu_install() {
 
     slog "Install scala"
     sudo apt-get -y install sbt scala
-    ammonite_install
 }
 
 sbt_plugins() {
@@ -866,6 +914,9 @@ scala_install() {
     scala_mac_install
     scala_fedora_install
     scala_ubuntu_install
+
+    ammonite_install
+
     scala_dotfiles
 }
 
@@ -1079,40 +1130,27 @@ flow_install() {
     is_linux || return 1
     has_cmd flow && return 1
 
-    slog "Installing flow"
-    cd ~/seartipy/vendors
-    wget https://github.com/facebook/flow/releases/download/v0.23.1/flow-linux64-v0.23.1.zip
-    unzip -o flow-linux64-v0.23.1.zip
-    sln ~/seartipy/vendors/flow/flow ~/bin/flow
-    srm flow-linux64-v0.23.1.zip
-}
-
-tern_install() {
-    slog "Installing tern"
-    sclone https://github.com/ternjs/tern.git ~/seartipy/vendors/tern
-    if cd ~/seartipy/vendors/tern; then
-        has_cmd npm || warn "npm not found, skipping tern install"
-        npm install
-    fi
+    npmi flow
 }
 
 node_linux_install() {
     is_linux || return 1
 
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
     slog "Installing nvm"
-    has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+    has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
 
     source ~/.nvm/nvm.sh
-    nvm install stable
-    nvm alias default stable
+    nvm install node
+    nvm alias default node
 }
 
 web_install() {
     web_mac_install
     node_linux_install
     flow_install
-    tern_install
-
+    
     slog "Installing npm packages for web development"
     npmi coffee-script typescript
     npmi eslint jshint coffeelint eslint-plugin-react
@@ -1154,22 +1192,11 @@ vim_install() {
     vim_ubuntu_install
 
     slog "Installing vim packages"
-    [ -d ~/.spf13-vim-3 ] || curl http://j.mp/spf13-vim3 -L -o - | sh
+    curl -L https://bit.ly/janus-bootstrap | bash
 }
 
 #
 # additional
-
-fasd_install() {
-    is_linux || return 1
-    has_cmd fasd && return 1
-
-    slog "Installing fasd"
-    if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
-        cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
-        srm ~/seartipy-installer-fasd
-    fi
-}
 
 sourcecodepro_install() {
     is_linux || return 1
@@ -1855,7 +1882,7 @@ script_options() {
     while [[ $# > 0 ]]; do
         case $1 in
             atom)
-                ATOM="ATOM"
+                ATOM="atom"
                 shift
                 ;;
             go)
@@ -1912,6 +1939,10 @@ script_options() {
                 SEARTIPY=""
                 shift
                 ;;
+            nogit)
+                GIT=""
+                shift
+                ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
                 shift
@@ -1948,6 +1979,7 @@ script_options() {
                 ADDITIONAL="additional"
                 SETTINGS="settings"
                 VIM="vim"
+                THEMES="themes"
                 shift
                 ;;
             xmonad)
@@ -2000,6 +2032,11 @@ script_options() {
                 ;;
             everything)
                 select_everything
+                shift
+                ;;
+            ui)
+                SETTINGS="settings"
+                THEMES="themes"
                 shift
                 ;;
             *)
@@ -2160,6 +2197,7 @@ installer() {
     fi
 
     echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $XMONAD $VIM $SETTINGS $THEMES $ADDITIONAL"
+
     [ -n "$FRESH" ]  && fresh_install
 
     [ -n "$ESSENTIAL" ] && essential_install
@@ -2173,6 +2211,8 @@ installer() {
         chsh -s /bin/zsh
     fi
 
+    cleanup
+
     post_installer_check
 
     echo "Installation done!"
@@ -2184,12 +2224,6 @@ installer() {
 pre_installer_check() {
     pre_cmd_check git curl wget unzip $trash
     pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
-}
-
-essential_mac_check() {
-    is_mac || return 1
-
-    cmd_check brew trash 7z greadlink
 }
 
 ppas_check() {
@@ -2221,12 +2255,18 @@ ppas_check() {
     fi
 }
 
+essential_mac_check() {
+    is_mac || return 1
+
+    cmd_check brew trash 7z greadlink
+}
+
 essential_ubuntu_check() {
     is_ubuntu || return 1
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf
+    cmd_check xsel xclip p7zip dconf google-chrome firefox
 }
 
 essential_fedora_check() {
@@ -2236,7 +2276,7 @@ essential_fedora_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git $trash tree fasd unrar gpg tmux
+    cmd_check curl wget git $trash tree ag fasd unrar gpg tmux
 
     essential_mac_check
     essential_fedora_check
@@ -2245,19 +2285,22 @@ essential_check() {
 
 dotfiles_check() {
     dir_check ~/seartipy/dotfiles ~/seartipy/lean-dotfiles
+    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    is_mac && ln_check ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
 
 zsh_check() {
     cmd_check zsh
 
-    ln_check ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
-    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-
-    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/seartipy/vendors/liquidprompt
+    ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
 }
 
 bash_check() {
     ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
+        warn "~/.bash_profile not sourced in ~/.bashrc"
+    fi
     dir_check ~/seartipy/vendors/liquidprompt
 }
 
@@ -2274,7 +2317,7 @@ emacs_check() {
     ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
     ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
 
-    is_linux && cmd_check cask
+    cmd_check cask
 }
 
 atom_check() {
@@ -2284,7 +2327,8 @@ atom_check() {
 }
 
 scala_check() {
-    cmd_check javac sbt scala
+    cmd_check javac sbt scala amm
+    is_mac && brew_cask_check scala-ide
 
     ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
@@ -2295,8 +2339,6 @@ clojure_check() {
 
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
-
-    is_linux && cmd_check lein boot
 }
 
 web_check() {
@@ -2332,7 +2374,7 @@ idris_check() {
 
 elm_check() {
     source ~/.nvm/nvm.sh
-    cmd_check elm
+    cmd_check elm elm-oracle
 }
 
 r_check() {
@@ -2344,7 +2386,7 @@ haskell_check() {
 
     cmd_check ghc cabal stack
 
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng
     # cmd_check structured-haskell-mode
 }
 
@@ -2352,7 +2394,9 @@ python_check() {
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
 
-    cmd_check pyenv
+    cmd_check pyenv pyenv-virtualenv
+
+    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-pip-rehash ~/.pyenv/plugins/pyenv-virtualenv
 
     has_cmd pyenv || return 1
 
@@ -2362,6 +2406,8 @@ python_check() {
 }
 
 ruby_check() {
+    source ~/.rvm/scripts/rvm
+
     cmd_check rvm ruby
     cmd_check pry thin guard watchr tmuxinator git-up sass overcommit
     is_mac && cmd_check xcpretty
@@ -2391,6 +2437,12 @@ additional_check() {
         cmd_check xmonad vim
     fi
     is_mac && cmd_check docker
+    brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    cmd_check youtube-dl
+
+    is_linux || return 0
+
+    has_cmd vmware-user-suid-wrapper ||  cmd_check virtualbox
 }
 
 settings_check() {
@@ -2402,18 +2454,20 @@ settings_check() {
 }
 
 git_check() {
-    cmd_check kdiff3 meld
+    cmd_check kdiff3 git-extras
     is_ubuntu && cmd_check smartgit
-    is_mac && cmd_check smartgit
+    is_linux && cmd_check meld
+    is_mac && brew_cask_check smartgit hub github-desktop
 }
 
 vim_check() {
     cmd_check vim
-    dir_check ~/.spf13-vim-3
+    dir_check ~/.vim/janus
 }
 
 xmonad_check() {
     cmd_check xmonad dmenu
+    ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 
 xmonad_check() {

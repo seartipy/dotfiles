@@ -2357,7 +2357,6 @@ web_check() {
 
     has_cmd npm && cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
     npm_check eslint-plugin-react babel-eslint babelify
-
 }
 
 elixir_check() {

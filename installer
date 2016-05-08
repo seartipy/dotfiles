@@ -2185,13 +2185,28 @@ ppas_check() {
     is_ubuntu || return 1
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
-            warn 'java ppa not added'
-        fi
+        ppa_check webupd8team-ubuntu-java
     fi
 
-    if [ -n "$SCALA" ] && ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
-        warn 'sbt ppa not added'
+    [ -n "$SCALA" ] && ppa_check sbt
+
+    [ -n "$GIT" ] && ppa_check eugenesan-ubuntu-ppa
+
+    [ -n "$HASKELL" ] && ppa_check fpco
+
+    ppa_check zeal-developers-ubuntu
+    ppa_check google-chrome
+    ppa_check nilarimogard-ubuntu-webupd8
+    [ -n "$ATOM" ] && ppa_check webupd8team-ubuntu-atom
+
+    # TODO : docker
+
+    [ -n "$R" ] && ppa_check rutter
+
+    if [ -n "$THEMES" ]; then
+        ppa_check numix
+        ppa_check arc-theme
+        ppa_check teejee2008
     fi
 }
 

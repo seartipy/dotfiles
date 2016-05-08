@@ -1,18 +1,20 @@
-colorize() {
-    if [ -t 1 ]; then
-        printf "\e[%sm%s\e[m" 1 "$2"
-    else
-        echo -n "$2"
-    fi
-}
+BOLD=`tput bold`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+RESET=`tput sgr0`
+WHITE=`tput setaf 7`
 
-log() {
-    echo $1 >> ~/seartipy_installer.log
+slog() {
+    echo "
+${BOLD}${WHITE}SEARTIPY: ${RESET} $1
+"
 }
 
 warn() {
-    colorize "WARNING : "
-    echo $1
+    echo "
+${BOLD}${YELLOW}WARNING: ${RESET} $1
+"
 }
 
 is_linux() {
@@ -44,13 +46,11 @@ smd() {
 sln() {
     if ! [ -e "$1" ]; then
         warn "$1 does not exist, cannot create the link $2"
-    else
-        if [ -L "$2" ]; then
-            trash "$2"
-        elif [ -e "$2" ]; then
-            warn "$2 exists and not a symbolic link! not creating link"
-            return
-        fi
+    elif [ -L "$2" ]; then
+        trash "$2"
+    elif [ -e "$2" ]; then
+        warn "$2 exists and not a symbolic link! not creating link"
+        return 1
     fi
     ln -s $1 $2
 }
@@ -106,16 +106,8 @@ export PATH="$HOME/.cabal/bin:$PATH"
 # haskell stack
 export PATH="$HOME/.local/bin:$PATH"
 
-#emacs
-export PATH="$HOME/.cask/bin:$PATH"
-
 #node
 export NVM_DIR="$HOME/.nvm"
-
-#flow
-if is_linux; then
-    export PATH="$PATH:$SEARTIPY_HOME/vendors/flow"
-fi
 
 #python
 export PYENV_ROOT="$HOME/.pyenv"
@@ -148,7 +140,7 @@ export PATH="$HOME/.rvm/bin:$PATH"
 
 seartipy_fix_links() {
     sln ~/seartipy/dotfiles/shellrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/zplug-zshrc ~/.zshrc
+    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
 
     smd ~/.lein
     smd ~/.boot
@@ -169,7 +161,7 @@ seartipy_fix_links() {
 
 seartipy_upgrade_emacs() {
     cd ~/seartipy/emacses/housemd && git-up
-    has_cmd cask && cd ~/seartipy/emacses/housemd && cask upgrade-cask && cask install && cask update
+    has_cmd cask && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
 }
 
 seartipy_upgrade_dotfiles() {

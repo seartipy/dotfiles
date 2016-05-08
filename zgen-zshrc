@@ -3,7 +3,7 @@
 ZGEN_PREZTO_LOAD_DEFAULT=false
 source "${HOME}/.zgen/zgen.zsh"
 
-[ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
+[ -s ~/.zshrc-pre-local.sh ] && source ~/.zshrc-pre-local.sh
 
 # check if there's no init script
 if ! zgen saved; then
@@ -52,4 +52,4 @@ fi
 
 source "$HOME/seartipy/dotfiles/shellrc"
 
-[ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local
+[ -s ~/.zshrc-post-local.sh ] && source ~/.zshrc-post-local.sh

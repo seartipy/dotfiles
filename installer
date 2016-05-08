@@ -448,6 +448,9 @@ cleanup_fedora() {
 }
 
 cleanup() {
+    cleanup_ubuntu
+    cleanup_fedora
+    cleanup_mac
 }
 
 #

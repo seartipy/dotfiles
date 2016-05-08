@@ -119,6 +119,14 @@ ln_check() {
      [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
+ppa_exists() {
+    ls /etc/apt/sources.list.d | grep "$1" > /dev/null || return 1
+}
+
+ppa_check() {
+    ppa_exists || warn "$1 ppa not added"
+}
+
 apmi() {
     has_cmd apm || return 1
 
@@ -148,77 +156,62 @@ npmi() {
 
 add_java_ppa() {
     is_ubuntu || return 1
-    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-java > /dev/null; then
-        slog "Adding java ppa"
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-        sudo add-apt-repository ppa:webupd8team/java -y
-    fi
+    ppa_exists webupd8team-ubuntu-java && return 0
+
+    slog "Adding java ppa"
+    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+    sudo add-apt-repository ppa:webupd8team/java -y
 }
 
 add_scala_ppa() {
     is_ubuntu || return 1
+    ppa_exists sbt > /dev/null && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep sbt > /dev/null; then
-        slog "Adding scala ppa"
-        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-        echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-    fi
+    slog "Adding scala ppa"
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+    echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
 }
 
 add_smartgit_ppa() {
     is_ubuntu || return 1
+    ppa_exists grep eugenesan-ubuntu-ppa > /dev/null && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep eugenesan-ubuntu-ppa > /dev/null; then
-        slog "Adding smartgit ppa"
-        sudo add-apt-repository ppa:eugenesan/ppa -y
-    fi
+    slog "Adding smartgit ppa"
+    sudo add-apt-repository ppa:eugenesan/ppa -y
 }
 
 add_haskell_stack_ppa() {
     is_ubuntu || return 1
+    ppa_exists fpco && return 0
 
-        if ! ls /etc/apt/sources.list.d | grep fpco > /dev/null; then
-        slog "Adding stack ppa"
-        wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
-        echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main'|sudo tee /etc/apt/sources.list.d/fpco.list
-    fi
-}
-
-add_ghc_ppa() {
-    is_ubuntu || return 1
-
-    if ! ls /etc/apt/sources.list.d | grep hvr-ubuntu-ghc > /dev/null; then
-        slog "Adding ghc ppa"
-        sudo add-apt-repository ppa:hvr/ghc -y
-    fi
+    slog "Adding stack ppa"
+    wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
+    echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main' | sudo tee /etc/apt/sources.list.d/fpco.list
 }
 
 add_zeal_ppa() {
     is_ubuntu || return 1
+    ppa_exists zeal-developers-ubuntu && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep zeal-developers-ubuntu > /dev/null; then
-        slog "Adding zeal ppa"
-        sudo add-apt-repository ppa:zeal-developers/ppa -y
-    fi
+    slog "Adding zeal ppa"
+    sudo add-apt-repository ppa:zeal-developers/ppa -y
 }
 
 add_chrome_ppa() {
     is_ubuntu || return 1
+    ppa_exists google-chrome.list && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep google-chrome.list > /dev/null; then
-        slog "Adding google chrome ppa"
-        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    fi
+    slog "Adding google chrome ppa"
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 }
 
 add_webupd8_ppa() {
     is_ubuntu || return 1
+    ppa_exists nilarimogard-ubuntu-webupd8 && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep nilarimogard-ubuntu-webupd8 > /dev/null; then
-        slog "Adding webupd8 ppa for youtub-dl etc"
-        sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
-    fi
+    slog "Adding webupd8 ppa for youtub-dl etc"
+    sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
 }
 
 add_virtualbox_ppa() {
@@ -236,17 +229,15 @@ add_virtualbox_ppa() {
 
 add_atom_ppa() {
     is_ubuntu || return 1
-
-    if ! ls /etc/apt/sources.list.d | grep webupd8team-ubuntu-atom > /dev/null; then
-        slog "Adding atom ppa"
-        sudo add-apt-repository  ppa:webupd8team/atom -y
-    fi
+    ppa_exists webupd8team-ubuntu-atom && return 0
+    slog "Adding atom ppa"
+    sudo add-apt-repository  ppa:webupd8team/atom -y
 }
 
 add_docker_ppa() {
     is_ubuntu || return 1
 
-    if ! has_cmd vmware-user-suid-wrapper && ! ls /etc/apt/sources.list.d | grep docker > /dev/null; then
+    if ! has_cmd vmware-user-suid-wrapper && ! ppa_exists docker; then
         slog "Installing docker"
         wget -qO- https://get.docker.com/ | sh
         sudo usermod -aG docker $USER
@@ -255,34 +246,35 @@ add_docker_ppa() {
 
 add_r_ppa() {
     is_ubuntu || return 1
+    ppa_exists rutter && return 0
 
-    if ! ls /etc/apt/sources.list.d | grep rutter > /dev/null; then
-        slog "Adding r ppa"
-        sudo add-apt-repository ppa:marutter/rrutter -y
-    fi
+    slog "Adding r ppa"
+    sudo add-apt-repository ppa:marutter/rrutter -y
 }
 
 add_numix_ppa() {
-    if ! ls /etc/apt/sources.list.d | grep numix > /dev/null; then
-        slog "Adding numix ppa"
-        sudo add-apt-repository ppa:numix/ppa -y
-    fi
+    is_ubuntu || return 1
+    ppa_exists numix && return 0
+
+    slog "Adding numix ppa"
+    sudo add-apt-repository ppa:numix/ppa -y
 }
 
 add_arc_theme_ppa() {
-    if ! ls /etc/apt/sources.list.d | grep arc-theme > /dev/null; then
-        slog "Adding arc theme ppa"
-        wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
-        echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
-    fi
+    is_ubuntu || return 1
+    ppa_exists arc-theme && return 1
 
+    slog "Adding arc theme ppa"
+    wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
+    echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
 }
 
 add_conky_manager_ppa() {
-    if ! ls /etc/apt/sources.list.d | grep teejee2008 > /dev/null; then
-        slog "Adding conky manager ppa"
-        sudo add-apt-repository ppa:teejee2008/ppa -y
-    fi
+    is_ubuntu || return 1
+    ppa_exists teejee2008 && return 1
+
+    slog "Adding conky manager ppa"
+    sudo add-apt-repository ppa:teejee2008/ppa -y
 }
 
 add_ppas() {
@@ -291,7 +283,6 @@ add_ppas() {
     add_java_ppa
     add_scala_ppa
     add_smartgit_ppa
-    # [ -n "$HASKELL" ] && add_ghc_ppa
     add_haskell_stack_ppa
 
     is_xenial || add_zeal_ppa

@@ -1,15 +1,29 @@
 # utils
 
+BOLD=`tput bold`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+RESET=`tput sgr0`
+WHITE=`tput setaf 7`
+
 slog() {
-    echo "SEARTIPY : $1" | tee -a ~/seartipy-installer.log
+    echo "
+${BOLD}${WHITE}SEARTIPY: ${RESET} $1
+" | tee -a ~/seartipy-installer.log
 }
 
 warn() {
-    echo "WARNING : $1" | tee -a ~/seartipy-installer.log
+    echo "
+${BOLD}${YELLOW}WARNING: ${RESET} $1
+" | tee -a ~/seartipy-installer.log
 }
 
 err_exit() {
-    echo "FATAL: $1" | tee -a ~/seartipy-installer.log
+    echo "
+${BOLD}${RED}FATAL : $RESET} $1
+" | tee -a ~/seartipy-installer.log
+
     exit 1
 }
 

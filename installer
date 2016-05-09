@@ -1132,7 +1132,7 @@ flow_install() {
     is_linux || return 1
     has_cmd flow && return 1
 
-    npmi flow
+    npmi flow-bin
 }
 
 node_linux_install() {

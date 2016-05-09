@@ -157,7 +157,7 @@ npm_check() {
 
 
 brew_exists() {
-    brew list | grep "$1" || return 1
+    brew list | grep "^$1$" || return 1
 }
 
 brew_check() {

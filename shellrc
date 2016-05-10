@@ -166,9 +166,25 @@ seartipy_fix_links() {
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
 
+seartipy_cask_backup() {
+    local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1)
+    cp -r $ELPA_PARENT/elpa $ELPA_PARENT/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
+    ROLLBACK_COUNT=$(ls $ELPA_PARENT | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)
+    if [ "$ROLLBACK_COUNT" -gt 5 ]; then
+        trash $ELPA_PARENT/$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | head -1)
+    fi
+}
+
+seartipy_cask_rollback() {
+    local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1) # -t might be a better option
+    trash "${ELPA_PARENT}/elpa"
+    LATEST_BACKUP=$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | tail -1)
+    mv $ELPA_PARENT/$LATEST_BACKUP $ELPA_PARENT/elpa
+}
+
 seartipy_upgrade_emacs() {
     cd ~/seartipy/emacses/housemd && git-up
-    has_cmd cask && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
+    has_cmd cask && seartipy_cask_backup && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
 }
 
 seartipy_upgrade_dotfiles() {
@@ -235,6 +251,8 @@ alias she="seartipy_emacs_default housemd"
 alias es="seartipy_emacs_launch spacemacs"
 alias el="seartipy_emacs_launch lean-emacs"
 alias eh="seartipy_emacs_launch housemd"
+
+alias emacs-restore="seartipy_elpa_rollback"
 
 alias upa=seartipy_upgrade_all
 alias upm=seartipy_upgrade_mean

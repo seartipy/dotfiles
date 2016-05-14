@@ -21,7 +21,7 @@ ${BOLD}${YELLOW}WARNING: ${RESET} $1
 
 err_exit() {
     echo "
-${BOLD}${RED}FATAL : $RESET} $1
+${BOLD}${RED}FATAL : ${RESET} $1
 " | tee -a ~/seartipy-installer.log
 
     exit 1
@@ -88,7 +88,7 @@ sclone() {
 
 pre_cmd_check() {
     for cmd in $*; do
-        has_cmd "$cmd" || err_exit "$cmd not be installed, quitting"
+        has_cmd "$cmd" || err_exit "$cmd not installed, quitting"
     done
 }
 

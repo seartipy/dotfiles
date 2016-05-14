@@ -15,10 +15,8 @@ if ! zgen saved; then
     zgen prezto tmux:auto-start local 'no'
 
     zgen prezto prompt theme 'pure'
-    # zgen prezto prompt theme 'peepcode' "❯"
-    zstyle terminal auto-title 'yes'
-
-    zgen prezto syntax-highlighting color 'yes'
+    # zstyle ':prezto:module:prompt' theme 'peepcode' "❯"
+    zstyle ':prezto:module:terminal' auto-title 'yes'
     zstyle ':prezto:module:utility:ls' color 'yes'
     zstyle ':prezto:module:syntax-highlighting' color 'yes'
     # prezto and modules

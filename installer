@@ -792,7 +792,7 @@ linux_lein_install() {
 }
 
 linux_boot_install() {
-    is_ubuntu || return 1
+    is_linux || return 1
     if ! has_cmd boot; then
         if cd ~/bin; then
             curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh

@@ -7,6 +7,8 @@
     :tools/terminal
     :tools/bookmarks
     :tools/todo
+    :tools/minimap
+    :tools/build
 
     :lang/markdown
 
@@ -17,7 +19,11 @@
     :lang/rust
     :lang/swift
 
+    :lang/python
+    :lang/ruby
+
     :lang/javascript
+    :lang/typescript
     :lang/html
     :lang/css
     :lang/less
@@ -31,6 +37,7 @@
   [
     :browser-plus
     :hyperclick
+    :project-manager
 
     :language-scala
     :intentions
@@ -65,6 +72,10 @@
     :linter-elm-make
 
     :git-time-machine
+    :git-log
+
+    :floobits
+
   ]
 
   :configuration

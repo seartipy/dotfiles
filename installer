@@ -86,6 +86,10 @@ sclone() {
     fi
 }
 
+scopy() {
+    [ -e "$2" ] || cp "$1" "$2"
+}
+
 pre_cmd_check() {
     for cmd in $*; do
         has_cmd "$cmd" || err_exit "$cmd not installed, quitting"
@@ -983,7 +987,7 @@ ihaskell_install() {
     has_cmd stack || return 1
 
     is_mac && brew install zeromq
-    is_ubuntu && sudo apt-get install -y libzmq3-dev
+    is_ubuntu && sudo apt-get install -y libzmq3-dev libzmq5
     is_fedora && sudo dnf install -y zeromq zeromq-devel
 
     stackexei  alex happy cpphs

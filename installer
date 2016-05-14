@@ -966,6 +966,7 @@ stack_fedora_install() {
     is_fedora || return 1
 
     slog "Installing stack"
+    sudo dnf install -y ncurses-compat-libs # fedora 24 beta fix
     sudo dnf copr -y enable petersen/stack
     sudo dnf install -y stack
 }

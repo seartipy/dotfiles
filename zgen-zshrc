@@ -19,6 +19,8 @@ if ! zgen saved; then
     zstyle terminal auto-title 'yes'
 
     zgen prezto syntax-highlighting color 'yes'
+    zstyle ':prezto:module:utility:ls' color 'yes'
+    zstyle ':prezto:module:syntax-highlighting' color 'yes'
     # prezto and modules
     zgen prezto
     zgen prezto environment

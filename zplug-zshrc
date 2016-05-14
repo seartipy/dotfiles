@@ -1,13 +1,12 @@
 if ! [ -f ~/.zplug/zplug ]; then
-    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
-    source ~/.zplug/zplug && zplug update --self
+    curl -sL get.zplug.sh | zsh
 fi
 
-ZSH_TMUX_AUTOSTART=true # can be overriden in ~/.zshrc-pre.local
+# ZSH_TMUX_AUTOSTART=true # can be overriden in ~/.zshrc-pre.local
 
 [ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
 
-source ~/.zplug/zplug
+source ~/.zplug/init.zsh
 
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
@@ -18,7 +17,7 @@ zplug "plugins/jsontools", from:oh-my-zsh
 
 zplug "plugins/command-not-found", from:oh-my-zsh
 zplug "plugins/autojump", from:oh-my-zsh
-zplug "plugins/common-aliases", from:oh-my-zsh
+# zplug "plugins/common-aliases", from:oh-my-zsh
 zplug "plugins/dircycle", from:oh-my-zsh
 zplug "plugins/dirhistory", from:oh-my-zsh
 
@@ -33,7 +32,7 @@ zplug "plugins/coffee", from:oh-my-zsh
 
 zplug "plugins/web-search", from:oh-my-zsh
 
-zplug "plugins/fasd", from:oh-my-zsh
+# zplug "plugins/fasd", from:oh-my-zsh
 
 zplug "zsh-users/zsh-history-substring-search"
 

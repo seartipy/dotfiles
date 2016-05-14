@@ -44,7 +44,7 @@ if ! zgen saved; then
     zgen load djui/alias-tips
     zgen load rimraf/k
     zgen load unixorn/git-extra-commands
-    zgen load zsh-users/zsh-autosuggestions
+    # zgen load zsh-users/zsh-autosuggestions
 
     # save all to init script
     zgen prezto prompt # prompt must be the last module to load

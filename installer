@@ -2272,7 +2272,7 @@ ppas_check() {
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew trash 7z greadlink
+    cmd_check brew trash 7z greadlink unar
 }
 
 essential_ubuntu_check() {
@@ -2280,17 +2280,17 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf google-chrome firefox
+    cmd_check xsel xclip p7zip dconf google-chrome firefox unrar
 }
 
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel xclip 7za dconf
+    cmd_check xsel xclip 7za dconf unar
 }
 
 essential_check() {
-    cmd_check curl wget git $trash tree ag fasd unrar gpg tmux
+    cmd_check curl wget git $trash tree ag fasd gpg tmux
 
     essential_mac_check
     essential_fedora_check

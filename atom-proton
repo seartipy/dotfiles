@@ -80,8 +80,8 @@
 
   :configuration
   [
-    ["editor.fontFamily" "Monaco"]
-    [ "editor.fontSize" "14" ]
+    ["editor.fontFamily" "Source Code Pro"]
+    [ "editor.fontSize" "13" ]
     ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
 
     ["proton.core.showTabBar" true]

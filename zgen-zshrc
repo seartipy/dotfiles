@@ -36,8 +36,8 @@ if ! zgen saved; then
     zgen prezto fasd
     zgen prezto gnu-utility
     zgen prezto osx
-    zgen prezto history-substring-search
     zgen prezto syntax-highlighting
+    zgen prezto history-substring-search
     zgen prezto tmux
 
     # plugins

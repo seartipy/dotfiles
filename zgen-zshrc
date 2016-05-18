@@ -13,42 +13,44 @@ if ! zgen saved; then
     zgen prezto editor key-bindings 'emacs'
     zgen prezto editor dot-expansion 'yes'
     zgen prezto tmux:auto-start local 'no'
-
     zgen prezto prompt theme 'pure'
-    # zstyle ':prezto:module:prompt' theme 'peepcode' "❯"
-    zstyle ':prezto:module:terminal' auto-title 'yes'
-    zstyle ':prezto:module:utility:ls' color 'yes'
-    zstyle ':prezto:module:syntax-highlighting' color 'yes'
+    zgen prezto terminal auto-title 'yes'
+    zgen prezto utility:ls color 'yes'
+    zgen prezto syntax-highlighting color 'yes'
+    zgen prezto syntax-highlighting highlighters 'main' 'brackets'
+    # zgen prezto tmux:iterm integrate 'yes'
+
+    [ -s ~/.zgen-options-local.sh ] && source ~/.zgen-options-local.sh
+
     # prezto and modules
     zgen prezto
     zgen prezto environment
+    zgen prezto utility
     zgen prezto terminal
     zgen prezto editor
     zgen prezto history
     zgen prezto directory
     zgen prezto spectrum
-    zgen prezto utility
-    zgen prezto completion
-    zgen prezto archive
-    zgen prezto emacs
-    zgen prezto git
+    zgen prezto completion                     # must be loaded after utility
+    zgen prezto archive                        # lsarchive and unarchive commands
+    zgen prezto git                            # git aliases
     zgen prezto command-not-found
-    zgen prezto fasd
-    zgen prezto gnu-utility
+    zgen prezto fasd                           # j , f, d etc.
     zgen prezto osx
+    zgen prezto tmux
     zgen prezto syntax-highlighting
     zgen prezto history-substring-search
-    zgen prezto tmux
+    zgen prezto autosuggestions
 
     # plugins
     zgen load djui/alias-tips
     zgen load rimraf/k
     zgen load unixorn/git-extra-commands
-    # zgen load zsh-users/zsh-autosuggestions
 
-    # save all to init script
-    zgen prezto prompt # prompt must be the last module to load
-    zgen save
+    [ -s ~/.zgen-plugins-local.sh ] && source ~/.zgen-plugins-local.sh
+
+    zgen prezto prompt          # prompt must be the last module to load
+    zgen save                   # save all to init script
 fi
 
 source "$HOME/seartipy/dotfiles/shellrc"

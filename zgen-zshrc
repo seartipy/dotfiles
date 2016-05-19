@@ -49,6 +49,12 @@ if ! zgen saved; then
     zgen load rimraf/k
     zgen load unixorn/git-extra-commands
 
+#    zgen load chrissicool/zsh-256color
+    zgen load unixorn/tumult.plugin.zsh
+    zgen load sharat87/pip-app
+    zgen load peterhurford/git-it-on.zsh
+    zgen load unixorn/git-extra-commands
+
     [ -s ~/.zgen-plugins-local.sh ] && source ~/.zgen-plugins-local.sh
 
     zgen prezto prompt          # prompt must be the last module to load

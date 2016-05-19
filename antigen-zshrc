@@ -1,3 +1,5 @@
+#! /bin/zsh
+
 [ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
 
 source ~/seartipy/vendors/antigen/antigen.zsh

@@ -1,3 +1,5 @@
+#! /bin/zsh
+
 if ! [ -f ~/.zplug/zplug ]; then
     curl -sL get.zplug.sh | zsh
 fi

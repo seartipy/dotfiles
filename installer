@@ -1072,8 +1072,6 @@ elm_mac_install() {
     brew cask install elm-platform
 
     web_mac_install
-
-    npmi elm-oracle
 }
 
 elm_linux_install() {
@@ -1082,12 +1080,14 @@ elm_linux_install() {
     node_linux_install
 
     slog "Installing elm"
-    npmi elm elm-oracle
+    npmi elm
 }
 
 elm_install() {
     elm_mac_install
     elm_linux_install
+
+    npmi elm-oracle elm-live
 }
 
 #
@@ -2396,7 +2396,7 @@ idris_check() {
 
 elm_check() {
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
-    cmd_check elm elm-oracle
+    cmd_check elm elm-oracle elm-make elm-reactor elm-compiler elm-repl elm-package elm-live
 }
 
 r_check() {

@@ -2487,7 +2487,7 @@ additional_check() {
     cmd_check youtube-dl icdiff jq http
 
     is_linux || return 0
-
+    cmd_check git-icdiff
     has_cmd vmware-user-suid-wrapper ||  cmd_check virtualbox
 }
 

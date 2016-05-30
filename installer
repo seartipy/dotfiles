@@ -1168,6 +1168,7 @@ web_install() {
     npmi browserify watchify babelify budo
     npmi webpack webpack-dev-server
     npmi tern js-beautify karma-cli
+    npmi browser-sync
 }
 
 #
@@ -1425,6 +1426,8 @@ golang_install() {
     go get -u golang.org/x/tools/go/ssa/interp
     sudo GOPATH="$HOME/golang-ws" go get -u golang.org/x/tools/cmd/godoc
     go get -u golang.org/x/tools/cmd/...
+
+    go get -u github.com/cortesi/devd/cmd/devd # livereload proxy server
 }
 
 #
@@ -2394,7 +2397,7 @@ web_check() {
     cmd_check npm
 
     has_cmd npm && cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
-    npm_check eslint-plugin-react babel-eslint babelify
+    npm_check eslint-plugin-react babel-eslint babelify browser-sync
 }
 
 elixir_check() {
@@ -2468,7 +2471,7 @@ golang_check() {
     export GOPATH="$HOME/golang-ws"
     export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
 
-    cmd_check go golint gocode godef goimports
+    cmd_check go golint gocode godef goimports devd
 }
 
 additional_check() {

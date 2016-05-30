@@ -1159,7 +1159,7 @@ web_install() {
     web_mac_install
     node_linux_install
     flow_install
-    
+
     slog "Installing npm packages for web development"
     npmi coffee-script typescript
     npmi eslint jshint coffeelint eslint-plugin-react
@@ -1221,11 +1221,29 @@ powerline_patched_fonts() {
     fi
 }
 
+icdiff_mac_install() {
+    is_mac || return 1
+    brew install icdiff
+}
+
+icdiff_linux_install() {
+    is_linux || return 1
+
+    has_cmd git-icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/git-icdiff > ~/bin/git-icdiff && chmod +x ~/bin/git-icdiff
+
+    has_cmd icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/git-icdiff > ~/bin/git-icdiff && chmod +x ~/bin/git-icdiff
+}
+
+icdiff_install() {
+    icdiff_mac_install
+    icdiff_linux_install
+}
+
 additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew cask install google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
@@ -1235,7 +1253,7 @@ additional_fedora_install() {
     is_fedora || return 1
 
     slog "Installing additional packages"
-    sudo dnf install -y vlc youtube-dl
+    sudo dnf install -y vlc youtube-dl jq httpie
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo dnf install -y VirtualBox dkms
     fi
@@ -1245,7 +1263,7 @@ additional_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing additional"
-    sudo apt-get install -y vlc youtube-dl google-chrome-stable
+    sudo apt-get install -y vlc youtube-dl google-chrome-stable jq httpie
     if ! has_cmd vmware-user-suid-wrapper; then
         is_xenial && sudo apt-get install -y virtualbox virtualbox-dkms
         is_xenial || sudo apt-get install -y virtualbox-5.0 dkms
@@ -1257,6 +1275,7 @@ additional_install() {
     additional_fedora_install
     additional_ubuntu_install
 
+    icdiff_install
     powerline_patched_fonts
 }
 
@@ -2465,7 +2484,7 @@ additional_check() {
 
     is_mac && cmd_check docker
     is_mac && brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
-    cmd_check youtube-dl
+    cmd_check youtube-dl icdiff jq http
 
     is_linux || return 0
 

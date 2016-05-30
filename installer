@@ -1207,19 +1207,17 @@ vim_install() {
 #
 # additional
 
-sourcecodepro_install() {
-    is_linux || return 1
-    has_cmd fc-cache || return 1
+patched_fonts_exist() {
+    (is_linux && ls ~/.local/share/fonts 2> /dev/null | grep Powerline > /dev/null) || (is_mac && ls ~/Library/Fonts 2> /dev/null | grep Powerline > /dev/null)
+}
 
-    if ! ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null; then
-        slog "Installing Source code pro fonts"
-        wget https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.zip
-        unzip -o 1.030R-it.zip
-        smd ~/.fonts
-        cp source-code-pro*/OTF/*.otf ~/.fonts
-        fc-cache -f -v
-        srm 1.030R-it.zip
-        srm source-code-pro*
+powerline_patched_fonts() {
+       if ! patched_fonts_exist; then
+        slog "Installing powerline patched fonts"
+        smd ~/seartipy-powerline-fonts
+        sclone https://github.com/powerline/fonts.git ~/seartipy-powerline-fonts
+        cd ~/seartipy-powerline-fonts && ./install.sh
+        smd ~/seartipy-powerline-fonts
     fi
 }
 
@@ -1259,7 +1257,7 @@ additional_install() {
     additional_fedora_install
     additional_ubuntu_install
 
-    sourcecodepro_install
+    powerline_patched_fonts
 }
 
 #
@@ -2456,9 +2454,15 @@ golang_check() {
 
 additional_check() {
     if is_linux; then
-        ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "source code pro not installed"
+        ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "powerline fonts not installed"
         cmd_check xmonad vim
     fi
+
+    if is_mac; then
+        ls ~/Library/Fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "powerline fonts not installed"
+
+    fi
+
     is_mac && cmd_check docker
     is_mac && brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     cmd_check youtube-dl

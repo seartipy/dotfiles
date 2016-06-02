@@ -7,22 +7,6 @@
     status = auto
     ui = true
 
-[color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
-
-[color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red
-    new = cyan
-
-[color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
-
 [alias]
 
     ## important aliases
@@ -68,10 +52,12 @@
         pager = less -F -X
 
 [merge]
-        tool = kdiff3
+  tool = ediff
 
-[mergetool]
-        keepBackup = false
-        template = ~/.gitmessage
+[mergetool "ediff"]
+  cmd = emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+  keepBackup = false
+  template = ~/.gitmessage
+
 [fetch]
         prune = true

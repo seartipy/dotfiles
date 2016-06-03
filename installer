@@ -125,6 +125,12 @@ ln_check() {
      [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
 }
 
+file_check() {
+    for f in $*; do
+        [ -f "$f" ] || warn "$f does not exist"
+    done
+}
+
 ppa_exists() {
     ls /etc/apt/sources.list.d | grep "$1" > /dev/null || return 1
 }
@@ -625,13 +631,10 @@ emacs_ubuntu_install() {
 spacemacs_dotfiles() {
     sclone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
 
-    [ -f ~/seartipy/dotfiles/spacemacs ] || return 1
+    [ -f ~/seartipy/dotfiles/templates/spacemacs ] || return 1
 
-    slog "Moving ~/.spacemacs to $BACKUP_DIR"
-    smv ~/.spacemacs $BACKUP_DIR
-
-    slog "Linking ~/seartipy/dotfiles/spacemacs as ~/.spacemacs"
-    sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
+    slog "Copying ~/seartipy/dotfiles/templates/spacemacs as ~/.spacemacs"
+    sln ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
 }
 
 leanemacs_dotfiles() {
@@ -2354,7 +2357,7 @@ emacs_check() {
 
     dir_check ~/seartipy/emacses/spacemacs ~/seartipy/emacses/housemd ~/seartipy/emacses/lean-emacs
 
-    ln_check ~/seartipy/dotfiles/spacemacs ~/.spacemacs
+    file_check ~/.spacemacs
     ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
     ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
 

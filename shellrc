@@ -57,6 +57,10 @@ sln() {
     ln -s $1 $2
 }
 
+scopy() {
+    [ -e "$2" ] || cp "$1" "$2"
+}
+
 if is_linux; then
     alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
     alias pbcopy="xsel --clipboard --input"
@@ -164,11 +168,12 @@ seartipy_fix_links() {
     sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
 
-    sln ~/seartipy/dotfiles/spacemacs ~/.spacemacs
     sln ~/seartipy/emacses/housemd ~/.emacs.d
 
     sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+
+    scopy ~/seartipy/dotfiles/templatesspacemacs ~/.spacemacs
 }
 
 seartipy_cask_backup() {

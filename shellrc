@@ -221,6 +221,7 @@ seartipy_upgrade_all() {
     cd && has_cmd stack && stack update
     cd && has_cmd boot && boot -u && boot
     cd && has_cmd stack && stack update
+    cd && has_cmd pyenv && pyenv rehash
 }
 
 seartipy_emacs_default() {

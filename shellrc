@@ -95,9 +95,11 @@ if is_mac; then
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
     export JDK_HOME=`/usr/libexec/java_home -v 1.8`
 
-    if has_cmd npm; then
-        export PATH=$(npm config get prefix)/bin:$PATH
-    fi
+    # 'npm config get prefix' returns '/usr/local', so already in path
+    # comment out to save time
+    # if has_cmd npm; then
+    #     export PATH=$(npm config get prefix)/bin:$PATH
+    # fi
     #brew
     export PATH="/usr/local/bin:$PATH"
 
@@ -147,7 +149,7 @@ fi
 
 #python
 if has_cmd pyenv > /dev/null; then
-    eval "$(pyenv init -)"
+    eval "$(pyenv init - --no-rehash)"
     eval "$(pyenv virtualenv-init -)"
 fi
 

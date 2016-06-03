@@ -39,6 +39,8 @@
     :hyperclick
     :project-manager
 
+    :busy
+
     :language-scala
     :intentions
     :Ensime

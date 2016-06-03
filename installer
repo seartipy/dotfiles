@@ -1102,14 +1102,13 @@ python_mac_install() {
     is_mac || return 1
 
     slog "Installing python packages"
-    brew install pyenv pyenv-virtualenv homebrew/boneyard/pyenv-pip-rehash
+    brew install pyenv pyenv-virtualenv
 }
 
 python_linux_install() {
     is_linux || return 1
 
     sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
-    sclone https://github.com/yyuu/pyenv-pip-rehash.git ~/.pyenv/plugins/pyenv-pip-rehash
     sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 }
 

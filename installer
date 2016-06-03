@@ -756,6 +756,8 @@ git_install() {
     git_mac_install
     git_fedora_install
     git_ubuntu_install
+
+    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
 }
 
 #
@@ -2510,6 +2512,8 @@ git_check() {
     is_ubuntu && cmd_check smartgit
     is_linux && cmd_check meld
     is_mac && brew_cask_check smartgit hub github-desktop
+
+    file_check ~/.gitconfig
 }
 
 vim_check() {

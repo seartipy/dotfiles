@@ -212,6 +212,30 @@ seartipy_upgrade_mean() {
     has_cmd zplug && zplug update
 }
 
+seartipy_nvm_dist_upgrade() {
+    has_cmd nvm || return 1
+
+    cd "$NVM_DIR" && git fetch origin && git checkout `git describe --abbrev=0 --tags`
+    source "$NVM_DIR/nvm.sh"
+
+    nvm install node --reinstall-packages-from=node
+    nvm alias default node
+}
+
+seartipy_conda_upgrade_all() {
+    conda update --all
+}
+
+# http://stackoverflow.com/questions/2720014/upgrading-all-packages-with-pip
+seartipy_pip_upgrade_all() {
+    pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
+}
+
+seartipy_gem_upgrade_all() {
+    gem update
+    gem update --system
+}
+
 seartipy_upgrade_all() {
     seartipy_upgrade_mean
     cd && has_cmd sbt && sbt console -batch

@@ -2443,7 +2443,7 @@ python_check() {
     cmd_check pyenv
     is_mac && cmd_check pyenv-virtualenv
 
-    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-pip-rehash ~/.pyenv/plugins/pyenv-virtualenv
+    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-virtualenv
 
     has_cmd pyenv || return 1
 

@@ -3,6 +3,7 @@
 [ -d ~/.zgen ] || git clone https://github.com/tarjoilija/zgen.git ~/.zgen
 
 ZGEN_PREZTO_LOAD_DEFAULT=false
+
 source "${HOME}/.zgen/zgen.zsh"
 
 [ -s ~/.zshrc-pre-local.sh ] && source ~/.zshrc-pre-local.sh
@@ -20,7 +21,6 @@ if ! zgen saved; then
     zgen prezto utility:ls color 'yes'
     zgen prezto syntax-highlighting color 'yes'
     zgen prezto syntax-highlighting highlighters 'main' 'brackets'
-    # zgen prezto tmux:iterm integrate 'yes'
 
     [ -s ~/.zgen-options-local.sh ] && source ~/.zgen-options-local.sh
 
@@ -40,16 +40,14 @@ if ! zgen saved; then
     zgen prezto fasd                           # j , f, d etc.
     zgen prezto osx
     zgen prezto tmux
-    zgen prezto syntax-highlighting
+    [[ "$ZGEN_SYNTAX_HIGHLIGHTING" == "yes" ]] && zgen prezto syntax-highlighting
     zgen prezto history-substring-search
-    zgen prezto autosuggestions
+    [[ "$ZGEN_AUTO_SUGGESIONS" == "yes" ]] && zgen prezto autosuggestions
 
     # plugins
     zgen load djui/alias-tips
     zgen load rimraf/k
-    zgen load unixorn/git-extra-commands
 
-#    zgen load chrissicool/zsh-256color
     zgen load unixorn/tumult.plugin.zsh
     zgen load sharat87/pip-app
     zgen load peterhurford/git-it-on.zsh
@@ -61,6 +59,6 @@ if ! zgen saved; then
     zgen save                   # save all to init script
 fi
 
-source "$HOME/seartipy/dotfiles/shellrc"
+[ -s ~/seartipy/dotfiles/shellrc ] && source ~/seartipy/dotfiles/shellrc
 
 [ -s ~/.zshrc-post-local.sh ] && source ~/.zshrc-post-local.sh

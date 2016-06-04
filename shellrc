@@ -258,6 +258,10 @@ seartipy_emacs_launch() {
     is_linux && emacs&
 }
 
+seartipy_kill_emacs() {
+    emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs))"
+}
+
 seartipy_ctrl_alt_set() {
     is_linux || return 1
     has_cmd gnome-session && gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
@@ -288,6 +292,10 @@ alias es="seartipy_emacs_launch spacemacs"
 alias el="seartipy_emacs_launch lean-emacs"
 alias eh="seartipy_emacs_launch housemd"
 
+alias ec="emacsclient -c -n"
+alias et="emacsclient -t"
+
+alias emacs-kill="seartipy_kill_emacs"
 alias emacs-restore="seartipy_elpa_rollback"
 
 alias upa=seartipy_upgrade_all

@@ -274,7 +274,6 @@ seartipy_lean_system() {
     sln ~/seartipy/lean-dotfiles/zshrc ~/.zshrc
     sln ~/seartipy/lean-dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     sln ~/seartipy/lean-dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
-    sln ~/seartipy/lean-dotfiles/spacemacs ~/.spacemacs
     sln ~/seartipy/emacses/lean-emacs ~/.emacs.d
 }
 

@@ -182,9 +182,14 @@ seartipy_cask_backup() {
 
 seartipy_cask_rollback() {
     local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1) # -t might be a better option
-    trash "${ELPA_PARENT}/elpa"
     LATEST_BACKUP=$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | tail -1)
-    mv $ELPA_PARENT/$LATEST_BACKUP $ELPA_PARENT/elpa
+
+    if [[ -z "${LOCAL_BACKUP// }" ]]; then
+        warn "no backups available, skipping"
+    else
+        trash "${ELPA_PARENT}/elpa"
+        mv $ELPA_PARENT/$LATEST_BACKUP $ELPA_PARENT/elpa
+    fi
 }
 
 seartipy_upgrade_emacs() {
@@ -289,7 +294,7 @@ alias ec="emacsclient -c -n"
 alias et="emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
-alias emacs-restore="seartipy_elpa_rollback"
+alias emacs-restore="seartipy_cask_rollback"
 
 alias upa=seartipy_upgrade_all
 alias upm=seartipy_upgrade_mean

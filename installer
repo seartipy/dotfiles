@@ -472,7 +472,7 @@ clone_lean_dotfiles() {
     slog "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
     smv ~/seartipy/lean-dotfiles $BACKUP_DIR
 
-    sclone https://perveziqbal@bitbucket.org/perveziqbal/lean-dotfiles.git ~/seartipy/lean-dotfiles
+    sclone https://gitlab.com/seartipy/lean-dotfiles.git ~/seartipy/lean-dotfiles
 
     [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop
 }

@@ -129,10 +129,6 @@ export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-
 
 export PATH="$HOME/bin:$PATH"
 
-
-#ruby
-export PATH="$HOME/.rvm/bin:$PATH"
-
 #go
 if has_cmd go; then
     export GOPATH="$HOME/golang-ws"
@@ -144,17 +140,14 @@ fi
 #node
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
 
-#rvm
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-
 #python
 if has_cmd pyenv > /dev/null; then
     eval "$(pyenv init - --no-rehash)"
     eval "$(pyenv virtualenv-init -)"
 fi
 
-#ruby
-export PATH="$HOME/.rvm/bin:$PATH"
+#rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 seartipy_fix_links() {
     sln ~/seartipy/dotfiles/shellrc ~/.bash_profile

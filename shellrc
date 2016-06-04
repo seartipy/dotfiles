@@ -175,7 +175,7 @@ seartipy_fix_links() {
     sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 
-    scopy ~/seartipy/dotfiles/templatesspacemacs ~/.spacemacs
+    scopy ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
 }
 
 seartipy_cask_backup() {

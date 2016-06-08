@@ -19,6 +19,12 @@ ${BOLD}${YELLOW}WARNING: ${RESET} $1
 "
 }
 
+error() {
+    echo "
+${BOLD}${RED}FATAL : ${RESET} $1
+"
+}
+
 is_linux() {
     [[ "$OSTYPE" == "linux-gnu" ]] || return 1
 }
@@ -185,7 +191,7 @@ seartipy_cask_rollback() {
     LATEST_BACKUP=$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | tail -1)
 
     if [[ -z "${LOCAL_BACKUP// }" ]]; then
-        warn "no backups available, skipping"
+        error "no backups available, skipping"
     else
         trash "${ELPA_PARENT}/elpa"
         mv $ELPA_PARENT/$LATEST_BACKUP $ELPA_PARENT/elpa

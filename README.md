@@ -10,37 +10,37 @@ Automated installer script will work only with the latest Ubuntu and Mac operati
 
 1. **Clojure**
 
-        wget -qO- j.mp/seartipy-setup > ~/setup && bash ~/setup clojure
+        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup clojure
 
 2. **Scala**
 
-		wget -qO- j.mp/seartipy-setup > ~/setup && bash ~/setup scala
+        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup scala
 
 3. **Web**
 
-		wget -qO- j.mp/seartipy-setup > ~/setup && bash ~/setup web
+        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup web
 
 4. **Everything**
 
-		wget -qO- j.mp/seartipy-setup > ~/setup && bash ~/setup everything
+        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup everything
 
 ##### Mac
 
 1. **Clojure**
 
-		curl -L http://bit.ly/1NXq6Pp > ~/setup && bash ~/setup clojure
+        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup clojure
 
 2. **Scala**
 
-		curl -L j.mp/seartipy-setup > ~/setup && bash ~/setup scala
+        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup scala
 
 3. **Web**
 
-		curl -L j.mp/seartipy-setup > ~/setup && bash ~/setup web
+        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup web
 
 4. **Everything**
 
-		curl -L j.mp/seartipy-setup > ~/setup && bash ~/setup
+        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup
 
 **Please Note** :
 

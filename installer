@@ -481,7 +481,7 @@ clone_dotfiles() {
     slog "Backing up your current dotfiles(if exists) to $BACKUP_DIR"
     smv ~/seartipy/dotfiles $BACKUP_DIR
 
-    sclone https://github.com/pervezfunctor/dotfiles.git ~/seartipy/dotfiles
+    sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
 
     [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop
 }

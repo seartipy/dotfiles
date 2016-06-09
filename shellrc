@@ -178,6 +178,11 @@ seartipy_fix_links() {
 }
 
 seartipy_cask_backup() {
+    if ! [ -d ~/.emacs.d/.cask ]; then
+        warn "no ~/.emacs.d/.cask to backup"
+        return 1
+    fi
+
     local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1)
     cp -r $ELPA_PARENT/elpa $ELPA_PARENT/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
     ROLLBACK_COUNT=$(ls $ELPA_PARENT | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)

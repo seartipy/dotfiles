@@ -14,7 +14,7 @@
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]
                        [spyscope "0.1.5"] ; lodash tap like macro
-                       [im.chit/vinyasa "0.4.3"]
+                       [im.chit/vinyasa "0.4.7"]
                        [io.aviso/pretty "0.1.26"]
                        [acyclic/squiggly-clojure "0.1.5"]] ; flycheck using eastwood
         :injections [(require 'spyscope.core)

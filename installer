@@ -650,7 +650,7 @@ leanemacs_dotfiles() {
 }
 
 housemd_dotfiles() {
-    sclone  https://github.com/pervezfunctor/emacs.d ~/seartipy/emacses/housemd
+    sclone  https://gitlab.com/seartipy/housemd.git ~/seartipy/emacses/housemd
 
     [ -d "$HOME/seartipy/emacses/housemd" ] || return 1
 

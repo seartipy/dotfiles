@@ -195,7 +195,7 @@ seartipy_cask_rollback() {
     local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1) # -t might be a better option
     LATEST_BACKUP=$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | tail -1)
 
-    if [[ -z "${LOCAL_BACKUP// }" ]]; then
+    if [[ -z "${LATEST_BACKUP// }" ]]; then
         error "no backups available, skipping"
     else
         trash "${ELPA_PARENT}/elpa"

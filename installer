@@ -158,7 +158,7 @@ apmi() {
 }
 
 npm_exists() {
-    npm list --global --depth=0 "$1" &> /dev/null || return 1
+    npm list --global --depth=0 "$1" &> /dev/null | grep "$1" || return 1
 }
 
 npm_check() {

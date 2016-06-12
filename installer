@@ -144,11 +144,11 @@ file_check() {
 }
 
 ppa_exists() {
-    ls /etc/apt/sources.list.d | grep "$1" > /dev/null || return 1
+    ls /etc/apt/sources.list.d | grep "$1" > /dev/null
 }
 
 ppa_check() {
-    ppa_exists || warn "$1 ppa not added"
+    ppa_exists "$1" || warn "$1 ppa not added"
 }
 
 apm_exists() {
@@ -327,7 +327,7 @@ add_numix_ppa() {
 
 add_arc_theme_ppa() {
     is_ubuntu || return 1
-    ppa_exists arc-theme && return 1
+    ppa_exists arc-theme && return 0
 
     slog "Adding arc theme ppa"
     wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
@@ -336,7 +336,7 @@ add_arc_theme_ppa() {
 
 add_conky_manager_ppa() {
     is_ubuntu || return 1
-    ppa_exists teejee2008 && return 1
+    ppa_exists teejee2008 && return 0
 
     slog "Adding conky manager ppa"
     sudo add-apt-repository ppa:teejee2008/ppa -y
@@ -369,7 +369,7 @@ add_ppas() {
 essential_ubuntu_install() {
     is_ubuntu || return 1
 
-    pre_cmd_check apt-get
+    pre_cmd_check apt-get apt-key add-apt-repository
     add_ppas
 
     slog "Updating ubuntu"

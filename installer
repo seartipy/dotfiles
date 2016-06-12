@@ -32,7 +32,7 @@ ${BOLD}${RED}FATAL : ${RESET} $1
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Ubuntu" == "$os" ]] || return 1
+    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]]
 }
 
 is_xenial() {

@@ -1060,8 +1060,7 @@ purescript_linux_install() {
 
 purescript_install() {
     purescript_mac_install
-    # currently does not work with node 6.0
-    # purescript_linux_install
+    purescript_linux_install
 }
 
 #

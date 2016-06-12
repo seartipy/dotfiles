@@ -158,12 +158,12 @@ apmi() {
 }
 
 npm_exists() {
-    npm list --global --depth=0 "$1" &> /dev/null | grep "$1" || return 1
+    npm list --global --depth=0 "$1" 2> /dev/null | grep "$1" > /dev/null
 }
 
 npm_check() {
     for p in $*; do
-        npm_exists "$p" || warn "$p atom package not installed"
+        npm_exists "$p" || warn "$p npm package not installed"
     done
 }
 
@@ -1131,41 +1131,25 @@ python_install() {
 #
 # web
 
-web_mac_install() {
-    is_mac || return 1
-
-    slog "Installing web packages"
-    brew install node flow
-}
-
-# perhaps using opam is a better idea
-flow_install() {
-    is_linux || return 1
-    has_cmd flow && return 1
-
-    npmi flow-bin
-}
-
-node_linux_install() {
-    is_linux || return 1
-
-    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+nvm_install() {
+    [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 
     slog "Installing nvm"
-    has_cmd nvm || curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+    if ! has_cmd nvm; then
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+        source ~/.nvm/nvm.sh
+    fi
+    has_cmd nvm || return 1
 
-    source ~/.nvm/nvm.sh
     nvm install node
     nvm alias default node
 }
 
 web_install() {
-    web_mac_install
-    node_linux_install
-    flow_install
+    nvm_install
 
     slog "Installing npm packages for web development"
-    npmi coffee-script typescript
+    npmi coffee-script typescript flow-bin
     npmi eslint jshint coffeelint eslint-plugin-react
     npmi gulp grunt-cli
     npmi babel-cli babel-eslint

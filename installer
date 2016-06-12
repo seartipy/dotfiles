@@ -254,14 +254,6 @@ add_haskell_stack_ppa() {
     echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main' | sudo tee /etc/apt/sources.list.d/fpco.list
 }
 
-add_zeal_ppa() {
-    is_ubuntu || return 1
-    ppa_exists zeal-developers-ubuntu && return 0
-
-    slog "Adding zeal ppa"
-    sudo add-apt-repository ppa:zeal-developers/ppa -y
-}
-
 add_chrome_ppa() {
     is_ubuntu || return 1
     ppa_exists google-chrome && return 0
@@ -350,7 +342,6 @@ add_ppas() {
     add_smartgit_ppa
     add_haskell_stack_ppa
 
-    is_xenial || add_zeal_ppa
     add_atom_ppa
     add_virtualbox_ppa
     add_chrome_ppa
@@ -383,13 +374,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r`
-
-    if is_xenial; then
-        warn "cannot install zeal on xenial"
-    else
-        sudo apt-get install -y zeal
-    fi
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal
 }
 
 essential_mac_install() {
@@ -2278,7 +2263,6 @@ ppas_check() {
 
     [ -n "$HASKELL" ] && ppa_check fpco
 
-    ppa_check zeal-developers-ubuntu
     ppa_check google-chrome
     ppa_check nilarimogard-ubuntu-webupd8
     [ -n "$ATOM" ] && ppa_check webupd8team-ubuntu-atom
@@ -2305,7 +2289,7 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf google-chrome firefox unrar
+    cmd_check xsel xclip p7zip dconf google-chrome firefox unrar zeal
 }
 
 essential_fedora_check() {

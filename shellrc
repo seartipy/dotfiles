@@ -200,13 +200,13 @@ seartipy_cask_rollback() {
 }
 
 seartipy_upgrade_emacs() {
-    cd ~/seartipy/emacses/housemd && git-up
+    cd ~/seartipy/emacses/housemd && git pull --ff-only
     has_cmd cask && seartipy_cask_backup && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
 }
 
 seartipy_upgrade_dotfiles() {
     cd ~/seartipy/dotfiles && git-up
-    cd ~/seartipy/lean-dotfiles && git-up
+    cd ~/seartipy/lean-dotfiles && git pull --ff-only
 }
 
 seartipy_upgrade_mean() {

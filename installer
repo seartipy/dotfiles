@@ -1049,7 +1049,7 @@ purescript_mac_install() {
 purescript_linux_install() {
     is_linux || return 1
 
-    node_linux_install
+    nvm_install
 
     slog "Installing purescript"
     npmi  purescript
@@ -1094,7 +1094,7 @@ elm_mac_install() {
 elm_linux_install() {
     is_linux || return 1
 
-    node_linux_install
+    nvm_install
 
     slog "Installing elm"
     npmi elm

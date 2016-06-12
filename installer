@@ -2097,7 +2097,7 @@ setup_backup_dir() {
 }
 
 fresh_ppas() {
-    is_linux || return 1
+    is_ubuntu || return 1
     has_cmd $trash || err_exit "no $trash, cannot reset, quitting"
     cd
     is_linux && sudo $trash /etc/apt/sources.list.d/*
@@ -2333,6 +2333,7 @@ zsh_check() {
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
     dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
+    file_check ~/.zgen-options-local.el
 }
 
 bash_check() {
@@ -2340,7 +2341,7 @@ bash_check() {
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/seartipy/vendors/liquidprompt
+    dir_check ~/seartipy/vendors/liquidprompt ~/.slimzsh ~/.zgen
 }
 
 emacs_check() {
@@ -2475,7 +2476,6 @@ golang_check() {
 additional_check() {
     if is_linux; then
         ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "powerline fonts not installed"
-        cmd_check xmonad vim
     fi
 
     if is_mac; then

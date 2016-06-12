@@ -38,19 +38,19 @@ is_ubuntu() {
 is_xenial() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -c | cut -d ':' -f2)`
-    [[ "xenial" == "$os" ]] || return 1
+    [[ "xenial" == "$os" ]]
 }
 
 is_fedora() {
-    [ -f /etc/redhat-release ] || return 1
+    [ -f /etc/redhat-release ]
 }
 
 is_linux() {
-    [ "$OSTYPE" == "linux-gnu" ] || return 1
+    [ "$OSTYPE" == "linux-gnu" ]
 }
 
 is_mac() {
-    [[ "$OSTYPE" == "darwin"* ]] || return 1
+    [[ "$OSTYPE" == "darwin"* ]]
 }
 
 has_cmd() {
@@ -66,30 +66,37 @@ smd() {
 }
 
 srm() {
-    $trash $1 $2 2> /dev/null
+    $trash $* 2> /dev/null
 }
 
 sln() {
     if ! [ -e "$1" ]; then
         warn "$1 does not exist, cannot create the link $2"
+        return 1
     elif [ -L "$2" ]; then
         srm "$2"
     elif [ -e "$2" ]; then
         warn "$2 exists and not a symbolic link! not creating link"
-        return
+        return 1
     fi
     ln -s $1 $2
 }
 
 sclone() {
-    if ! [ -d "$2" ]; then
-        slog "Cloning $1 to $2"
-        git clone $1 $2
+    local dest=${*: -1}
+    local src=${*: -2:1}
+
+    if [ -d "$dest" ]; then
+        cd "$dest" && git pull --ff-only
+        cd
+    else
+        slog "Cloning $src to $dest"
+        git clone $*
     fi
 }
 
 scopy() {
-    [ -e "$2" ] || cp "$1" "$2"
+    [ -e "$2" ] || [ -L "$2" ] || cp "$1" "$2"
 }
 
 pre_cmd_check() {
@@ -110,19 +117,24 @@ cmd_check() {
     done
 }
 
+dir_exists() {
+    [[ -d "$1" ]]
+}
+
 dir_check() {
     for dir in $*; do
-        [ -d "$dir" ] || warn "$dir does not exist"
+        dir_exists "$dir" || warn "$dir does not exist"
     done
 }
 
-ln_check() {
+ln_to_exists() {
     local rl=readlink
-    if is_mac; then
-        rl=greadlink
-    fi
+    is_mac && rl=greadlink
+    [[ "$1" == $($rl -f $2) ]]
+}
 
-     [[ "$1" == $($rl -f $2) ]] ||  warn "$2 not a link to $1"
+ln_check() {
+    ln_to_exists "$1" "$2" || warn "$2 not a link to $1"
 }
 
 file_check() {

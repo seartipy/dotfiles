@@ -26,7 +26,7 @@ ${BOLD}${RED}FATAL : ${RESET} $1
 }
 
 is_linux() {
-    [[ "$OSTYPE" == "linux-gnu" ]] || return 1
+    [[ "$OSTYPE" == "linux-gnu" ]]
 }
 
 is_ubuntu() {
@@ -36,11 +36,11 @@ is_ubuntu() {
 }
 
 is_fedora() {
-    [ -f /etc/redhat-release ] || return 1
+    [ -f /etc/redhat-release ]
 }
 
 is_mac() {
-    [[ "$OSTYPE" == "darwin"* ]] || return 1
+    [[ "$OSTYPE" == "darwin"* ]]
 }
 
 has_cmd() {
@@ -54,6 +54,7 @@ smd() {
 sln() {
     if ! [ -e "$1" ]; then
         warn "$1 does not exist, cannot create the link $2"
+        return 1
     elif [ -L "$2" ]; then
         trash "$2"
     elif [ -e "$2" ]; then

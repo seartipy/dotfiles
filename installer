@@ -370,7 +370,7 @@ essential_mac_install() {
     pre_cmd_check brew
 
     slog "Installing brew cask"
-    brew install caskroom/cask/brew-cask
+    brew tap caskroom/cask
 
     slog "Upgrading brew packages"
     brew update && brew upgrade

@@ -585,6 +585,9 @@ zsh_dotfiles() {
 
     slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
     sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
 }
 
 zsh_install() {
@@ -646,7 +649,7 @@ spacemacs_dotfiles() {
     [ -f ~/seartipy/dotfiles/templates/spacemacs ] || return 1
 
     slog "Copying ~/seartipy/dotfiles/templates/spacemacs as ~/.spacemacs"
-    sln ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
+    scopy ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
 }
 
 leanemacs_dotfiles() {

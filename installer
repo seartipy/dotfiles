@@ -2519,11 +2519,6 @@ xmonad_check() {
     ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 
-xmonad_check() {
-    # check ~/.xmonad/xmonad.hs exists
-    cmd_check xmonad
-}
-
 post_installer_check() {
     essential_check
     dotfiles_check

@@ -175,7 +175,7 @@ npm_check() {
 
 
 brew_exists() {
-    brew list | grep "^$1$" || return 1
+    brew list | grep "^$1$" > /dev/null
 }
 
 brew_check() {
@@ -185,7 +185,7 @@ brew_check() {
 }
 
 brew_cask_exists() {
-    brew cask list | grep "$1" || return 1
+    brew cask list | grep "$1" > /dev/null
 }
 
 brew_cask_check() {
@@ -2292,7 +2292,7 @@ zsh_check() {
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
     dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
-    file_check ~/.zgen-options-local.el
+    file_check ~/.zgen-options-local.sh
 }
 
 bash_check() {

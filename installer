@@ -316,6 +316,7 @@ add_conky_manager_ppa() {
 }
 
 add_ppas() {
+    install software-properties-common
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_java_ppa
@@ -340,7 +341,7 @@ add_ppas() {
 essential_ubuntu_install() {
     is_ubuntu || return 1
 
-    pre_cmd_check apt-get apt-key add-apt-repository
+    pre_cmd_check apt-get
     add_ppas
 
     slog "Updating ubuntu"

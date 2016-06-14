@@ -32,7 +32,7 @@ ${BOLD}${RED}FATAL : ${RESET} $1
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ *"elementary OS" == "$os" ]]
+    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ "$os" == *"elementary OS" ]]
 }
 
 is_fedora() {
@@ -316,7 +316,7 @@ add_conky_manager_ppa() {
 }
 
 add_ppas() {
-    install software-properties-common
+    sudo apt-get install -y software-properties-common
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_java_ppa

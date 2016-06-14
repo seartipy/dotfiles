@@ -7,4 +7,4 @@ zgen prezto tmux:auto-start local 'no'
 
 # select your prompt, if you have powerline patched fonts installed,
 # and selected as terminal font, agnoster is a good option
-zgen prezto prompt theme 'agnoster'
+zgen prezto prompt theme 'pure'

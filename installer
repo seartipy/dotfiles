@@ -355,7 +355,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils firefox linux-headers-`uname -r` zeal
 }
 
 essential_mac_install() {

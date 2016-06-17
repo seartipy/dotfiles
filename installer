@@ -1136,7 +1136,7 @@ web_install() {
     npmi browserify watchify babelify budo
     npmi webpack webpack-dev-server
     npmi tern js-beautify karma-cli
-    npmi browser-sync
+    npmi browser-sync npm-check
 }
 
 #

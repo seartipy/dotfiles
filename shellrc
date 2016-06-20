@@ -205,7 +205,7 @@ seartipy_upgrade_emacs() {
 }
 
 seartipy_upgrade_dotfiles() {
-    cd ~/seartipy/dotfiles && git-up
+    cd ~/seartipy/dotfiles && git pull --ff-only
     cd ~/seartipy/lean-dotfiles && git pull --ff-only
 }
 

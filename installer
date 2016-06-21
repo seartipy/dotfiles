@@ -303,8 +303,8 @@ add_arc_theme_ppa() {
     ppa_exists arc-theme && return 0
 
     slog "Adding arc theme ppa"
-    wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_15.10/Release.key | sudo apt-key add -
-    echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
+    wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_16.04/Release.key | sudo apt-key add -
+    echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_16.04/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
 }
 
 add_conky_manager_ppa() {
@@ -1780,7 +1780,7 @@ fedora_themes_install() {
     sudo dnf copr -y enable numix/numix
     sudo dnf install -y numix-*
 
-    curl -L http://download.opensuse.org/repositories/home:Horst3180/Fedora_23/home:Horst3180.repo | sudo tee /etc/yum.repos.d/Horst3180.repo
+    curl -L http://download.opensuse.org/repositories/home:Horst3180/Fedora_24_standard/home:Horst3180.repo | sudo tee /etc/yum.repos.d/Horst3180.repo
     sudo dnf install -y arc-theme
 
     sudo dnf install -y conky conky-manager
@@ -1801,7 +1801,7 @@ themes_install() {
     if has_cmd gnome-shell; then
         gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Dark'
         gsettings set org.gnome.desktop.interface icon-theme 'Numix-Circle'
-        gsettings set org.gnome.shell.extensions.user-theme name 'Arc-Dark'
+        gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Dark'
     fi
 
     if has_cmd mate-session; then

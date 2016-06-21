@@ -2500,7 +2500,7 @@ post_installer_check() {
     [ -n "$ELM" ] && elm_check
 
     [ -n "$ADDITIONAL" ] && additional_check
-    [ -n "$SETTINGS" ] && settings_check
+    # [ -n "$SETTINGS" ] && settings_check
     [ -n "$XMONAD" ] && xmonad_check
     [ -n "$VIM" ] && vim_check
 }

@@ -244,8 +244,8 @@ add_haskell_stack_ppa() {
     ppa_exists fpco && return 0
 
     slog "Adding stack ppa"
-    wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
-    echo 'deb http://download.fpcomplete.com/ubuntu/wily stable main' | sudo tee /etc/apt/sources.list.d/fpco.list
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
+    echo 'deb http://download.fpcomplete.com/ubuntu xenial main'|sudo tee /etc/apt/sources.list.d/fpco.list
 }
 
 add_chrome_ppa() {

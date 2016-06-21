@@ -1552,7 +1552,7 @@ gnome_settings() {
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
     gsettings set org.gnome.desktop.screensaver lock-enabled false
-    gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+    is_ubuntu && gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
     gsettings set org.gnome.desktop.interface clock-show-date true
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
     gsettings set org.gnome.shell.calendar show-weekdate true
@@ -2378,7 +2378,7 @@ idris_check() {
 
 elm_check() {
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
-    cmd_check elm elm-oracle elm-make elm-reactor elm-compiler elm-repl elm-package elm-live
+    cmd_check elm elm-oracle elm-make elm-reactor elm-repl elm-package elm-live
 }
 
 r_check() {

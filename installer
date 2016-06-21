@@ -643,6 +643,9 @@ housemd_dotfiles() {
 
     slog "Linking ~/seartipy/emacses/housemd as ~/.emacs.d"
     sln ~/seartipy/emacses/housemd ~/.emacs.d
+
+    slog "Copying ~/seartipy/emacses/housemd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
+    scopy ~/seartipy/emacses/housemd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
 }
 
 emacs_dotfiles() {

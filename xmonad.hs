@@ -10,10 +10,17 @@ import           System.IO
 import           System.Posix.Env             (getEnv)
 import           XMonad
 import           XMonad.Hooks.DynamicLog
+
 import           XMonad.Actions.WindowBringer
+import           XMonad.Actions.CycleSelectedLayouts
+import           XMonad.Actions.CycleWS
+import           XMonad.Actions.WindowNavigation
+import           XMonad.Actions.FindEmptyWorkspace
+import           XMonad.Actions.WorkspaceNames
 
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.SetWMName
+
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ResizableTile
@@ -22,6 +29,9 @@ import           XMonad.Layout.ThreeColumns
 import qualified XMonad.StackSet              as W
 import           XMonad.Util.EZConfig         (additionalKeys)
 import           XMonad.Util.Run              (spawnPipe)
+
+import           XMonad.Prompt
+import           XMonad.Prompt.RunOrRaise
 
 import           XMonad.Config.Desktop
 import           XMonad.Config.Gnome
@@ -49,29 +59,74 @@ myLayout = avoidStruts (
     -- spiral (6/7)
 
 myModMask = mod4Mask
+
+myXPConfig  = defaultXPConfig {
+        -- font = "-*-avant garde gothic-demi-r-*-*"
+        font = "xft:Ubuntu Mono:pixelsize=30:autohint=true"
+        ,   height = 30
+        -- always highlight a result, so I can hit enter any time
+        ,   alwaysHighlight = True
+}
+
 main = do
      session <- getEnv "DESKTOP_SESSION"
-     xmonad  $ (maybe desktopConfig desktop session)
+
+     -- switch/move windows using arrow keys
+     xconfig <- withWindowNavigationKeys [
+       ((myModMask, xK_Up), WNGo U)
+       , ((myModMask, xK_Left), WNGo L)
+       , ((myModMask, xK_Down), WNGo D)
+       , ((myModMask, xK_Right), WNGo R)
+       , ((myModMask .|. shiftMask, xK_Up), WNSwap U)
+       , ((myModMask .|. shiftMask, xK_Left), WNSwap L)
+       , ((myModMask .|. shiftMask, xK_Down), WNSwap D)
+       , ((myModMask .|. shiftMask, xK_Right), WNSwap R)
+       ] $ (maybe desktopConfig desktop session)
+
+     xmonad $ xconfig
        {
-         layoutHook = smartBorders $ myLayout,
-         modMask = myModMask     -- Rebind Mod to the Windows key
+         layoutHook = smartBorders $ myLayout
+       , modMask = myModMask     -- Rebind Mod to the Windows key
        } `additionalKeys` [
        -- Shring non master area
-       ((myModMask, xK_a), sendMessage MirrorShrink)
-
-       , ((myModMask, xK_p), spawn "dmenu_run -fn 'Ubuntu Mono 13'")
-
+       ((myModMask, xK_u), sendMessage MirrorShrink)
          -- Expand non master area
-       , ((myModMask, xK_z), sendMessage MirrorExpand)
+       , ((myModMask, xK_i), sendMessage MirrorExpand)
+
+       -- Launch applications using dmenu, rofi, j4-dmenu-deskop(experimenting)
+       , ((myModMask, xK_p), spawn "dmenu_run -fn 'Ubuntu Mono 13'")
+       , ((myModMask .|. shiftMask .|. controlMask, xK_p), spawn "rofi -show run -i -font 'Ubuntu Mono 26'")
+       , ((myModMask .|. shiftMask, xK_p), spawn "j4-dmenu-desktop --dmenu='rofi -dmenu -i -font \"Ubuntu Mono 26\"'")
+
          -- open a dmenu with window titles, switch to workspace of the chosen one
        , ((myModMask, xK_g), gotoMenuArgs' "dmenu" [ "-fn",  "'Ubuntu Mono 13'" ])
+       , ((myModMask .|. shiftMask, xK_g), spawn "rofi -show window -i -font \"Ubuntu Mono 26\"")
 
          -- Chosen one, will be brought into current workspace
-       , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 14'" ])
+       , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 13'" ])
 
+       -- Display current layout
        , ((myModMask, xK_m), (dynamicLogString defaultPP >>= \d->spawn $"notify-send \"" ++ d ++ "\"" ++ " -t 1000"))
 
+       -- Run or Switch to app
+       , ((myModMask, xK_x), runOrRaisePrompt myXPConfig)
+
+       -- Cycle between workspaces
+       , ((myModMask .|. controlMask, xK_Left), nextWS)
+       , ((myModMask .|. controlMask, xK_Right),  prevWS)
+       , ((myModMask .|. controlMask .|. shiftMask, xK_Left),  shiftToNext >> nextWS)
+       , ((myModMask .|. controlMask .|. shiftMask, xK_Right), shiftToPrev >> prevWS)
+       , ((myModMask .|. controlMask, xK_z), toggleWS)
+
+       -- Jump or move window to empty workspace
+       , ((myModMask, xK_e), viewEmptyWorkspace)
+       , ((myModMask .|. shiftMask, xK_e), tagToEmptyWorkspace)
+
+       , ((myModMask .|. shiftMask, xK_r), renameWorkspace myXPConfig)
+       , ((myModMask .|. shiftMask, xK_Left  ), swapTo Prev)
+       , ((myModMask .|. shiftMask, xK_Right ), swapTo Next)
        ]
+       -- ++ [((myModMask .|. controlMask, k), swapWithCurrent i) | (i, k) <- zip (workspaces xconfig) [xK_1 ..]]
 
 desktop "gnome" = gnomeConfig
 desktop "kde" = kde4Config

@@ -1202,9 +1202,9 @@ icdiff_mac_install() {
 icdiff_linux_install() {
     is_linux || return 1
 
-    has_cmd git-icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/git-icdiff > ~/bin/git-icdiff && chmod +x ~/bin/git-icdiff
+    has_cmd icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/icdiff > ~/bin/icdiff && chmod +x ~/bin/icdiff
 
-    has_cmd icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/git-icdiff > ~/bin/git-icdiff && chmod +x ~/bin/git-icdiff
+    has_cmd git-icdiff || curl -L https://raw.githubusercontent.com/jeffkaufman/icdiff/release-1.8.1/git-icdiff > ~/bin/git-icdiff && chmod +x ~/bin/git-icdiff
 }
 
 icdiff_install() {

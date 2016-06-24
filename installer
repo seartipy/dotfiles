@@ -1542,10 +1542,6 @@ gnome_settings() {
 
     [ -n "$SEARTIPY" ] || return 1
 
-    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
-    gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
-    gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
-    gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
     gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
     gsettings set org.gnome.desktop.interface gtk-key-theme Emacs
@@ -1553,7 +1549,9 @@ gnome_settings() {
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
     gsettings set org.gnome.desktop.screensaver lock-enabled false
+
     is_ubuntu && gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+
     gsettings set org.gnome.desktop.interface clock-show-date true
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
     gsettings set org.gnome.shell.calendar show-weekdate true
@@ -1561,6 +1559,24 @@ gnome_settings() {
     [ -e ~/.config/gtk-3.0/settings.ini ] || printf "[Settings]\ngtk-application-prefer-dark-theme=1\n" > ~/.config/gtk-3.0/settings.ini
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 1800
     gsettings set org.gnome.desktop.session idle-delay 180
+}
+
+gnome_keybindings() {
+    is_linux || return 1
+    has_cmd gnome-session || return 1
+    [ -n "$SEARTIPY" ] || return 1
+
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
+
+    gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F11']"
+
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Shift><Control>Down']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Shift><Control>Up']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Control>Down']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Control>Up']"
 }
 
 mate_settings() {
@@ -1573,6 +1589,24 @@ mate_settings() {
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
     dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
+
+    dconf write /org/mate/caja/preferences/click-policy "'single'"
+    dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"
+
+    dconf write /org/mate/power-manager/sleep-computer-ac "1800"
+    dconf write /org/mate/power-manager/sleep-display-ac "300"
+
+    dconf write /org/mate/power-manager/lock-use-screensaver "false"
+    dconf write /org/mate/power-manager/lock-suspend "false"
+    dconf write /org/mate/terminal/profiles/default/login-shell "true"
+    dconf write /org/mate/terminal/global/use-menu-accelerators "false"
+    dconf write /org/mate/terminal/profiles/default/default-show-menubar "false"
+}
+
+mate_keybindings() {
+    is_linux || return 1
+    has_cmd mate-session || return 1
+    [ -n "$SEARTIPY" ] || return 1
 
     dconf write /org/mate/marco/global-keybindings/panel-run-dialog "'<Mod4>space'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"
@@ -1602,27 +1636,16 @@ mate_settings() {
     dconf write /org/mate/marco/window-keybindings/toggle-fullscreen "'F11'"
     dconf write /org/mate/marco/window-keybindings/toggle-maximized "'<Mod4>F11'"
     dconf write /org/mate/marco/window-keybindings/activate-window-menu "'disabled'"
-
-    dconf write /org/mate/caja/preferences/click-policy "'single'"
-    dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"
-
-    dconf write /org/mate/power-manager/sleep-computer-ac "1800"
-    dconf write /org/mate/power-manager/sleep-display-ac "300"
-
-    dconf write /org/mate/power-manager/lock-use-screensaver "false"
-    dconf write /org/mate/power-manager/lock-suspend "false"
-    dconf write /org/mate/terminal/profiles/default/login-shell "true"
-    dconf write /org/mate/terminal/global/use-menu-accelerators "false"
-    dconf write /org/mate/terminal/profiles/default/default-show-menubar "false"
 }
 
 linux_settings() {
     gnome_hidpi_conf
     gnome_settings
     gnome_extensions
+    gnome_keybindings
 
     mate_settings
-
+    mate_keybindings
     is_ubuntu || return 1
 
     echo "enabled=0" | sudo tee /etc/default/apport > /dev/null

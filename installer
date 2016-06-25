@@ -1500,6 +1500,61 @@ gnome_hidpi_conf() {
     fi
 }
 
+shell_extension_install() {
+    has_cmd unzip || return 1
+
+    # set gnome shell extension site URL
+    local GNOME_SITE="https://extensions.gnome.org"
+
+    # gnome shell target version
+    local GNOME_VERSION="$1"
+
+    # set extension ID (from command line parameter)
+    local EXTENSION_ID="$2"
+
+    # installation path is in user home directory
+    local EXTENSION_PATH="$HOME/.local/share/gnome-shell/extensions";
+
+    # get extension description
+    wget --header='Accept-Encoding:none' -O /tmp/extension.txt "${GNOME_SITE}/extension-info/?pk=${EXTENSION_ID}&shell_version=${GNOME_VERSION}"
+
+    # get extension UUID
+    EXTENSION_UUID=$(cat /tmp/extension.txt | grep "uuid" | sed 's/^.*uuid[\": ]*\([^\"]*\).*$/\1/')
+
+    # get extension download URL
+    EXTENSION_URL=$(cat /tmp/extension.txt | grep "download_url" | sed 's/^.*download_url[\": ]*\([^\"]*\).*$/\1/')
+
+    if [ "$EXTENSION_URL" != "" ]; then
+        # download extension archive
+        wget --header='Accept-Encoding:none' -O /tmp/extension.zip "${GNOME_SITE}${EXTENSION_URL}"
+
+        # unzip extension to installation folder
+        mkdir -p "${EXTENSION_PATH}/${EXTENSION_UUID}"
+        unzip -n /tmp/extension.zip -d "${EXTENSION_PATH}/${EXTENSION_UUID}"
+
+        # list enabled extensions
+        EXTENSION_LIST=$(gsettings get org.gnome.shell enabled-extensions | sed 's/^.\(.*\).$/\1/')
+
+        # check if extension is already enabled
+        EXTENSION_ENABLED=$(echo ${EXTENSION_LIST} | grep ${EXTENSION_UUID})
+
+        if [ "$EXTENSION_ENABLED" = "" ]; then
+            # enable extension
+            gsettings set org.gnome.shell enabled-extensions "[${EXTENSION_LIST},'${EXTENSION_UUID}']"
+
+            # extension is not available
+            echo "Extension with ID ${EXTENSION_ID} has been enabled. Restart Gnome Shell to take effect."
+        fi
+    else
+        # extension is not available
+        echo "Extension with ID ${EXTENSION_ID} is not available for Gnome Shell ${GNOME_VERSION}"
+    fi
+
+    # remove temporary files
+    rm -f /tmp/extension.txt
+    rm -f /tmp/extension.zip
+}
+
 gnome_extensions() {
     is_linux || return 1
     has_cmd gnome-session || return 1
@@ -1509,24 +1564,21 @@ gnome_extensions() {
 
     gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou', 'shellshape@gfxmonk.net']"
 
-    wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install
-    chmod +x ~/bin/shell-extension-install
-
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
-    shell-extension-install $gnomever 10   # window navigator
-    shell-extension-install $gnomever 21   # workspace indicator
-    shell-extension-install $gnomever 28   # gtile
-    shell-extension-install $gnomever 97   # coverflow alt-tab
-    shell-extension-install $gnomever 294  # shellshape
-    shell-extension-install $gnomever 413  # app keys like unity
-    shell-extension-install $gnomever 442  # drop down terminal
-    shell-extension-install $gnomever 657  # shelltile
-    shell-extension-install $gnomever 690  # easy screen casting
-    shell-extension-install $gnomever 704  # all windows in top bar
-    shell-extension-install $gnomever 885  # transparent top bar
-    shell-extension-install $gnomever 973  # app switcher
-    shell-extension-install $gnomever 1018 # text scaler
+    shell_extension_install $gnomever 10   # window navigator
+    shell_extension_install $gnomever 21   # workspace indicator
+    shell_extension_install $gnomever 28   # gtile
+    shell_extension_install $gnomever 97   # coverflow alt-tab
+    shell_extension_install $gnomever 294  # shell_hape
+    shell_extension_install $gnomever 413  # app keys like unity
+    shell_extension_install $gnomever 442  # drop down terminal
+    shell_extension_install $gnomever 657  # shell_ile
+    shell_extension_install $gnomever 690  # easy screen casting
+    shell_extension_install $gnomever 704  # all windows in top bar
+    shell_extension_install $gnomever 885  # transparent top bar
+    shell_extension_install $gnomever 973  # app switcher
+    shell_extension_install $gnomever 1018 # text scaler
 
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F12']"
 

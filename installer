@@ -1507,7 +1507,7 @@ gnome_extensions() {
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 
-    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'workspace_wraparound@crister.tk', 'all-windows@ezix.org']"
+    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou', 'shellshape@gfxmonk.net']"
 
     wget -O ~/bin/shell-extension-install https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/ubuntugnome/gnome-extension/shell-extension-install
     chmod +x ~/bin/shell-extension-install
@@ -1516,7 +1516,9 @@ gnome_extensions() {
 
     shell-extension-install $gnomever 10   # window navigator
     shell-extension-install $gnomever 21   # workspace indicator
+    shell-extension-install $gnomever 28   # gtile
     shell-extension-install $gnomever 97   # coverflow alt-tab
+    shell-extension-install $gnomever 294  # shellshape
     shell-extension-install $gnomever 413  # app keys like unity
     shell-extension-install $gnomever 442  # drop down terminal
     shell-extension-install $gnomever 657  # shelltile
@@ -1533,8 +1535,13 @@ gnome_extensions() {
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher matching "uint32 1"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher workspace-indicator "true"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher activate-immediately "true"
-   gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher activate-by-key "uint32 2"
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher activate-by-key "uint32 2"
 
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.prefs default-layout 'vertical'
+    gsettings  --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings next-layout "['<Mod4>Space']"
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings prev-layout "['<Mod4><Shift>Space']"
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings swap-current-window-with-main "['<Mod4>Return']"
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings focus-main-window "['<Mod4>m']"
 }
 
 gnome_settings() {
@@ -1576,6 +1583,7 @@ gnome_keybindings() {
     gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
+    gsettings set org.gnome.shell.keybindings toggle-message-tray "@as []"
 
     gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F11']"
 

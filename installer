@@ -1624,6 +1624,8 @@ gnome_settings() {
     [ -e ~/.config/gtk-3.0/settings.ini ] || printf "[Settings]\ngtk-application-prefer-dark-theme=1\n" > ~/.config/gtk-3.0/settings.ini
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 1800
     gsettings set org.gnome.desktop.session idle-delay 180
+
+    gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'emacs.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.Software.desktop', 'gnome-tweak-tool.desktop']"
 }
 
 gnome_keybindings() {

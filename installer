@@ -1988,6 +1988,15 @@ script_options() {
                 WEB="web"
                 shift
                 ;;
+            nothings)
+                ESSENTIAL=""
+                ZSH=""
+                BASH=""
+                EMACS=""
+                DOTFILES=""
+                GIT=""
+                shift
+                ;;
             nodefaults)
                 ZSH=""
                 BASH=""

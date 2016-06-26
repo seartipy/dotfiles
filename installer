@@ -1264,7 +1264,7 @@ xmonad_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing xmonad"
-    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools
+    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools rofi j4-dmenu-desktop
 }
 
 xmonad_fix() {

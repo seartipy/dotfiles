@@ -11,7 +11,7 @@ WHITE=`tput setaf 7`
 
 slog() {
     echo "
-${BOLD}${WHITE}SEARTIPY: ${RESET} $1
+${BOLD}${GREEN}SEARTIPY: ${RESET} $1
 " | tee -a ~/seartipy-installer.log
 }
 

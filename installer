@@ -29,10 +29,20 @@ ${BOLD}${RED}FATAL : ${RESET} $1
     exit 1
 }
 
+is_debian() {
+    has_cmd lsb_release || return 1
+    local os=`echo $(lsb_release -i | cut -d ':' -f2)`
+    [[ "$os" == "Debian" ]]
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -i | cut -d ':' -f2)`
     [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ "$os" == *"elementary OS" ]]
+}
+
+is_apt() {
+    is_ubuntu || is_debian
 }
 
 is_fedora() {
@@ -214,7 +224,7 @@ npmi() {
 # PPAs
 
 add_java_ppa() {
-    is_ubuntu || return 1
+    is_apt || return 1
     ppa_exists webupd8team-ubuntu-java && return 0
 
     slog "Adding java ppa"
@@ -223,7 +233,7 @@ add_java_ppa() {
 }
 
 add_scala_ppa() {
-    is_ubuntu || return 1
+    is_apt || return 1
     ppa_exists sbt && return 0
 
     slog "Adding scala ppa"
@@ -240,12 +250,13 @@ add_smartgit_ppa() {
 }
 
 add_haskell_stack_ppa() {
-    is_ubuntu || return 1
+    is_apt || return 1
     ppa_exists fpco && return 0
 
     slog "Adding stack ppa"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
-    echo 'deb http://download.fpcomplete.com/ubuntu xenial main'|sudo tee /etc/apt/sources.list.d/fpco.list
+    is_ubuntu && echo 'deb http://download.fpcomplete.com/ubuntu xenial main'|sudo tee /etc/apt/sources.list.d/fpco.list
+    is_debian && echo 'deb http://download.fpcomplete.com/debian jessie main'|sudo tee /etc/apt/sources.list.d/fpco.list
 }
 
 add_chrome_ppa() {
@@ -339,8 +350,7 @@ add_ppas() {
 # essential
 
 essential_ubuntu_install() {
-    is_ubuntu || return 1
-
+    is_apt || return 1
     pre_cmd_check apt-get
     add_ppas
 
@@ -355,7 +365,9 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag unrar p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils firefox linux-headers-`uname -r` zeal stow myrepos
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos
+    is_ubuntu && sudo apt-get install -y unrar firefox
+    is_debian && sudo apt-get install -y unar firefox-esr
 }
 
 essential_mac_install() {
@@ -415,7 +427,7 @@ essential_install() {
 # cleanup
 
 cleanup_ubuntu() {
-    is_ubuntu || return 1
+    is_apt || return 1
     sudo apt-get clean
     sudo apt-get autoclean
     sudo apt-get autoremove -y
@@ -535,7 +547,7 @@ zsh_fedora_install() {
 }
 
 zsh_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing zsh"
     sudo apt-get install -y zsh
@@ -600,7 +612,7 @@ emacs_fedora_install() {
 }
 
 emacs_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing emacs"
     sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
@@ -683,7 +695,7 @@ emacs_install() {
 # atom
 
 ubuntu_atom_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
     sudo apt-get install -y atom
 }
 
@@ -728,10 +740,11 @@ git_fedora_install() {
 }
 
 git_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing git"
-    sudo apt-get install -y smartgit kdiff3 git-extras meld
+    sudo apt-get install -y kdiff3 git-extras meld
+    is_ubuntu && sudo apt-get install -y smartgit
 }
 
 git_install() {
@@ -760,7 +773,7 @@ java_fedora_install() {
 }
 
 java_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing Java"
     sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
@@ -869,7 +882,7 @@ scala_fedora_install() {
 }
 
 scala_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Install scala"
     sudo apt-get -y install sbt scala
@@ -932,7 +945,7 @@ cabal_fedora_install() {
 }
 
 cabal_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing cabal"
     sudo apt-get install -y cabal-install ghc
@@ -962,7 +975,7 @@ stack_fedora_install() {
 }
 
 stack_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing stack"
     sudo apt-get install -y stack
@@ -978,7 +991,7 @@ ihaskell_install() {
     has_cmd stack || return 1
 
     is_mac && brew install zeromq
-    is_ubuntu && sudo apt-get install -y libzmq3-dev libzmq5
+    (is_apt) && sudo apt-get install -y libzmq3-dev libzmq5
     is_fedora && sudo dnf install -y zeromq zeromq-devel
 
     stackexei  alex happy cpphs
@@ -1160,7 +1173,7 @@ vim_fedora_install() {
 }
 
 vim_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing vim"
     sudo apt-get install -y vim-gnome
@@ -1231,7 +1244,7 @@ additional_fedora_install() {
 }
 
 additional_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing additional"
     sudo apt-get install -y vlc youtube-dl google-chrome-stable jq httpie
@@ -1261,7 +1274,7 @@ xmonad_fedora_install() {
 }
 
 xmonad_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing xmonad"
     sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools rofi j4-dmenu-desktop
@@ -1288,7 +1301,7 @@ xmonad_install() {
 
     has_cmd mate-session && dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
 
-    is_ubuntu || return 1
+    is_apt || return 1
 
     xmonad_fix
 }
@@ -1297,7 +1310,7 @@ xmonad_install() {
 # c++
 
 cpp_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing C++"
     sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
@@ -1335,7 +1348,7 @@ elixir_fedora_install() {
 }
 
 elixir_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     slog "Installing elixir"
     sudo apt-get install -y elixir
@@ -1364,7 +1377,7 @@ golang_mac_install() {
 }
 
 golang_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     sudo apt-get install -y golang
 }
@@ -1420,7 +1433,7 @@ rust_install() {
 # r
 
 r_ubuntu_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     sudo apt-get install -y r-base r-base-dev # currently using rutter ppa, use cran instead?
 }
@@ -2160,7 +2173,7 @@ setup_backup_dir() {
 }
 
 fresh_ppas() {
-    is_ubuntu || return 1
+    is_apt || return 1
     has_cmd $trash || err_exit "no $trash, cannot reset, quitting"
     cd
     is_linux && sudo $trash /etc/apt/sources.list.d/*
@@ -2329,7 +2342,7 @@ pre_installer_check() {
 }
 
 ppas_check() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
         ppa_check webupd8team-ubuntu-java
@@ -2337,17 +2350,20 @@ ppas_check() {
 
     [ -n "$SCALA" ] && ppa_check sbt
 
-    [ -n "$GIT" ] && ppa_check eugenesan-ubuntu-ppa
 
     [ -n "$HASKELL" ] && ppa_check fpco
 
     ppa_check google-chrome
-    ppa_check nilarimogard-ubuntu-webupd8
+
     [ -n "$ATOM" ] && ppa_check webupd8team-ubuntu-atom
 
     # TODO : docker
 
+    is_ubuntu || return 1
+
     [ -n "$R" ] && ppa_check rutter
+    [ -n "$GIT" ] && ppa_check eugenesan-ubuntu-ppa
+    ppa_check nilarimogard-ubuntu-webupd8
 
     if [ -n "$THEMES" ]; then
         ppa_check numix

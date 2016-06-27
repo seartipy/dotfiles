@@ -1957,16 +1957,20 @@ select_everything() {
     R="r"
 }
 
+select_defaults() {
+    ESSENTIAL="essential"
+    ZSH="zsh"
+    BASH="bash"
+    EMACS="emacs"
+    DOTFILES="dotfiles"
+    GIT="git"
+}
+
 script_options() {
     if [ $# -eq 0 ]; then
         select_everything
     else
-        ESSENTIAL="essential"
-        ZSH="zsh"
-        BASH="bash"
-        EMACS="emacs"
-        DOTFILES="dotfiles"
-        GIT="git"
+        select_defaults
     fi
 
     if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
@@ -1975,6 +1979,30 @@ script_options() {
 
     while [[ $# > 0 ]]; do
         case $1 in
+            essential)
+                ESSENTIAL="essential"
+                shift
+                ;;
+            zsh)
+                ZSH="zsh"
+                shift
+                ;;
+            bash)
+                BASH="bash"
+                shift
+                ;;
+            emacs)
+                EMACS="emacs"
+                shift
+                ;;
+            dotfiles)
+                DOTFILES="dotfiles"
+                shift
+                ;;
+            git)
+                GIT="git"
+                shift
+                ;;
             atom)
                 ATOM="atom"
                 shift
@@ -2001,7 +2029,7 @@ script_options() {
                 WEB="web"
                 shift
                 ;;
-            nothings)
+            nothing)
                 ESSENTIAL=""
                 ZSH=""
                 BASH=""
@@ -2051,9 +2079,6 @@ script_options() {
                 shift
                 ;;
             haskell)
-                PURESCRIPT="purescript"
-                IDRIS="idris"
-                ELM="elm"
                 HASKELL="haskell"
                 shift
                 ;;

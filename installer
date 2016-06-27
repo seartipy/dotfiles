@@ -1198,10 +1198,10 @@ patched_fonts_exist() {
 powerline_patched_fonts() {
        if ! patched_fonts_exist; then
         slog "Installing powerline patched fonts"
-        smd ~/seartipy-powerline-fonts
+        srm ~/seartipy-powerline-fonts
         sclone https://github.com/powerline/fonts.git ~/seartipy-powerline-fonts
         cd ~/seartipy-powerline-fonts && ./install.sh
-        smd ~/seartipy-powerline-fonts
+        srm ~/seartipy-powerline-fonts
     fi
 }
 

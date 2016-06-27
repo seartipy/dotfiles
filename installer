@@ -260,7 +260,7 @@ add_haskell_stack_ppa() {
 }
 
 add_chrome_ppa() {
-    is_ubuntu || return 1
+    is_apt || return 1
     ppa_exists google-chrome && return 0
 
     slog "Adding google chrome ppa"
@@ -277,12 +277,13 @@ add_webupd8_ppa() {
 }
 
 add_atom_ppa() {
-    is_ubuntu || return 1
+    is_atom || return 1
     ppa_exists webupd8team-ubuntu-atom && return 0
     slog "Adding atom ppa"
     sudo add-apt-repository  ppa:webupd8team/atom -y
 }
 
+# update docker method, this os obsolete now
 add_docker_ppa() {
     is_ubuntu || return 1
 
@@ -2404,11 +2405,13 @@ essential_mac_check() {
 }
 
 essential_ubuntu_check() {
-    is_ubuntu || return 1
+    is_apt || return 1
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf google-chrome firefox unrar zeal
+    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox
+    is_ubuntu && cmd_check unrar
+    is_debian && check unar
 }
 
 essential_fedora_check() {
@@ -2449,7 +2452,7 @@ bash_check() {
 
 emacs_check() {
     cmd_check emacs aspell
-    if is_ubuntu || is_mac; then
+    if is_apt || is_mac; then
         cmd_check editorconfig
     fi
     is_linux && cmd_check ctags
@@ -2650,7 +2653,7 @@ post_installer_check() {
 
 curdir=`pwd`
 
-if is_ubuntu; then
+if is_apt; then
     trash=trash-put
 else
     trash=trash

@@ -2515,17 +2515,14 @@ elixir_check() {
 }
 
 purescript_check() {
-    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
     cmd_check psc
 }
 
 idris_check() {
-    export PATH="$HOME/.local/bin:$PATH"
     cmd_check idris
 }
 
 elm_check() {
-    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
     cmd_check elm elm-oracle elm-make elm-reactor elm-repl elm-package elm-live
 }
 
@@ -2534,18 +2531,13 @@ r_check() {
 }
 
 haskell_check() {
-    export PATH="$HOME/.local/bin:$PATH"
-
     cmd_check ghc cabal stack
 
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng ghc-mod gch-modi
     # cmd_check structured-haskell-mode
 }
 
 python_check() {
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-
     cmd_check pyenv
     is_mac && cmd_check pyenv-virtualenv
 
@@ -2576,11 +2568,6 @@ cpp_check() {
 }
 
 golang_check() {
-    is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
-
-    export GOPATH="$HOME/golang-ws"
-    export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
-
     cmd_check go golint gocode godef goimports devd
 }
 
@@ -2618,11 +2605,25 @@ vim_check() {
 }
 
 xmonad_check() {
+    is_linux || return 1
+
     cmd_check xmonad dmenu
     ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 
 post_installer_check() {
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    export PATH="$HOME/.local/bin:$PATH"
+
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
+    is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
+    export GOPATH="$HOME/golang-ws"
+    export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+
+    export PATH="$HOME/.cask/bin:$PATH"
+
     essential_check
     dotfiles_check
 

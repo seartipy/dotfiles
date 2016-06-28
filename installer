@@ -99,6 +99,15 @@ sclone() {
     fi
 }
 
+fclone() {
+    local dest=${*: -1}
+    local src=${*: -2:1}
+
+    srm "$dest"
+    slog "Cloning $src to $dest"
+    git clone $*
+}
+
 scopy() {
     [ -e "$2" ] || [ -L "$2" ] || cp "$1" "$2"
 }

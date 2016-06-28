@@ -366,9 +366,9 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos
-    is_ubuntu && sudo apt-get install -y unrar firefox
-    is_debian && sudo apt-get install -y unar firefox-esr
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar
+    is_ubuntu && sudo apt-get install -y firefox
+    is_debian && sudo apt-get install -y firefox-esr
 }
 
 essential_mac_install() {
@@ -389,7 +389,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unrar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos
     brew cask install iterm2
 }
 
@@ -2401,7 +2401,7 @@ ppas_check() {
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew trash 7z greadlink unar
+    cmd_check brew trash 7z greadlink
 }
 
 essential_ubuntu_check() {
@@ -2410,18 +2410,17 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check xsel xclip p7zip dconf google-chrome zeal firefox
-    is_ubuntu && cmd_check unrar
-    is_debian && check unar
+    is_apt && check
 }
 
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel xclip 7za dconf unar
+    cmd_check xsel xclip 7za dconf
 }
 
 essential_check() {
-    cmd_check curl wget git $trash tree ag fasd gpg tmux
+    cmd_check curl wget git $trash tree ag fasd gpg tmux unar
 
     essential_mac_check
     essential_fedora_check

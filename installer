@@ -183,6 +183,15 @@ npm_check() {
     done
 }
 
+gem_exists() {
+    gem list --local | grep "$1" > /dev/null
+}
+
+gem_check() {
+    for p in $*; do
+        gem_exists "$p" || warn "$p gem not installed"
+    done
+}
 
 brew_exists() {
     brew list | grep "^$1$" > /dev/null
@@ -217,6 +226,14 @@ npmi() {
 
     for p in $*; do
         npm_exists "$p" || npm install -g "$p"
+    done
+}
+
+gemi() {
+    has_cmd gem || return 1
+
+    for p in $*; do
+        gem_exists "$p" || gem install "$p" --no-ri --no-rdoc
     done
 }
 
@@ -1461,11 +1478,11 @@ ruby_install() {
     source ~/.rvm/scripts/rvm
     slog "Installing ruby gems"
     if is_mac; then
-        gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
+        gem_exists eventmachine || gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
     fi
-    gem install pry sinatra thin guard watchr tmuxinator sass overcommit --no-ri --no-rdoc
+    gemi pry sinatra thin guard watchr tmuxinator sass overcommit
 
-    is_mac && gem install xcpretty -no-ri --no-rdoc
+    is_mac && gemi xcpretty
 }
 
 #
@@ -2545,7 +2562,7 @@ ruby_check() {
     source ~/.rvm/scripts/rvm
 
     cmd_check rvm ruby
-    cmd_check pry thin guard watchr tmuxinator sass overcommit
+    gem_check pry thin guard watchr tmuxinator sass overcommit
     is_mac && cmd_check xcpretty
 }
 

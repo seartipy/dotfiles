@@ -1022,7 +1022,7 @@ haskell_install() {
     stackexei hasktags
     stackexei hindent
     stackexei hdevtools
-    # stackexei install ghc-mod
+    stackexei install ghc-mod
     stackexei ghci-ng
     ihaskell_install
 }

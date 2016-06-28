@@ -427,6 +427,7 @@ fasd_install() {
     has_cmd fasd && return 0
 
     slog "Installing fasd"
+    srm ~/seartipy-installer-fasd
     if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
         cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
         srm ~/seartipy-installer-fasd
@@ -590,6 +591,7 @@ zsh_install() {
 #
 # emacs
 
+# drop emacs-mac, normal emacs works better with emacsclient
 emacs_mac_install() {
     is_mac || return 1
 
@@ -2426,7 +2428,6 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check xsel xclip p7zip dconf google-chrome zeal firefox
-    is_apt && check
 }
 
 essential_fedora_check() {
@@ -2537,7 +2538,7 @@ r_check() {
 haskell_check() {
     cmd_check ghc cabal stack
 
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng ghc-mod gch-modi
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng ghc-mod
     # cmd_check structured-haskell-mode
 }
 
@@ -2577,11 +2578,11 @@ golang_check() {
 
 additional_check() {
     if is_linux; then
-        ls ~/.fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "powerline fonts not installed"
+        ls ~/.local/share/fonts 2> /dev/null | grep "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
     fi
 
     if is_mac; then
-        ls ~/Library/Fonts 2> /dev/null | grep SourceCodePro > /dev/null || warn "powerline fonts not installed"
+        ls ~/Library/Fonts 2> /dev/null | grep "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
 
     fi
 

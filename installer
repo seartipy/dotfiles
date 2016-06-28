@@ -458,20 +458,12 @@ cleanup() {
 # dotfiles
 
 clone_lean_dotfiles() {
-    slog "Backing up your current lean-dotfiles(if exists) to $BACKUP_DIR"
-    smv ~/seartipy/lean-dotfiles $BACKUP_DIR
-
     sclone https://gitlab.com/seartipy/lean-dotfiles.git ~/seartipy/lean-dotfiles
-
     [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop
 }
 
 clone_dotfiles() {
-    slog "Backing up your current dotfiles(if exists) to $BACKUP_DIR"
-    smv ~/seartipy/dotfiles $BACKUP_DIR
-
     sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-
     [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop
 }
 
@@ -631,9 +623,6 @@ spacemacs_dotfiles() {
 
 leanemacs_dotfiles() {
     [ -f ~/seartipy/lean-dotfiles/emacs-init.el ] || return 1
-
-    slog "Moving ~/seartipy/emacses/lean-emacs to $BACKUP_DIR (if it exists)"
-    smv ~/seartipy/emacses/lean-emacs $BACKUP_DIR
 
     smd ~/seartipy/emacses/lean-emacs
 

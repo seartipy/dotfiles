@@ -1534,17 +1534,21 @@ shell_extension_install() {
     local EXTENSION_PATH="$HOME/.local/share/gnome-shell/extensions";
 
     # get extension description
-    wget --header='Accept-Encoding:none' -O /tmp/extension.txt "${GNOME_SITE}/extension-info/?pk=${EXTENSION_ID}&shell_version=${GNOME_VERSION}"
+    wget --quiet --header='Accept-Encoding:none' -O /tmp/extension.txt "${GNOME_SITE}/extension-info/?pk=${EXTENSION_ID}&shell_version=${GNOME_VERSION}"
 
     # get extension UUID
     EXTENSION_UUID=$(cat /tmp/extension.txt | grep "uuid" | sed 's/^.*uuid[\": ]*\([^\"]*\).*$/\1/')
+
+    if ls "$EXTENSION_PATH" | grep "$EXTENSION_UUID" > /dev/null; then
+        return 1
+    fi
 
     # get extension download URL
     EXTENSION_URL=$(cat /tmp/extension.txt | grep "download_url" | sed 's/^.*download_url[\": ]*\([^\"]*\).*$/\1/')
 
     if [ "$EXTENSION_URL" != "" ]; then
         # download extension archive
-        wget --header='Accept-Encoding:none' -O /tmp/extension.zip "${GNOME_SITE}${EXTENSION_URL}"
+        wget --quiet --header='Accept-Encoding:none' -O /tmp/extension.zip "${GNOME_SITE}${EXTENSION_URL}"
 
         # unzip extension to installation folder
         mkdir -p "${EXTENSION_PATH}/${EXTENSION_UUID}"

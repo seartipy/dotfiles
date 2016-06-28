@@ -436,10 +436,9 @@ fasd_install() {
     has_cmd fasd && return 0
 
     slog "Installing fasd"
-    srm ~/seartipy-installer-fasd
-    if git clone https://github.com/clvv/fasd.git ~/seartipy-installer-fasd; then
-        cd ~/seartipy-installer-fasd && PREFIX=$HOME make install
-        srm ~/seartipy-installer-fasd
+    if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
+        cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
+        rm -rf /tmp/seartipy-installer-fasd
     fi
 }
 
@@ -1229,11 +1228,10 @@ mononoki_font() {
 powerline_fonts() {
     if ! font_exists "Powerline"; then
         slog "Installing powerline patched fonts"
-        srm ~/seartipy-powerline-fonts
-        sclone https://github.com/powerline/fonts.git ~/seartipy-powerline-fonts
-        cd ~/seartipy-powerline-fonts && ./install.sh
+        fclone https://github.com/powerline/fonts.git /tmp/seartipy-powerline-fonts
+        cd /tmp/seartipy-powerline-fonts && ./install.sh
         cd
-        srm ~/seartipy-powerline-fonts
+        rm -rf /tmp/seartipy-powerline-fonts
     fi
 }
 fonts_install() {

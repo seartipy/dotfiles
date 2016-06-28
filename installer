@@ -1209,18 +1209,36 @@ vim_install() {
 #
 # additional
 
-patched_fonts_exist() {
-    (is_linux && ls ~/.local/share/fonts 2> /dev/null | grep Powerline > /dev/null) || (is_mac && ls ~/Library/Fonts 2> /dev/null | grep Powerline > /dev/null)
+font_exists() {
+    (is_linux && ls ~/.local/share/fonts 2> /dev/null | grep "$1" > /dev/null) ||
+        (is_mac && ls ~/Library/Fonts 2> /dev/null | grep "$1" > /dev/null)
 }
 
-powerline_patched_fonts() {
-       if ! patched_fonts_exist; then
+mononoki_font() {
+    if ! font_exists "mononoki"; then
+        srm /tmp/mononoki.zip
+        wget  --quiet -O /tmp/mononoki.zip https://github.com/madmalik/mononoki/releases/download/1.2/mononoki.zip
+        srm /tmp/seartipy-mononoki-fonts
+        unzip /tmp/mononoki.zip -d /tmp/seartipy-mononoki-fonts
+        cp /tmp/seartipy-mononoki-fonts/*.ttf ~/Library/Fonts
+        rm -f /tmp/mononoki.zip
+        rm -rf /tmp/seartipy-mononoki-fonts
+    fi
+}
+
+powerline_fonts() {
+    if ! font_exists "Powerline"; then
         slog "Installing powerline patched fonts"
         srm ~/seartipy-powerline-fonts
         sclone https://github.com/powerline/fonts.git ~/seartipy-powerline-fonts
         cd ~/seartipy-powerline-fonts && ./install.sh
+        cd
         srm ~/seartipy-powerline-fonts
     fi
+}
+fonts_install() {
+    powerline_fonts
+    mononoki_font
 }
 
 icdiff_mac_install() {
@@ -1282,7 +1300,7 @@ additional_install() {
     additional_ubuntu_install
 
     icdiff_install
-    powerline_patched_fonts
+    fonts_install
 }
 
 #
@@ -2585,14 +2603,11 @@ golang_check() {
 }
 
 additional_check() {
-    if is_linux; then
-        ls ~/.local/share/fonts 2> /dev/null | grep "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
-    fi
+    is_linux && font_exists "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
+    is_mac && font_exists "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
 
-    if is_mac; then
-        ls ~/Library/Fonts 2> /dev/null | grep "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
-
-    fi
+    is_linux && font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+    is_mac && font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
 
     if ! has_cmd vmware-user-suid-wrapper; then
         is_mac && cmd_check virtualbox virtualbox-extension-pack

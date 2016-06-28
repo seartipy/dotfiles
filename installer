@@ -2500,19 +2500,13 @@ clojure_check() {
 
 web_check() {
     cmd_check flow
-
-    if is_mac; then
-        export PATH=$(npm config get prefix)/bin:$PATH
-    fi
-
-    if is_linux; then
-        [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
-        cmd_check nvm
-    fi
+    cmd_check nvm
 
     cmd_check npm
 
-    has_cmd npm && cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
+    has_cmd npm || return 1
+
+    cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
     npm_check eslint-plugin-react babel-eslint babelify browser-sync
 }
 

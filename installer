@@ -1234,10 +1234,14 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred jq httpie icdiff
+    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
+    if ! has_cmd vmware-user-suid-wrapper; then
+        brew cask install virtualbox virtualbox-extension-pack
+        # install docker
+    fi
 }
 
 additional_fedora_install() {
@@ -2581,8 +2585,12 @@ additional_check() {
 
     fi
 
-    is_mac && cmd_check docker
-    is_mac && brew_cask_check google-chrome dash android-file-transfer virtualbox virtualbox-extension-pack transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    if ! has_cmd vmware-user-suid-wrapper; then
+        is_mac && cmd_check virtualbox virtualbox-extension-pack
+        # is_mac && cmd_check docker
+    fi
+
+    is_mac && brew_cask_check google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     cmd_check youtube-dl icdiff jq http
 
     is_linux || return 0

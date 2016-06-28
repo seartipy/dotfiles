@@ -2062,7 +2062,6 @@ script_options() {
                 ZSH=""
                 BASH=""
                 EMACS=""
-                DOTFILES=""
                 GIT=""
                 shift
                 ;;

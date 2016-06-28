@@ -2605,14 +2605,12 @@ golang_check() {
 }
 
 additional_check() {
-    is_linux && font_exists "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
-    is_mac && font_exists "Sauce Code Powerline" > /dev/null || warn "powerline fonts not installed"
-
-    is_linux && font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
-    is_mac && font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+    font_exists "Sauce Code Powerline" || warn "powerline fonts not installed"
+    font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
 
     if ! has_cmd vmware-user-suid-wrapper; then
-        is_mac && cmd_check virtualbox virtualbox-extension-pack
+        is_mac && cmd_check virtualbox
+        brew_cask_check virtualbox-extension-pack
         # is_mac && cmd_check docker
     fi
 

@@ -38,7 +38,7 @@ is_debian() {
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ "$os" == *"elementary OS" ]]
+    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ "$os" == *"elementary OS" ]] || [[ "$os" == *"LinuxMint" ]]
 }
 
 is_apt() {

@@ -2652,7 +2652,7 @@ post_installer_check() {
 
     is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
     export GOPATH="$HOME/golang-ws"
-    export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+    has_cmd go && export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
 
     export PATH="$HOME/.cask/bin:$PATH"
 

@@ -565,14 +565,21 @@ zsh_fedora_install() {
     is_fedora || return 1
 
     slog "Installing zsh"
-    sudo dnf install -y zsh
+    sudo dnf install -y zsh ShellCheck
 }
 
 zsh_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing zsh"
-    sudo apt-get install -y zsh
+    sudo apt-get install -y zsh shellcheck
+}
+
+zsh_mac_install() {
+    is_mac || return 1
+
+    slog "Installing zsh"
+    brew install shellcheck
 }
 
 zsh_dotfiles() {
@@ -591,6 +598,7 @@ zsh_dotfiles() {
 zsh_install() {
     zsh_fedora_install
     zsh_ubuntu_install
+    zsh_mac_install
 
     zsh_dotfiles
 
@@ -2478,7 +2486,7 @@ dotfiles_check() {
 }
 
 zsh_check() {
-    cmd_check zsh
+    cmd_check zsh shellcheck
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
     dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt

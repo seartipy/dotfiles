@@ -1,6 +1,6 @@
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-addSbtPlugin("org.ensime" % "sbt-ensime" % "0.5.1")
+addSbtPlugin("org.ensime" % "sbt-ensime" % "0.6.0")
 
 addSbtPlugin("com.scalapenos" % "sbt-prompt" % "1.0.0")
 

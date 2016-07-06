@@ -614,11 +614,9 @@ zsh_install() {
 emacs_mac_install() {
     is_mac || return 1
 
-    slog "Tapping emacsport"
-    [ -n "$EMACS" ] && brew tap railwaycat/emacsmacport
-
     slog "Installing emacs packages"
-    brew install emacs-mac ---with-spacemacs-icon
+    brew install emacs --with-cocoa --with-gnutls --with-librsvg --with-imagemagick
+
     brew install editorconfig cask
     # TODO : ctags
     brew install aspell --with-lang-en
@@ -628,11 +626,11 @@ emacs_mac_install() {
 
     slog "Creating Emacs alias in /Applications"
     # make emacs available from spotlight
-    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs/Emacs.app" at POSIX file "/Applications"'
 
     slog "Generating terminfo for terminal in emacs"
-    local emacsversion=`ls -r /usr/local/Cellar/emacs-mac | head -1`
-    tic -o ~/.terminfo /usr/local/Cellar/emacs-mac/${emacsversion}/share/emacs/24.5/etc/e/eterm-color.ti
+    local emacsversion=`ls -r /usr/local/Cellar/emacs | head -1`
+    tic -o ~/.terminfo /usr/local/Cellar/emacs/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
 }
 
 emacs_fedora_install() {

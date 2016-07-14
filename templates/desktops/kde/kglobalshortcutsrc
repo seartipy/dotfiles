@@ -23,10 +23,10 @@ Show System Activity=Ctrl+Esc,Ctrl+Esc,Show System Activity
 Sleep=Sleep,Sleep,Suspend
 Toggle Keyboard Backlight=Keyboard Light On/Off,Keyboard Light On/Off,Toggle Keyboard Backlight
 _k_friendly_name=KDE Daemon
-display=Display,Display,Switch Display
+display=Display,Display\tMeta+P,Switch Display
 
 [khotkeys]
-_k_friendly_name=System Settings
+_k_friendly_name=KDE Daemon
 {6a1256fe-3dd5-4e20-ade3-3aaa6945e137}=,none,Start Screenshot Tool
 {7829b994-f121-47f7-8cb8-17d3f8bd9f65}=,none,Take Full Screen Screenshot
 {9d9a4e92-f974-47e2-ae66-f187646fc678}=,none,Take Active Window Screenshot

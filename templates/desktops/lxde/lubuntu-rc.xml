@@ -345,7 +345,7 @@
       <action name="UnmaximizeFull"/>
       <action name="MoveResizeTo"><x>-0</x><y>-0</y><height>50%</height><width>33%</width></action>
     </keybind>
-    
+
     <keybind key="W-C-Insert">        <!-- # ThirdLeftTopScreen -->
       <action name="UnmaximizeFull"/>
       <action name="MoveResizeTo"><x>0</x><y>0</y><height>67%</height><width>50%</width></action>
@@ -395,7 +395,7 @@
       <action name="UnmaximizeFull"/>
       <action name="MoveResizeTo"><x>-0</x><y>0</y><height>33%</height><width>50%</width></action>
     </keybind>
-    
+
     <keybind key="W-Insert">        <!-- # TwoThirdsLeftTopScreen -->
       <action name="UnmaximizeFull"/>
       <action name="MoveResizeTo"><x>0</x><y>0</y><height>100%</height><width>67%</width></action>
@@ -465,6 +465,15 @@
       <action name="ToggleMaximize"><direction>vertical</direction></action>
     </keybind>
 
+    <keybind key="W-F2">
+      <action name="Move" />
+    </keybind>
+    <keybind key="W-F3">
+      <action name="Resize" />
+    </keybind>
+    <keybind key="A-F9">
+      <action name="Iconify"/>
+    </keybind>
 
     <keybind key="F11">
       <action name="ToggleFullscreen"/>
@@ -550,7 +559,7 @@
         <command>lxsession-default launcher</command>
       </action>
     </keybind>
-    
+
     <!-- Keybindings for running Menu from Lxpanel -->
     <keybind key="A-F1">
       <action name="Execute">
@@ -1052,7 +1061,7 @@
   # order that they appear in this list
 
 
-    # each rule element can be left out or set to 'default' to specify to not 
+    # each rule element can be left out or set to 'default' to specify to not
     # change that attribute of the window
 
     <decor>yes</decor>

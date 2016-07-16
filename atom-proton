@@ -81,7 +81,7 @@
 
   :configuration
   [
-    ["editor.fontFamily" "Source Code Pro"]
+    ["editor.fontFamily" "Hack"]
     [ "editor.fontSize" "13" ]
     ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
 

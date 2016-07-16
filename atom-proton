@@ -63,7 +63,6 @@
     :ide-haskell-repl
     :ide-haskell-cabal
 
-    :language-babel
     :emmet
 
     :clang-format

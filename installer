@@ -485,12 +485,18 @@ cleanup() {
 
 clone_lean_dotfiles() {
     sclone https://gitlab.com/seartipy/lean-dotfiles.git ~/seartipy/lean-dotfiles
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop
+    [ -d ~/seartipy/lean-dotfiles ] || return 1
+
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop && cd || return 1
 }
 
 clone_dotfiles() {
     sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop
+    [ -d ~/seartipy/lean-dotfiles ] || return 1
+
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
+
+    pre_dir_check ~/seartipy/dotfiles
 }
 
 tmux_dotfiles() {

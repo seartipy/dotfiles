@@ -1323,7 +1323,8 @@ xmonad_fedora_install() {
     is_fedora || return 1
 
     slog "Installing xmonad"
-    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu
+    dnf copr -y enable region51/rofi
+    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu rofi
 }
 
 xmonad_ubuntu_install() {
@@ -2651,7 +2652,7 @@ vim_check() {
 xmonad_check() {
     is_linux || return 1
 
-    cmd_check xmonad dmenu
+    cmd_check xmonad dmenu rofi
     ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 

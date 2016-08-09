@@ -61,6 +61,7 @@ if ! zgen saved; then
     zgen load sharat87/pip-app
     zgen load peterhurford/git-it-on.zsh
     zgen load unixorn/git-extra-commands
+    zgen load paulirish/git-open
 
     [ -s ~/.zgen-plugins-local.sh ] || touch ~/.zgen-plugins-local.sh
     source ~/.zgen-plugins-local.sh

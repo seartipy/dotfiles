@@ -174,28 +174,77 @@ seartipy_fix_links() {
 }
 
 seartipy_cask_backup() {
-    if ! [ -d ~/.emacs.d/.cask ]; then
-        warn "no ~/.emacs.d/.cask to backup"
+    if ! has_cmd cask; then
+        warn "cask not installed, cannot backup elpa"
         return 1
     fi
 
-    local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1)
-    cp -r $ELPA_PARENT/elpa $ELPA_PARENT/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
+    local ELPA_DIR ELPA_PARENT ELPA_BACKUP ROLLBACK_COUNT OLDEST_BACKUP
+
+    if ! cd ~/seartipy/emacses/housemd; then
+        warn "no ~/seartipy/emacses/housemd, cannot backup"
+        return 1
+    fi
+
+    ELPA_DIR=$(cask package-directory)
+    [ -d "$ELPA_DIR" ] || return 1
+
+    ELPA_PARENT=$(dirname "$ELPA_DIR")
+    [ -d "$ELPA_PARENT" ] || return 1
+
+    ELPA_BACKUP="${ELPA_PARENT}/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")"
+
+    cp -r "$ELPA_DIR" "$ELPA_BACKUP"
+
     ROLLBACK_COUNT=$(ls $ELPA_PARENT | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)
-    if [ "$ROLLBACK_COUNT" -gt 5 ]; then
-        trash $ELPA_PARENT/$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | head -1)
+
+    [ "$ROLLBACK_COUNT" -gt 5 ] || return 1
+
+    OLDEST_BACKUP=$ELPA_PARENT/$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | head -1)
+    if [ -d "$OLDEST_BACKUP" ]; then
+        trash "$OLDEST_BACKUP"
+    else
+        warn "cannot trash old backup $OLDEST, as it does not exist. This cannot happen!"
     fi
 }
 
 seartipy_cask_rollback() {
-    local ELPA_PARENT=~/.emacs.d/.cask/$(ls -1v ~/.emacs.d/.cask | tail -1) # -t might be a better option
-    LATEST_BACKUP=$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | tail -1)
+    if ! has_cmd cask; then
+        warn "cask not installed, cannot rollback elpa"
+        return 1
+    fi
 
-    if [[ -z "${LATEST_BACKUP// }" ]]; then
+    if ! cd ~/seartipy/emacses/housemd; then
+        warn "no ~/seartipy/emacses/housemd, cannot backup"
+        return 1
+    fi
+
+    local ELPA_DIR ELPA_PARENT LATEST_BACKUP
+
+    ELPA_DIR=$(cask package-directory)
+    [ -d "$ELPA_DIR" ] || return 1
+
+    ELPA_PARENT=$(dirname "$ELPA_DIR")
+    [ -d "$ELPA_PARENT" ] || return 1
+
+    LATEST_BACKUP="$(ls -1v "$ELPA_PARENT" | grep "^elpa-rollback" | tail -1)"
+
+    if [ -z "$LATEST_BACKUP" ]; then
+        warn "no backups, cannot rollback"
+        return 1
+    fi
+
+    if ! [ -d "$ELPA_PARENT/${LATEST_BACKUP}" ]; then
         error "no backups available, skipping"
-    else
-        trash "${ELPA_PARENT}/elpa"
-        mv $ELPA_PARENT/$LATEST_BACKUP $ELPA_PARENT/elpa
+        return 1
+    fi
+
+    trash "$ELPA_DIR"
+
+    if [ -d "$ELPA_DIR" ]; then
+        warn "cannot trash $ELPA_DIR, can not rolling back"
+    elif ! mv "$ELPA_PARENT/$LATEST_BACKUP" "$ELPA_DIR"; then
+        error "cannot move $LATEST_BACKUP to $ELPA_DIR; previous $ELPA_DIR must be in trash"
     fi
 }
 

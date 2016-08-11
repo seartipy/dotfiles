@@ -438,6 +438,7 @@ fasd_install() {
     slog "Installing fasd"
     if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
         cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
+	cd
         rm -rf /tmp/seartipy-installer-fasd
     fi
 }
@@ -492,7 +493,7 @@ clone_lean_dotfiles() {
 
 clone_dotfiles() {
     sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    [ -d ~/seartipy/lean-dotfiles ] || return 1
+    [ -d ~/seartipy/dotfiles ] || return 1
 
     pre_dir_check ~/seartipy/dotfiles
 

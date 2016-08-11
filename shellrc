@@ -29,10 +29,22 @@ is_linux() {
     [[ "$OSTYPE" == "linux-gnu" ]]
 }
 
+is_debian() {
+    has_cmd lsb_release || return 1
+    local os
+    os=$(lsb_release -i | cut -d ':' -f2)
+    [[ "$os" == *"Debian" ]]
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]]
+    local os
+    os=$(lsb_release -i | cut -d ':' -f2)
+    [[ "$os" == *"Ubuntu" ]] || [[ "$os" == *"neon" ]] || [[ "$os" == *"elementary OS" ]] || [[ "$os" == *"LinuxMint" ]]
+}
+
+is_apt() {
+    is_ubuntu || is_debian
 }
 
 is_fedora() {
@@ -80,7 +92,7 @@ if is_linux; then
     alias e="TERM=xterm-256color emacs -nw"
 fi
 
-if is_ubuntu; then
+if is_apt; then
     alias trash=trash-put
 
     #java
@@ -362,7 +374,7 @@ alias sfl=seartipy_fix_links
 
 alias gst="git status"
 
-if is_ubuntu; then
+if is_apt; then
     alias si="sudo apt-get install -y"
     alias ss="sudo apt-cache search"
     alias sr="sudo apt-get purge"

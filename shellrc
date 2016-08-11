@@ -164,25 +164,58 @@ fi
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 seartipy_fix_links() {
-    sln ~/seartipy/dotfiles/shellrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    if ! [ -d ~/seartipy/dotfiles ]; then
+        smd ~/seartipy
+        git clone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
+    fi
+    if ! [ -d ~/seartipy/dotfiles ]; then
+        error "no ~/seartipy/dotfiles, cannot fix links"
+    fi
 
-    smd ~/.lein
-    smd ~/.boot
-    smd ~/.sbt/0.13
+    # bash
+    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    is_mac && sln ~/seartipy/dotfiles/bashrc ~/.bashrc
+    if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
+        echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
+    fi
 
-    sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
-    sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
+    # zsh
+    has_cmd zsh && sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
 
-    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
-    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    # emacs
+    has_cmd emacs && sln ~/seartipy/emacses/housemd ~/.emacs.d
+    [ -d ~/seartipy/emacses/spacemacs ] && scopy ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
 
-    sln ~/seartipy/emacses/housemd ~/.emacs.d
+    # clojure
+    if has_cmd lein; then
+        smd ~/.lein
+        sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+    fi
 
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    if has_cmd boot; then
+        smd ~/.boot
+        sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
+    fi
+
+    # scala
+    if has_cmd sbt; then
+        echo "HELLO WORLD"
+        smd ~/.sbt/0.13/plugins
+        sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+        sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    fi
+
+
+    has_cmd tmux && sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+
+    has_cmd atom && sln ~/seartipy/dotfiles/atom-proton ~/.proton
+
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 
-    scopy ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
+    if has_cmd xmonad; then
+        smd ~/.xmonad
+        sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
+    fi
 }
 
 seartipy_cask_backup() {

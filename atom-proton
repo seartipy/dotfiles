@@ -27,7 +27,6 @@
     :lang/css
     :lang/less
     :lang/sass
-    :lang/jade
     :lang/stylus
     :lang/json
   ]

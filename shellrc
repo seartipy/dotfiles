@@ -393,6 +393,7 @@ alias eh="seartipy_emacs_launch housemd"
 
 alias ec="emacsclient -c -n"
 alias et="emacsclient -t"
+alias xet="TERM=xterm-256color emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
 alias emacs-restore="seartipy_cask_rollback"

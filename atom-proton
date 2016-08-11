@@ -17,7 +17,6 @@
     :lang/python
 
     :lang/rust
-    :lang/swift
 
     :lang/python
     :lang/ruby

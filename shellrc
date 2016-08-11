@@ -56,7 +56,7 @@ is_mac() {
 }
 
 has_cmd() {
-    command -v $1 > /dev/null
+    command -v "$1" > /dev/null
 }
 
 smd() {
@@ -73,7 +73,7 @@ sln() {
         warn "$2 exists and not a symbolic link! not creating link"
         return 1
     fi
-    ln -s $1 $2
+    ln -s "$1" "$2"
 }
 
 scopy() {
@@ -111,9 +111,11 @@ if is_mac; then
     alias upgrade="brew update && brew upgrade"
 
     #java
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-    export JDK_HOME=`/usr/libexec/java_home -v 1.8`
+    JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+    export JAVA_HOME
 
+    JDK_HOME=$(/usr/libexec/java_home -v 1.8)
+    export JDK_HOME
     #brew
     export PATH="/usr/local/bin:$PATH"
 
@@ -146,7 +148,8 @@ export PATH="$HOME/bin:$PATH"
 #go
 if has_cmd go; then
     export GOPATH="$HOME/golang-ws"
-    export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+    PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+    export PATH
 fi
 
 # sources
@@ -245,7 +248,7 @@ seartipy_cask_backup() {
 
     [ "$ROLLBACK_COUNT" -gt 5 ] || return 1
 
-    OLDEST_BACKUP=$ELPA_PARENT/$(ls -1v $ELPA_PARENT | grep "^elpa-rollback" | head -1)
+    OLDEST_BACKUP=$ELPA_PARENT/$(ls -1v "$ELPA_PARENT" | grep "^elpa-rollback" | head -1)
     if [ -d "$OLDEST_BACKUP" ]; then
         trash "$OLDEST_BACKUP"
     else
@@ -314,7 +317,8 @@ seartipy_upgrade_mean() {
 seartipy_nvm_dist_upgrade() {
     has_cmd nvm || return 1
 
-    cd "$NVM_DIR" && git fetch origin && git checkout `git describe --abbrev=0 --tags`
+    cd "$NVM_DIR" && git fetch origin && git checkout "$(git describe --abbrev=0 --tags)"
+    cd
     source "$NVM_DIR/nvm.sh"
 
     nvm install node --reinstall-packages-from=node
@@ -352,7 +356,7 @@ seartipy_emacs_default() {
 }
 
 seartipy_emacs_launch() {
-    seartipy_emacs_default $*
+    seartipy_emacs_default "$@"
     is_mac && open -a /Applications/Emacs.app
     is_linux && emacs&
 }

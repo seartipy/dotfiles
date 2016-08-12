@@ -1145,8 +1145,6 @@ apt_python3_install() {
 python3_install() {
     mac_python3_install
     apt_python3_install
-
-    apmi autocomplete-python python-tools linter-flake8 python-isort hydrogen
 }
 
 python_mac_install() {

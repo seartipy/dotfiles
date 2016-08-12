@@ -2459,7 +2459,7 @@ ppas_check() {
     is_apt || return 1
 
     if [ -n "$SCALA" ] || [ -n "$CLOJURE" ]; then
-        ppa_check webupd8team-ubuntu-java
+        ppa_check webupd8team-java
     fi
 
     [ -n "$SCALA" ] && ppa_check sbt
@@ -2469,7 +2469,7 @@ ppas_check() {
 
     ppa_check google-chrome
 
-    [ -n "$ATOM" ] && ppa_check webupd8team-ubuntu-atom
+    [ -n "$ATOM" ] && ppa_check webupd8team-atom
 
     # TODO : docker
 

@@ -75,6 +75,9 @@
 
     :floobits
 
+    :lisp-paredit
+    :linter-flow
+    :Hydrogen
   ]
 
   :configuration

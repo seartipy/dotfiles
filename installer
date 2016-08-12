@@ -1126,6 +1126,29 @@ elm_install() {
 #
 # python
 
+mac_python3_install() {
+    is_mac || return 1
+
+    brew install python3 pkg-config zeromq
+    pip3 install --upgrade pip setuptools wheel
+    pip3 install yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 matplotlib
+}
+
+apt_python3_install() {
+    is_apt || return 1
+
+    sudo apt-get install -y python3-pip python3-dev python3-matplotlib python3-setuptools python3-wheel libzmq3-dev
+    pip3 install --upgrade --user pip
+    pip3 install --user yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5
+}
+
+python3_install() {
+    mac_python3_install
+    apt_python3_install
+
+    apmi autocomplete-python python-tools linter-flake8 python-isort hydrogen
+}
+
 python_mac_install() {
     is_mac || return 1
 
@@ -1141,6 +1164,8 @@ python_linux_install() {
 }
 
 python_install() {
+    python3_install
+
     python_mac_install
     python_linux_install
 
@@ -1177,14 +1202,15 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi coffee-script typescript flow-bin
-    npmi eslint jshint coffeelint eslint-plugin-react
+    npmi coffee-script typescript typings flow-bin
+    npmi eslint jshint coffeelint
+    npmi eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-config-airbnb
     npmi gulp grunt-cli
     npmi babel-cli babel-eslint
     npmi browserify watchify babelify budo
-    npmi webpack webpack-dev-server
-    npmi tern js-beautify karma-cli
-    npmi browser-sync npm-check
+    npmi webpack webpack-dev-server systemjs
+    npmi tern js-beautify karma-cli ijavascript
+    npmi browser-sync npm-check lite-server live-server
 }
 
 #
@@ -2556,8 +2582,8 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma
-    npm_check eslint-plugin-react babel-eslint babelify browser-sync
+    cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma live-server lite-server tsc typings ijs
+    npm_check eslint-plugin-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-config-airbnb babel-eslint babelify browser-sync
 }
 
 elixir_check() {
@@ -2587,7 +2613,14 @@ haskell_check() {
     # cmd_check structured-haskell-mode
 }
 
+python3_check() {
+    export PATH="$HOME/.local/bin:$PATH"
+    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort
+}
+
 python_check() {
+    python3_check
+
     cmd_check pyenv
     is_mac && cmd_check pyenv-virtualenv
 

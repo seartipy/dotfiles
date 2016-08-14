@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Name=ControlAlt
+Comment=Caps becomes Alt and Left Alt becomes Meta
+Exec=setxbmap -option 'caps:ctrl_modifier' -option 'ctrl:lctrl_meta'
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=false
+Hidden=false
+

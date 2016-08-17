@@ -1149,9 +1149,18 @@ apt_python3_install() {
     pip3 install --upgrade --user pip
 }
 
+fedora_python3_install() {
+    is_fedora || return 1
+
+    sudo dnf install -y python3-pip python3-devel python3-matplotlib python3-setuptools python3-wheel zeromq-devel python3-tkinter
+    pip3 install --upgrade --user pip
+}
+
 python3_install() {
     mac_python3_install
     apt_python3_install
+    fedora_python3_install
+
     pipi yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest ptpython autoflake
     is_linux && export PATH="$HOME/.local/bin:$PATH"
 }
@@ -2628,7 +2637,7 @@ haskell_check() {
 
 python3_check() {
     export PATH="$HOME/.local/bin:$PATH"
-    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptpython autoflake
+    cmd_check python3 pip3 easy_install git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptpython autoflake
 }
 
 python_check() {

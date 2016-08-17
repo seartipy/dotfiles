@@ -1126,12 +1126,20 @@ elm_install() {
 #
 # python
 
+pipi() {
+    if is_mac; then
+        pip3 install "$@"
+    elif is_linux; then
+        pip3 install --user "$@"
+    fi
+}
+
 mac_python3_install() {
     is_mac || return 1
 
     brew install python3 pkg-config zeromq
     pip3 install --upgrade pip setuptools wheel
-    pip3 install yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 matplotlib pytest ptpython autoflake
+    pip3 install matplotlib
 }
 
 apt_python3_install() {
@@ -1139,12 +1147,13 @@ apt_python3_install() {
 
     sudo apt-get install -y python3-pip python3-dev python3-matplotlib python3-setuptools python3-wheel libzmq3-dev python3-tk
     pip3 install --upgrade --user pip
-    pip3 install --user yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest ptpython autoflake
 }
 
 python3_install() {
     mac_python3_install
     apt_python3_install
+    pipi yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest ptpython autoflake
+    is_linux && export PATH="$HOME/.local/bin:$PATH"
 }
 
 python_mac_install() {
@@ -1162,8 +1171,6 @@ python_linux_install() {
 }
 
 python_install() {
-    python3_install
-
     python_mac_install
     python_linux_install
 
@@ -2026,6 +2033,7 @@ select_everything() {
     GO="go"
 
     PYTHON="python"
+    PYTHON3="python3"
     HASKELL="haskell"
 
     RUBY="ruby"
@@ -2161,6 +2169,10 @@ script_options() {
                 GIT=""
                 shift
                 ;;
+            nopython3)
+                PYTHON3=""
+                shift
+                ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
                 shift
@@ -2184,6 +2196,7 @@ script_options() {
                 ;;
             python)
                 PYTHON="python"
+                PYTHON3="python3"
                 shift
                 ;;
             elixir)
@@ -2380,6 +2393,8 @@ install_all() {
     [ -n "$ATOM" ] && atom_install
 
     [ -n "$GIT" ] && git_install
+
+    [ -n "$PYTHON3" ] && python3_install
 
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
@@ -2617,8 +2632,6 @@ python3_check() {
 }
 
 python_check() {
-    python3_check
-
     cmd_check pyenv
     is_mac && cmd_check pyenv-virtualenv
 
@@ -2718,6 +2731,7 @@ post_installer_check() {
     [ -n "$WEB" ] && web_check
     [ -n "$CPP" ] && cpp_check
     [ -n "$GO" ] && golang_check
+    [ -n "$PYTHON3" ] && python3_check
     [ -n "$PYTHON" ] && python_check
     [ -n "$HASKELL" ] && haskell_check
 

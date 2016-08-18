@@ -2637,7 +2637,7 @@ haskell_check() {
 
 python3_check() {
     export PATH="$HOME/.local/bin:$PATH"
-    cmd_check python3 pip3 easy_install git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptpython autoflake
+    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptpython autoflake
 }
 
 python_check() {

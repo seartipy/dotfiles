@@ -269,7 +269,7 @@ add_scala_ppa() {
 
 add_smartgit_ppa() {
     is_ubuntu || return 1
-    ppa_exists eugenesan-ppa && return 0
+    ppa_exists eugenesan && return 0
 
     slog "Adding smartgit ppa"
     sudo add-apt-repository ppa:eugenesan/ppa -y
@@ -296,7 +296,7 @@ add_chrome_ppa() {
 
 add_webupd8_ppa() {
     is_ubuntu || return 1
-    ppa_exists nilarimogard-webupd8 && return 0
+    ppa_exists nilarimogard && return 0
 
     slog "Adding webupd8 ppa for youtub-dl etc"
     sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
@@ -2498,8 +2498,8 @@ ppas_check() {
     is_ubuntu || return 1
 
     [ -n "$R" ] && ppa_check rutter
-    [ -n "$GIT" ] && ppa_check eugenesan-ppa
-    ppa_check nilarimogard-webupd8
+    [ -n "$GIT" ] && ppa_check eugenesan
+    ppa_check nilarimogard
 
     if [ -n "$THEMES" ]; then
         ppa_check numix

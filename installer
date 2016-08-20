@@ -428,7 +428,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++
 }
 
 fasd_install() {
@@ -1415,7 +1415,7 @@ cpp_fedora_install() {
     is_fedora || return 1
 
     slog "Installing C++"
-    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build  gcc-c++ cppcheck scons cmake
+    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build cppcheck scons cmake
 }
 
 cpp_mac_install() {
@@ -2525,7 +2525,7 @@ essential_ubuntu_check() {
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel xclip 7za dconf
+    cmd_check xsel xclip 7za dconf g++
 }
 
 essential_check() {

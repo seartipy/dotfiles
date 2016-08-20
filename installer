@@ -734,7 +734,7 @@ ubuntu_atom_install() {
 
 fedora_atom_install() {
     is_fedora || return 1
-    sudo dnf -y copr enable helber/atom
+    sudo dnf -y copr enable mosquito/atom
     sudo dnf install -y atom
 }
 

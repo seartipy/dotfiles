@@ -4,7 +4,7 @@
     :core
     :tools/git
     :tools/linter
-    :tools/terminal
+    ;; :tools/terminal
     :tools/bookmarks
     :tools/todo
     :tools/minimap
@@ -33,6 +33,7 @@
 
   :additional-packages
   [
+    :platformio-ide-terminal
     :browser-plus
     :hyperclick
     :project-manager

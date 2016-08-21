@@ -392,7 +392,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar unzip libzmq3-dev
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar unzip libzmq3-dev pkg-config
     is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
@@ -415,7 +415,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq pkg-config
     brew cask install iterm2
 }
 
@@ -1133,7 +1133,7 @@ pipi() {
 mac_python3_install() {
     is_mac || return 1
 
-    brew install python3 pkg-config
+    brew install python3
     pip3 install --upgrade pip setuptools wheel
     pip3 install matplotlib
 }

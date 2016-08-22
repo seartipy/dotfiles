@@ -1157,7 +1157,7 @@ python3_install() {
     apt_python3_install
     fedora_python3_install
 
-    pipi yapf jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake
+    pipi yapf service-factory jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake
     is_linux && export PATH="$HOME/.local/bin:$PATH"
 }
 

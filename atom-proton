@@ -91,6 +91,8 @@
     ["proton.core.relativeLineNumbers" true]
 
     ["proton.core.vim-provider" :vim-mode-plus]
+    ; ["proton.core.wipeUserConfigs" false]
+    ["linter-eslint.useGlobalEslint" true]
   ]
 
   :keybindings {}

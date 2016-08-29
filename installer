@@ -35,6 +35,12 @@ is_debian() {
     [[ "$os" == "Debian" ]]
 }
 
+is_yakkety() {
+    has_cmd lsb_release || return 1
+    local os=`echo $(lsb_release -c | cut -d ':' -f 2)`
+    [[ "yakkety" == $os ]]
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os=`echo $(lsb_release -i | cut -d ':' -f2)`
@@ -268,6 +274,7 @@ add_scala_ppa() {
 }
 
 add_smartgit_ppa() {
+    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists eugenesan && return 0
 
@@ -295,6 +302,7 @@ add_chrome_ppa() {
 }
 
 add_webupd8_ppa() {
+    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists nilarimogard && return 0
 
@@ -321,6 +329,7 @@ add_docker_ppa() {
 }
 
 add_r_ppa() {
+    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists rutter && return 0
 
@@ -346,6 +355,7 @@ add_arc_theme_ppa() {
 }
 
 add_conky_manager_ppa() {
+    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists teejee2008 && return 0
 
@@ -777,7 +787,7 @@ git_ubuntu_install() {
 
     slog "Installing git"
     sudo apt-get install -y kdiff3 git-extras meld
-    is_ubuntu && sudo apt-get install -y smartgit
+    is_yakkety || sudo apt-get install -y smartgit
 }
 
 git_install() {
@@ -1328,20 +1338,16 @@ additional_fedora_install() {
 
     slog "Installing additional packages"
     sudo dnf install -y vlc youtube-dl jq httpie
-    if ! has_cmd vmware-user-suid-wrapper; then
-        sudo dnf install -y VirtualBox dkms
-    fi
+    has_cmd vmware-user-suid-wrapper || sudo dnf install -y VirtualBox dkms
 }
 
 additional_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing additional"
-    sudo apt-get install -y vlc youtube-dl google-chrome-stable jq httpie
-    if ! has_cmd vmware-user-suid-wrapper; then
-        sudo apt-get install -y virtualbox virtualbox-dkms
-        sudo apt-get install -y virtualbox-5.0 dkms
-    fi
+    is_yakkety || sudo apt-get install -y youtube-dl
+    sudo apt-get install -y vlc google-chrome-stable jq httpie
+    has_cmd vmware-user-suid-wrapper || sudo apt-get install -y virtualbox
 }
 
 additional_install() {
@@ -1992,7 +1998,7 @@ ubuntu_themes_install() {
 
     sudo apt-get install -y numix-*
     sudo apt-get install -y arc-theme
-    sudo apt-get install -y conky conky-manager
+    is_yakkety || sudo apt-get install -y conky conky-manager
 }
 
 themes_install() {

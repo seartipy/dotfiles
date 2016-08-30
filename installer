@@ -392,7 +392,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar unzip libzmq3-dev pkg-config
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf
     is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
@@ -428,7 +428,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel hack-fonts
 }
 
 fasd_install() {

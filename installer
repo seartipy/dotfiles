@@ -346,6 +346,7 @@ add_numix_ppa() {
 }
 
 add_arc_theme_ppa() {
+    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists arc-theme && return 0
 
@@ -2505,7 +2506,7 @@ ppas_check() {
 
     if [ -n "$THEMES" ]; then
         ppa_check numix
-        ppa_check arc-theme
+        is_yakkety || ppa_check arc-theme
         ppa_check teejee2008
     fi
 }

@@ -1411,14 +1411,14 @@ cpp_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing C++"
-    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake
+    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy clang-modernize ninja-build lldb
 }
 
 cpp_fedora_install() {
     is_fedora || return 1
 
     slog "Installing C++"
-    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build cppcheck scons cmake
+    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build cppcheck scons cmake ninja-build lldb
 }
 
 cpp_mac_install() {
@@ -1426,7 +1426,7 @@ cpp_mac_install() {
 
     slog "Installing c++ packages"
     brew install boost --c++11
-    brew install cmake scons boost-build cppcheck clang-format
+    brew install cmake scons boost-build cppcheck clang-format ninja bear
 }
 
 cpp_install() {
@@ -2669,8 +2669,11 @@ swift_check() {
 }
 
 cpp_check() {
-    cmd_check cmake scons cppcheck clang++
+    cmd_check cmake scons cppcheck clang++ clang-format
     is_linux && cmd_check g++
+    is_fedora && cmd_check ninja-build
+    is_apt && cmd_check ninja bear clang-tidy clang-modernize
+    is_mac && cmd_check ninja bear
 }
 
 golang_check() {

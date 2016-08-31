@@ -1411,7 +1411,7 @@ cpp_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing C++"
-    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy clang-modernize ninja-build lldb
+    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy ninja-build lldb
 }
 
 cpp_fedora_install() {
@@ -2672,7 +2672,7 @@ cpp_check() {
     cmd_check cmake scons cppcheck clang++ clang-format
     is_linux && cmd_check g++
     is_fedora && cmd_check ninja-build
-    is_apt && cmd_check ninja bear clang-tidy clang-modernize
+    is_apt && cmd_check ninja bear clang-tidy
     is_mac && cmd_check ninja bear
 }
 

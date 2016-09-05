@@ -47,6 +47,7 @@
 
     :jumpy
     :last-cursor-position
+    :atomic-emacs
 
     :split-diff
     :toggle-quotes

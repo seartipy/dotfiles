@@ -91,7 +91,7 @@
     ["proton.core.showTabBar" true]
     ["proton.core.relativeLineNumbers" true]
 
-    ["proton.core.vim-provider" :vim-mode-plus]
+    ["proton.core.inputProvider" :vim-mode-plus]
     ; ["proton.core.wipeUserConfigs" false]
     ["linter-eslint.useGlobalEslint" true]
   ]

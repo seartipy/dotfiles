@@ -94,6 +94,7 @@
     ["proton.core.inputProvider" :vim-mode-plus]
     ; ["proton.core.wipeUserConfigs" false]
     ["linter-eslint.useGlobalEslint" true]
+    ["proton.core.modeKey" "enter"]
   ]
 
   :keybindings {}

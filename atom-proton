@@ -1,105 +1,110 @@
 {
-  :layers
-  [
-    :core
-    :tools/git
-    :tools/linter
-    ;; :tools/terminal
-    :tools/bookmarks
-    :tools/todo
-    :tools/minimap
-    :tools/build
+ :layers
+ [
+  :core
+  :tools/git
+  :tools/linter
+  :tools/terminal
+  :tools/build
 
-    :lang/markdown
+  ;; :tools/bookmarks
+  ;; :tools/todo
+  ;; :tools/minimap
 
-    :lang/clojure
-    :lang/haskell
-    :lang/python
+  :lang/markdown
 
-    :lang/rust
+  :lang/clojure
+  :lang/haskell
+  :lang/python
+  :lang/ruby
 
-    :lang/python
-    :lang/ruby
+  :lang/javascript
+  :lang/typescript
+  :lang/html
+  :lang/css
+  :lang/json
 
-    :lang/javascript
-    :lang/typescript
-    :lang/html
-    :lang/css
-    :lang/less
-    :lang/sass
-    :lang/stylus
-    :lang/json
+  ;; :lang/less
+  ;; :lang/sass
+  ;; :lang/jade
+  ;; :lang/stylus
+
+  ;; :lang/rust
+  ;; :lang/csharp
+  ;; :lang/elixir
+  ;; :lang/go
+  ;; :langjulia
+  ;; :lang/swift
   ]
 
-  :additional-packages
-  [
-    :platformio-ide-terminal
-    :browser-plus
-    :hyperclick
-    :project-manager
+ :additional-packages
+ [
+  :atom-terminal
+  :browser-plus ; for livereload
+  :hyperclick
+  :script
+  :jumpy
+  :last-cursor-position
+  :toggle-quotes
+  :editorconfig
+  :fonts
+  :Sublime-Style-Column-Selection ; package names are case sensitive in proton
+  :floobits
+  :disable-keybindings
+  :narrow
+  :choose-pane
 
-    :busy
+  :language-scala
+  :intentions
+  :Ensime
 
-    :language-scala
-    :intentions
-    :Ensime
-    :script
+  :ide-haskell-repl
 
-    :jumpy
-    :last-cursor-position
-    :atomic-emacs
+  :clang-format
+  :linter-clang
+  :autocomplete-clang
 
-    :split-diff
-    :toggle-quotes
-    :editorconfig
-    :fonts
-    :Sublime-Style-Column-Selection
-    :autoclose-html
+  :language-elm
+  :linter-elm-make
 
-    :language-haskell
-    :ide-haskell
-    :haskell-ghc-mod
-    :autocomplete-haskell
-    :ide-haskell-repl
-    :ide-haskell-cabal
+  :git-time-machine
+  :git-log
+  :split-diff
 
-    :emmet
+  :flow-ide
+  :Hydrogen
+  :js-hyperclick
 
-    :clang-format
-    :linter-clang
-    :autocomplete-clang
-
-    :language-elm
-    :linter-elm-make
-
-    :git-time-machine
-    :git-log
-
-    :floobits
-
-    :lisp-paredit
-    :linter-flow
-    :Hydrogen
+  :proto-repl-charts
+  :lisp-paredit
+  :tool-bar
+  :set-syntax
   ]
 
-  :configuration
-  [
-    ["editor.fontFamily" "Hack"]
-    [ "editor.fontSize" "13" ]
-    ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
+ :configuration
+ [
+  ["editor.fontSize" "13"]
+  ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
+  ["proton.core.showTabBar" true]
+  ["proton.core.relativeLineNumbers" true]
 
-    ["proton.core.showTabBar" true]
-    ["proton.core.relativeLineNumbers" true]
+  ;; :vim-mode-plus, :emacs :default available
+  ["proton.core.inputProvider" :default]
+  ["linter-eslint.useGlobalEslint" true]
+  ["disable-keybindings.communityPackages" ["emmet"]]
 
-    ["proton.core.inputProvider" :vim-mode-plus]
-    ; ["proton.core.wipeUserConfigs" false]
-    ["linter-eslint.useGlobalEslint" true]
-    ["proton.core.modeKey" "enter"]
+  ;; ["proton.core.modeKey" "enter"]
+
+  ;; ["proton.core.wipeUserConfigs" false]
+
   ]
 
-  :keybindings {}
+ :keybindings {}
 
-  :keymaps [{:selector ".tree-view" :keymap [["escape" "tree-view:toggle"]]}
-            {:selector "atom-text-editor.vim-mode-plus.insert-mode" :keymap [["f d" "vim-mode-plus:activate-normal-mode"]]}
-  ]
-}
+ :keymaps [{:selector ".tree-view" :keymap [["escape" "tree-view:toggle"]]}
+           {:selector "atom-workspace:not([mini])" :keymap [["ctrl-x ctrl-o" "choose-pane:start"]]}
+           {:selector "atom-text-editor" :keymap [["alt-space s a" "narrow:lines"]]}
+           ;; {:selector "atom-text-editor.vim-mode-plus.insert-mode" :keymap [["f d" "vim-mode-plus:activate-normal-mode"]]}
+           ;; {:selector "atom-text-editor.vim-mode-plus.insert-mode.autocomplete-active" :keymap [["escape" "autocomplete-plus:cancel"]]}
+           ]
+ }

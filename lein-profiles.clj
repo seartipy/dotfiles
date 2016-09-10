@@ -2,8 +2,8 @@
         :plugins [
                   [cider/cider-nrepl "0.14.0-SNAPSHOT"] ; nrepl server for cider in emacs
                   [refactor-nrepl "2.3.0-SNAPSHOT"] ; refactor in emacs using clj-refactor
-                  [com.jakemccrary/lein-test-refresh "0.11.0"]
-                  [lein-midje "3.2"] ; midje plugin for continous testing
+                  [com.jakemccrary/lein-test-refresh "0.17.0"]
+                  [lein-midje "3.2.1"] ; midje plugin for continous testing
                   [lein-exec "0.3.6"] ; run clojure scripts
                   [lein-try "0.4.3"] ; try clojure library
                   [lein-oneoff "0.3.2"] ; run single clojure script
@@ -16,8 +16,8 @@
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]
                        [spyscope "0.1.5"] ; lodash tap like macro
                        [im.chit/vinyasa "0.4.7"]
-                       [io.aviso/pretty "0.1.26"]
-                       [acyclic/squiggly-clojure "0.1.5"]] ; flycheck using eastwood
+                       [io.aviso/pretty "0.1.30"]
+                       [acyclic/squiggly-clojure "0.1.6"]] ; flycheck using eastwood
         :injections [(require 'spyscope.core)
                      (require 'io.aviso.repl)
                      (require '[vinyasa.inject :as inject])

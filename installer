@@ -64,15 +64,23 @@ has_cmd() {
 }
 
 smv() {
-    mv "$1" "$2" 2> /dev/null
+    if mv "$1" "$2" 2> /dev/null; then
+        slog "Moved $1 to $2"
+    fi
 }
 
 smd() {
-    [ -d "$1" ] || mkdir -p "$1" 2> /dev/null
+    [ -d "$1" ] && return 1
+    slog "Creating directory $1"
+    mkdir -p "$1" 2> /dev/null
 }
 
 srm() {
-    $trash "$@" 2> /dev/null
+    for f in "$@"; do
+        if $trash "$f" 2> /dev/null; then
+            slog "Trashed $2"
+        fi
+    done
 }
 
 sln() {
@@ -85,6 +93,7 @@ sln() {
         warn "$2 exists and not a symbolic link! not creating link"
         return 1
     fi
+    slog "Creating link $2 to $1"
     ln -s "$1" "$2"
 }
 
@@ -93,8 +102,15 @@ sclone() {
     local src=${*: -2:1}
 
     if [ -d "$dest" ]; then
-        cd "$dest" && git pull --ff-only
-        cd
+        if cd "$dest"; then
+            slog "Pulling $dest"
+            if has_cmd git-up; then
+                git-up
+            else
+                git pull --ff-only
+            fi
+            cd
+        fi
     else
         slog "Cloning $src to $dest"
         git clone "$@"
@@ -111,7 +127,12 @@ fclone() {
 }
 
 scopy() {
-    [ -e "$2" ] || [ -L "$2" ] || cp "$1" "$2"
+    if [ -e "$2" ] || [ -L "$2" ]; then
+        return 0
+    else
+        slog "Copying $1 to $2"
+        cp "$1" "$2"
+    fi
 }
 
 pre_cmd_check() {
@@ -176,14 +197,6 @@ apm_check() {
     done
 }
 
-apmi() {
-    has_cmd apm || return 1
-
-    for p in "$@"; do
-        apm_exists "$p" || apm install "$p"
-    done
-}
-
 npm_exists() {
     npm list --global --depth=0 "$1" 2> /dev/null | grep "$1" > /dev/null
 }
@@ -224,6 +237,30 @@ brew_cask_check() {
     done
 }
 
+apmi() {
+    has_cmd apm || return 1
+
+    for p in "$@"; do
+        if ! apm_exists "$p"; then
+            slog "Installing apm package $p"
+            apm install "$p"
+        fi
+    done
+}
+
+
+sysi() {
+    for p in "$@"; do
+        if is_mac; then
+            brew install "$p"
+        elif is_apt; then
+            sudo apt install -y "$p"
+        elif is_fedora; then
+            sudo dnf install -y "$p"
+        fi
+    done
+}
+
 stackexei() {
     has_cmd stack || return 1
 
@@ -236,7 +273,10 @@ npmi() {
     has_cmd npm || return 1
 
     for p in "$@"; do
-        npm_exists "$p" || npm install -g "$p"
+        if ! npm_exists "$p"; then
+            slog "Installing npm package $p"
+            npm install -g "$p"
+        fi
     done
 }
 
@@ -244,7 +284,10 @@ gemi() {
     has_cmd gem || return 1
 
     for p in "$@"; do
-        gem_exists "$p" || gem install "$p" --no-ri --no-rdoc
+        if ! gem_exists "$p"; then
+            slog "Installing gem package $p"
+            gem install "$p" --no-ri --no-rdoc
+        fi
     done
 }
 
@@ -311,17 +354,6 @@ add_atom_ppa() {
     sudo add-apt-repository  ppa:webupd8team/atom -y
 }
 
-# update docker method, this os obsolete now
-add_docker_ppa() {
-    is_ubuntu || return 1
-
-    if ! has_cmd vmware-user-suid-wrapper && ! ppa_exists docker; then
-        slog "Installing docker"
-        wget -qO- https://get.docker.com/ | sh
-        sudo usermod -aG docker $USER
-    fi
-}
-
 add_r_ppa() {
     is_ubuntu || return 1
     ppa_exists rutter && return 0
@@ -367,7 +399,6 @@ add_ppas() {
     add_atom_ppa
     add_chrome_ppa
     add_webupd8_ppa
-    add_docker_ppa
     add_r_ppa
 
     add_numix_ppa
@@ -394,7 +425,7 @@ essential_ubuntu_install() {
     fi
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils linux-headers-`uname -r` zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf
     is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
@@ -1288,6 +1319,7 @@ powerline_fonts() {
         rm -rf /tmp/seartipy-powerline-fonts
     fi
 }
+
 fonts_install() {
     powerline_fonts
     mononoki_font
@@ -1321,7 +1353,6 @@ additional_mac_install() {
     brew install youtube-dl
     if ! has_cmd vmware-user-suid-wrapper; then
         brew cask install virtualbox virtualbox-extension-pack
-        # install docker
     fi
 }
 
@@ -2080,7 +2111,7 @@ script_options() {
         SEARTIPY="seartipy"
     fi
 
-    while [[ $# > 0 ]]; do
+    while [[ $# -gt 0 ]]; do
         case $1 in
             essential)
                 ESSENTIAL="essential"
@@ -2491,8 +2522,6 @@ ppas_check() {
 
     [ -n "$ATOM" ] && ppa_check webupd8team-atom
 
-    # TODO : docker
-
     is_ubuntu || return 1
 
     [ -n "$R" ] && ppa_check rutter
@@ -2682,7 +2711,6 @@ additional_check() {
     if ! has_cmd vmware-user-suid-wrapper; then
         is_mac && cmd_check virtualbox
         brew_cask_check virtualbox-extension-pack
-        # is_mac && cmd_check docker
     fi
 
     is_mac && brew_cask_check google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
@@ -2797,4 +2825,3 @@ else
 fi
 
 cd $curdir
-

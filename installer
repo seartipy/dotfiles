@@ -2750,8 +2750,12 @@ post_installer_check() {
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 
     is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
+
     export GOPATH="$HOME/golang-ws"
-    has_cmd go && export PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+    if has_cmd go; then
+        PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
+        export PATH
+    fi
 
     export PATH="$HOME/.cask/bin:$PATH"
 
@@ -2789,12 +2793,12 @@ post_installer_check() {
     [ -n "$VIM" ] && vim_check
 }
 
-curdir=`pwd`
+curdir=$(pwd)
 
 if is_apt; then
-    trash=trash-put
+    trash-cli ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
 else
-    trash=trash
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
 fi
 
 keep_sudo_running
@@ -2803,25 +2807,13 @@ create_dirs
 
 export PATH="$HOME/bin:$PATH"
 
-try_trash() {
-    if has_cmd trash; then
-        trash $* 2> /dev/null
-    elif has_cmd trash-put; then
-        trash-put $* 2> /dev/null
-    else
-        rm -rf $*
-    fi
-}
-
-try_trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
-
 if [[ $- = *i* ]]; then
     slog "Running pre installer check..."
     slog "if this does not succeed you must first at least install essentials by running this script without parameters"
     pre_installer_check
     slog "installer check succeeded, you could run functions in this script for testing"
 else
-    installer $* > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+    installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
 fi
 
-cd $curdir
+cd "$curdir"

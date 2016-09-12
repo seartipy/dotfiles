@@ -75,10 +75,13 @@ smd() {
     mkdir -p "$1" 2> /dev/null
 }
 
+
 srm() {
     for f in "$@"; do
-        if $trash "$f" 2> /dev/null; then
-            slog "Trashed $2"
+        if is_apt; then
+            trash-cli "$f" 2> /dev/null && slog "Trashed $f"
+        else
+            trash "$f" 2> /dev/null && slog "Trashed $f"
         fi
     done
 }
@@ -2337,9 +2340,8 @@ setup_backup_dir() {
 
 fresh_ppas() {
     is_apt || return 1
-    has_cmd $trash || err_exit "no $trash, cannot reset, quitting"
-    cd
-    is_linux && sudo $trash /etc/apt/sources.list.d/*
+    has_cmd trash-cli || err_exit "no trash-cli, cannot reset, quitting"
+    is_linux && sudo trash-clo /etc/apt/sources.list.d/*
 }
 
 fresh_install() {
@@ -2502,7 +2504,12 @@ installer() {
 # diagnostics
 
 pre_installer_check() {
-    pre_cmd_check git curl wget unzip $trash
+    pre_cmd_check git curl wget unzip
+    if is_apt; then
+        pre_cmd_check trash-cli
+    else
+        pre_cmd_check trash
+    fi
     pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
 }
 
@@ -2538,7 +2545,7 @@ ppas_check() {
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew trash 7z greadlink
+    cmd_check brew trash 7z greadlink trash
 }
 
 essential_ubuntu_check() {
@@ -2546,17 +2553,17 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox
+    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-cli
 }
 
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel xclip 7za dconf g++
+    cmd_check xsel xclip 7za dconf g++ trash
 }
 
 essential_check() {
-    cmd_check curl wget git $trash tree ag fasd gpg tmux unar
+    cmd_check curl wget git tree ag fasd gpg tmux unar
 
     essential_mac_check
     essential_fedora_check

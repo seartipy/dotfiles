@@ -2,12 +2,12 @@
 
 # utils
 
-BOLD=`tput bold`
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-RESET=`tput sgr0`
-WHITE=`tput setaf 7`
+BOLD=$(tput bold)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RESET=$(tput sgr0)
+# WHITE=$(tput setaf 7)
 
 slog() {
     echo "
@@ -23,7 +23,7 @@ ${BOLD}${YELLOW}WARNING: ${RESET} $1
 
 err_exit() {
     echo "
-${BOLD}${RED}FATAL : ${RESET} $1
+${BOLD}${RED}FATAL: ${RESET} $1
 " | tee -a ~/seartipy-installer.log
 
     exit 1
@@ -31,14 +31,16 @@ ${BOLD}${RED}FATAL : ${RESET} $1
 
 is_debian() {
     has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "$os" == "Debian" ]]
+    local OS
+    OS=$(lsb_release -i | cut -d ':' -f2)
+    [[ "$OS" == *"Debian" ]]
 }
 
 is_ubuntu() {
     has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -i | cut -d ':' -f2)`
-    [[ "Ubuntu" == "$os" ]] || [[ "neon" == "$os" ]] || [[ "$os" == *"elementary OS" ]] || [[ "$os" == *"LinuxMint" ]]
+    local OS
+    OS=$(lsb_release -i | cut -d ':' -f2)
+    [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
 }
 
 is_apt() {
@@ -58,11 +60,11 @@ is_mac() {
 }
 
 has_cmd() {
-    command -v $1 > /dev/null
+    command -v "$1" > /dev/null
 }
 
 smv() {
-    mv $1 $2 2> /dev/null
+    mv "$1" "$2" 2> /dev/null
 }
 
 smd() {
@@ -70,7 +72,7 @@ smd() {
 }
 
 srm() {
-    $trash $* 2> /dev/null
+    $trash "$@" 2> /dev/null
 }
 
 sln() {
@@ -83,7 +85,7 @@ sln() {
         warn "$2 exists and not a symbolic link! not creating link"
         return 1
     fi
-    ln -s $1 $2
+    ln -s "$1" "$2"
 }
 
 sclone() {
@@ -95,7 +97,7 @@ sclone() {
         cd
     else
         slog "Cloning $src to $dest"
-        git clone $*
+        git clone "$@"
     fi
 }
 
@@ -105,7 +107,7 @@ fclone() {
 
     srm "$dest"
     slog "Cloning $src to $dest"
-    git clone $*
+    git clone "$@"
 }
 
 scopy() {
@@ -113,19 +115,19 @@ scopy() {
 }
 
 pre_cmd_check() {
-    for cmd in $*; do
+    for cmd in "$@"; do
         has_cmd "$cmd" || err_exit "$cmd not installed, quitting"
     done
 }
 
 pre_dir_check() {
-    for dir in $*; do
+    for dir in "$@"; do
         [ -d "$dir" ] || err_exit "$dir does not exist, quitting"
     done
 }
 
 cmd_check() {
-    for cmd in $*; do
+    for cmd in "$@"; do
         has_cmd "$cmd" || warn "$cmd not installed"
     done
 }
@@ -135,7 +137,7 @@ dir_exists() {
 }
 
 dir_check() {
-    for dir in $*; do
+    for dir in "$@"; do
         dir_exists "$dir" || warn "$dir does not exist"
     done
 }
@@ -143,7 +145,7 @@ dir_check() {
 ln_to_exists() {
     local rl=readlink
     is_mac && rl=greadlink
-    [[ "$1" == $($rl -f $2) ]]
+    [[ "$1" == $($rl -f "$2") ]]
 }
 
 ln_check() {
@@ -151,7 +153,7 @@ ln_check() {
 }
 
 file_check() {
-    for f in $*; do
+    for f in "$@"; do
         [ -f "$f" ] || warn "$f does not exist"
     done
 }
@@ -169,7 +171,7 @@ apm_exists() {
 }
 
 apm_check() {
-    for p in $*; do
+    for p in "$@"; do
         apm_exists "$p" || warn "$p atom package not installed"
     done
 }
@@ -177,8 +179,8 @@ apm_check() {
 apmi() {
     has_cmd apm || return 1
 
-    for p in $*; do
-        apm_exists "$p" || apm install $p
+    for p in "$@"; do
+        apm_exists "$p" || apm install "$p"
     done
 }
 
@@ -187,7 +189,7 @@ npm_exists() {
 }
 
 npm_check() {
-    for p in $*; do
+    for p in "$@"; do
         npm_exists "$p" || warn "$p npm package not installed"
     done
 }
@@ -197,7 +199,7 @@ gem_exists() {
 }
 
 gem_check() {
-    for p in $*; do
+    for p in "$@"; do
         gem_exists "$p" || warn "$p gem not installed"
     done
 }
@@ -207,7 +209,7 @@ brew_exists() {
 }
 
 brew_check() {
-    for p in $*; do
+    for p in "$@"; do
         brew_exists "$p" || warn "$p brew cask package not installed"
     done
 }
@@ -217,7 +219,7 @@ brew_cask_exists() {
 }
 
 brew_cask_check() {
-    for p in $*; do
+    for p in "$@"; do
         brew_cask_exists "$p" || warn "$p brew cask package not installed"
     done
 }
@@ -225,15 +227,15 @@ brew_cask_check() {
 stackexei() {
     has_cmd stack || return 1
 
-    for p in $*; do
-        stack install $p
+    for p in "$@"; do
+        stack install "$p"
     done
 }
 
 npmi() {
     has_cmd npm || return 1
 
-    for p in $*; do
+    for p in "$@"; do
         npm_exists "$p" || npm install -g "$p"
     done
 }
@@ -241,7 +243,7 @@ npmi() {
 gemi() {
     has_cmd gem || return 1
 
-    for p in $*; do
+    for p in "$@"; do
         gem_exists "$p" || gem install "$p" --no-ri --no-rdoc
     done
 }

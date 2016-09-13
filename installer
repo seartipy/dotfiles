@@ -79,7 +79,7 @@ smd() {
 srm() {
     for f in "$@"; do
         if is_apt; then
-            trash-cli "$f" 2> /dev/null && slog "Trashed $f"
+            trash-put "$f" 2> /dev/null && slog "Trashed $f"
         else
             trash "$f" 2> /dev/null && slog "Trashed $f"
         fi
@@ -487,6 +487,11 @@ cleanup() {
 #
 # dotfiles
 
+clone_mean_dotfiles() {
+    sclone https://gitlab.com/seartipy/mean-dotfiles.git ~/seartipy/mean-dotfiles
+    [ -d ~/seartipy/mean-dotfiles ] || return 1
+}
+
 clone_lean_dotfiles() {
     sclone https://gitlab.com/seartipy/lean-dotfiles.git ~/seartipy/lean-dotfiles
     [ -d ~/seartipy/lean-dotfiles ] || return 1
@@ -507,7 +512,7 @@ tmux_dotfiles() {
     [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
 
     slog "Moving ~/.tmux.conf to $BACKUP_DIR"
-    smv ~/.tmux.conf $BACKUP_DIR
+    smv ~/.tmux.conf "$BACKUP_DIR"
 
     slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
     sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
@@ -518,7 +523,7 @@ amethyst_dotfiles() {
     [ -f ~/seartipy/dotfiles/amethyst ] || return 1
 
     slog "Moving ~/.amethyst to $BACKUP_DIR"
-    smv ~/.amethyst $BACKUP_DIR
+    smv ~/.amethyst "$BACKUP_DIR"
 
     slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
 
@@ -526,6 +531,7 @@ amethyst_dotfiles() {
 }
 
 dotfiles_install() {
+    clone_mean_dotfiles
     clone_lean_dotfiles
     clone_dotfiles
 
@@ -542,7 +548,7 @@ mac_bash_dotfiles() {
 
     slog "Moving ~/.bash_profile, ~/.bashrc to $BACKUP_DIR"
     smv ~/.bash_profile $BACKUP_DIR
-    smv ~/.bashrc $BACKUP_DIR
+    smv ~/.bashrc "$BACKUP_DIR"
 
     sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
     sln ~/seartipy/dotfiles/bashrc ~/.bashrc
@@ -553,7 +559,7 @@ linux_bash_dotfiles() {
     [ -f ~/seartipy/dotfiles/bashrc ] || return 1
 
     slog "Moving ~/.bash_profile to $BACKUP_DIR"
-    smv ~/.bash_profile $BACKUP_DIR
+    smv ~/.bash_profile "$BACKUP_DIR"
     sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
 
     if ! grep .bash_profile ~/.bashrc > /dev/null; then
@@ -596,7 +602,7 @@ zsh_dotfiles() {
     [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
-    smv ~/.zshrc $BACKUP_DIR
+    smv ~/.zshrc "$BACKUP_DIR"
 
     slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
     sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
@@ -1798,8 +1804,8 @@ setup_backup_dir() {
 
 fresh_ppas() {
     is_apt || return 1
-    has_cmd trash-cli || err_exit "no trash-cli, cannot reset, quitting"
-    is_linux && sudo trash-clo /etc/apt/sources.list.d/*
+    has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
+    is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
 }
 
 fresh_install() {
@@ -1955,7 +1961,7 @@ installer() {
 pre_installer_check() {
     pre_cmd_check git curl wget unzip
     if is_apt; then
-        pre_cmd_check trash-cli
+        pre_cmd_check trash-put
     else
         pre_cmd_check trash
     fi
@@ -1991,7 +1997,7 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-cli
+    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-put
 }
 
 essential_fedora_check() {
@@ -2229,9 +2235,9 @@ post_installer_check() {
 curdir=$(pwd)
 
 if is_apt; then
-    trash-cli ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 else
-    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 fi
 
 keep_sudo_running

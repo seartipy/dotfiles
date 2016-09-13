@@ -391,6 +391,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y software-properties-common
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
+    add_chrome_ppa
     ubuntu_update
     ubuntu_upgrade
 
@@ -419,7 +420,7 @@ essential_mac_install() {
     brew update && brew upgrade
 
     brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq pkg-config
-    brew cask install iterm2
+    brew cask install iterm2 google-chrome
 }
 
 essential_fedora_install() {
@@ -518,25 +519,12 @@ tmux_dotfiles() {
     sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 }
 
-amethyst_dotfiles() {
-    is_mac || return 1
-    [ -f ~/seartipy/dotfiles/amethyst ] || return 1
-
-    slog "Moving ~/.amethyst to $BACKUP_DIR"
-    smv ~/.amethyst "$BACKUP_DIR"
-
-    slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
-
-    sln ~/seartipy/dotfiles/amethyst ~/.amethyst
-}
-
 dotfiles_install() {
     clone_mean_dotfiles
     clone_lean_dotfiles
     clone_dotfiles
 
     tmux_dotfiles
-    amethyst_dotfiles
 }
 
 #
@@ -1304,7 +1292,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred jq httpie icdiff
+    brew cask install dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord alfred jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
@@ -1331,7 +1319,7 @@ additional_ubuntu_install() {
     ubuntu_update
 
     slog "Installing additional"
-    sudo apt-get install -y vlc youtube-dl google-chrome-stable jq httpie
+    sudo apt-get install -y vlc youtube-dl jq httpie
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox virtualbox-dkms
         sudo apt-get install -y virtualbox-5.0 dkms
@@ -1971,12 +1959,12 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
+    ppa_check google-chrome
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$HASKELL" ] && ppa_check fpco
     if [ -n "$ADDITIONAL" ]; then
-        ppa_check google-chrome
         ppa_check nilarimogard
     fi
 
@@ -2161,7 +2149,7 @@ additional_check() {
         brew_cask_check virtualbox-extension-pack
     fi
 
-    is_mac && brew_cask_check google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     cmd_check youtube-dl icdiff jq http
 
     is_linux || return 0

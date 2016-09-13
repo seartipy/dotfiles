@@ -547,3 +547,16 @@ xmonad_check() {
 
 font_exists "Sauce Code Powerline" || warn "powerline fonts not installed"
 font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+
+amethyst_install() {
+    is_mac || return 1
+    brew cask install amethyst
+    [ -f ~/seartipy/dotfiles/amethyst ] || return 1
+
+    slog "Moving ~/.amethyst to $BACKUP_DIR"
+    smv ~/.amethyst "$BACKUP_DIR"
+
+    slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
+
+    sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+}

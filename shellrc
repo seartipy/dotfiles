@@ -299,8 +299,8 @@ seartipy_cask_rollback() {
 seartipy-gitup() {
     cd "$1" || return 1
 
-    if has_cmd gitup; then
-        gitup
+    if has_cmd git-up; then
+        git-up
     else
         git pull --ff-only
     fi

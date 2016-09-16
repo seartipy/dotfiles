@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=LightTable
+GenericName=Text Editor
+Comment=LightTable is a text editor
+MimeType=text/english;text/plain;text/x-clojure;text/x-clojurescript;
+TryExec=light
+Exec=light %F
+Icon=lticon.png
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;
+StartupWMClass=LightTable
+Keywords=Text;Editor;

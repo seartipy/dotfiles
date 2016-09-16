@@ -391,6 +391,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y software-properties-common
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
+    add_chrome_ppa
     ubuntu_update
     ubuntu_upgrade
 

@@ -415,7 +415,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zeromq pkg-config
     brew cask install iterm2
 }
 
@@ -761,8 +761,9 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit hub github-desktop
-    brew install kdiff3 git-extras
+    brew cask install smartgit github-desktop
+    brew install git-extras
+    brew cask install kdiff3
 }
 
 git_fedora_install() {

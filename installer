@@ -391,6 +391,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y software-properties-common
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
+    add_chrome_ppa
     ubuntu_update
     ubuntu_upgrade
 
@@ -418,7 +419,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zeromq pkg-config
     brew cask install iterm2
 }
 
@@ -772,8 +773,9 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit hub github-desktop
-    brew install kdiff3 git-extras
+    brew cask install smartgit github-desktop
+    brew install git-extras
+    brew cask install kdiff3
 }
 
 git_fedora_install() {
@@ -1304,7 +1306,8 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred jq httpie icdiff
+    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew install jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
     # brew cask install suspicious-package
     brew install youtube-dl
@@ -1805,7 +1808,7 @@ setup_backup_dir() {
 fresh_ppas() {
     is_apt || return 1
     has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
-    is_linux && sudo trash-put /etc/apt/sources.list.d/*
+    is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
 }
 
 fresh_install() {
@@ -2235,9 +2238,9 @@ post_installer_check() {
 curdir=$(pwd)
 
 if is_apt; then
-    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 else
-    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 fi
 
 keep_sudo_running

@@ -307,7 +307,7 @@ seartipy-gitup() {
 }
 
 seartipy_upgrade_emacs() {
-    seartipy-gitup ~/seartipy/emacses/housemd && seartipy-gitup
+    seartipy-gitup ~/seartipy/emacses/housemd
     has_cmd cask && seartipy_cask_backup && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
 }
 

@@ -10,13 +10,11 @@
                   [lein-cprint "1.2.0"] ; Like lein-pprint, but with colorization!
                   [quickie "0.4.2"] ; Lein plugin for auto testing
                   [venantius/ultra "0.4.1"] ; A Leiningen plugin for a superior development environment
-                  [alembic "0.3.2"] ; A library for distilling dependencies
                   [lein-ancient "0.6.10"]] ; upgrade packages
         :ultra {:color-scheme :solarized_dark}
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]
                        [spyscope "0.1.5"] ; lodash tap like macro
                        [im.chit/vinyasa "0.4.7"]
-                       [io.aviso/pretty "0.1.30"]
                        [acyclic/squiggly-clojure "0.1.6"]] ; flycheck using eastwood
         :injections [(require 'spyscope.core)
                      (require 'io.aviso.repl)

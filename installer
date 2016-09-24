@@ -1710,7 +1710,6 @@ script_options() {
                 shift
                 ;;
             cpp)
-                RUST="rust"
                 CPP="cpp"
                 shift
                 ;;

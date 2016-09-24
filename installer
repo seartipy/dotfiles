@@ -1323,14 +1323,13 @@ additional_fedora_install() {
 additional_ubuntu_install() {
     is_apt || return 1
 
-    add_chrome_ppa
     add_webupd8_ppa
     ubuntu_update
 
     slog "Installing additional"
 
     is_yakkety || sudo apt-get install -y youtube-dl
-    sudo apt-get install -y vlc google-chrome-stable jq httpie
+    sudo apt-get install -y vlc jq httpie
     has_cmd vmware-user-suid-wrapper || sudo apt-get install -y virtualbox
 }
 

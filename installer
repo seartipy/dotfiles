@@ -1304,8 +1304,7 @@ additional_mac_install() {
     slog "Installing additional packages"
     brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
     brew install jq httpie icdiff
-    brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
-    # brew cask install suspicious-package
+    brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
     brew install youtube-dl
     if ! has_cmd vmware-user-suid-wrapper; then
         brew cask install virtualbox virtualbox-extension-pack
@@ -1316,21 +1315,24 @@ additional_fedora_install() {
     is_fedora || return 1
 
     slog "Installing additional packages"
-    sudo dnf install -y vlc youtube-dl jq httpie
-    has_cmd vmware-user-suid-wrapper || sudo dnf install -y VirtualBox dkms
+    sudo dnf install -y jq httpie
+    has_cmd vmware-user-suid-wrapper || sudo dnf install -y VirtualBox dkms vlc youtube-dl
 }
 
 additional_ubuntu_install() {
     is_apt || return 1
 
-    add_webupd8_ppa
+    is_yakkety || add_webupd8_ppa
     ubuntu_update
 
     slog "Installing additional"
 
-    is_yakkety || sudo apt-get install -y youtube-dl
-    sudo apt-get install -y vlc jq httpie
-    has_cmd vmware-user-suid-wrapper || sudo apt-get install -y virtualbox
+    sudo apt-get install -y q httpie
+
+    if ! has_cmd vmware-user-suid-wrapper; then
+        sudo apt-get install -y virtualbox vlc
+        is_yakkety || sudo apt-get install -y youtube-dl
+    fi
 }
 
 additional_install() {
@@ -1723,7 +1725,6 @@ script_options() {
                 ;;
             additional)
                 ADDITIONAL="additional"
-                VIM="vim"
                 shift
                 ;;
             seartipy)
@@ -1971,7 +1972,7 @@ ppas_check() {
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$HASKELL" ] && ppa_check fpco
     if [ -n "$ADDITIONAL" ]; then
-        ppa_check nilarimogard
+        is_yakkety || ppa_check nilarimogard
     fi
 
     is_ubuntu || return 1
@@ -2155,12 +2156,16 @@ additional_check() {
         brew_cask_check virtualbox-extension-pack
     fi
 
-    is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz
+    is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
+ 
     cmd_check youtube-dl icdiff jq http
 
     is_linux || return 0
-    cmd_check git-icdiff
-    has_cmd vmware-user-suid-wrapper ||  cmd_check virtualbox
+    cmd_check jq http git-icdiff
+    if ! has_cmd vmware-user-suid-wrapper; then
+        cmd_check virtualbox vlc
+        is_yakkety || cmd_check youtube-dl
+    fi
 }
 
 git_check() {

@@ -1327,7 +1327,7 @@ additional_ubuntu_install() {
 
     slog "Installing additional"
 
-    sudo apt-get install -y q httpie
+    sudo apt-get install -y jq httpie
 
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox vlc
@@ -2157,8 +2157,8 @@ additional_check() {
     fi
 
     is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
- 
-    cmd_check youtube-dl icdiff jq http
+
+    cmd_check icdiff jq http
 
     is_linux || return 0
     cmd_check jq http git-icdiff

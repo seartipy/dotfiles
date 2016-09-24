@@ -784,7 +784,7 @@ git_fedora_install() {
 git_ubuntu_install() {
     is_apt || return 1
 
-    add_smartgit_ppa
+    is_yakkety || add_smartgit_ppa
     ubuntu_update
 
     slog "Installing git"
@@ -2170,11 +2170,13 @@ additional_check() {
 
 git_check() {
     cmd_check kdiff3 git-extras
-    is_ubuntu && cmd_check smartgit
     is_linux && cmd_check meld
     is_mac && brew_cask_check smartgit hub github-desktop
 
     file_check ~/.gitconfig
+
+    is_yakkety && return 1
+    is_ubuntu && cmd_check smartgit
 }
 
 vim_check() {

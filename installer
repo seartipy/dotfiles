@@ -606,6 +606,9 @@ zsh_dotfiles() {
 
     slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
     scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zgen-pre-local.sh ~/.zgen-pre-local.sh
 }
 
 zsh_install() {

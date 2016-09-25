@@ -23,7 +23,7 @@ if ! zgen saved; then
     # prezto options
     zgen prezto editor key-bindings 'emacs'
     zgen prezto editor dot-expansion 'yes'
-    zgen prezto tmux:auto-start local 'no'
+
     zgen prezto prompt theme 'pure'
     zgen prezto terminal auto-title 'yes'
     zgen prezto utility:ls color 'yes'
@@ -48,7 +48,6 @@ if ! zgen saved; then
     zgen prezto command-not-found
     zgen prezto fasd                           # j , f, d etc.
     zgen prezto osx
-    zgen prezto tmux
     [[ "$ZGEN_SYNTAX_HIGHLIGHTING" == "yes" ]] && zgen prezto syntax-highlighting
     zgen prezto history-substring-search
     [[ "$ZGEN_AUTO_SUGGESIONS" == "yes" ]] && zgen prezto autosuggestions
@@ -69,3 +68,21 @@ if ! zgen saved; then
     zgen prezto prompt          # prompt must be the last module to load
     zgen save                   # save all to init script
 fi
+
+# copied from tmux prezto module
+start_tmux() {
+    tmux start-server
+
+    # Create a 'seartipy' session if no session has been defined in tmux.conf.
+    if ! tmux has-session 2> /dev/null; then
+        tmux_session='seartipy'
+        tmux \
+            new-session -d -s "$tmux_session" \; \
+            set-option -t "$tmux_session" destroy-unattached off &> /dev/null
+    fi
+
+    # Attach to the 'prezto' session or to the last session used.
+    exec tmux attach-session
+}
+
+[ -n "$SEARTIPY_TMUX" ] && [[ -z "$SEARTIPY_EMACS" && -z "$TMUX" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$VIM" ]] && start_tmux

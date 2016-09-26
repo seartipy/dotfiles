@@ -455,7 +455,6 @@ themes_install() {
 ppas_check() {
     if [ -n "$THEMES" ]; then
         ppa_check numix
-        ppa_check arc-theme
         is_yakkety || ppa_check teejee2008
     fi
 }

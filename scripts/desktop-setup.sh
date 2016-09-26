@@ -1,46 +1,39 @@
-add_numix_ppa() {
-    is_ubuntu || return 1
-    ppa_exists numix && return 0
+#! /bin/bash
 
-    slog "Adding numix ppa"
-    sudo add-apt-repository ppa:numix/ppa -y
-}
-
-add_arc_theme_ppa() {
-    is_ubuntu || return 1
-    ppa_exists arc-theme && return 0
-
-    slog "Adding arc theme ppa"
-    wget -qO- http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_16.04/Release.key | sudo apt-key add -
-    echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_16.04/ /' | sudo tee -a /etc/apt/sources.list.d/arc-theme.list
-}
-
-add_conky_manager_ppa() {
-    is_ubuntu || return 1
-    ppa_exists teejee2008 && return 0
-
-    slog "Adding conky manager ppa"
-    sudo add-apt-repository ppa:teejee2008/ppa -y
-}
+source "$HOME/seartipy/dotfiles/scripts/utils.sh"
 
 #
-# settings
+# GNOME
 
-gnome_hidpi_conf() {
+gnome_hidpi() {
     is_linux || return 1
     has_cmd gnome-session || return 1
-    has_cmd gnome-shell || return 1
     has_cmd gsettings || return 1
 
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
-    if [ $xres -ge 2800 ]; then
+
+    if [ "$xres" -ge 2800 ]; then
         gsettings set org.gnome.desktop.interface scaling-factor 2
         gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
     fi
 
-    if [ $xres -ge 3840 ]; then
+    if [ "$xres" -ge 3840 ]; then
         gsettings set org.gnome.desktop.interface text-scaling-factor .8
     fi
+}
+
+mate_hidpi() {
+    dconf write /org/mate/desktop/font-rendering/dpi "160.0"
+}
+
+x11_hidpi() {
+    scopy ~/seartipy/dotfiles/xresources ~/.Xresources
+}
+
+hidpi() {
+    gnome_hidpi
+    mate_hidpi
+    x11_hidpi
 }
 
 shell_extension_install() {
@@ -106,11 +99,10 @@ shell_extension_install() {
 gnome_extensions() {
     is_linux || return 1
     has_cmd gnome-session || return 1
-    [ -n "$SEARTIPY" ] || return 1
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 
-    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou', 'shellshape@gfxmonk.net']"
+    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou']"
 
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
@@ -118,10 +110,10 @@ gnome_extensions() {
     shell_extension_install $gnomever 21   # workspace indicator
     shell_extension_install $gnomever 28   # gtile
     shell_extension_install $gnomever 97   # coverflow alt-tab
-    shell_extension_install $gnomever 294  # shell_hape
+    shell_extension_install $gnomever 294  # shell shape
     shell_extension_install $gnomever 413  # app keys like unity
     shell_extension_install $gnomever 442  # drop down terminal
-    shell_extension_install $gnomever 657  # shell_ile
+    shell_extension_install $gnomever 657  # shelltile
     shell_extension_install $gnomever 690  # easy screen casting
     shell_extension_install $gnomever 704  # all windows in top bar
     shell_extension_install $gnomever 885  # transparent top bar
@@ -153,11 +145,8 @@ gnome_settings() {
     gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
     gsettings set org.gnome.system.locale region 'en_US.UTF-8'
 
-    [ -n "$SEARTIPY" ] || return 1
-
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
     gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
-    gsettings set org.gnome.desktop.interface gtk-key-theme Emacs
 
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
@@ -179,7 +168,6 @@ gnome_settings() {
 gnome_keybindings() {
     is_linux || return 1
     has_cmd gnome-session || return 1
-    [ -n "$SEARTIPY" ] || return 1
 
     gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
@@ -191,16 +179,23 @@ gnome_keybindings() {
 
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Shift><Control>Down']"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Shift><Control>Up']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Control>Down']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Control>Up']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "['<Super>Page_Down', '<Super><Control>Down']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up  "['<Super>Page_Up', '<Super><Control>Up']"
 }
+
+gnome_install() {
+    gnome_hidpi
+    gnome_extensions
+    gnome_settings
+    gnome_keybindings
+}
+
+# 
 
 mate_settings() {
     is_linux || return 1
     has_cmd mate-session || return 1
-    [ -n "$SEARTIPY" ] || return 1
 
-    dconf write /org/mate/desktop/font-rendering/dpi "160.0"
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
@@ -222,7 +217,6 @@ mate_settings() {
 mate_keybindings() {
     is_linux || return 1
     has_cmd mate-session || return 1
-    [ -n "$SEARTIPY" ] || return 1
 
     dconf write /org/mate/marco/global-keybindings/panel-run-dialog "'<Mod4>space'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"
@@ -254,22 +248,13 @@ mate_keybindings() {
     dconf write /org/mate/marco/window-keybindings/activate-window-menu "'disabled'"
 }
 
-linux_settings() {
-    gnome_hidpi_conf
-    gnome_settings
-    gnome_extensions
-    gnome_keybindings
-
+mate_install() {
     mate_settings
     mate_keybindings
-    is_ubuntu || return 1
-
-    echo "enabled=0" | sudo tee /etc/default/apport > /dev/null
 }
 
 mac_settings() {
     is_mac || return 1
-    [ -n "$SEARTIPY" ] || return 1
 
     # https://github.com/mathiasbynens/dotfiles/blob/978fb2696860ebe055a0caec425c67be0ad73319/.osx
 
@@ -406,11 +391,6 @@ mac_settings() {
 
 }
 
-settings() {
-    linux_settings
-    mac_settings
-}
-
 #
 # themes
 
@@ -426,12 +406,31 @@ fedora_themes_install() {
     sudo dnf install -y conky conky-manager
 }
 
+add_numix_ppa() {
+    is_ubuntu || return 1
+    ppa_exists numix && return 0
+
+    slog "Adding numix ppa"
+    sudo add-apt-repository ppa:numix/ppa -y
+}
+
+add_conky_manager_ppa() {
+    is_yakkety && return 1
+    is_ubuntu || return 1
+    ppa_exists teejee2008 && return 0
+
+    slog "Adding conky manager ppa"
+    sudo add-apt-repository ppa:teejee2008/ppa -y
+}
+
 ubuntu_themes_install() {
     is_ubuntu || return 1
 
-    sudo apt-get install -y numix-*
-    sudo apt-get install -y arc-theme
-    sudo apt-get install -y conky conky-manager
+    add_numix_ppa
+    add_conky_manager_ppa
+    sudo apt-get update
+
+    sudo apt-get install -y numix-* arc-theme conky-all conky-manager
 }
 
 themes_install() {
@@ -447,7 +446,6 @@ themes_install() {
     fi
 
     if has_cmd mate-session; then
-        dconf write /org/mate/desktop/peripherals/mouse/cursor-theme "'DMZ-Black'"
         dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
         dconf write /org/mate/marco/general/theme "'Arc-Dark'"
     fi
@@ -457,13 +455,19 @@ ppas_check() {
     if [ -n "$THEMES" ]; then
         ppa_check numix
         ppa_check arc-theme
-        ppa_check teejee2008
+        is_yakkety || ppa_check teejee2008
     fi
 }
 
+# 
+# FONTS
+
 font_exists() {
-    (is_linux && ls ~/.local/share/fonts 2> /dev/null | grep "$1" > /dev/null) ||
-        (is_mac && ls ~/Library/Fonts 2> /dev/null | grep "$1" > /dev/null)
+    if is_mac; then
+        is_mac && ls ~/Library/Fonts 2> /dev/null | grep "$1" > /dev/null
+    else
+        (ls ~/.local/share/fonts 2> /dev/null | grep "$1" > /dev/null) || (ls ~/.fonts 2> /dev/null | grep "$1" > /dev/null)
+    fi
 }
 
 mononoki_font() {
@@ -472,7 +476,15 @@ mononoki_font() {
         wget  --quiet -O /tmp/mononoki.zip https://github.com/madmalik/mononoki/releases/download/1.2/mononoki.zip
         srm /tmp/seartipy-mononoki-fonts
         unzip /tmp/mononoki.zip -d /tmp/seartipy-mononoki-fonts
-        cp /tmp/seartipy-mononoki-fonts/*.ttf ~/Library/Fonts
+
+        is_mac && cp /tmp/seartipy-mononoki-fonts/*.ttf ~/Library/Fonts
+
+        if is_linux; then
+            smd ~/.fonts
+            cp /tmp/seartipy-mononoki-fonts/*.ttf ~/.fonts
+            fc-cache -f ~/.fonts
+        fi
+
         rm -f /tmp/mononoki.zip
         rm -rf /tmp/seartipy-mononoki-fonts
     fi
@@ -494,8 +506,13 @@ fonts_install() {
 
 }
 
+fonts_check() {
+    font_exists "Sauce Code Powerline" || warn "powerline fonts not installed"
+    font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+}
+
 #
-# xmonad
+# XMONAD
 
 xmonad_fedora_install() {
     is_fedora || return 1
@@ -545,8 +562,59 @@ xmonad_check() {
     ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 
-font_exists "Sauce Code Powerline" || warn "powerline fonts not installed"
-font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+# 
+# i3
+
+i3_ubuntu_install() {
+    is_apt ||  return 1
+
+    sudo apt-get install -y i3-wm rofi suckless-tools i3status
+}
+
+i3_fedora_install() {
+    is_fedora || return 1
+
+    sudo dnf install -y i3 i3status
+}
+
+i3_install() {
+    is_linux || return 1
+
+    scopy ~/seartipy/dotfiles/templates/desktops/i3-config ~/.i3/config
+}
+
+# 
+# KDE
+
+kde_install() {
+    is_linux || return 1
+    fcopy ~/seartipy/dotfiles/templates/desktops/kde/kdeglobals  ~/.config/kdeglobals
+    fcopy ~/seartipy/dotfiles/templates/desktops/kde/kglobalshortcutsrc  ~/.config/kglobalshortcutsrc
+}
+
+# 
+# OPENBOX
+
+lxde_install() {
+    is_linux || return 1
+
+    fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lubuntu-rc.xml
+    fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lxde-rc.xml
+}
+
+# 
+# XFCE
+
+xfce_install() {
+    is_linux || return 1
+
+    fcopy ~/seartipy/dotfiles/templates/desktops/xfce4/xfce4-keyboard-shortcuts.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
+    fcopy ~/seartipy/dotfiles/templates/desktops/xfce4/xsettings.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+    fcopy ~/seartipy/dotfiles/templates/desktops/xfce4/xfwm4.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
+}
+
+# 
+# MAC
 
 amethyst_install() {
     is_mac || return 1
@@ -560,3 +628,142 @@ amethyst_install() {
 
     sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
+
+mac_install() {
+    is_mac || return 1
+
+    amethyst_install
+    mac_settings
+}
+
+# 
+
+select_defaults() {
+    FONTS="fonts"
+    is_ubuntu || return 1
+    echo "enabled=0" | sudo tee /etc/default/apport > /dev/null
+
+}
+
+select_everything() {
+    select_defaults
+
+    XMONAD="xmonad"
+    I3="i3"
+    LXDE="lxde"
+    XFCE="xfce"
+    GNOME="gnome"
+    XMONAD="xmonad"
+    MAC="mac"
+    MATE="mate"
+}
+
+script_options() {
+    if [ $# -eq 0 ]; then
+        select_everything
+    else
+        select_defaults
+    fi
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            xmonad)
+                XMONAD="xmonad"
+                shift
+                ;;
+            i3)
+                I3="i3"
+                shift
+                ;;
+            lxde)
+                LXDE="lxde"
+                shift
+                ;;
+            xfce)
+                XFCE="xfce"
+                shift
+                ;;
+            gnome)
+                GNOME="gnome"
+                shift
+                ;;
+            kde)
+                KDE="kde"
+                shift
+                ;;
+            mac)
+                MAC="mac"
+                shift
+                ;;
+            mate)
+                MATE="mate"
+                shift
+                ;;
+            themes)
+                THEMES="themes"
+                shift
+                ;;
+            hidpi)
+                HIDPI="hidpi"
+                shift
+                ;;
+            nofonts)
+                FONTS=""
+                shift
+                ;;
+            nodefaults)
+                FONTS=""
+                shift;;
+            *)
+                err_exit "unknown option: $1"
+                ;;
+        esac
+    done
+}
+
+installer() {
+    script_options "$@"
+
+    [ -n "$FONTS" ] && fonts_install
+    [ -n "$THEMES" ] && themes_install
+    [ -n "$HIDPI" ] && hidpi_install
+
+    [ -n "$MAC" ] && mac_install
+
+    [ -n "$XMONAD" ] && xmonad_install
+    [ -n "$I3" ] && i3_install
+
+    [ -n "$LXDE" ] && lxde_install
+    [ -n "$XFCE" ] && xfce_install
+
+    [ -n "$GNOME" ] && gnome_install
+    [ -n "$KDE" ] && kde_install
+    [ -n "$MATE" ] && mate_install
+}
+
+post_installer_check() {
+    [ -n "$FONTS" ] && fonts_check
+    # [ -n "$THEMES" ] && themes_check
+    # [ -n "$HIDPI" ] && hidpi_check
+
+    # [ -n "$MAC" ] && mac_check
+
+    [ -n "$XMONAD" ] && xmonad_check
+    [ -n "$I3" ] && i3_check
+
+    # [ -n "$LXDE" ] && lxde_check
+    # [ -n "$XFCE" ] && xfce_check
+
+    # [ -n "$GNOME" ] && gnome_check
+    # [ -n "$KDE" ] && kde_check
+    # [ -n "$MATE" ] && mate_check
+}
+
+main() {
+    pre_cmd_check
+    keep_sudo_running
+    installer "$@"
+    post_installer_check
+}
+
+main "$@"

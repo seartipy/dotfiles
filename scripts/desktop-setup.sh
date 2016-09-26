@@ -430,7 +430,8 @@ ubuntu_themes_install() {
     add_conky_manager_ppa
     sudo apt-get update
 
-    sudo apt-get install -y numix-* arc-theme conky-all conky-manager
+    sudo apt-get install -y numix-icon-theme arc-theme conky-all
+    is_yakkety || sudo apt-get install -y conky-manager
 }
 
 themes_install() {

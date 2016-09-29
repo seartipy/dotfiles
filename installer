@@ -608,7 +608,7 @@ zsh_dotfiles() {
     scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
 
     slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
-    scopy ~/seartipy/dotfiles/templates/zgen-pre-local.sh ~/.zgen-pre-local.sh
+    scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
 }
 
 zsh_install() {
@@ -2024,6 +2024,7 @@ zsh_check() {
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
     dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
     file_check ~/.zgen-options-local.sh
+    file_check ~/.zshrc-pre-local.sh
 }
 
 bash_check() {

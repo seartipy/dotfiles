@@ -103,7 +103,7 @@
  :keybindings {}
 
  :keymaps [{:selector ".tree-view" :keymap [["escape" "tree-view:toggle"]]}
-           {:selector "atom-workspace:not([mini])" :keymap [["ctrl-x ctrl-o" "choose-pane:start"]]}
+           ;; {:selector "atom-workspace:not([mini])" :keymap [["ctrl-x ctrl-o" "choose-pane:start"]]}
            {:selector "atom-text-editor" :keymap [["alt-space s a" "narrow:lines"]]}
            ;; {:selector "atom-text-editor.vim-mode-plus.insert-mode" :keymap [["f d" "vim-mode-plus:activate-normal-mode"]]}
            ;; {:selector "atom-text-editor.vim-mode-plus.insert-mode.autocomplete-active" :keymap [["escape" "autocomplete-plus:cancel"]]}

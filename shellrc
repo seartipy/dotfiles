@@ -371,6 +371,19 @@ seartipy_emacs_launch() {
     is_linux && emacs&
 }
 
+seartipy_spacemacs_launch() {
+    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
+}
+
+
+seartipy_housemd_launch() {
+    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/housemd/") (load-file (concat user-emacs-directory "init.el")))' &
+}
+
+seartipy_lean_launch() {
+    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/lean-emacs/") (load-file (concat user-emacs-directory "init.el")))' &
+}
+
 seartipy_kill_emacs() {
     emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs))"
 }
@@ -401,9 +414,9 @@ alias sse="seartipy_emacs_default spacemacs"
 alias sle="seartipy_emacs_default lean-emacs"
 alias she="seartipy_emacs_default housemd"
 
-alias es="seartipy_emacs_launch spacemacs"
-alias el="seartipy_emacs_launch lean-emacs"
-alias eh="seartipy_emacs_launch housemd"
+alias es="seartipy_spacemacs_launch"
+alias el="seartipy_lean_launch"
+alias eh="seartipy_housemd_launch"
 
 alias ec="emacsclient -c -n"
 alias et="emacsclient -t"

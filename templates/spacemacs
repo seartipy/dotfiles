@@ -302,6 +302,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-default dotspacemacs-line-numbers 'relative)
   (setq-default dotspacemacs-smartparens-strict-mode t)
   (setq-default exec-path-from-shell-check-startup-files nil)
+
+  (spacemacs|use-package-add-hook smartparens
+    :post-init
+    (setq sp-base-key-bindings 'paredit)
+    :post-config
+    (sp-use-paredit-bindings)
+    )
   )
 
 (defun dotspacemacs/user-config ()

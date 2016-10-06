@@ -22,15 +22,17 @@ PowerOff=Power Off,Power Off,Power Off
 Show System Activity=Ctrl+Esc,Ctrl+Esc,Show System Activity
 Sleep=Sleep,Sleep,Suspend
 Toggle Keyboard Backlight=Keyboard Light On/Off,Keyboard Light On/Off,Toggle Keyboard Backlight
-_k_friendly_name=KDE Daemon
+_k_friendly_name=Power Management
 display=Display,Display\tMeta+P,Switch Display
 
 [khotkeys]
 _k_friendly_name=KDE Daemon
-{6a1256fe-3dd5-4e20-ade3-3aaa6945e137}=,none,Start Screenshot Tool
-{7829b994-f121-47f7-8cb8-17d3f8bd9f65}=,none,Take Full Screen Screenshot
-{9d9a4e92-f974-47e2-ae66-f187646fc678}=,none,Take Active Window Screenshot
-{b41f450b-e5bc-4d61-b12d-fdd295719724}=Meta+Shift+Print,none,Take Rectangular Region Screenshot
+{2f762990-2264-40a6-ac6b-eb68c8710056}=Print,none,Start Screenshot Tool
+{3b1a327f-0835-4e4a-acf2-4a604b078a07}=none,none,Take Rectangular Region Screenshot
+{666ffdea-254b-4826-93b1-1e277dfdf4c2}=Shift+Print,none,Take Full Screen Screenshot
+{7af5019c-891b-4709-8662-bbeb585a4cea}=Meta+W,none,Rofi Window Selector
+{8a2329db-2277-4224-84a3-5e75f3bf1eee}=Meta+P,none,Rof Launcher
+{cea1d665-6652-4d2c-9757-c8b881a6d33f}=Meta+Print,none,Take Active Window Screenshot
 {d03619b6-9b3c-48cc-9d9c-a2aadb485550}=,none,Search
 
 [kmix]
@@ -43,7 +45,7 @@ mic_mute=Microphone Mute,Microphone Mute,Mute Microphone
 mute=Volume Mute,Volume Mute,Mute
 
 [krunner]
-_k_friendly_name=krunner
+_k_friendly_name=Run Command
 run command=Meta+Space\tAlt+F2\tSearch,Alt+Space,Run Command
 run command on clipboard contents=Alt+Shift+F2,Alt+Shift+F2,Run Command on clipboard contents
 
@@ -123,6 +125,8 @@ Switch to Screen 5=none,none,Switch to Screen 5
 Switch to Screen 6=none,none,Switch to Screen 6
 Switch to Screen 7=none,none,Switch to Screen 7
 Toggle Window Raise/Lower=none,none,Toggle Window Raise/Lower
+ToggleCurrentThumbnail=Meta+Ctrl+T,Meta+Ctrl+T,Toggle Thumbnail for Current Window
+ToggleMouseClick=Meta+*,Meta+*,Toggle Mouse Click Effect
 Walk Through Desktop List=none,none,Walk Through Desktop List
 Walk Through Desktop List (Reverse)=none,none,Walk Through Desktop List (Reverse)
 Walk Through Desktops=none,none,Walk Through Desktops
@@ -233,3 +237,7 @@ show dashboard=Ctrl+F12,Ctrl+F12,Show Desktop
 show-barcode=none,none,Show Barcode...
 show-on-mouse-pos=none,none,Open Klipper at Mouse Position
 stop current activity=Meta+S,Meta+S,Stop Current Activity
+
+[yakuake]
+_k_friendly_name=Yakuake
+toggle-window-state=F12,F12,Open/Retract Yakuake

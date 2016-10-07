@@ -373,6 +373,15 @@ add_r_ppa() {
     sudo add-apt-repository ppa:marutter/rrutter -y
 }
 
+add_typora_ppa() {
+    is_apt || return 1
+
+    grep https://typora.io /etc/apt/sources.list > /dev/null && return 0
+
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
+    sudo add-apt-repository 'deb https://typora.io ./linux/'
+}
+
 #
 # essential
 
@@ -1305,7 +1314,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred
+    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred typora
     brew install jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
     brew install youtube-dl
@@ -1322,6 +1331,16 @@ additional_fedora_install() {
     has_cmd vmware-user-suid-wrapper || sudo dnf install -y VirtualBox dkms vlc youtube-dl
 }
 
+
+typora_install() {
+    is_apt || return 1
+
+    add_typora_ppa
+    sudo apt-get update
+
+    sudo apt-get install typora
+}
+
 additional_ubuntu_install() {
     is_apt || return 1
 
@@ -1336,6 +1355,8 @@ additional_ubuntu_install() {
         sudo apt-get install -y virtualbox vlc
         is_yakkety || sudo apt-get install -y youtube-dl
     fi
+
+    typora_install
 }
 
 additional_install() {

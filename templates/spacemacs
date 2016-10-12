@@ -64,7 +64,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(lispy)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -299,6 +299,9 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
+(add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode)))
+  (add-hook 'clojure-mode-hook (lambda () (lispy-mode)))
+
   (setq-default dotspacemacs-line-numbers 'relative)
   (setq-default dotspacemacs-smartparens-strict-mode t)
   (setq-default exec-path-from-shell-check-startup-files nil)
@@ -318,6 +321,11 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  (with-eval-after-load 'lispy
+    (lispy-set-key-theme '(parinfer special))
+    )
+
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
   (when (file-exists-p custom-file)

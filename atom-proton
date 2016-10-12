@@ -79,6 +79,7 @@
   :lisp-paredit
   :tool-bar
   :set-syntax
+  :mdn-doc
   ]
 
  :configuration

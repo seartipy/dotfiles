@@ -1,7 +1,14 @@
 #! /bin/zsh
 
-[ -s ~/.zshrc-pre.local ] && source ~/.zshrc-pre.local
+[ -s ~/.zshrc-pre-local.sh ] && source ~/.zshrc-pre-local.sh
 
+[ -s ~/seartipy/dotfiles/shellrc ] && source ~/seartipy/dotfiles/shellrc
+
+[ -s ~/.zshrc-post-local.sh ] && source ~/.zshrc-post-local.sh
+
+[[ $- == *i* ]] || return 0
+
+[ -s ~/seartipy/vendors/antigen/antigen.zsh ] || git clone https://github.com/zsh-users/antigen.git
 source ~/seartipy/vendors/antigen/antigen.zsh
 
 antigen use oh-my-zsh
@@ -14,38 +21,22 @@ antigen bundle github
 antigen bundle jsontools
 
 antigen bundle command-not-found
-antigen bundle autojump
 antigen bundle common-aliases
 antigen bundle dircycle
-antigen bundle dirhistory
 
 antigen bundle lein
 antigen bundle sbt
 antigen bundle scala
 antigen bundle cabal
 antigen bundle python
-antigen bundle ruby
-antigen bundle pip
-antigen bundle coffee
-
 antigen bundle web-search
 
 antigen bundle fasd
 
 antigen bundle zsh-users/zsh-history-substring-search
 
-# fix for using zsh inside emacs
-if [ -n "$INSIDE_EMACS" ]; then
-    antigen theme robbyrussell
-else
-    antigen bundle mafredri/zsh-async
-    antigen bundle sindresorhus/pure
-    # antigen bundle nojhan/liquidprompt
-    antigen bundle zsh-users/zsh-syntax-highlighting
-fi
+antigen bundle mafredri/zsh-async
+antigen bundle sindresorhus/pure
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen apply
-
-source ~/seartipy/dotfiles/shellrc
-
-[ -s ~/.zshrc-post.local ] && source ~/.zshrc-post.local

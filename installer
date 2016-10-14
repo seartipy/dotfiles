@@ -349,7 +349,6 @@ add_chrome_ppa() {
 }
 
 add_webupd8_ppa() {
-    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists nilarimogard && return 0
 
@@ -1995,9 +1994,7 @@ ppas_check() {
     [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$HASKELL" ] && ppa_check fpco
-    if [ -n "$ADDITIONAL" ]; then
-        is_yakkety || ppa_check nilarimogard
-    fi
+    [ -n "$ADDITIONAL" ] && ppa_check nilarimogard
 
     is_ubuntu || return 1
 
@@ -2186,11 +2183,8 @@ additional_check() {
     cmd_check icdiff jq http
 
     is_linux || return 0
-    cmd_check jq http git-icdiff
-    if ! has_cmd vmware-user-suid-wrapper; then
-        cmd_check virtualbox vlc
-        is_yakkety || cmd_check youtube-dl
-    fi
+    cmd_check jq http git-icdiff vlc youtube-dl
+    has_cmd vmware-user-suid-wrapper || cmd_check virtualbox
 }
 
 git_check() {

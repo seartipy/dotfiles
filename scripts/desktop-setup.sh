@@ -415,7 +415,6 @@ add_numix_ppa() {
 }
 
 add_conky_manager_ppa() {
-    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists teejee2008 && return 0
 
@@ -431,7 +430,7 @@ ubuntu_themes_install() {
     sudo apt-get update
 
     sudo apt-get install -y numix-icon-theme arc-theme conky-all
-    is_yakkety || sudo apt-get install -y conky-manager
+    sudo apt-get install -y conky-manager
 }
 
 themes_install() {
@@ -455,7 +454,7 @@ themes_install() {
 ppas_check() {
     if [ -n "$THEMES" ]; then
         ppa_check numix
-        is_yakkety || ppa_check teejee2008
+        ppa_check teejee2008
     fi
 }
 

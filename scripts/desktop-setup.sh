@@ -99,6 +99,7 @@ shell_extension_install() {
 gnome_extensions() {
     is_linux || return 1
     has_cmd gnome-session || return 1
+    has_cmd gnome-shell || return 1
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 

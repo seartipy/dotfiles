@@ -454,7 +454,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel hack-fonts
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel
 }
 
 fasd_install() {
@@ -830,7 +830,7 @@ java_fedora_install() {
     is_fedora || return 1
 
     slog "Installing java"
-    sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-src
+    sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-src
 }
 
 java_ubuntu_install() {
@@ -2077,6 +2077,8 @@ emacs_check() {
 
 atom_check() {
     cmd_check atom apm
+    has_cmd apm || return 1
+
     apm_check proton-mode
     ln_check ~/seartipy/dotfiles/atom-proton ~/.proton
 }
@@ -2231,6 +2233,7 @@ post_installer_check() {
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check
     [ -n "$EMACS" ] && emacs_check
+    [ -n "$ATOM" ] && atom_check
     [ -n "$GIT" ] && git_check
 
     [ -n "$CLOJURE" ] && clojure_check

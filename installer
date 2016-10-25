@@ -1046,7 +1046,10 @@ haskell_install() {
     stackexei hindent
     stackexei hdevtools
     stackexei install ghc-mod
-    stackexei ghci-ng
+    # stackexei ghci-ng
+    stackexei apply-refact
+    stackexei hoogle
+    stackexei intero
     ihaskell_install
 }
 
@@ -2631,7 +2634,8 @@ r_check() {
 haskell_check() {
     cmd_check ghc cabal stack
 
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghci-ng ghc-mod
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghc-mod hoogle intero
+
     # cmd_check structured-haskell-mode
 }
 

@@ -14,9 +14,9 @@
   :lang/markdown
 
   :lang/clojure
-  :lang/haskell
+  ;; :lang/haskell
   :lang/python
-  :lang/ruby
+  ;; :lang/ruby
 
   :lang/javascript
   :lang/typescript

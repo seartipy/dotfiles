@@ -146,6 +146,8 @@ gnome_settings() {
     gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled false
     gsettings set org.gnome.system.locale region 'en_US.UTF-8'
 
+    gsettings set org.gnome.desktop.interface clock-format '12h'
+
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
     gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
 
@@ -175,7 +177,6 @@ gnome_keybindings() {
     gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
     gsettings set org.gnome.shell.keybindings toggle-message-tray "@as []"
-
     gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F11']"
 
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Shift><Control>Down']"

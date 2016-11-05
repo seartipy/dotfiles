@@ -588,7 +588,7 @@ i3_install() {
 
 kde_install() {
     is_linux || return 1
-    fcopy ~/seartipy/dotfiles/templates/desktops/kde/kdeglobals  ~/.config/kdeglobals
+    fcopy ~/seartipy/dotfiles/templates/desktops/kde/kwinrc ~/.config/kwinrc
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kglobalshortcutsrc  ~/.config/kglobalshortcutsrc
 }
 

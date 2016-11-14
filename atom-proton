@@ -7,28 +7,26 @@
   :tools/terminal
   :tools/build
 
-  ;; :tools/bookmarks
-  ;; :tools/todo
-  ;; :tools/minimap
-
-  :lang/markdown
-
   :lang/clojure
-  ;; :lang/haskell
-  :lang/python
-  ;; :lang/ruby
-
-  :lang/javascript
   :lang/typescript
   :lang/html
   :lang/css
   :lang/json
 
+  ;; :tools/bookmarks
+  ;; :tools/todo
+  ;; :tools/minimap
+  ;; :lang/markdown
+
+  ;; :lang/haskell
+  ; :lang/python
+  ;; :lang/ruby
+  ;; :lang/elm
+  ;; :lang/javascript
   ;; :lang/less
   ;; :lang/sass
   ;; :lang/jade
   ;; :lang/stylus
-
   ;; :lang/rust
   ;; :lang/csharp
   ;; :lang/elixir
@@ -39,68 +37,72 @@
 
  :additional-packages
  [
-  :atom-terminal
-  :browser-plus ; for livereload
   :hyperclick
-  :script
   :jumpy
   :last-cursor-position
-  :toggle-quotes
   :editorconfig
-  :fonts
-  :Sublime-Style-Column-Selection ; package names are case sensitive in proton
-  :floobits
-  :disable-keybindings
-  :narrow
-  :choose-pane
 
-  :language-scala
-  :intentions
-  :Ensime
-
-  :ide-haskell-repl
-
-  :clang-format
-  :linter-clang
-  :autocomplete-clang
-
-  :language-elm
-  :linter-elm-make
-
-  :git-time-machine
-  :git-log
-  :split-diff
-
-  :flow-ide
-  :Hydrogen
   :js-hyperclick
+  :linter-eslint
+  :language-babel
+  :nuclide
 
-  :proto-repl-charts
-  :lisp-paredit
-  :tool-bar
-  :set-syntax
-  :mdn-doc
-  ]
+  ;;:browser-plus ; for livereload
+  ;; :sublime-style-column-selection
+  ;; :fonts
+  ;; :script
+  ;; :toggle-quotes
+  ;; :floobits
+  ;; :disable-keybindings
+  ;; :narrow
+  ;; :choose-pane
+
+  ;; :language-scala
+  ;; :intentions
+
+  ;; :javascript-snippets
+  ;; :react-snippets
+
+  ;; :ide-haskell-repl
+
+  ;; :clang-format
+  ;; :linter-clang
+  ;; :autocomplete-clang
+
+  ;; :git-time-machine
+  ;; :git-log
+  ;; :split-diff
+
+  ;; :hydrogen
+
+  ;; :proto-repl-charts
+  ;; :lisp-paredit
+  ;; :tool-bar
+  ;; :set-syntax
+  ;; :mdn-doc
+ ]
 
  :configuration
  [
   ["editor.fontSize" "13"]
   ["editor.fontFamily" "monaco, consolas, ubuntu mono, mononoki, hack, source code pro, monospace"]
   ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
-  ["proton.core.showTabBar" true]
+  ["proton.core.showTabBar" false]
+  ["editor.scrollPastEnd" true]
   ["proton.core.relativeLineNumbers" true]
 
   ;; :vim-mode-plus, :emacs :default available
   ["proton.core.inputProvider" :default]
-  ["linter-eslint.useGlobalEslint" true]
+  ;; ["linter-eslint.useGlobalEslint" true]
   ["disable-keybindings.communityPackages" ["emmet"]]
 
   ["tool-bar.visible" false]
   ;; ["proton.core.modeKey" "enter"]
 
   ;; ["proton.core.wipeUserConfigs" false]
-
-  ]
+  ["nuclide.nuclide-flow.canUseFlowBin" true]
+  ["nuclide.nuclide-home.showHome" false]
+ ]
 
  :keybindings {}
 

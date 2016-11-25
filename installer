@@ -441,7 +441,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zermoq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg stow myrepos zeromq pkg-config
     brew cask install iterm2 google-chrome
 }
 

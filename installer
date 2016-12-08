@@ -1321,7 +1321,7 @@ additional_mac_install() {
     is_mac || return 1
 
     slog "Installing additional packages"
-    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred typora
+    brew cask install google-chrome dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord alfred typora
     brew install jq httpie icdiff
     brew cask install betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
     brew install youtube-dl
@@ -1839,7 +1839,6 @@ fresh_install() {
         srm ~/seartipy/dotfiles
         srm ~/seartipy/lean-dotfiles
         srm ~/.tmux.conf
-        srm ~/.amethyst
     fi
 
     if [ -n "$ZSH" ]; then
@@ -2041,7 +2040,6 @@ essential_check() {
 dotfiles_check() {
     dir_check ~/seartipy/dotfiles ~/seartipy/lean-dotfiles
     ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-    is_mac && ln_check ~/seartipy/dotfiles/amethyst ~/.amethyst
 }
 
 zsh_check() {
@@ -2189,7 +2187,7 @@ additional_check() {
         brew_cask_check virtualbox-extension-pack
     fi
 
-    is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord amethyst alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
+    is_mac && brew_cask_check dash android-file-transfer transmission macdown vlc karabiner seil spectacle skype gitup discord alfred betterzipql qlcolorcode qlimagesize qlmarkdown qlprettypatch qlstephen quicklook-csv quicklook-json webpquicklook xquartz suspicious-package
 
     cmd_check icdiff jq http
 

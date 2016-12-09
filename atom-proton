@@ -45,7 +45,7 @@
   :js-hyperclick
   :linter-eslint
   :language-babel
-  :nuclide
+  ;; :nuclide
 
   ;;:browser-plus ; for livereload
   ;; :sublime-style-column-selection

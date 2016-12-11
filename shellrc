@@ -202,7 +202,6 @@ seartipy_fix_links() {
 
     # scala
     if has_cmd sbt; then
-        echo "HELLO WORLD"
         smd ~/.sbt/0.13/plugins
         sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
         sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt

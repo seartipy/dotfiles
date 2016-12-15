@@ -451,3 +451,7 @@ if is_fedora; then
     alias ss="sudo dnf search"
     alias sr="sudo dnf remove"
 fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/pervez/.sdkman"
+[[ -s "/home/pervez/.sdkman/bin/sdkman-init.sh" ]] && source "/home/pervez/.sdkman/bin/sdkman-init.sh"

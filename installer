@@ -819,21 +819,21 @@ git_install() {
 #
 # java
 
-java_mac_install() {
+jdk_mac_install() {
     is_mac || return 1
 
     slog "Installing java"
     brew cask install java
 }
 
-java_fedora_install() {
+jdk_fedora_install() {
     is_fedora || return 1
 
     slog "Installing java"
     sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-src
 }
 
-java_ubuntu_install() {
+jdk_ubuntu_install() {
     is_apt || return 1
     add_java_ppa
     ubuntu_update
@@ -842,10 +842,27 @@ java_ubuntu_install() {
     sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
 }
 
-java_install() {
+jdk_install() {
+    has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
+
     java_mac_install
     java_fedora_install
     java_ubuntu_install
+}
+
+sdkman_install() {
+    has_cmd sdk && return 0
+    curl -s "https://get.sdkman.io" | bash
+}
+
+
+java_install() {
+    jdk_install
+    sdkman_install
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    has_cmd maven || sdk install maven < /dev/null
+    has_cmd gradle || sdk install gradle < /dev/null
+    has_cmd groovy || sdk install groovy < /dev/null
 }
 
 #
@@ -909,7 +926,7 @@ clojure_dotfiles() {
 }
 
 clojure_install() {
-    cmd_check javac
+    jdk_install
 
     clojure_mac_install
     linux_lein_install
@@ -984,6 +1001,8 @@ scala_dotfiles() {
 }
 
 scala_install() {
+    jdk_install
+
     scala_mac_install
     scala_fedora_install
     scala_ubuntu_install
@@ -1664,12 +1683,10 @@ script_options() {
                 shift
                 ;;
             clojure)
-                JAVA="java"
                 CLOJURE="clojure"
                 shift
                 ;;
             scala)
-                JAVA="java"
                 SCALA="scala"
                 shift
                 ;;
@@ -1958,7 +1975,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -2082,6 +2099,12 @@ atom_check() {
 
     apm_check proton-mode
     ln_check ~/seartipy/dotfiles/atom-proton ~/.proton
+}
+
+java_check() {
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+    has_cmd javac java sdk groovy maven gradle
 }
 
 scala_check() {
@@ -2238,6 +2261,7 @@ post_installer_check() {
     [ -n "$ATOM" ] && atom_check
     [ -n "$GIT" ] && git_check
 
+    [ -n "$JAVA" ] && java_check
     [ -n "$CLOJURE" ] && clojure_check
     [ -n "$SCALA" ] && scala_check
 

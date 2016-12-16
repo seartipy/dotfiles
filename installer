@@ -1306,14 +1306,15 @@ web_install() {
 
     slog "Installing npm packages for web development"
     npmi coffee-script typescript typings flow-bin yarn
-    npmi eslint jshint coffeelint
-    npmi eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-config-airbnb eslint-plugin-flowtype
+    npmi eslint jshint coffeelint tslint
+    npmi eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-config-airbnb eslint-plugin-flowtype eslint-config-airbnb-base eslint-config-walmart eslint-plugin-filenames eslint-plugin-fp eslint-plugin-immutable
     npmi gulp grunt-cli
     npmi babel-cli babel-eslint create-react-app
     npmi browserify watchify babelify budo
     npmi webpack webpack-dev-server systemjs
-    npmi tern js-beautify karma-cli ijavascript
-    npmi browser-sync npm-check lite-server live-server
+    npmi tern js-beautify karma-cli jest-cli ijavascript
+    npmi browser-sync npm-check npm-check-updates lite-server live-server
+    npmi feathers-cli express-generator
 }
 
 #
@@ -2183,8 +2184,8 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma live-server lite-server tsc typings ijs create-react-app yarn
-    npm_check eslint-plugin-flowtype eslint-plugin-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-config-airbnb babel-eslint babelify browser-sync
+    cmd_check budo browserify watchify coffee tsc babel webpack eslint jshint coffeelint tern js-beautify webpack-dev-server gulp grunt karma live-server lite-server tsc typings ijs create-react-app yarn express feathers jest tslint ncu
+    npm_check eslint-plugin-flowtype eslint-plugin-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-config-airbnb babel-eslint babelify browser-sync eslint-config-airbnb-base eslint-config-walmart eslint-plugin-filenames eslint-plugin-fp eslint-plugin-immutable
 }
 
 elixir_check() {

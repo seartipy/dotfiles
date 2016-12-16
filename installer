@@ -368,6 +368,14 @@ add_atom_ppa() {
     sudo add-apt-repository  ppa:webupd8team/atom -y
 }
 
+add_vscode_ppa() {
+    is_ubuntu || return 1
+    ppa_exists 'vscode' && return 0
+
+    sudo wget -O - https://tagplus5.github.io/vscode-ppa/ubuntu/gpg.key | sudo apt-key add -
+    sudo wget -O /etc/apt/sources.list.d/vscode.list https://tagplus5.github.io/vscode-ppa/ubuntu/vscode.list
+}
+
 add_r_ppa() {
     is_yakkety && return 1
     is_ubuntu || return 1
@@ -380,7 +388,7 @@ add_r_ppa() {
 add_typora_ppa() {
     is_apt || return 1
 
-    grep https://typora.io /etc/apt/sources.list > /dev/null && return 0
+    ppa_exists typora.io && return 0
 
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
     sudo add-apt-repository 'deb https://typora.io ./linux/'
@@ -777,6 +785,36 @@ atom_install() {
 
     slog "Linking ~/seartipy/dotfiles/atom-proton to ~/.proton"
     sln ~/seartipy/dotfiles/atom-proton ~/.proton
+}
+
+#
+# vscode
+
+ubuntu_vscode_install() {
+    is_ubuntu || return 1
+    add_vscode_ppa
+    ubuntu_update
+    sudo apt-get install -y code code-insiders
+}
+
+mac_vscode_install() {
+    is_mac || return 1
+    brew cask install visual-studio-code visual-studio-code-insiders
+}
+
+vscode_install() {
+    ubuntu_vscode_install
+    mac_vscode_install
+
+    code --install-extension EditorConfig.EditorConfig
+    code --install-extension msjsdiag.debugger-for-chrome
+    code --install-extension eg2.tslint
+    code --install-extension dbaeumer.vscode-eslint
+    code --install-extension alefragnani.project-manager
+    code --install-extension robertohuertasm.vscode-icons
+    code --install-extension Orta.vscode-jest
+    code --install-extension flowtype.flow-for-vscode
+    code --install-extension ms-vscode.cpptools
 }
 
 #
@@ -1595,6 +1633,7 @@ select_everything() {
 
     EMACS="emacs"
     ATOM="atom"
+    VSCODE="vscode"
 
     GIT="git"
     DOTFILES="dotfiles"
@@ -1673,6 +1712,10 @@ script_options() {
                 ;;
             atom)
                 ATOM="atom"
+                shift
+                ;;
+            vscode)
+                VSCODE="vscode"
                 shift
                 ;;
             go)
@@ -1894,6 +1937,10 @@ fresh_install() {
         srm ~/.proton
     fi
 
+    if [ -n "$VSCODE" ]; then
+        srm ~/.vscode
+    fi
+
     if [ -n "$CLOJURE" ]; then
         srm ~/.len
         srm ~/.boot
@@ -1934,6 +1981,7 @@ install_all() {
 
     [ -n "$EMACS" ] && emacs_install
     [ -n "$ATOM" ] && atom_install
+    [ -n "$VSCODE" ] && vscode_install
 
     [ -n "$GIT" ] && git_install
 
@@ -1976,7 +2024,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $RUBY $SWIFT $ELIXIR $R $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -2018,6 +2066,7 @@ ppas_check() {
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
+    [ -n "$VSCODE" ] && ppa_check 'vscode'
     [ -n "$HASKELL" ] && ppa_check fpco
     [ -n "$ADDITIONAL" ] && ppa_check nilarimogard
 
@@ -2100,6 +2149,11 @@ atom_check() {
 
     apm_check proton-mode
     ln_check ~/seartipy/dotfiles/atom-proton ~/.proton
+}
+
+vscode_check() {
+    is_fedora && return 1
+    cmd_check code
 }
 
 java_check() {
@@ -2260,6 +2314,8 @@ post_installer_check() {
     [ -n "$BASH" ] && bash_check
     [ -n "$EMACS" ] && emacs_check
     [ -n "$ATOM" ] && atom_check
+    [ -n "$VSCODE" ] && vscode_check
+
     [ -n "$GIT" ] && git_check
 
     [ -n "$JAVA" ] && java_check

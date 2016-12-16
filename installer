@@ -385,6 +385,13 @@ add_typora_ppa() {
     sudo add-apt-repository 'deb https://typora.io ./linux/'
 }
 
+add_umake_ppa() {
+    is_ubuntu || return 1
+    ppa_exists ubuntu-make && return 0
+
+    sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+}
+
 #
 # essential
 
@@ -413,12 +420,14 @@ essential_ubuntu_install() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_chrome_ppa
+    add_umake_ppa
+
     ubuntu_update
     ubuntu_upgrade
 
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf
-    is_ubuntu && sudo apt-get install -y firefox
+    is_ubuntu && sudo apt-get install -y firefox ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
 }
 
@@ -2050,6 +2059,8 @@ ppas_check() {
     is_apt || return 1
 
     ppa_check google-chrome
+    is_ubuntu && ppa_check ubuntu-make
+
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
@@ -2074,6 +2085,7 @@ essential_ubuntu_check() {
 
     ppas_check
 
+    is_ubuntu && cmd_check umake
     cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-put
 }
 

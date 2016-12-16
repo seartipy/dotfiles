@@ -799,7 +799,7 @@ ubuntu_vscode_install() {
 
 mac_vscode_install() {
     is_mac || return 1
-    brew cask install visual-studio-code visual-studio-code-insiders
+    brew cask install visual-studio-code
 }
 
 vscode_install() {

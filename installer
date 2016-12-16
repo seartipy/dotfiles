@@ -644,22 +644,23 @@ emacs_mac_install() {
     is_mac || return 1
 
     slog "Installing emacs packages"
-    brew install emacs --with-cocoa --with-gnutls --with-librsvg --with-imagemagick
+    brew tap d12frosted/emacs-plus
+    brew install emacs-plus
 
     brew install editorconfig cask
     # TODO : ctags
     brew install aspell --with-lang-en
 
-    slog "Trashing /Applications/Emacs.app alias (if exists)"
-    srm '/Applications/Emacs.app alias'
+    slog "Trashing /Applications/Emacs.app(if exists)"
+    srm '/Applications/Emacs.app'
 
     slog "Creating Emacs alias in /Applications"
     # make emacs available from spotlight
-    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs/Emacs.app" at POSIX file "/Applications"'
+    osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-plus/Emacs.app" at POSIX file "/Applications"'
 
     slog "Generating terminfo for terminal in emacs"
-    local emacsversion=`ls -r /usr/local/Cellar/emacs | head -1`
-    tic -o ~/.terminfo /usr/local/Cellar/emacs/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
+    local emacsversion=`ls -r /usr/local/Cellar/emacs-plus | head -1`
+    tic -o ~/.terminfo /usr/local/Cellar/emacs-plus/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
 }
 
 emacs_fedora_install() {

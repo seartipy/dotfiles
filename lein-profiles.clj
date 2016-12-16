@@ -1,5 +1,5 @@
 {:user {
-        :plugins [[com.jakemccrary/lein-test-refresh "0.17.0"]
+        :plugins [[com.jakemccrary/lein-test-refresh "0.18.0"]
                   [lein-exec "0.3.6"] ; run clojure scripts
                   [lein-try "0.4.3"] ; try clojure library
                   [lein-oneoff "0.3.2"] ; run single clojure script

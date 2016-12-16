@@ -2071,7 +2071,6 @@ ppas_check() {
     is_ubuntu || return 1
 
     [ -n "$R" ] && ppa_check rutter
-    [ -n "$GIT" ] && ppa_check eugenesan
 }
 
 essential_mac_check() {

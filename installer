@@ -84,7 +84,9 @@ smd() {
 
 srm() {
     for f in "$@"; do
-        if is_apt; then
+        if [ -L "$f" ]; then
+            rm -f "$f"
+        elif is_apt; then
             trash-put "$f" 2> /dev/null && slog "Trashed $f"
         else
             trash "$f" 2> /dev/null && slog "Trashed $f"

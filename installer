@@ -351,14 +351,14 @@ add_webupd8_ppa() {
     ppa_exists nilarimogard && return 0
 
     slog "Adding webupd8 ppa for youtub-dl etc"
-    sudo add-apt-repository  ppa:nilarimogard/webupd8 -y
+    sudo add-apt-repository ppa:nilarimogard/webupd8 -y
 }
 
 add_atom_ppa() {
     is_apt || return 1
     ppa_exists 'webupd8team.*-atom' && return 0
     slog "Adding atom ppa"
-    sudo add-apt-repository  ppa:webupd8team/atom -y
+    sudo add-apt-repository ppa:webupd8team/atom -y
 }
 
 add_vscode_ppa() {
@@ -384,14 +384,14 @@ add_typora_ppa() {
     ppa_exists typora.io && return 0
 
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
-    sudo add-apt-repository 'deb https://typora.io ./linux/'
+    sudo add-apt-repository 'deb https://typora.io ./linux/' -y
 }
 
 add_umake_ppa() {
     is_ubuntu || return 1
     ppa_exists ubuntu-make && return 0
 
-    sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+    sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
 }
 
 add_docker_ppa() {

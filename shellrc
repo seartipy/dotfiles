@@ -111,11 +111,12 @@ if is_mac; then
     alias upgrade="brew update && brew upgrade"
 
     #java
-    JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+    JAVA_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
     export JAVA_HOME
 
-    JDK_HOME=$(/usr/libexec/java_home -v 1.8)
+    JDK_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
     export JDK_HOME
+
     #brew
     export PATH="/usr/local/bin:$PATH"
 

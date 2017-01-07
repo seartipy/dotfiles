@@ -414,7 +414,7 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf zip
     is_ubuntu && sudo apt-get install -y firefox ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
 }
@@ -450,7 +450,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel readline-devel
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user stow myrepos gcc-c++ zeromq zeromq-devel readline-devel zip
 }
 
 fasd_install() {
@@ -868,9 +868,9 @@ jdk_ubuntu_install() {
 jdk_install() {
     has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
 
-    java_mac_install
-    java_fedora_install
-    java_ubuntu_install
+    jdk_mac_install
+    jdk_fedora_install
+    jdk_ubuntu_install
 }
 
 sdkman_install() {
@@ -2075,7 +2075,7 @@ essential_fedora_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar
+    cmd_check curl wget git tree ag fasd gpg tmux unar zip
 
     essential_mac_check
     essential_fedora_check

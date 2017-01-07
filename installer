@@ -36,12 +36,6 @@ is_debian() {
     [[ "$OS" == *"Debian" ]]
 }
 
-is_yakkety() {
-    has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -c | cut -d ':' -f 2)`
-    [[ "yakkety" == $os ]]
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -322,21 +316,6 @@ add_scala_ppa() {
     echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
 }
 
-add_haskell_stack_ppa() {
-    is_apt || return 1
-    ppa_exists fpco && return 0
-
-    slog "Adding stack ppa"
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
-    if is_yakkety; then
-        echo 'deb http://download.fpcomplete.com/ubuntu yakkety main' | sudo tee /etc/apt/sources.list.d/fpco.list
-    elif is_ubuntu; then
-        echo 'deb http://download.fpcomplete.com/ubuntu xenial main' | sudo tee /etc/apt/sources.list.d/fpco.list
-    elif is_debian; then
-        echo 'deb http://download.fpcomplete.com/debian jessie main' | sudo tee /etc/apt/sources.list.d/fpco.list
-    fi
-}
-
 add_chrome_ppa() {
     is_apt || return 1
     ppa_exists google-chrome && return 0
@@ -370,7 +349,6 @@ add_vscode_ppa() {
 }
 
 add_r_ppa() {
-    is_yakkety && return 1
     is_ubuntu || return 1
     ppa_exists rutter && return 0
 
@@ -1090,35 +1068,6 @@ cabal_install() {
     cabal_ubuntu_install
 }
 
-stack_mac_install() {
-    is_mac || return 1
-
-    slog "Installing stack"
-    brew install haskell-stack
-}
-
-stack_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing stack"
-    sudo dnf install -y ncurses-compat-libs # fedora 24 beta fix
-    sudo dnf install -y zlib-devel
-    sudo dnf copr -y enable petersen/stack
-    sudo dnf install -y stack
-}
-
-stack_ubuntu_install() {
-    is_apt || return 1
-
-    slog "Installing stack"
-    sudo apt-get install -y stack
-}
-
-stack_install() {
-    stack_mac_install
-    stack_fedora_install
-    stack_ubuntu_install
-}
 
 ihaskell_install() {
     has_cmd stack || return 1
@@ -1131,8 +1080,12 @@ ihaskell_install() {
 }
 
 haskell_install() {
+    slog "Installing haskell..."
+
     cabal_install
-    stack_install
+
+    slog "Installing stack"
+    curl -sSL https://get.haskellstack.org/ | sh
 
     slog "Installing stack packages"
     stack setup
@@ -1431,7 +1384,7 @@ typora_install() {
 additional_ubuntu_install() {
     is_apt || return 1
 
-    is_yakkety || add_webupd8_ppa
+    add_webupd8_ppa
     ubuntu_update
 
     slog "Installing additional"
@@ -1440,7 +1393,7 @@ additional_ubuntu_install() {
 
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox vlc
-        is_yakkety || sudo apt-get install -y youtube-dl
+        sudo apt-get install -y youtube-dl
         docker_ubuntu_install
     fi
 

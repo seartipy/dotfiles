@@ -43,6 +43,12 @@ is_ubuntu() {
     [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
 }
 
+is_zesty() {
+    local OS
+    OS=$(lsb_release -c | cut -d ':' -f2)
+    [[ "$OS" == *"zesty" ]]
+}
+
 is_apt() {
     is_ubuntu || is_debian
 }
@@ -408,14 +414,15 @@ essential_ubuntu_install() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_chrome_ppa
-    add_umake_ppa
+    is_zesty || add_umake_ppa
 
     ubuntu_update
     ubuntu_upgrade
 
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf zip
-    is_ubuntu && sudo apt-get install -y firefox ubuntu-make
+    is_ubuntu && sudo apt-get install -y firefox
+    is_zesty || sudo apt-get install -y ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
 }
 

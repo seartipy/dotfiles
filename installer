@@ -810,6 +810,16 @@ vscode_install() {
     code --install-extension Orta.vscode-jest
     code --install-extension flowtype.flow-for-vscode
     code --install-extension ms-vscode.cpptools
+    code --install-extension jakethashi.vscode-angular2-emmet
+    code --install-extension natewallace.angular2-inline
+    code --install-extension lucax88x.codeacejumper
+    code --install-extension dracula-theme.theme-dracula
+    code --install-extension TwentyChung.jsx
+    code --install-extension wmaurer.vscode-jumpy
+    code --install-extension web-dave.vsc-angular-cli
+    code --install-extension ms-vscode.Theme-TomorrowKit
+    code --install-extension esbenp.prettier-vscode
+    code --install-extension redhat.java
 }
 
 #

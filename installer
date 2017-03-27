@@ -814,7 +814,6 @@ vscode_install() {
     code --install-extension natewallace.angular2-inline
     code --install-extension lucax88x.codeacejumper
     code --install-extension dracula-theme.theme-dracula
-    code --install-extension TwentyChung.jsx
     code --install-extension wmaurer.vscode-jumpy
     code --install-extension web-dave.vsc-angular-cli
     code --install-extension ms-vscode.Theme-TomorrowKit

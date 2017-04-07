@@ -96,7 +96,7 @@
   ;; ["linter-eslint.useGlobalEslint" true]
   ["disable-keybindings.communityPackages" ["emmet"]]
 
-  ["tool-bar.visible" false]
+  ;; ["tool-bar.visible" false]
   ;; ["proton.core.modeKey" "enter"]
 
   ;; ["proton.core.wipeUserConfigs" false]

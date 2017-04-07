@@ -812,6 +812,8 @@ vscode_install() {
     code --install-extension ms-vscode.cpptools
     code --install-extension jakethashi.vscode-angular2-emmet
     code --install-extension natewallace.angular2-inline
+    code --install-extension formulahendry.auto-rename-tag
+    code --install-extension Angular.ng-template
     code --install-extension lucax88x.codeacejumper
     code --install-extension dracula-theme.theme-dracula
     code --install-extension wmaurer.vscode-jumpy

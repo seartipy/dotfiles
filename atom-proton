@@ -87,7 +87,7 @@
   ["editor.fontSize" "13"]
   ["editor.fontFamily" "monaco, consolas, ubuntu mono, mononoki, hack, source code pro, monospace"]
   ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
-  ["proton.core.showTabBar" false]
+  ["proton.core.showTabBar" true]
   ["editor.scrollPastEnd" true]
   ["proton.core.relativeLineNumbers" true]
 

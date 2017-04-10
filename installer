@@ -422,7 +422,7 @@ essential_ubuntu_install() {
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal stow myrepos unar unzip libzmq3-dev pkg-config fonts-hack-otf zip
     is_ubuntu && sudo apt-get install -y firefox
-    is_zesty || sudo apt-get install -y ubuntu-make
+    sudo apt-get install -y ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
 }
 
@@ -2056,7 +2056,9 @@ ppas_check() {
     is_apt || return 1
 
     ppa_check google-chrome
-    is_ubuntu && ppa_check ubuntu-make
+    if is_ubuntu; then
+       is_zesty || ppa_check ubuntu-make
+    fi
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$SCALA" ] && ppa_check sbt

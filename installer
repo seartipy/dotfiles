@@ -797,9 +797,16 @@ mac_vscode_install() {
     brew cask install visual-studio-code
 }
 
+fedora_vscode_install() {
+    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+    sudo dnf install -y code
+}
+
 vscode_install() {
     ubuntu_vscode_install
     mac_vscode_install
+    fedora_vscode_install
 
     code --install-extension EditorConfig.EditorConfig
     code --install-extension msjsdiag.debugger-for-chrome
@@ -2145,7 +2152,6 @@ atom_check() {
 }
 
 vscode_check() {
-    is_fedora && return 1
     cmd_check code
 }
 

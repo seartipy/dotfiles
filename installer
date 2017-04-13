@@ -350,8 +350,8 @@ add_vscode_ppa() {
     is_ubuntu || return 1
     ppa_exists 'vscode' && return 0
 
-    sudo wget -O - https://tagplus5.github.io/vscode-ppa/ubuntu/gpg.key | sudo apt-key add -
-    sudo wget -O /etc/apt/sources.list.d/vscode.list https://tagplus5.github.io/vscode-ppa/ubuntu/vscode.list
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" | sudo tee -a /etc/apt/sources.list.d/vscode.list
 }
 
 add_r_ppa() {
@@ -789,7 +789,7 @@ ubuntu_vscode_install() {
     is_ubuntu || return 1
     add_vscode_ppa
     ubuntu_update
-    sudo apt-get install -y code code-insiders
+    sudo apt-get install -y code
 }
 
 mac_vscode_install() {
@@ -798,6 +798,8 @@ mac_vscode_install() {
 }
 
 fedora_vscode_install() {
+    is_fedora || return 1
+
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
     sudo dnf install -y code

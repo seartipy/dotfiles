@@ -677,7 +677,7 @@ emacs_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing emacs"
-    sudo apt-get install -y emacs24 aspell aspell-en editorconfig exuberant-ctags
+    sudo apt-get install -y emacs aspell aspell-en editorconfig exuberant-ctags
 
 }
 

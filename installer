@@ -218,6 +218,16 @@ npm_check() {
     done
 }
 
+vsext_exists() {
+    code --list-extensions | grep "$1" > /dev/null
+}
+
+vsext_check() {
+    for p in "$@"; do
+	vsext_exists "$p" || warn "$p vscode extension not installed"
+    done
+}
+
 gem_exists() {
     gem list --local | grep "$1" > /dev/null
 }
@@ -276,6 +286,16 @@ stackexei() {
 
     for p in "$@"; do
         stack install "$p"
+    done
+}
+
+vsexti() {
+    has_cmd code || return 1
+
+    for p in "$@"; do
+	if ! vsext_exists "$p"; then
+	    code --install-extension "$p"
+	fi
     done
 }
 
@@ -810,25 +830,27 @@ vscode_install() {
     mac_vscode_install
     fedora_vscode_install
 
-    code --install-extension EditorConfig.EditorConfig
-    code --install-extension msjsdiag.debugger-for-chrome
-    code --install-extension eg2.tslint
-    code --install-extension dbaeumer.vscode-eslint
-    code --install-extension alefragnani.project-manager
-    code --install-extension robertohuertasm.vscode-icons
-    code --install-extension Orta.vscode-jest
-    code --install-extension flowtype.flow-for-vscode
-    code --install-extension ms-vscode.cpptools
-    code --install-extension jakethashi.vscode-angular2-emmet
-    code --install-extension natewallace.angular2-inline
-    code --install-extension formulahendry.auto-rename-tag
-    code --install-extension Angular.ng-template
-    code --install-extension lucax88x.codeacejumper
-    code --install-extension dracula-theme.theme-dracula
-    code --install-extension wmaurer.vscode-jumpy
-    code --install-extension ms-vscode.Theme-TomorrowKit
-    code --install-extension esbenp.prettier-vscode
-    code --install-extension redhat.java
+    has_cmd code || return 1
+
+    vsexti EditorConfig.EditorConfig
+    vsexti msjsdiag.debugger-for-chrome
+    vsexti eg2.tslint
+    vsexti dbaeumer.vscode-eslint
+    vsexti alefragnani.project-manager
+    vsexti robertohuertasm.vscode-icons
+    vsexti Orta.vscode-jest
+    vsexti flowtype.flow-for-vscode
+    vsexti ms-vscode.cpptools
+    vsexti jakethashi.vscode-angular2-emmet
+    vsexti natewallace.angular2-inline
+    vsexti formulahendry.auto-rename-tag
+    vsexti Angular.ng-template
+    vsexti lucax88x.codeacejumper
+    vsexti dracula-theme.theme-dracula
+    vsexti wmaurer.vscode-jumpy
+    vsexti ms-vscode.Theme-TomorrowKit
+    vsexti esbenp.prettier-vscode
+    vsexti redhat.java
 }
 
 #
@@ -2155,6 +2177,26 @@ atom_check() {
 
 vscode_check() {
     cmd_check code
+    
+    vsext_check EditorConfig.EditorConfig
+    vsext_check msjsdiag.debugger-for-chrome
+    vsext_check eg2.tslint
+    vsext_check dbaeumer.vscode-eslint
+    vsext_check alefragnani.project-manager
+    vsext_check robertohuertasm.vscode-icons
+    vsext_check Orta.vscode-jest
+    vsext_check flowtype.flow-for-vscode
+    vsext_check ms-vscode.cpptools
+    vsext_check jakethashi.vscode-angular2-emmet
+    vsext_check natewallace.angular2-inline
+    vsext_check formulahendry.auto-rename-tag
+    vsext_check Angular.ng-template
+    vsext_check lucax88x.codeacejumper
+    vsext_check dracula-theme.theme-dracula
+    vsext_check wmaurer.vscode-jumpy
+    vsext_check ms-vscode.Theme-TomorrowKit
+    vsext_check esbenp.prettier-vscode
+    vsext_check redhat.java
 }
 
 java_check() {

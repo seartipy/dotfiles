@@ -405,7 +405,7 @@ fedora_themes_install() {
     dnf config-manager --add-repo http://download.opensuse.org/repositories/home:Horst3180/Fedora_24/home:Horst3180.repo
     sudo dnf install -y arc-theme
 
-    sudo dnf install -y conky conky-manager
+    sudo dnf install -y conky
 }
 
 add_numix_ppa() {
@@ -416,23 +416,13 @@ add_numix_ppa() {
     sudo add-apt-repository ppa:numix/ppa -y
 }
 
-add_conky_manager_ppa() {
-    is_ubuntu || return 1
-    ppa_exists teejee2008 && return 0
-
-    slog "Adding conky manager ppa"
-    sudo add-apt-repository ppa:teejee2008/ppa -y
-}
-
 ubuntu_themes_install() {
     is_ubuntu || return 1
 
     add_numix_ppa
-    add_conky_manager_ppa
     sudo apt-get update
 
     sudo apt-get install -y numix-icon-theme arc-theme conky-all
-    sudo apt-get install -y conky-manager
 }
 
 themes_install() {
@@ -504,11 +494,10 @@ powerline_fonts() {
 fonts_install() {
     powerline_fonts
     mononoki_font
-
 }
 
 fonts_check() {
-    font_exists "Sauce Code Powerline" || warn "powerline fonts not installed"
+    font_exists "Powerline" || warn "powerline fonts not installed"
     font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
 }
 

@@ -202,7 +202,7 @@ mate_settings() {
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
-    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:lctrl_meta', 'caps\tcaps:ctrl_modifier']"
+    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps', 'caps\tcaps:none', 'ctrl\tctrl:lctrl_meta']"
 
     dconf write /org/mate/caja/preferences/click-policy "'single'"
     dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"

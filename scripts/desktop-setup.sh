@@ -149,7 +149,8 @@ gnome_settings() {
     gsettings set org.gnome.desktop.interface clock-format '12h'
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
-    gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier', 'ctrl:lctrl_meta']"
+    # https://askubuntu.com/questions/493404/ubuntu-14-04-vmware-6-left-ctrl-and-right-shift-not-functioning
+    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps', 'ctrl:lctrl_meta']"
 
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true

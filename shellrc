@@ -454,5 +454,5 @@ if is_fedora; then
 fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/home/pervez/.sdkman"
-[[ -s "/home/pervez/.sdkman/bin/sdkman-init.sh" ]] && source "/home/pervez/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="~/.sdkman"
+[[ -s "~/.sdkman/bin/sdkman-init.sh" ]] && source "~/.sdkman/bin/sdkman-init.sh"

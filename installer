@@ -1506,35 +1506,6 @@ elixir_install() {
 }
 
 #
-# r
-
-r_ubuntu_install() {
-    is_apt || return 1
-
-    sudo apt-get install -y r-base r-base-dev # currently using rutter ppa, use cran instead?
-}
-
-r_mac_install() {
-    is_mac || return 1
-
-    brew tap homebrew/science
-    brew install R
-    brew cask install rstudio
-}
-
-r_fedora_install() {
-    is_fedora || return 1
-
-    sudo dnf install -y R
-}
-
-r_install() {
-    r_ubuntu_install
-    r_mac_install
-    r_fedora_install
-}
-
-#
 # swift
 
 swift_mac_install() {
@@ -1760,10 +1731,6 @@ script_options() {
                 ELM="elm"
                 shift
                 ;;
-            r)
-                R="r"
-                shift
-                ;;
             fresh)
                 FRESH="fresh"
                 shift
@@ -1914,7 +1881,6 @@ install_all() {
     [ -n "$ELM" ] && elm_install
 
     [ -n "$ELIXIR" ] && elixir_install
-    [ -n "$R" ] && r_install
 
     [ -n "$CPP" ] && cpp_install
 
@@ -1933,7 +1899,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $SWIFT $ELIXIR $R $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $SWIFT $ELIXIR $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -1983,8 +1949,6 @@ ppas_check() {
     [ -n "$ADDITIONAL" ] && ppa_check nilarimogard
 
     is_ubuntu || return 1
-
-    [ -n "$R" ] && ppa_check rutter
 }
 
 essential_mac_check() {
@@ -2065,7 +2029,7 @@ atom_check() {
 
 vscode_check() {
     cmd_check code
-    
+
     vsext_check EditorConfig.EditorConfig
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint
@@ -2137,10 +2101,6 @@ idris_check() {
 
 elm_check() {
     cmd_check elm elm-oracle elm-make elm-reactor elm-repl elm-package elm-live
-}
-
-r_check() {
-    :
 }
 
 haskell_check() {
@@ -2245,7 +2205,6 @@ post_installer_check() {
     [ -n "$SWIFT" ] && swift_check
 
     [ -n "$ELIXIR" ] && elixir_check
-    # [ -n "$R" ] && r_check
     [ -n "$PURESCRIPT" ] && purescript_check
     [ -n "$IDRIS" ] && idris_check
     [ -n "$ELM" ] && elm_check

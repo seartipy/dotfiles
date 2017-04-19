@@ -1037,51 +1037,7 @@ scala_install() {
 #
 # haskell
 
-cabal_mac_install() {
-    is_mac || return 1
-
-    slog "Installing cabal"
-    brew install ghc cabal-install
-}
-
-cabal_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing cabal"
-    sudo dnf install -y ghc cabal-install
-}
-
-cabal_ubuntu_install() {
-    is_apt || return 1
-
-    ubuntu_update
-
-    slog "Installing cabal"
-    sudo apt-get install -y cabal-install ghc
-}
-
-cabal_install() {
-    cabal_mac_install
-    cabal_fedora_install
-    cabal_ubuntu_install
-}
-
-
-# ihaskell_install() {
-#     has_cmd stack || return 1
-
-#     stackexei  alex happy cpphs
-#     stackexei ihaskell
-
-#     # has_cmd ihaskell || return 1
-#     # ihaskell install
-# }
-
 haskell_install() {
-    slog "Installing haskell..."
-
-    cabal_install
-
     slog "Installing stack"
     curl -sSL https://get.haskellstack.org/ | sh
 
@@ -1829,11 +1785,7 @@ web_check() {
 }
 
 haskell_check() {
-    cmd_check ghc cabal stack
-
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghc-mod hoogle intero
-
-    # cmd_check structured-haskell-mode
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghc-mod hoogle intero structured-haskell-mode
 }
 
 python3_check() {

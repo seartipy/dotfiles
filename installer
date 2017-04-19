@@ -1427,7 +1427,6 @@ select_everything() {
 
     WEB="web"
     CPP="cpp"
-    GO="go"
 
     PYTHON="python"
     PYTHON3="python3"
@@ -1436,7 +1435,6 @@ select_everything() {
     ADDITIONAL="additional"
 
     VIM="vim"
-    R="r"
 }
 
 select_defaults() {
@@ -1491,10 +1489,6 @@ script_options() {
                 ;;
             vscode)
                 VSCODE="vscode"
-                shift
-                ;;
-            go)
-                GO="go"
                 shift
                 ;;
             java)
@@ -1747,7 +1741,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 

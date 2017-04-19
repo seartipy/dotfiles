@@ -1476,21 +1476,6 @@ cpp_install() {
 }
 
 #
-# swift
-
-swift_mac_install() {
-    is_mac || return 1
-
-    curl -fsSL https://raw.github.com/alcatraz/Alcatraz/master/Scripts/install.sh | sh # xcode plugin manager
-
-    brew install swiftlint tailor cocoapods carthage
-}
-
-swift_install() {
-    swift_mac_install
-}
-
-#
 # installer
 
 select_everything() {
@@ -1521,7 +1506,6 @@ select_everything() {
     PURESCRIPT="purescript"
     IDRIS="idris"
     ELM="elm"
-    SWIFT="swift"
 
     ADDITIONAL="additional"
 
@@ -1657,10 +1641,6 @@ script_options() {
                 ;;
             haskell)
                 HASKELL="haskell"
-                shift
-                ;;
-            swift)
-                SWIFT="swift"
                 shift
                 ;;
             cpp)
@@ -1843,8 +1823,6 @@ install_all() {
 
     [ -n "$CPP" ] && cpp_install
 
-    [ -n "$SWIFT" ] && swift_install
-
     [ -n "$ADDITIONAL" ] && additional_install
 
     [ -n "$VIM" ] && vim_install
@@ -1858,7 +1836,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $SWIFT $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -2084,10 +2062,6 @@ python_check() {
     fi
 }
 
-swift_check() {
-    is_mac && cmd_check swiftlint tailor pod carthage
-}
-
 cpp_check() {
     cmd_check cmake scons cppcheck clang++ clang-format
     is_linux && cmd_check g++
@@ -2156,8 +2130,6 @@ post_installer_check() {
     [ -n "$PYTHON3" ] && python3_check
     [ -n "$PYTHON" ] && python_check
     [ -n "$HASKELL" ] && haskell_check
-
-    [ -n "$SWIFT" ] && swift_check
 
     [ -n "$PURESCRIPT" ] && purescript_check
     [ -n "$IDRIS" ] && idris_check

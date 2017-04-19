@@ -787,6 +787,8 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
     fedora_atom_install
+
+    apmi nuclide
 }
 
 #
@@ -1812,6 +1814,9 @@ emacs_check() {
 
 atom_check() {
     cmd_check atom apm
+    has_cmd apm || return 1
+
+    apm_check nuclide
 }
 
 vscode_check() {

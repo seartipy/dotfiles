@@ -1476,36 +1476,6 @@ cpp_install() {
 }
 
 #
-# elixir
-
-elixir_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing elixir"
-    sudo dnf install -y elixir
-}
-
-elixir_ubuntu_install() {
-    is_apt || return 1
-
-    slog "Installing elixir"
-    sudo apt-get install -y elixir
-}
-
-elixir_mac_install() {
-    is_mac || return 1
-
-    slog "Installing elixir"
-    brew install elixir
-}
-
-elixir_install() {
-    elixir_fedora_install
-    elixir_ubuntu_install
-    elixir_mac_install
-}
-
-#
 # swift
 
 swift_mac_install() {
@@ -1548,7 +1518,6 @@ select_everything() {
     PYTHON3="python3"
     HASKELL="haskell"
 
-    ELIXIR="elixir"
     PURESCRIPT="purescript"
     IDRIS="idris"
     ELM="elm"
@@ -1703,10 +1672,6 @@ script_options() {
                 PYTHON3="python3"
                 shift
                 ;;
-            elixir)
-                ELIXIR="elixir"
-                shift
-                ;;
             additional)
                 ADDITIONAL="additional"
                 shift
@@ -1733,10 +1698,6 @@ script_options() {
                 ;;
             fresh)
                 FRESH="fresh"
-                shift
-                ;;
-            elixir)
-                ELIXIR="elixir"
                 shift
                 ;;
             everything)
@@ -1880,8 +1841,6 @@ install_all() {
     [ -n "$IDRIS" ] && idris_install
     [ -n "$ELM" ] && elm_install
 
-    [ -n "$ELIXIR" ] && elixir_install
-
     [ -n "$CPP" ] && cpp_install
 
     [ -n "$SWIFT" ] && swift_install
@@ -1899,7 +1858,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $SWIFT $ELIXIR $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $GO $HASKELL $SWIFT $VIM $THEMES $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -2087,10 +2046,6 @@ web_check() {
     cmd_check npm-check ncu lite-server
 }
 
-elixir_check() {
-    cmd_check elixir
-}
-
 purescript_check() {
     cmd_check psc
 }
@@ -2204,7 +2159,6 @@ post_installer_check() {
 
     [ -n "$SWIFT" ] && swift_check
 
-    [ -n "$ELIXIR" ] && elixir_check
     [ -n "$PURESCRIPT" ] && purescript_check
     [ -n "$IDRIS" ] && idris_check
     [ -n "$ELM" ] && elm_check

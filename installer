@@ -1367,7 +1367,7 @@ script_options() {
                 shift
                 ;;
             *)
-                shift # ignore unknown option
+                err_exit "unknown option $1"
                 ;;
         esac
     done
@@ -1740,6 +1740,7 @@ post_installer_check() {
 
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check
+
     [ -n "$EMACS" ] && emacs_check
     [ -n "$ATOM" ] && atom_check
     [ -n "$VSCODE" ] && vscode_check

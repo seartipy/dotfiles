@@ -155,9 +155,6 @@ if has_cmd pyenv > /dev/null; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
-#rvm
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-
 seartipy_fix_links() {
     if ! [ -d ~/seartipy/dotfiles ]; then
         smd ~/seartipy

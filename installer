@@ -1152,76 +1152,6 @@ haskell_install() {
 }
 
 #
-# purescript
-
-purescript_mac_install() {
-    is_mac || return 1
-
-    slog "Installing purescript"
-    brew cask install purescript
-}
-
-purescript_linux_install() {
-    is_linux || return 1
-
-    nvm_install
-
-    slog "Installing purescript"
-    npmi  purescript
-}
-
-purescript_install() {
-    purescript_mac_install
-    purescript_linux_install
-}
-
-#
-# idris
-
-idris_mac_install() {
-    is_mac || return 1
-
-    brew cask install idris
-}
-
-idris_linux_install() {
-    is_linux || return 1
-
-    stackexei idris
-}
-
-idris_install() {
-    idris_mac_install
-    idris_linux_install
-}
-
-#
-# elm
-
-elm_mac_install() {
-    is_mac || return 1
-    brew cask install elm-platform
-
-    web_mac_install
-}
-
-elm_linux_install() {
-    is_linux || return 1
-
-    nvm_install
-
-    slog "Installing elm"
-    npmi elm
-}
-
-elm_install() {
-    elm_mac_install
-    elm_linux_install
-
-    npmi elm-oracle elm-live
-}
-
-#
 # python
 
 pipi() {
@@ -1503,10 +1433,6 @@ select_everything() {
     PYTHON3="python3"
     HASKELL="haskell"
 
-    PURESCRIPT="purescript"
-    IDRIS="idris"
-    ELM="elm"
-
     ADDITIONAL="additional"
 
     VIM="vim"
@@ -1664,18 +1590,6 @@ script_options() {
                 VIM="vim"
                 shift
                 ;;
-            idris)
-                IDRIS="idris"
-                shift
-                ;;
-            purescript)
-                PURESCRIPT="purescript"
-                shift
-                ;;
-            elm)
-                ELM="elm"
-                shift
-                ;;
             fresh)
                 FRESH="fresh"
                 shift
@@ -1817,9 +1731,6 @@ install_all() {
     [ -n "$PYTHON" ] && python_install
 
     [ -n "$HASKELL" ] && haskell_install
-    [ -n "$PURESCRIPT" ] && purescript_install
-    [ -n "$IDRIS" ] && idris_install
-    [ -n "$ELM" ] && elm_install
 
     [ -n "$CPP" ] && cpp_install
 
@@ -2024,18 +1935,6 @@ web_check() {
     cmd_check npm-check ncu lite-server
 }
 
-purescript_check() {
-    cmd_check psc
-}
-
-idris_check() {
-    cmd_check idris
-}
-
-elm_check() {
-    cmd_check elm elm-oracle elm-make elm-reactor elm-repl elm-package elm-live
-}
-
 haskell_check() {
     cmd_check ghc cabal stack
 
@@ -2130,10 +2029,6 @@ post_installer_check() {
     [ -n "$PYTHON3" ] && python3_check
     [ -n "$PYTHON" ] && python_check
     [ -n "$HASKELL" ] && haskell_check
-
-    [ -n "$PURESCRIPT" ] && purescript_check
-    [ -n "$IDRIS" ] && idris_check
-    [ -n "$ELM" ] && elm_check
 
     [ -n "$ADDITIONAL" ] && additional_check
     [ -n "$VIM" ] && vim_check

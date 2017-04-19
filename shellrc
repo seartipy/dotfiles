@@ -120,8 +120,6 @@ if is_mac; then
     #brew
     export PATH="/usr/local/bin:$PATH"
 
-    #golang
-    export PATH="$PATH:/usr/local/opt/go/libexec/bin"
 fi
 
 
@@ -145,13 +143,6 @@ export EDITOR="emacsclient -t"                  # $EDITOR should open in termina
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
 
 export PATH="$HOME/bin:$PATH"
-
-#go
-if has_cmd go; then
-    export GOPATH="$HOME/golang-ws"
-    PATH="$PATH:$(go env GOROOT)/bin:$GOPATH/bin"
-    export PATH
-fi
 
 # sources
 

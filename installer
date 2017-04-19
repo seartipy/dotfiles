@@ -374,14 +374,6 @@ add_vscode_ppa() {
     sudo wget -O /etc/apt/sources.list.d/vscode.list https://tagplus5.github.io/vscode-ppa/ubuntu/vscode.list
 }
 
-add_r_ppa() {
-    is_ubuntu || return 1
-    ppa_exists rutter && return 0
-
-    slog "Adding r ppa"
-    sudo add-apt-repository ppa:marutter/rrutter -y
-}
-
 add_typora_ppa() {
     is_apt || return 1
 

@@ -1253,40 +1253,6 @@ web_install() {
 }
 
 #
-# vim
-
-vim_mac_install() {
-    is_mac || return 1
-
-    slog "Installing vim packages"
-    brew install macvim --override-system-vim --with-lua --with-luajit
-    brew linkapps macvim
-}
-
-vim_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing vim"
-    sudo dnf install -y vim-enhanced
-}
-
-vim_ubuntu_install() {
-    is_apt || return 1
-
-    slog "Installing vim"
-    sudo apt-get install -y vim-gnome
-}
-
-vim_install() {
-    vim_mac_install
-    vim_fedora_install
-    vim_ubuntu_install
-
-    slog "Installing vim packages"
-    curl -L https://bit.ly/janus-bootstrap | bash
-}
-
-#
 # additional
 
 docker_ubuntu_install() {
@@ -1433,8 +1399,6 @@ select_everything() {
     HASKELL="haskell"
 
     ADDITIONAL="additional"
-
-    VIM="vim"
 }
 
 select_defaults() {
@@ -1580,10 +1544,6 @@ script_options() {
                 SEARTIPY="seartipy"
                 shift
                 ;;
-            vim)
-                VIM="vim"
-                shift
-                ;;
             fresh)
                 FRESH="fresh"
                 shift
@@ -1689,10 +1649,6 @@ fresh_install() {
     if [ -n "$PYTHON" ]; then
         srm ~/.pyenv
     fi
-
-    if [ -n "$VIM" ]; then
-        srm ~/.vim
-    fi
 }
 
 create_dirs() {
@@ -1729,8 +1685,6 @@ install_all() {
     [ -n "$CPP" ] && cpp_install
 
     [ -n "$ADDITIONAL" ] && additional_install
-
-    [ -n "$VIM" ] && vim_install
 }
 
 installer() {
@@ -1741,7 +1695,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $VIM $THEMES $ADDITIONAL"
+    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL $ADDITIONAL"
 
     [ -n "$FRESH" ]  && fresh_install
 
@@ -1987,11 +1941,6 @@ git_check() {
     file_check ~/.gitconfig
 }
 
-vim_check() {
-    cmd_check vim
-    dir_check ~/.vim/janus
-}
-
 post_installer_check() {
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
@@ -2025,7 +1974,6 @@ post_installer_check() {
     [ -n "$HASKELL" ] && haskell_check
 
     [ -n "$ADDITIONAL" ] && additional_check
-    [ -n "$VIM" ] && vim_check
 }
 
 curdir=$(pwd)

@@ -1506,27 +1506,6 @@ elixir_install() {
 }
 
 #
-# rust
-
-rust_linux_install() {
-    is_linux || return 1
-    has_cmd rustc && return 1
-
-    curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y
-}
-
-rust_mac_install() {
-    is_mac || return 1
-
-    brew install rust
-}
-
-rust_install() {
-    rust_linux_install
-    rust_mac_install
-}
-
-#
 # r
 
 r_ubuntu_install() {
@@ -1607,7 +1586,6 @@ select_everything() {
     ADDITIONAL="additional"
 
     VIM="vim"
-    RUST="rust"
     R="r"
 }
 
@@ -1772,10 +1750,6 @@ script_options() {
                 ;;
             idris)
                 IDRIS="idris"
-                shift
-                ;;
-            rust)
-                RUST="rust"
                 shift
                 ;;
             purescript)
@@ -1943,7 +1917,6 @@ install_all() {
     [ -n "$R" ] && r_install
 
     [ -n "$CPP" ] && cpp_install
-    [ -n "$RUST" ] && rust_install
 
     [ -n "$SWIFT" ] && swift_install
 
@@ -2271,7 +2244,6 @@ post_installer_check() {
 
     [ -n "$SWIFT" ] && swift_check
 
-    # [ -n "$RUST" ] && rust_check
     [ -n "$ELIXIR" ] && elixir_check
     # [ -n "$R" ] && r_check
     [ -n "$PURESCRIPT" ] && purescript_check

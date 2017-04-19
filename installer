@@ -385,6 +385,7 @@ add_typora_ppa() {
 
 add_umake_ppa() {
     is_ubuntu || return 1
+    is_zesty && return 1
     ppa_exists ubuntu-make && return 0
 
     sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
@@ -418,7 +419,7 @@ essential_ubuntu_install() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_chrome_ppa
-    is_zesty || add_umake_ppa
+    add_umake_ppa
 
     ubuntu_update
     ubuntu_upgrade

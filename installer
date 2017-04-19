@@ -518,18 +518,6 @@ cleanup() {
 #
 # dotfiles
 
-clone_mean_dotfiles() {
-    sclone https://gitlab.com/seartipy/mean-dotfiles.git ~/seartipy/mean-dotfiles
-    [ -d ~/seartipy/mean-dotfiles ] || return 1
-}
-
-clone_lean_dotfiles() {
-    sclone https://gitlab.com/seartipy/lean-dotfiles.git ~/seartipy/lean-dotfiles
-    [ -d ~/seartipy/lean-dotfiles ] || return 1
-
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/lean-dotfiles && git checkout develop && cd || return 1
-}
-
 clone_dotfiles() {
     sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
     [ -d ~/seartipy/dotfiles ] || return 1
@@ -550,8 +538,6 @@ tmux_dotfiles() {
 }
 
 dotfiles_install() {
-    clone_mean_dotfiles
-    clone_lean_dotfiles
     clone_dotfiles
 
     tmux_dotfiles
@@ -686,25 +672,7 @@ emacs_ubuntu_install() {
 
 }
 
-spacemacs_dotfiles() {
-    sclone https://github.com/syl20bnr/spacemacs ~/seartipy/emacses/spacemacs
-
-    [ -f ~/seartipy/dotfiles/templates/spacemacs ] || return 1
-
-    slog "Copying ~/seartipy/dotfiles/templates/spacemacs as ~/.spacemacs"
-    scopy ~/seartipy/dotfiles/templates/spacemacs ~/.spacemacs
-}
-
-leanemacs_dotfiles() {
-    [ -f ~/seartipy/lean-dotfiles/emacs-init.el ] || return 1
-
-    smd ~/seartipy/emacses/lean-emacs
-
-    slog "Linking ~/seartipy/lean-dotfiles/emacs-init.el as ~/seartipy/emacses/lean-emacs/init.el"
-    sln ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
-}
-
-housemd_dotfiles() {
+emacs_dotfiles() {
     sclone  https://gitlab.com/seartipy/housemd.git ~/seartipy/emacses/housemd
 
     [ -d "$HOME/seartipy/emacses/housemd" ] || return 1
@@ -720,12 +688,6 @@ housemd_dotfiles() {
 
     slog "Copying ~/seartipy/emacses/housemd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
     scopy ~/seartipy/emacses/housemd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
-}
-
-emacs_dotfiles() {
-    spacemacs_dotfiles
-    leanemacs_dotfiles
-    housemd_dotfiles
 }
 
 emacs_cask_install() {
@@ -1581,7 +1543,6 @@ fresh_ppas() {
 fresh_install() {
     if [ -n "$DOTFILES" ]; then
         srm ~/seartipy/dotfiles
-        srm ~/seartipy/lean-dotfiles
         srm ~/.tmux.conf
     fi
 
@@ -1767,7 +1728,6 @@ essential_check() {
 }
 
 dotfiles_check() {
-    dir_check ~/seartipy/dotfiles ~/seartipy/lean-dotfiles
     ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 }
 
@@ -1796,11 +1756,7 @@ emacs_check() {
     fi
     is_linux && cmd_check ctags
 
-    dir_check ~/seartipy/emacses/spacemacs ~/seartipy/emacses/housemd ~/seartipy/emacses/lean-emacs
-
-    file_check ~/.spacemacs
     ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
-    ln_check ~/seartipy/lean-dotfiles/emacs-init.el ~/seartipy/emacses/lean-emacs/init.el
 
     cmd_check cask
 }

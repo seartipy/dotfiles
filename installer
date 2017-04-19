@@ -1110,7 +1110,6 @@ cabal_fedora_install() {
 cabal_ubuntu_install() {
     is_apt || return 1
 
-    add_haskell_stack_ppa
     ubuntu_update
 
     slog "Installing cabal"
@@ -1124,15 +1123,15 @@ cabal_install() {
 }
 
 
-ihaskell_install() {
-    has_cmd stack || return 1
+# ihaskell_install() {
+#     has_cmd stack || return 1
 
-    stackexei  alex happy cpphs
-    stackexei ihaskell
+#     stackexei  alex happy cpphs
+#     stackexei ihaskell
 
-    # has_cmd ihaskell || return 1
-    # ihaskell install
-}
+#     # has_cmd ihaskell || return 1
+#     # ihaskell install
+# }
 
 haskell_install() {
     slog "Installing haskell..."
@@ -1147,17 +1146,17 @@ haskell_install() {
     stackexei alex
     stackexei happy
     stackexei hlint
-    # stack install structured-haskell-mode
-    stackexei  stylish-haskell
+    stackexei structured-haskell-mode
+    stackexei stylish-haskell
     stackexei hasktags
     stackexei hindent
     stackexei hdevtools
-    stackexei install ghc-mod
+    stackexei ghc-mod
     # stackexei ghci-ng
     stackexei apply-refact
     stackexei hoogle
     stackexei intero
-    ihaskell_install
+    # ihaskell_install
 }
 
 #
@@ -2098,7 +2097,6 @@ ppas_check() {
     [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
-    [ -n "$HASKELL" ] && ppa_check fpco
     [ -n "$ADDITIONAL" ] && ppa_check nilarimogard
 
     is_ubuntu || return 1

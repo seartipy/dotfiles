@@ -198,8 +198,6 @@ seartipy_fix_links() {
 
     has_cmd tmux && sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 
-    has_cmd atom && sln ~/seartipy/dotfiles/atom-proton ~/.proton
-
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
 
     if has_cmd xmonad; then

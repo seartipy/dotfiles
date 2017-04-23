@@ -1,0 +1,29 @@
+{
+    "editor.fontFamily": "Fira Code, Monaco, 'Ubuntu Mono', Consolas, 'Courier New', monospace",
+    "editor.fontSize": 15,
+    "editor.tabSize": 2,
+    "editor.formatOnPaste": true,
+    "editor.fontLigatures": true,
+    "editor.emptySelectionClipboard": false,
+    "editor.trimAutoWhitespace": true,
+    "editor.formatOnSave": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.autoSave": "afterDelay",
+    "emmet.syntaxProfiles": {
+        "javascript": "html"
+    },
+    "vsicons.projectDetection.autoReload": true,
+    "prettier.singleQuote": true,
+    "[html]": {
+        "editor.formatOnSave": false
+    },
+    "workbench.iconTheme": "vs-seti",
+    "workbench.colorTheme": "Default Light+",
+    "[cpp]": {
+        "editor.quickSuggestions": false
+    },
+    "[c]": {
+        "editor.quickSuggestions": false
+    }
+}

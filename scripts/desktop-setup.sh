@@ -591,6 +591,7 @@ lxde_install() {
 
     fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lubuntu-rc.xml
     fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lxde-rc.xml
+    fcopy ~/seartipy/dotfiles/templates/desktops/lxde/autostart ~/.config/lxsession/Lubuntu/autostart
 }
 
 # 

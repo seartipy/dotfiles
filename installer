@@ -427,7 +427,7 @@ essential_ubuntu_install() {
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal unar unzip libzmq3-dev pkg-config zip
     is_ubuntu && sudo apt-get install -y firefox
-    sudo apt-get install -y ubuntu-make
+    is_ubuntu && sudo apt-get install -y ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
 }
 

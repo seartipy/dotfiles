@@ -333,13 +333,13 @@ add_java_ppa() {
     sudo add-apt-repository ppa:webupd8team/java -y
 }
 
-add_scala_ppa() {
+add_sbt_ppa() {
     is_apt || return 1
     ppa_exists sbt && return 0
 
     slog "Adding scala ppa"
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-    echo "deb http://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
 }
 
 add_chrome_ppa() {
@@ -986,7 +986,7 @@ scala_fedora_install() {
 scala_ubuntu_install() {
     is_apt || return 1
 
-    add_scala_ppa
+    add_sbt_ppa
     ubuntu_update
 
     slog "Install scala"

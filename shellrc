@@ -384,8 +384,20 @@ seartipy_ctrl_alt_reset() {
     has_cmd mate-session && dconf write /org/mate/desktop/peripherals/keyboard/kbd/options '@as []'
 }
 
+seartipy_ctrl_caps_set() {
+    is_linux || return 1
+    has_cmd gnome-session && gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
+    has_cmd mate-session && dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['ctrl\tctrl:nocaps', 'caps\tcaps:none']"
+}
+
+seartipy_ctrl_caps_reset() {
+    seartipy_ctrl_alt_reset
+}
+
 alias cas=seartipy_ctrl_alt_set
 alias car=seartipy_ctrl_alt_reset
+alias ccs=seartipy_ctrl_caps_set
+alias ccr=seartipy_ctrl_caps_reset
 
 alias sse="seartipy_emacs_default spacemacs"
 alias sle="seartipy_emacs_default lean-emacs"

@@ -18,7 +18,7 @@ gnome_hidpi() {
     fi
 
     if [ "$xres" -ge 3840 ]; then
-        gsettings set org.gnome.desktop.interface text-scaling-factor .8
+        gsettings set org.gnome.desktop.interface text-scaling-factor .9
     fi
 }
 
@@ -109,7 +109,7 @@ gnome_extensions() {
 
     shell_extension_install $gnomever 10   # window navigator
     shell_extension_install $gnomever 21   # workspace indicator
-    shell_extension_install $gnomever 28   # gtile
+    # shell_extension_install $gnomever 28   # gtile
     shell_extension_install $gnomever 97   # coverflow alt-tab
     shell_extension_install $gnomever 294  # shell shape
     shell_extension_install $gnomever 413  # app keys like unity
@@ -120,10 +120,12 @@ gnome_extensions() {
     shell_extension_install $gnomever 885  # transparent top bar
     shell_extension_install $gnomever 973  # app switcher
     shell_extension_install $gnomever 1018 # text scaler
+    shell_extension_install $gnomever 1036 # enable/disable extensions
+    shell_extension_install $gnomever 1166 # extension update notifier
 
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F12']"
 
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher show-switcher "['<Super>g']"
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher show-switcher "['<Super>w']"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher font-size "uint32 18"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher matching "uint32 1"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher workspace-indicator "true"

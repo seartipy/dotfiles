@@ -1,7 +1,8 @@
 {
-    "editor.fontFamily": "Fira Code, Monaco, 'Ubuntu Mono', Consolas, 'Courier New', monospace",
+    "editor.fontFamily": "Monaco, 'Ubuntu Mono', Consolas, 'Courier New', monospace",
     "editor.fontSize": 15,
     "editor.tabSize": 2,
+    "editor.formatOnType": true,
     "editor.formatOnPaste": true,
     "editor.fontLigatures": true,
     "editor.emptySelectionClipboard": false,
@@ -9,7 +10,6 @@
     "editor.formatOnSave": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
-    "files.autoSave": "afterDelay",
     "emmet.syntaxProfiles": {
         "javascript": "html"
     },
@@ -19,11 +19,17 @@
         "editor.formatOnSave": false
     },
     "workbench.iconTheme": "vs-seti",
-    "workbench.colorTheme": "Default Light+",
+    "workbench.colorTheme": "Solarized Light",
     "[cpp]": {
         "editor.quickSuggestions": false
     },
     "[c]": {
         "editor.quickSuggestions": false
-    }
+    },
+    "window.zoomLevel": -1,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.implementationsCodeLens.enabled": true,
+    "typescript.useCodeSnippetsOnMethodSuggest": true,
+    "C_Cpp.intelliSenseEngine": "Default",
+    "extensions.autoUpdate": false
 }

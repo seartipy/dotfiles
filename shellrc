@@ -298,7 +298,7 @@ seartipy_upgrade_emacs() {
 
 seartipy_upgrade_dotfiles() {
     seartipy-gitup ~/seartipy/dotfiles
-    [ "$USER" == "pervez" ] && cd ~/seartipy/dotfiles && git checkout switch-to-emacsd && cd
+    [[ "$USER" == "pervez" ]] && cd ~/seartipy/dotfiles && git checkout switch-to-emacsd && cd
 }
 
 seartipy_upgrade_mean() {

@@ -256,8 +256,8 @@ seartipy-gitup() {
 
 seartipy_upgrade_emacs() {
     seartipy-gitup ~/seartipy/emacses/emacsd
-    seartipy_elpa_backup
-    seartipy_elpa_upgrade
+    seartipy_emacs_backup
+    seartipy_emacs_upgrade
 }
 
 seartipy_upgrade_dotfiles() {

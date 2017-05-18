@@ -76,6 +76,18 @@ sln() {
     ln -s "$1" "$2"
 }
 
+srm() {
+    for f in "$@"; do
+        if [ -L "$f" ]; then
+            rm -f "$f"
+        elif is_apt; then
+            trash-put "$f" 2> /dev/null && slog "Trashed $f"
+        else
+            trash "$f" 2> /dev/null && slog "Trashed $f"
+        fi
+    done
+}
+
 scopy() {
     [ -e "$2" ] || cp "$1" "$2"
 }

@@ -312,6 +312,7 @@ seartipy_gem_upgrade_all() {
 seartipy_upgrade_all() {
     if [ -d ~/.cask ]; then
         srm ~/.cask
+        srm ~/seartipy/emacses/emacsd
         srm ~/.emacs.d
         git clone https://pervezfunctor@gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
         sln ~/seartipy/emacses/emacsd ~/.emacs.d

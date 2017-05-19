@@ -223,7 +223,7 @@ function seartipy_emacs_backup() {
         return 1
     fi
 
-    cp -r ~/.emacs.d/elpa '$HOME/.emacs.d/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")'
+    cp -r ~/.emacs.d/elpa ~/.emacs.d/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
 
     local ROLLBACK_COUNT
     ROLLBACK_COUNT=$(ls ~/.emacs.d | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)

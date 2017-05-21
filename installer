@@ -641,7 +641,7 @@ emacs_mac_install() {
     brew tap d12frosted/emacs-plus
     brew install emacs-plus
 
-    brew install editorconfig cask
+    brew install editorconfig
     # TODO : ctags
     brew install aspell --with-lang-en
 
@@ -688,31 +688,12 @@ emacs_dotfiles() {
     scopy ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
 }
 
-emacs_cask_install() {
-    is_linux || return 1
-
-    export PATH="$HOME/.cask/bin:$PATH"
-    has_cmd cask || curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
-}
-
 emacs_install() {
     emacs_mac_install
     emacs_fedora_install
     emacs_ubuntu_install
 
     emacs_dotfiles
-
-    emacs_cask_install
-
-    cd ~/seartipy/emacses/emacsd || return 1
-
-    if has_cmd cask; then
-        cask install && cask update
-    else
-        warn "cask command absent, skipping emacs install"
-    fi
-
-    cd
 }
 
 #
@@ -1614,8 +1595,6 @@ emacs_check() {
     is_linux && cmd_check ctags
 
     ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
-
-    cmd_check cask
 }
 
 atom_check() {

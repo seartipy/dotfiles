@@ -4,7 +4,7 @@ _k_friendly_name=KDE Daemon
 
 [kaccess]
 Toggle Screen Reader On and Off=Meta+Alt+S,Meta+Alt+S,Toggle Screen Reader On and Off
-_k_friendly_name=kaccess
+_k_friendly_name=Accessibility
 
 [kcm_touchpad]
 Disable Touchpad=Touchpad Off,Touchpad Off,Disable Touchpad
@@ -22,18 +22,16 @@ PowerOff=Power Off,Power Off,Power Off
 Show System Activity=Ctrl+Esc,Ctrl+Esc,Show System Activity
 Sleep=Sleep,Sleep,Suspend
 Toggle Keyboard Backlight=Keyboard Light On/Off,Keyboard Light On/Off,Toggle Keyboard Backlight
-_k_friendly_name=Power Management
-display=Display,Display\tMeta+P,Switch Display
+_k_friendly_name=KDE Daemon
+display=Display\tMeta+P,Display\tMeta+P,Switch Display
 
 [khotkeys]
 _k_friendly_name=KDE Daemon
-{2f762990-2264-40a6-ac6b-eb68c8710056}=Print,none,Start Screenshot Tool
-{3b1a327f-0835-4e4a-acf2-4a604b078a07}=none,none,Take Rectangular Region Screenshot
-{666ffdea-254b-4826-93b1-1e277dfdf4c2}=Shift+Print,none,Take Full Screen Screenshot
-{7af5019c-891b-4709-8662-bbeb585a4cea}=Meta+W,none,Rofi Window Selector
-{8a2329db-2277-4224-84a3-5e75f3bf1eee}=Meta+P,none,Rof Launcher
-{cea1d665-6652-4d2c-9757-c8b881a6d33f}=Meta+Print,none,Take Active Window Screenshot
-{d03619b6-9b3c-48cc-9d9c-a2aadb485550}=,none,Search
+{1a0a5d19-0fff-41fa-bd7e-bd6a0506b727}=Meta+Print,none,Take Active Window Screenshot
+{6aaf0788-7922-4d5d-bdaf-bcebcb1e4dab}=Shift+Print,none,Take Full Screen Screenshot
+{8eba533a-b0a0-4a0a-b452-245a32e61509}=Meta+Shift+Print,none,Take Rectangular Region Screenshot
+{d0031632-0ee6-4c9e-bcc2-b27e5ebcc939}=Print,none,Start Screenshot Tool
+{d03619b6-9b3c-48cc-9d9c-a2aadb485550}=Search,none,Search
 
 [kmix]
 _k_friendly_name=Audio Volume
@@ -46,7 +44,7 @@ mute=Volume Mute,Volume Mute,Mute
 
 [krunner]
 _k_friendly_name=Run Command
-run command=Meta+Space\tAlt+F2\tSearch,Alt+Space,Run Command
+run command=Meta+Space\tAlt+F2\t,Alt+Space,Run Command
 run command on clipboard contents=Alt+Shift+F2,Alt+Shift+F2,Run Command on clipboard contents
 
 [ksmserver]
@@ -58,9 +56,7 @@ Reboot Without Confirmation=Ctrl+Alt+Shift+PgUp,none,Reboot Without Confirmation
 _k_friendly_name=ksmserver
 
 [kwin]
-Activate Window Demanding Attention=Meta+Ctrl+A,Ctrl+Alt+A,Activate Window Demanding Attention
-Cube=F9,Ctrl+F11,Desktop Cube
-Cylinder=Shift+F9,none,Desktop Cylinder
+Activate Window Demanding Attention=Ctrl+Alt+A,Ctrl+Alt+A,Activate Window Demanding Attention
 Decrease Opacity=none,none,Decrease Opacity of Active Window by 5 %
 Expose=Ctrl+F9,Ctrl+F9,Toggle Present Windows (Current desktop)
 ExposeAll=Ctrl+F10\tLaunch (C),Ctrl+F10\tLaunch (C),Toggle Present Windows (All desktops)
@@ -74,10 +70,10 @@ KWin Script: Sticky Window Snapping: enable/disable temporarily=Ctrl+Shift+S,non
 Kill Window=Ctrl+Alt+Esc,Ctrl+Alt+Esc,Kill Window
 MoveMouseToCenter=Meta+F6,Meta+F6,Move Mouse to Center
 MoveMouseToFocus=Meta+F5,Meta+F5,Move Mouse to Focus
-MoveZoomDown=,Meta+Down,Move Zoomed Area Downwards
-MoveZoomLeft=,Meta+Left,Move Zoomed Area to Left
-MoveZoomRight=,Meta+Right,Move Zoomed Area to Right
-MoveZoomUp=,Meta+Up,Move Zoomed Area Upwards
+MoveZoomDown=Meta+Down,Meta+Down,Move Zoomed Area Downwards
+MoveZoomLeft=Meta+Left,Meta+Left,Move Zoomed Area to Left
+MoveZoomRight=Meta+Right,Meta+Right,Move Zoomed Area to Right
+MoveZoomUp=Meta+Up,Meta+Up,Move Zoomed Area Upwards
 Remove Window From Group=none,none,Remove Window From Group
 Setup Window Shortcut=none,none,Setup Window Shortcut
 Show Desktop=none,none,Show Desktop
@@ -125,8 +121,6 @@ Switch to Screen 5=none,none,Switch to Screen 5
 Switch to Screen 6=none,none,Switch to Screen 6
 Switch to Screen 7=none,none,Switch to Screen 7
 Toggle Window Raise/Lower=none,none,Toggle Window Raise/Lower
-ToggleCurrentThumbnail=Meta+Ctrl+T,Meta+Ctrl+T,Toggle Thumbnail for Current Window
-ToggleMouseClick=Meta+*,Meta+*,Toggle Mouse Click Effect
 Walk Through Desktop List=none,none,Walk Through Desktop List
 Walk Through Desktop List (Reverse)=none,none,Walk Through Desktop List (Reverse)
 Walk Through Desktops=none,none,Walk Through Desktops
@@ -210,9 +204,9 @@ Window to Screen 5=none,none,Window to Screen 5
 Window to Screen 6=none,none,Window to Screen 6
 Window to Screen 7=none,none,Window to Screen 7
 _k_friendly_name=KWin
-view_actual_size=Meta+0,Meta+0,Actual Size
+view_actual_size=,Meta+0,Actual Size
 view_zoom_in=Meta+=,Meta+=,Zoom In
-view_zoom_out=,Meta+-,Zoom Out
+view_zoom_out=Meta+-,Meta+-,Zoom Out
 
 [mediacontrol]
 _k_friendly_name=Media Controller
@@ -223,7 +217,17 @@ stopmedia=Media Stop,Media Stop,Stop media playback
 
 [plasmashell]
 _k_friendly_name=Plasma
-activate widget 2=Alt+F1,none,Activate Application Launcher Widget
+activate task manager entry 1=Meta+1,Meta+1,Activate Task Manager Entry 1
+activate task manager entry 10=Meta+0,Meta+0,Activate Task Manager Entry 10
+activate task manager entry 2=Meta+2,Meta+2,Activate Task Manager Entry 2
+activate task manager entry 3=Meta+3,Meta+3,Activate Task Manager Entry 3
+activate task manager entry 4=Meta+4,Meta+4,Activate Task Manager Entry 4
+activate task manager entry 5=Meta+5,Meta+5,Activate Task Manager Entry 5
+activate task manager entry 6=Meta+6,Meta+6,Activate Task Manager Entry 6
+activate task manager entry 7=Meta+7,Meta+7,Activate Task Manager Entry 7
+activate task manager entry 8=Meta+8,Meta+8,Activate Task Manager Entry 8
+activate task manager entry 9=Meta+9,Meta+9,Activate Task Manager Entry 9
+activate widget 3=Alt+F1,none,Activate Application Launcher Widget
 clear-history=none,none,Clear Clipboard History
 clipboard_action=Ctrl+Alt+X,Ctrl+Alt+X,Enable Clipboard Actions
 cycleNextAction=none,none,Next History Item

@@ -524,7 +524,7 @@ clone_dotfiles() {
 
     pre_dir_check ~/seartipy/dotfiles
 
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout switch-to-emacsd && cd || return 1
 }
 
 tmux_dotfiles() {
@@ -677,8 +677,6 @@ emacs_dotfiles() {
 
     [ -d "$HOME/seartipy/emacses/emacsd" ] || return 1
 
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/emacses/emacsd && git checkout develop
-    cd
 
     slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
     smv ~/.emacs.d $BACKUP_DIR

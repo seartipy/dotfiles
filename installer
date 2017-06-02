@@ -524,7 +524,7 @@ clone_dotfiles() {
 
     pre_dir_check ~/seartipy/dotfiles
 
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout switch-to-emacsd && cd || return 1
+    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
 }
 
 tmux_dotfiles() {

@@ -641,7 +641,7 @@ emacs_mac_install() {
     brew tap d12frosted/emacs-plus
     brew install emacs-plus
 
-    brew install editorconfig cask
+    brew install editorconfig
     # TODO : ctags
     brew install aspell --with-lang-en
 
@@ -673,28 +673,19 @@ emacs_ubuntu_install() {
 }
 
 emacs_dotfiles() {
-    sclone  https://gitlab.com/seartipy/housemd.git ~/seartipy/emacses/housemd
+    sclone  https://gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
 
-    [ -d "$HOME/seartipy/emacses/housemd" ] || return 1
+    [ -d "$HOME/seartipy/emacses/emacsd" ] || return 1
 
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/emacses/housemd && git checkout develop
-    cd
 
     slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
     smv ~/.emacs.d $BACKUP_DIR
 
-    slog "Linking ~/seartipy/emacses/housemd as ~/.emacs.d"
-    sln ~/seartipy/emacses/housemd ~/.emacs.d
+    slog "Linking ~/seartipy/emacses/emacsd as ~/.emacs.d"
+    sln ~/seartipy/emacses/emacsd ~/.emacs.d
 
-    slog "Copying ~/seartipy/emacses/housemd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
-    scopy ~/seartipy/emacses/housemd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
-}
-
-emacs_cask_install() {
-    is_linux || return 1
-
-    export PATH="$HOME/.cask/bin:$PATH"
-    has_cmd cask || curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
+    slog "Copying ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
+    scopy ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
 }
 
 emacs_install() {
@@ -703,18 +694,6 @@ emacs_install() {
     emacs_ubuntu_install
 
     emacs_dotfiles
-
-    emacs_cask_install
-
-    cd ~/seartipy/emacses/housemd || return 1
-
-    if has_cmd cask; then
-        cask install && cask update
-    else
-        warn "cask command absent, skipping emacs install"
-    fi
-
-    cd
 }
 
 #
@@ -1615,9 +1594,7 @@ emacs_check() {
     fi
     is_linux && cmd_check ctags
 
-    ln_check  ~/seartipy/emacses/housemd ~/.emacs.d
-
-    cmd_check cask
+    ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
 }
 
 atom_check() {

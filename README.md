@@ -1,4 +1,4 @@
-This repository consists of configuration for zsh, emacs, clojure, scala, haskell web development and more.
+This repository consists of configuration for zsh, bash, visual studio code, emacs, atom, clojure, scala, haskell, python and web development.
 
 ### Installation
 
@@ -18,7 +18,7 @@ Automated installer script will work only with the latest Ubuntu and Mac operati
 
 3. **Web**
 
-        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup web
+        wget -qO- bit.ly/srtpdtf > ~/setup && bash ~/setup web vscode
 
 4. **Everything**
 
@@ -36,7 +36,7 @@ Automated installer script will work only with the latest Ubuntu and Mac operati
 
 3. **Web**
 
-        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup web
+        curl -L bit.ly/srtpdtf > ~/setup && bash ~/setup web vscode
 
 4. **Everything**
 
@@ -46,4 +46,4 @@ Automated installer script will work only with the latest Ubuntu and Mac operati
 
 * No files will be deleted by the installer. All your current files will be backed up to ~/seartipy.backups directory.
 
-* If ~/seartipy.backups already exists, it will be moved to trash. Also, if you find a file deleted but do not find it in ~/seartipy.backups, you should find it in  your trash folder.
+* If ~/seartipy.backups already exists, it will be moved to trash.

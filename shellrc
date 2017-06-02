@@ -76,6 +76,18 @@ sln() {
     ln -s "$1" "$2"
 }
 
+srm() {
+    for f in "$@"; do
+        if [ -L "$f" ]; then
+            rm -f "$f"
+        elif is_apt; then
+            trash-put "$f" 2> /dev/null && slog "Trashed $f"
+        else
+            trash "$f" 2> /dev/null && slog "Trashed $f"
+        fi
+    done
+}
+
 scopy() {
     [ -e "$2" ] || cp "$1" "$2"
 }
@@ -137,7 +149,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
 #emacs
-export PATH="$HOME/.cask/bin:$PATH"
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"                  # $EDITOR should open in terminal
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
@@ -175,7 +186,7 @@ seartipy_fix_links() {
     has_cmd zsh && sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
 
     # emacs
-    has_cmd emacs && sln ~/seartipy/emacses/housemd ~/.emacs.d
+    has_cmd emacs && sln ~/seartipy/emacses/emacsd ~/.emacs.d
 
     # clojure
     if has_cmd lein; then
@@ -206,79 +217,43 @@ seartipy_fix_links() {
     fi
 }
 
-seartipy_cask_backup() {
-    if ! has_cmd cask; then
-        warn "cask not installed, cannot backup elpa"
+function seartipy_emacs_backup() {
+    if ! [[ -d ~/.emacs.d/elpa ]]; then
+        echo "$HOME/.emacs.d/elpa does not exist, nothing to backup"
         return 1
     fi
 
-    local ELPA_DIR ELPA_PARENT ELPA_BACKUP ROLLBACK_COUNT OLDEST_BACKUP
+    cp -r ~/.emacs.d/elpa ~/.emacs.d/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
 
-    if ! cd ~/seartipy/emacses/housemd; then
-        warn "no ~/seartipy/emacses/housemd, cannot backup"
-        return 1
-    fi
-
-    ELPA_DIR=$(cask package-directory)
-    [ -d "$ELPA_DIR" ] || return 1
-
-    ELPA_PARENT=$(dirname "$ELPA_DIR")
-    [ -d "$ELPA_PARENT" ] || return 1
-
-    ELPA_BACKUP="${ELPA_PARENT}/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")"
-
-    cp -r "$ELPA_DIR" "$ELPA_BACKUP"
-
-    ROLLBACK_COUNT=$(ls $ELPA_PARENT | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)
-
-    [ "$ROLLBACK_COUNT" -gt 5 ] || return 1
-
-    OLDEST_BACKUP=$ELPA_PARENT/$(ls -1v "$ELPA_PARENT" | grep "^elpa-rollback" | head -1)
-    if [ -d "$OLDEST_BACKUP" ]; then
-        trash "$OLDEST_BACKUP"
-    else
-        warn "cannot trash old backup $OLDEST, as it does not exist. This cannot happen!"
+    local ROLLBACK_COUNT
+    ROLLBACK_COUNT=$(ls ~/.emacs.d | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)
+    if [ "$ROLLBACK_COUNT" -gt 5 ]; then
+        srm ~/.emacs.d/$(ls -1v ~/.emacs.d | grep "^elpa-rollback" | head -1)
     fi
 }
 
-seartipy_cask_rollback() {
-    if ! has_cmd cask; then
-        warn "cask not installed, cannot rollback elpa"
+function seartipy_emacs_rollback() {
+    local LATEST_BACKUP
+    LATEST_BACKUP=$(ls -1v ~/.emacs.d | grep "^elpa-rollback" | tail -1)
+    if [[ -z "${LATEST_BACKUP}" ]]; then
+        echo "no backups available, cannot rollback"
         return 1
     fi
 
-    if ! cd ~/seartipy/emacses/housemd; then
-        warn "no ~/seartipy/emacses/housemd, cannot backup"
-        return 1
-    fi
-
-    local ELPA_DIR ELPA_PARENT LATEST_BACKUP
-
-    ELPA_DIR=$(cask package-directory)
-    [ -d "$ELPA_DIR" ] || return 1
-
-    ELPA_PARENT=$(dirname "$ELPA_DIR")
-    [ -d "$ELPA_PARENT" ] || return 1
-
-    LATEST_BACKUP="$(ls -1v "$ELPA_PARENT" | grep "^elpa-rollback" | tail -1)"
-
-    if [ -z "$LATEST_BACKUP" ]; then
-        warn "no backups, cannot rollback"
-        return 1
-    fi
-
-    if ! [ -d "$ELPA_PARENT/${LATEST_BACKUP}" ]; then
-        error "no backups available, skipping"
-        return 1
-    fi
-
-    trash "$ELPA_DIR"
-
-    if [ -d "$ELPA_DIR" ]; then
-        warn "cannot trash $ELPA_DIR, can not rolling back"
-    elif ! mv "$ELPA_PARENT/$LATEST_BACKUP" "$ELPA_DIR"; then
+    srm "$HOME/.emacs.d/elpa"
+    if [ -d ~/.emacs.d/elpa ]; then
+        warn "cannot trash ~/.emacs.d/elpa, can not rolling back"
+    elif ! mv ~/.emacs.d/"$LATEST_BACKUP" ~/.emacs.d/elpa; then
         error "cannot move $LATEST_BACKUP to $ELPA_DIR; previous $ELPA_DIR must be in trash"
     fi
+}
+
+function seartipy_emacs_upgrade() {
+    emacs -batch --eval "(progn (load-file \"~/.emacs.d/init.el\") (package-refresh-contents) (auto-package-update-now))"
+}
+
+function seartipy_emacs_clean() {
+    srm ~/.emacs.d/.cache ~/.emacs.d/auto-save-list ~/.emacs.d/.last-package-update-day
 }
 
 seartipy-gitup() {
@@ -292,8 +267,9 @@ seartipy-gitup() {
 }
 
 seartipy_upgrade_emacs() {
-    seartipy-gitup ~/seartipy/emacses/housemd
-    has_cmd cask && seartipy_cask_backup && cd ~/seartipy/emacses/housemd && cask install && cask upgrade-cask
+    seartipy-gitup ~/seartipy/emacses/emacsd
+    seartipy_emacs_backup
+    seartipy_emacs_upgrade
 }
 
 seartipy_upgrade_dotfiles() {
@@ -335,6 +311,14 @@ seartipy_gem_upgrade_all() {
 }
 
 seartipy_upgrade_all() {
+    if [ -d ~/.cask ]; then
+        srm ~/.cask
+        srm ~/seartipy/emacses/emacsd
+        srm ~/.emacs.d
+        git clone https://pervezfunctor@gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
+        sln ~/seartipy/emacses/emacsd ~/.emacs.d
+    fi
+
     seartipy_upgrade_mean
     cd && has_cmd sbt && sbt console -batch
     cd && has_cmd lein && lein
@@ -361,8 +345,8 @@ seartipy_spacemacs_launch() {
 }
 
 
-seartipy_housemd_launch() {
-    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/housemd/") (load-file (concat user-emacs-directory "init.el")))' &
+seartipy_emacsd_launch() {
+    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &
 }
 
 seartipy_lean_launch() {
@@ -402,18 +386,18 @@ alias ccr=seartipy_ctrl_caps_reset
 
 alias sse="seartipy_emacs_default spacemacs"
 alias sle="seartipy_emacs_default lean-emacs"
-alias she="seartipy_emacs_default housemd"
+alias she="seartipy_emacs_default emacsd"
 
 alias es="seartipy_spacemacs_launch"
 alias el="seartipy_lean_launch"
-alias eh="seartipy_housemd_launch"
+alias eh="seartipy_emacsd_launch"
 
 alias ec="emacsclient -c -n"
 alias et="emacsclient -t"
 alias xet="TERM=xterm-256color emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
-alias emacs-restore="seartipy_cask_rollback"
+alias emacs-restore="seartipy_emacs_rollback"
 
 alias upa=seartipy_upgrade_all
 alias upm=seartipy_upgrade_mean

@@ -182,6 +182,9 @@ gnome_keybindings() {
     gsettings set org.gnome.shell.keybindings toggle-message-tray "@as []"
     gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F11']"
 
+    gsettings set org.gnome.desktop.wm.keybindings minimize "['<Primary><Alt>KP_0']"
+    gsettings set org.gnome.desktop.wm.keybindings maximize "['<Super>Up', '<Primary><Alt>KP_5']"
+
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down  "['<Super><Shift>Page_Down', '<Super><Shift><Control>Down']"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Shift><Control>Up']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "['<Super>Page_Down', '<Super><Control>Down']"

@@ -27,7 +27,7 @@ mate_hidpi() {
 }
 
 x11_hidpi() {
-    scopy ~/seartipy/dotfiles/xresources ~/.Xresources
+    scopy ~/seartipy/dotfiles/templates/xresources ~/.Xresources
 }
 
 hidpi() {

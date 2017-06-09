@@ -184,7 +184,6 @@ gnome_keybindings() {
 }
 
 gnome_install() {
-    gnome_hidpi
     gnome_extensions
     gnome_settings
     gnome_keybindings
@@ -579,6 +578,7 @@ i3_install() {
 
 kde_install() {
     is_linux || return 1
+
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kwinrc ~/.config/kwinrc
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kglobalshortcutsrc  ~/.config/kglobalshortcutsrc
 }

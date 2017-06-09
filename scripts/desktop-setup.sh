@@ -10,16 +10,11 @@ gnome_hidpi() {
     has_cmd gnome-session || return 1
     has_cmd gsettings || return 1
 
+    gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
+
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
-
-    if [ "$xres" -ge 2800 ]; then
-        gsettings set org.gnome.desktop.interface scaling-factor 2
-        gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
-    fi
-
-    if [ "$xres" -ge 3840 ]; then
-        gsettings set org.gnome.desktop.interface text-scaling-factor .9
-    fi
+    [ "$xres" -ge 2800 ] && gsettings set org.gnome.desktop.interface scaling-factor 2
+    [ "$xres" -ge 3840 ] && gsettings set org.gnome.desktop.interface text-scaling-factor .9
 }
 
 mate_hidpi() {

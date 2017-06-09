@@ -568,6 +568,9 @@ i3_fedora_install() {
 i3_install() {
     is_linux || return 1
 
+    i3_ubuntu_install
+    i3_fedora_install
+
     scopy ~/seartipy/dotfiles/templates/desktops/i3-config ~/.i3/config
 }
 

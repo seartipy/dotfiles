@@ -147,7 +147,7 @@ gnome_settings() {
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
     # https://askubuntu.com/questions/493404/ubuntu-14-04-vmware-6-left-ctrl-and-right-shift-not-functioning
-    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps', 'ctrl:lctrl_meta']"
+    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
 
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
@@ -199,7 +199,7 @@ mate_settings() {
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
-    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps', 'caps\tcaps:none', 'ctrl\tctrl:lctrl_meta']"
+    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps', 'caps\tcaps:none']"
 
     dconf write /org/mate/caja/preferences/click-policy "'single'"
     dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"

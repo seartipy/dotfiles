@@ -420,7 +420,7 @@ ubuntu_themes_install() {
     add_numix_ppa
     sudo apt-get update
 
-    sudo apt-get install -y numix-icon-theme arc-theme conky-all
+    sudo apt-get install -y numix-icon-theme-circle arc-theme conky-all
 }
 
 themes_install() {

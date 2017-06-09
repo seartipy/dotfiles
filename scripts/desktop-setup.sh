@@ -10,16 +10,11 @@ gnome_hidpi() {
     has_cmd gnome-session || return 1
     has_cmd gsettings || return 1
 
+    gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
+
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
-
-    if [ "$xres" -ge 2800 ]; then
-        gsettings set org.gnome.desktop.interface scaling-factor 2
-        gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
-    fi
-
-    if [ "$xres" -ge 3840 ]; then
-        gsettings set org.gnome.desktop.interface text-scaling-factor .9
-    fi
+    [ "$xres" -ge 2800 ] && gsettings set org.gnome.desktop.interface scaling-factor 2
+    [ "$xres" -ge 3840 ] && gsettings set org.gnome.desktop.interface text-scaling-factor .9
 }
 
 mate_hidpi() {
@@ -152,7 +147,7 @@ gnome_settings() {
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver ''
     # https://askubuntu.com/questions/493404/ubuntu-14-04-vmware-6-left-ctrl-and-right-shift-not-functioning
-    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps', 'ctrl:lctrl_meta']"
+    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
 
     gsettings set org.gnome.desktop.privacy remove-old-temp-files true
     gsettings set org.gnome.desktop.privacy remove-old-trash-files true
@@ -192,7 +187,6 @@ gnome_keybindings() {
 }
 
 gnome_install() {
-    gnome_hidpi
     gnome_extensions
     gnome_settings
     gnome_keybindings
@@ -207,7 +201,7 @@ mate_settings() {
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
-    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps', 'caps\tcaps:none', 'ctrl\tctrl:lctrl_meta']"
+    dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps', 'caps\tcaps:none']"
 
     dconf write /org/mate/caja/preferences/click-policy "'single'"
     dconf write /org/mate/caja/preferences/executable-text-activation "'launch'"
@@ -428,7 +422,7 @@ ubuntu_themes_install() {
     add_numix_ppa
     sudo apt-get update
 
-    sudo apt-get install -y numix-icon-theme arc-theme conky-all
+    sudo apt-get install -y numix-icon-theme-circle arc-theme conky-all
 }
 
 themes_install() {
@@ -576,6 +570,9 @@ i3_fedora_install() {
 i3_install() {
     is_linux || return 1
 
+    i3_ubuntu_install
+    i3_fedora_install
+
     scopy ~/seartipy/dotfiles/templates/desktops/i3-config ~/.i3/config
 }
 
@@ -584,6 +581,7 @@ i3_install() {
 
 kde_install() {
     is_linux || return 1
+
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kwinrc ~/.config/kwinrc
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kglobalshortcutsrc  ~/.config/kglobalshortcutsrc
 }
@@ -593,6 +591,8 @@ kde_install() {
 
 lxde_install() {
     is_linux || return 1
+
+    is_ubuntu && sudo apt-get install -y rofi
 
     fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lubuntu-rc.xml
     fcopy ~/seartipy/dotfiles/templates/desktops/lxde/lubuntu-rc.xml ~/.config/openbox/lxde-rc.xml
@@ -604,6 +604,8 @@ lxde_install() {
 
 xfce_install() {
     is_linux || return 1
+
+    is_ubuntu && sudo apt-get install -y rofi
 
     fcopy ~/seartipy/dotfiles/templates/desktops/xfce4/xfce4-keyboard-shortcuts.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
     fcopy ~/seartipy/dotfiles/templates/desktops/xfce4/xsettings.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml

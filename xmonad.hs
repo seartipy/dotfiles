@@ -93,14 +93,11 @@ main = do
          -- Expand non master area
        , ((myModMask, xK_i), sendMessage MirrorExpand)
 
-       -- Launch applications using dmenu, rofi, j4-dmenu-deskop(experimenting)
-       , ((myModMask, xK_p), spawn "dmenu_run -fn 'Ubuntu Mono 13'")
-       , ((myModMask .|. shiftMask .|. controlMask, xK_p), spawn "rofi -show run -i -font 'Ubuntu Mono 26'")
-       , ((myModMask .|. shiftMask, xK_p), spawn "j4-dmenu-desktop --dmenu='rofi -dmenu -i -font \"Ubuntu Mono 26\"'")
+       -- Launch applications rofi
+       , ((myModMask, xK_p), spawn "rofi -show run -i -font 'Ubuntu Mono 26'")
 
-         -- open a dmenu with window titles, switch to workspace of the chosen one
-       , ((myModMask, xK_g), gotoMenuArgs' "dmenu" [ "-fn",  "'Ubuntu Mono 13'" ])
-       , ((myModMask .|. shiftMask, xK_g), spawn "rofi -show window -i -font \"Ubuntu Mono 26\"")
+       -- Switch to application using rofi
+       , ((myModMask, xK_w), spawn "rofi -show window -i -font \"Ubuntu Mono 26\"")
 
          -- Chosen one, will be brought into current workspace
        , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 13'" ])

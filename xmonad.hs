@@ -94,10 +94,16 @@ main = do
        , ((myModMask, xK_i), sendMessage MirrorExpand)
 
        -- Launch applications rofi
-       , ((myModMask, xK_p), spawn "rofi -show run -i -font 'Ubuntu Mono 26'")
+       , ((myModMask, xK_space), spawn "rofi -show run -i -font 'Ubuntu Mono 26'")
 
        -- Switch to application using rofi
-       , ((myModMask, xK_w), spawn "rofi -show window -i -font \"Ubuntu Mono 26\"")
+       , ((myModMask .|. shiftMask, xK_space), spawn "rofi -show window -i -font \"Ubuntu Mono 26\"")
+
+       -- Cycle through the available layout algorithms.
+       , ((myModMask, xK_y), sendMessage NextLayout)
+
+       --  Reset the layouts on the current workspace to default.
+       , ((myModMask .|. shiftMask, xK_y), sendMessage FirstLayout)
 
          -- Chosen one, will be brought into current workspace
        , ((myModMask, xK_b), bringMenuArgs' "dmenu" [ "-fn", "'Ubuntu Mono 13'" ])

@@ -58,9 +58,9 @@
       <property name="XF86Music" type="string" value="parole"/>
       <property name="XF86HomePage" type="string" value="exo-open --launch WebBrowser"/>
       <property name="override" type="bool" value="true"/>
-      <property name="&lt;Super&gt;w" type="string" value="rofi -show window -font &quot;Ubuntu Mono 25&quot;"/>
-      <property name="&lt;Super&gt;p" type="string" value="rofi -show run -font &quot;Ubuntu Mono 25&quot;"/>
-      <property name="&lt;Super&gt;space" type="string" value="xfce4-popup-whiskermenu"/>
+      <property name="&lt;Super&gt;&lt;Shift&gt;space" type="string" value="rofi -show window -font &quot;Ubuntu Mono 25&quot;"/>
+      <property name="&lt;Super&gt;space" type="string" value="rofi -show run -font &quot;Ubuntu Mono 25&quot;"/>
+      <property name="&lt;Super&gt;p" type="string" value="xfce4-popup-whiskermenu"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">

@@ -539,17 +539,17 @@
         <command>lxsession-default launcher</command>
       </action>
     </keybind>
-    <keybind key="W-space">
+    <keybind key="W-p">
       <action name="Execute">
         <command>lxsession-default launcher</command>
       </action>
     </keybind>
-    <keybind key="W-w">
+    <keybind key="W-S-space">
       <action name="Execute">
         <command>rofi -show window -font 'Ubuntu Mono 25'</command>
       </action>
     </keybind>
-    <keybind key="W-p">
+    <keybind key="W-space">
       <action name="Execute">
         <command>rofi -show run -font 'Ubuntu Mono 25'</command>
       </action>

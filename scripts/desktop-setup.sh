@@ -25,7 +25,7 @@ x11_hidpi() {
     scopy ~/seartipy/dotfiles/templates/xresources ~/.Xresources
 }
 
-hidpi() {
+hidpi_install() {
     gnome_hidpi
     mate_hidpi
     x11_hidpi

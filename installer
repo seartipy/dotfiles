@@ -43,6 +43,12 @@ is_ubuntu() {
     [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
 }
 
+is_xenial() {
+    local OS
+    OS=$(lsb_release -c | cut -d ':' -f2)
+    [[ "$OS" == *"xenial" ]]
+}
+
 is_zesty() {
     local OS
     OS=$(lsb_release -c | cut -d ':' -f2)
@@ -323,6 +329,14 @@ gemi() {
 
 #
 # PPAs
+
+add_emacs_ppa() {
+    is_apt || return 1
+    ppa_exists 'kelleyk' && return 0
+
+    slog "Adding emacs 25 ppa"    
+    sudo add-apt-repository ppa:kelleyk/emacs -y
+}
 
 add_java_ppa() {
     is_apt || return 1
@@ -668,8 +682,15 @@ emacs_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing emacs"
-    sudo apt-get install -y emacs aspell aspell-en editorconfig exuberant-ctags
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags
 
+    if is_xenial; then
+        add_emacs_ppa
+        sudo apt-get update
+        sudo apt-get install -y emacs25
+    else
+        sudo apt-get install -y emacs
+    fi
 }
 
 emacs_dotfiles() {
@@ -1588,6 +1609,8 @@ bash_check() {
 }
 
 emacs_check() {
+    is_xenial && ppa_check kelleyk
+
     cmd_check emacs aspell
     if is_apt || is_mac; then
         cmd_check editorconfig

@@ -468,7 +468,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA
 }
 
 fasd_install() {
@@ -1576,6 +1576,7 @@ essential_fedora_check() {
     is_fedora || return 1
 
     cmd_check xsel xclip 7za dconf g++ trash
+    cmd_check xsel xclip 7za dconf g++ trash shasum
 }
 
 essential_check() {

@@ -459,13 +459,19 @@ essential_mac_install() {
     brew cask install iterm2 google-chrome
 }
 
+add_rpmfusion() {
+    sudo dnf repolist | grep rpmfusion > /dev/null && return 0
+        
+    slog "Add rpmfusion free and non free packages"
+    sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+}
+
 essential_fedora_install() {
     is_fedora || return 1
 
     pre_cmd_check dnf
-
-    slog "Add rpmfusion free and non free packages"
-    sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    
+    add_rpmfusion
 
     slog "Installing essential packages"
     sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA
@@ -1575,7 +1581,8 @@ essential_ubuntu_check() {
 essential_fedora_check() {
     is_fedora || return 1
 
-    cmd_check xsel xclip 7za dconf g++ trash
+    sudo dnf repolist | grep rpmfusion > /dev/null || warn "rpmfusion not added"
+    
     cmd_check xsel xclip 7za dconf g++ trash shasum
 }
 

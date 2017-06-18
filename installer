@@ -347,15 +347,6 @@ add_java_ppa() {
     sudo add-apt-repository ppa:webupd8team/java -y
 }
 
-add_sbt_ppa() {
-    is_apt || return 1
-    ppa_exists sbt && return 0
-
-    slog "Adding scala ppa"
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-}
-
 add_chrome_ppa() {
     is_apt || return 1
     ppa_exists google-chrome && return 0
@@ -961,12 +952,17 @@ clojure_install() {
 #
 # scala
 
+
+sbt_install() {
+    has_cmd sbt && return 0
+    curl -Ls https://git.io/sbt > ~/bin/sbt && chmod 0755 ~/bin/sbt
+}
+
 scala_mac_install() {
     is_mac || return 1
 
     slog "Installing scala packages"
-    brew install sbt scala ammonite-repl
-    brew cask install scala-ide
+    brew install scala ammonite-repl
 }
 
 ammonite_install() {
@@ -980,18 +976,14 @@ scala_fedora_install() {
     is_fedora || return 1
 
     slog "Installing scala"
-    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-    sudo dnf install -y scala sbt
+    sudo dnf install -y scala
 }
 
 scala_ubuntu_install() {
     is_apt || return 1
 
-    add_sbt_ppa
-    ubuntu_update
-
     slog "Install scala"
-    sudo apt-get -y install sbt scala
+    sudo apt-get -y install scala
 }
 
 sbt_plugins() {
@@ -1025,6 +1017,8 @@ scala_dotfiles() {
 
 scala_install() {
     jdk_install
+
+    sbt_install
 
     scala_mac_install
     scala_fedora_install
@@ -1660,7 +1654,6 @@ java_check() {
 
 scala_check() {
     cmd_check javac sbt scala amm
-    is_mac && brew_cask_check scala-ide
 
     ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
     ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt

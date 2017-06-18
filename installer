@@ -339,7 +339,7 @@ add_emacs_ppa() {
 }
 
 add_java_ppa() {
-    is_apt || return 1
+    is_ubuntu || return 1
     ppa_exists 'webupd8team.*java' && return 0
 
     slog "Adding java ppa"
@@ -858,10 +858,11 @@ jdk_fedora_install() {
 jdk_ubuntu_install() {
     is_apt || return 1
     add_java_ppa
-    ubuntu_update
+    is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+    is_ubuntu && sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+    is_debian && sudo apt-get install -y openjdk-8-jdk openjdk-8-source openjdk-8-doc
 }
 
 jdk_install() {
@@ -1653,7 +1654,7 @@ vscode_check() {
 
 java_check() {
     source "$HOME/.sdkman/bin/sdkman-init.sh"
-
+    is_ubuntu && ppa_check webupd8team-ubuntu-java
     has_cmd javac java sdk groovy maven gradle
 }
 

@@ -1540,13 +1540,14 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
+    is_xenial && ppa_check kelleyk
+
     ppa_check google-chrome
     if is_ubuntu; then
        is_zesty || ppa_check ubuntu-make
     fi
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
-    [ -n "$SCALA" ] && ppa_check sbt
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
 
@@ -1605,8 +1606,6 @@ bash_check() {
 }
 
 emacs_check() {
-    is_xenial && ppa_check kelleyk
-
     cmd_check emacs aspell
     if is_apt || is_mac; then
         cmd_check editorconfig
@@ -1649,7 +1648,6 @@ vscode_check() {
 
 java_check() {
     source "$HOME/.sdkman/bin/sdkman-init.sh"
-    is_ubuntu && ppa_check webupd8team-ubuntu-java
     has_cmd javac java sdk groovy maven gradle
 }
 

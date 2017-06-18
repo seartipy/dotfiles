@@ -373,11 +373,11 @@ add_atom_ppa() {
 }
 
 add_vscode_ppa() {
-    is_ubuntu || return 1
+    is_apt || return 1
     ppa_exists 'vscode' && return 0
 
     sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null    
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
 }
 
 add_typora_ppa() {
@@ -742,7 +742,7 @@ atom_install() {
 # vscode
 
 ubuntu_vscode_install() {
-    is_ubuntu || return 1
+    is_apt || return 1
     add_vscode_ppa
     ubuntu_update
     sudo apt-get install -y code

@@ -225,6 +225,7 @@ npm_check() {
 }
 
 vsext_exists() {
+    has_cmd code || return 1
     code --list-extensions | grep "$1" > /dev/null
 }
 

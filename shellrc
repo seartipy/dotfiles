@@ -319,8 +319,8 @@ seartipy_upgrade_all() {
     fi
 
     seartipy_upgrade_mean
-    cd && has_cmd sbt && sbt console -batch
-    cd && has_cmd lein && lein
+    has_cmd sbt && cd ~/programs/scala/scala-starter && sbt console -batch
+    has_cmd lein && cd ~/programs/clojure/clojure-starter && lein
     cd && has_cmd npm && npm update -g
     cd && has_cmd cabal && cabal update
     cd && has_cmd stack && stack update

@@ -98,7 +98,7 @@ if is_linux; then
     alias pbpaste="xsel --clipboard --output"
     alias open="xdg-open"
 
-    alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
+    # alias tmux="tmux -u -2" #force tmux to use unicode and 256 colors
 
     #to support xterm key bindings in emacs
     alias e="TERM=xterm-256color emacs -nw"

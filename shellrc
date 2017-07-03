@@ -394,6 +394,8 @@ alias eh="seartipy_emacsd_launch"
 alias ec="emacsclient -c -n"
 alias et="emacsclient -t"
 alias xet="TERM=xterm-256color emacsclient -t"
+alias e24="TERM=xterm-24bit emacs -nw"
+alias et24="TERM=xterm-24bit emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
 alias emacs-restore="seartipy_emacs_rollback"

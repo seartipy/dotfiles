@@ -343,6 +343,9 @@ seartipy_spacemacs() {
     emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
 }
 
+seartipy_isolated() {
+    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"~/seartipy/emacses/$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
+}
 
 seartipy_emacsd() {
     emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &

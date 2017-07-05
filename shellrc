@@ -353,7 +353,7 @@ seartipy_lean() {
 }
 
 seartipy_kill_emacs() {
-    emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs))"
+    emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs '(4)))"
 }
 
 seartipy_ctrl_alt_set() {

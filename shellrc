@@ -339,16 +339,16 @@ seartipy_emacs_launch() {
     is_linux && emacs&
 }
 
-seartipy_spacemacs_launch() {
+seartipy_spacemacs() {
     emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
 }
 
 
-seartipy_emacsd_launch() {
+seartipy_emacsd() {
     emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &
 }
 
-seartipy_lean_launch() {
+seartipy_lean() {
     emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/lean-emacs/") (load-file (concat user-emacs-directory "init.el")))' &
 }
 
@@ -387,9 +387,9 @@ alias sse="seartipy_emacs_default spacemacs"
 alias sle="seartipy_emacs_default lean-emacs"
 alias she="seartipy_emacs_default emacsd"
 
-alias es="seartipy_spacemacs_launch"
-alias el="seartipy_lean_launch"
-alias eh="seartipy_emacsd_launch"
+alias es="seartipy_spacemacs"
+alias el="seartipy_lean"
+alias eh="seartipy_emacsd"
 
 alias ec="emacsclient -c -n"
 alias et="emacsclient -t"

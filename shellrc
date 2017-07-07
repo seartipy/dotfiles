@@ -1,5 +1,8 @@
 #! /bin/bash
 
+#
+# utils
+
 BOLD=$(tput bold)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -129,6 +132,9 @@ if is_mac; then
 
 fi
 
+#
+
+# exports
 
 #haskell
 export PATH="$HOME/.cabal/bin:$PATH"
@@ -160,6 +166,8 @@ if has_cmd pyenv > /dev/null; then
     eval "$(pyenv init - --no-rehash)"
     eval "$(pyenv virtualenv-init -)"
 fi
+
+#
 
 seartipy_fix_links() {
     if ! [ -d ~/seartipy/dotfiles ]; then
@@ -212,6 +220,46 @@ seartipy_fix_links() {
     fi
 }
 
+#
+# emacs
+
+seartipy_emacs_default() {
+    sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
+}
+
+seartipy_emacs_launch() {
+    seartipy_emacs_default "$@"
+    is_mac && open -a /Applications/Emacs.app
+    is_linux && emacs&
+}
+
+seartipy_spacemacs() {
+    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
+}
+
+seartipy_isolated_dir() {
+    local DIR=$1
+    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
+}
+
+seartipy_isolated() {
+    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"~/seartipy/emacses/$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
+}
+
+seartipy_emacsd() {
+    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &
+}
+
+seartipy_lean() {
+    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/lean-emacs/") (load-file (concat user-emacs-directory "init.el")))' &
+}
+
+seartipy_kill_emacs() {
+    emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs '(4)))"
+}
+
+# emacs upgrade
+
 function seartipy_emacs_backup() {
     if ! [[ -d ~/.emacs.d/elpa ]]; then
         echo "$HOME/.emacs.d/elpa does not exist, nothing to backup"
@@ -252,6 +300,7 @@ function seartipy_emacs_clean() {
 }
 
 #
+# upgrade
 
 seartipy-gitup() {
     cd "$1" || return 1
@@ -326,40 +375,8 @@ seartipy_upgrade_all() {
     cd && has_cmd pyenv && pyenv rehash
 }
 
-seartipy_emacs_default() {
-    sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
-}
-
-seartipy_emacs_launch() {
-    seartipy_emacs_default "$@"
-    is_mac && open -a /Applications/Emacs.app
-    is_linux && emacs&
-}
-
-seartipy_spacemacs() {
-    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
-}
-
-seartipy_isolated_dir() {
-    local DIR=$1
-    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
-}
-
-seartipy_isolated() {
-    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"~/seartipy/emacses/$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
-}
-
-seartipy_emacsd() {
-    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &
-}
-
-seartipy_lean() {
-    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/lean-emacs/") (load-file (concat user-emacs-directory "init.el")))' &
-}
-
-seartipy_kill_emacs() {
-    emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs '(4)))"
-}
+#
+# ctrl alt
 
 seartipy_ctrl_alt_set() {
     is_linux || return 1
@@ -382,6 +399,9 @@ seartipy_ctrl_caps_set() {
 seartipy_ctrl_caps_reset() {
     seartipy_ctrl_alt_reset
 }
+
+#
+# aliases
 
 alias cas=seartipy_ctrl_alt_set
 alias car=seartipy_ctrl_alt_reset
@@ -437,6 +457,8 @@ if is_fedora; then
     alias ss="sudo dnf search"
     alias sr="sudo dnf remove"
 fi
+
+#
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="~/.sdkman"

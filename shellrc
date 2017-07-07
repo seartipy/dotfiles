@@ -424,8 +424,8 @@ alias et="emacsclient -t"
 alias xen="TERM=xterm-256color emacs -nw"
 alias xet="TERM=xterm-256color emacsclient -t"
 
-alias ten= "TERM=xterm-24bit emacs -nw"
-alias tet="TERM=xterm-24bit emacsclient -t"
+alias ten= "TERM=xterm-24bits emacs -nw"
+alias tet="TERM=xterm-24bits emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
 alias emacs-restore="seartipy_emacs_rollback"

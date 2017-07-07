@@ -244,12 +244,14 @@ function seartipy_emacs_rollback() {
 }
 
 function seartipy_emacs_upgrade() {
-    emacs -batch --eval "(progn (load-file \"~/.emacs.d/init.el\") (package-refresh-contents) (auto-package-update-now))"
+    emacs -batch --eval "(progn (load-file \"~/.emacs.d/init.el\") (package-refresh-contents) (auto-package-update-now) (package-autoremove)"
 }
 
 function seartipy_emacs_clean() {
     srm ~/.emacs.d/.cache ~/.emacs.d/auto-save-list ~/.emacs.d/.last-package-update-day
 }
+
+#
 
 seartipy-gitup() {
     cd "$1" || return 1

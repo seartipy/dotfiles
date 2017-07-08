@@ -1,0 +1,4 @@
+remove Mod4 = Hyper_L
+remove Mod4 = Super_R
+add Mod3 = Hyper_L
+keycode 134 = Hyper_L

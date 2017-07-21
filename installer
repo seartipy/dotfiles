@@ -687,7 +687,9 @@ emacs_ubuntu_install() {
     slog "Installing emacs"
     sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags
 
-    if is_xenial; then
+    if is_wsl; then
+        sudo apt-get install -y emacs-nox
+    elif is_xenial; then
         add_emacs_ppa
         sudo apt-get update
         sudo apt-get install -y emacs25
@@ -1551,8 +1553,8 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
-    if [ -n "$EMACS" ]; then
-        is_xenial && ppa_check kelleyk
+    if [ -n "$EMACS" ] && ! is_xenial && ! is_wsl; then
+        ppa_check kelleyk
     fi
 
     is_wsl || ppa_check google-chrome

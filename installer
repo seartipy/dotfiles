@@ -831,8 +831,9 @@ git_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing git"
-    sudo apt-get install -y kdiff3 git-extras
-    git_credential_gnome_keyring_install
+    sudo apt-get install -y git-extras git
+    is_wsl || sudo apt-get install -y kdiff3
+    is_wsl || git_credential_gnome_keyring_install
 }
 
 git_install() {
@@ -1732,7 +1733,8 @@ cpp_check() {
 }
 
 git_check() {
-    cmd_check kdiff3 git-extras
+    is_wsl || cmd_check kdiff3
+    cmd_check git git-extras
     is_mac && brew_cask_check smartgit hub github-desktop
 
     file_check ~/.gitconfig

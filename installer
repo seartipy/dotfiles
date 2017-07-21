@@ -1745,7 +1745,7 @@ post_installer_check() {
     export PATH="$HOME/.cask/bin:$PATH"
 
     essential_check
-    dotfiles_check
+    [ -n "$DOTFILES"] && dotfiles_check
 
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check

@@ -36,6 +36,10 @@ is_debian() {
     [[ "$OS" == *"Debian" ]]
 }
 
+is_wsl() {
+    [ -e /proc/version ] && grep -q "Microsoft" /proc/version
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -424,16 +428,20 @@ essential_ubuntu_install() {
     sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
-    add_chrome_ppa
+    is_wsl || add_chrome_ppa
     add_umake_ppa
 
     ubuntu_update
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal unar unzip libzmq3-dev pkg-config zip
-    is_ubuntu && sudo apt-get install -y firefox
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux exfat-fuse unar unzip libzmq3-dev pkg-config zip
     is_ubuntu && sudo apt-get install -y ubuntu-make
+
+    is_wsl && return 0
+
+    sudo apt-get install -y google-chrome-stable exfat-utils zeal "linux-headers-$(uname -r)"
+    is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
 
@@ -1545,10 +1553,12 @@ ppas_check() {
 
     is_xenial && ppa_check kelleyk
 
-    ppa_check google-chrome
+    is_wsl || ppa_check google-chrome
     if is_ubuntu; then
        is_zesty || ppa_check ubuntu-make
     fi
+
+    is_wsl && return 0
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
@@ -1568,8 +1578,9 @@ essential_ubuntu_check() {
 
     ppas_check
 
+    cmd_check p7zip dconf xsel xclip trash-put
     is_ubuntu && cmd_check umake
-    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-put
+    is_wsl || cmd_check google-chrome zeal firefox
 }
 
 essential_fedora_check() {

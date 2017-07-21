@@ -904,7 +904,7 @@ java_install() {
 
 linux_lein_install() {
     is_linux || return 1
-    has_cmd lein && return 1
+    has_cmd ~/bin/lein && return 1
 
     slog "Installing leiningen"
     curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
@@ -913,7 +913,7 @@ linux_lein_install() {
 
 linux_boot_install() {
     is_linux || return 1
-    if ! has_cmd boot; then
+    if ! has_cmd ~/bin/boot; then
         if cd ~/bin; then
             curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
             chmod 755 boot
@@ -1695,6 +1695,7 @@ scala_check() {
 
 clojure_check() {
     cmd_check javac lein boot
+    is_wsl && cmd_check ~/bin/lein ~/bin/boot
 
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot

@@ -726,6 +726,7 @@ emacs_install() {
 # atom
 
 ubuntu_atom_install() {
+    is_wsl && return 1
     is_apt || return 1
     add_atom_ppa
     ubuntu_update
@@ -755,6 +756,7 @@ atom_install() {
 # vscode
 
 ubuntu_vscode_install() {
+    is_wsl && return 1
     is_apt || return 1
     add_vscode_ppa
     ubuntu_update
@@ -1641,6 +1643,10 @@ emacs_check() {
 }
 
 atom_check() {
+    if is_wsl; then
+        warn "atom unsupported on wsl"
+        return 1
+    fi
     cmd_check atom apm
     has_cmd apm || return 1
 
@@ -1648,6 +1654,10 @@ atom_check() {
 }
 
 vscode_check() {
+    if is_wsl; then
+        warn "vscode unsupported on wsl"
+        return 1
+    fi
     cmd_check code
 
     vsext_check EditorConfig.EditorConfig

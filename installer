@@ -339,7 +339,7 @@ add_emacs_ppa() {
     is_apt || return 1
     ppa_exists 'kelleyk' && return 0
 
-    slog "Adding emacs 25 ppa"    
+    slog "Adding emacs 25 ppa"
     sudo add-apt-repository ppa:kelleyk/emacs -y
 }
 
@@ -1551,7 +1551,9 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
-    is_xenial && ppa_check kelleyk
+    if [ -n "$EMACS" ]; then
+        is_xenial && ppa_check kelleyk
+    fi
 
     is_wsl || ppa_check google-chrome
     if is_ubuntu; then

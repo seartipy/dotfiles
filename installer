@@ -1611,7 +1611,7 @@ zsh_check() {
     cmd_check zsh shellcheck
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
+    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen
     file_check ~/.zgen-options-local.sh
     file_check ~/.zshrc-pre-local.sh
 }
@@ -1619,10 +1619,11 @@ zsh_check() {
 bash_check() {
     is_mac && ln_check ~/seartipy/dotfiles/bashrc ~/.bashrc
     ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/seartipy/vendors/liquidprompt ~/.slimzsh ~/.zgen
+    dir_check ~/seartipy/vendors/liquidprompt
 }
 
 emacs_check() {

@@ -650,7 +650,7 @@ emacs_mac_install() {
     brew tap d12frosted/emacs-plus
     brew install emacs-plus
 
-    brew install editorconfig
+    brew install editorconfig discount
     # TODO : ctags
     brew install aspell --with-lang-en
 
@@ -670,14 +670,14 @@ emacs_fedora_install() {
     is_fedora || return 1
 
     slog "Installing emacs"
-    sudo dnf install -y emacs aspell aspell-en ctags-etags
+    sudo dnf install -y emacs aspell aspell-en ctags-etags discount
 }
 
 emacs_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing emacs"
-    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
 
     if is_xenial; then
         add_emacs_ppa
@@ -1611,7 +1611,7 @@ bash_check() {
 }
 
 emacs_check() {
-    cmd_check emacs aspell
+    cmd_check emacs aspell markdown
     if is_apt || is_mac; then
         cmd_check editorconfig
     fi

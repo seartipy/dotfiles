@@ -601,7 +601,8 @@ zsh_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing zsh"
-    sudo apt-get install -y zsh shellcheck
+    sudo apt-get install -y zsh
+    is_xenial || sudo apt-get install -y shellcheck
 }
 
 zsh_mac_install() {

@@ -231,7 +231,7 @@ vsext_exists() {
 
 vsext_check() {
     for p in "$@"; do
-	vsext_exists "$p" || warn "$p vscode extension not installed"
+        vsext_exists "$p" || warn "$p vscode extension not installed"
     done
 }
 
@@ -300,9 +300,9 @@ vsexti() {
     has_cmd code || return 1
 
     for p in "$@"; do
-	if ! vsext_exists "$p"; then
-	    code --install-extension "$p"
-	fi
+        if ! vsext_exists "$p"; then
+            code --install-extension "$p"
+        fi
     done
 }
 
@@ -335,7 +335,7 @@ add_emacs_ppa() {
     is_apt || return 1
     ppa_exists 'kelleyk' && return 0
 
-    slog "Adding emacs 25 ppa"    
+    slog "Adding emacs 25 ppa"
     sudo add-apt-repository ppa:kelleyk/emacs -y
 }
 
@@ -478,7 +478,7 @@ fasd_install() {
     slog "Installing fasd"
     if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
         cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
-	cd
+        cd
         rm -rf /tmp/seartipy-installer-fasd
     fi
 }

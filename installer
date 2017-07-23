@@ -431,7 +431,7 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal unar unzip libzmq3-dev pkg-config zip
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal unar unzip libzmq3-dev pkg-config zip gawk urlview
     is_ubuntu && sudo apt-get install -y firefox
     is_ubuntu && sudo apt-get install -y ubuntu-make
     is_debian && sudo apt-get install -y firefox-esr
@@ -455,7 +455,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
     brew cask install iterm2 google-chrome
 }
 
@@ -468,7 +468,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip gawk urlview
 }
 
 fasd_install() {
@@ -1580,7 +1580,7 @@ essential_fedora_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar zip
+    cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
 
     essential_mac_check
     essential_fedora_check

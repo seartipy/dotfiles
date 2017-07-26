@@ -96,6 +96,12 @@ gnome_extensions() {
     has_cmd gnome-session || return 1
     has_cmd gnome-shell || return 1
 
+    if is_ubuntu; then
+        sudo apt-get install -y chrome-gnome-shell
+    elif is_fedora; then
+        sudo dnf install -y chrome-gnome-shell
+    fi
+
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 
     gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou']"

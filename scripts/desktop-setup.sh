@@ -10,6 +10,7 @@ gnome_hidpi() {
     has_cmd gnome-session || return 1
     has_cmd gsettings || return 1
 
+    slog "Setting gnome HIDPI"
     gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
 
     local xres=$(xdpyinfo | grep dimensions | uniq | awk '{print $2}' |  cut -d 'x' -f1)
@@ -18,10 +19,12 @@ gnome_hidpi() {
 }
 
 mate_hidpi() {
+    slog "Setting mate HIDPI"
     dconf write /org/mate/desktop/font-rendering/dpi "160.0"
 }
 
 x11_hidpi() {
+    slog "Setting X11 HIDPI(~/.Xresources)"
     scopy ~/seartipy/dotfiles/templates/desktops/xresources ~/.Xresources
 }
 
@@ -215,6 +218,8 @@ mate_settings() {
     is_linux || return 1
     has_cmd mate-session || return 1
 
+    slog "Mate settings"
+
     dconf write /org/mate/desktop/font-rendering/antialiasing "'rgba'"
     dconf write /org/mate/desktop/font-rendering/hinting "'slight'"
 
@@ -236,6 +241,8 @@ mate_settings() {
 mate_keybindings() {
     is_linux || return 1
     has_cmd mate-session || return 1
+
+    slog "Mate keybindings"
 
     dconf write /org/mate/marco/global-keybindings/panel-run-dialog "'<Mod4>space'"
     dconf write /org/mate/marco/window-keybindings/tile-to-side-e "'<Mod4>Right'"
@@ -274,6 +281,8 @@ mate_install() {
 
 mac_settings() {
     is_mac || return 1
+
+    slog "Mac settings"
 
     # https://github.com/mathiasbynens/dotfiles/blob/978fb2696860ebe055a0caec425c67be0ad73319/.osx
 
@@ -416,8 +425,10 @@ mac_settings() {
 fedora_themes_install() {
     is_fedora || return 1
 
+    slog "Installing themes"
+
     sudo dnf copr -y enable numix/numix
-    sudo dnf install -y numix-*
+    sudo dnf install -y numix-icon-theme-circle
 
     dnf config-manager --add-repo http://download.opensuse.org/repositories/home:Horst3180/Fedora_24/home:Horst3180.repo
     sudo dnf install -y arc-theme
@@ -436,6 +447,8 @@ add_numix_ppa() {
 ubuntu_themes_install() {
     is_ubuntu || return 1
 
+    slog "Installing themes"
+
     add_numix_ppa
     sudo apt-get update
 
@@ -449,12 +462,14 @@ themes_install() {
     is_debian && return 1
 
     if has_cmd gnome-shell; then
+        slog "Setting Arc theme and Numix Circle theme for gnome"
         gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Dark'
         gsettings set org.gnome.desktop.interface icon-theme 'Numix-Circle'
         gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Dark'
     fi
 
     if has_cmd mate-session; then
+        slog "Setting Arc theme and Numix Circle theme for mate"
         dconf write /org/mate/desktop/interface/icon-theme "'Numix-Circle'"
         dconf write /org/mate/marco/general/theme "'Arc-Dark'"
     fi
@@ -480,6 +495,8 @@ font_exists() {
 
 mononoki_font() {
     if ! font_exists "mononoki"; then
+        slog "Installing mononoki fonts"
+
         srm /tmp/mononoki.zip
         wget  --quiet -O /tmp/mononoki.zip https://github.com/madmalik/mononoki/releases/download/1.2/mononoki.zip
         srm /tmp/seartipy-mononoki-fonts
@@ -525,15 +542,14 @@ xmonad_fedora_install() {
     is_fedora || return 1
 
     slog "Installing xmonad"
-    dnf copr -y enable region51/rofi
-    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu rofi
+    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu
 }
 
 xmonad_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing xmonad"
-    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools rofi j4-dmenu-desktop
+    sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools rofi
 }
 
 xmonad_fix() {
@@ -543,6 +559,8 @@ xmonad_fix() {
 
 xmonad_install() {
     is_linux || return 1
+
+    slog "xmonad setup"
 
     xmonad_fedora_install
     xmonad_ubuntu_install
@@ -555,7 +573,10 @@ xmonad_install() {
     slog "Linking ~/seartipy/dotfiles/xmonad.hs to ~/.xmonad/xmonad.hs"
     sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 
-    has_cmd mate-session && dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
+    if has_cmd mate-session; then
+        slog "setting xmonad as mate's window manager"
+        dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
+
 
     is_apt || return 1
 
@@ -565,7 +586,8 @@ xmonad_install() {
 xmonad_check() {
     is_linux || return 1
 
-    cmd_check xmonad dmenu rofi
+    cmd_check xmonad dmenu
+    is_ubuntu && cmd_check rofi
     ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
 }
 
@@ -587,6 +609,8 @@ i3_fedora_install() {
 i3_install() {
     is_linux || return 1
 
+    slog "i3 setup"
+
     i3_ubuntu_install
     i3_fedora_install
 
@@ -599,6 +623,10 @@ i3_install() {
 kde_install() {
     is_linux || return 1
 
+    slog "kde setup"
+
+    is_ubuntu && sudo apt-get install -y rofi
+
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kwinrc ~/.config/kwinrc
     fcopy ~/seartipy/dotfiles/templates/desktops/kde/kglobalshortcutsrc  ~/.config/kglobalshortcutsrc
 }
@@ -608,6 +636,8 @@ kde_install() {
 
 lxde_install() {
     is_linux || return 1
+
+    slog "lxde setup"
 
     is_ubuntu && sudo apt-get install -y rofi
 
@@ -621,6 +651,8 @@ lxde_install() {
 
 xfce_install() {
     is_linux || return 1
+
+    slog "xfce setup"
 
     is_ubuntu && sudo apt-get install -y rofi
 
@@ -655,6 +687,9 @@ mac_install() {
 #
 
 git_credential_gnome_keyring_install() {
+    is_ubuntu || return 1
+
+    slog "git credential - gnome-keyring"
     sudo apt-get install -y libgnome-keyring-dev
     sudo make --directory=/usr/share/doc/git/contrib/credential/gnome-keyring
     git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
@@ -662,13 +697,16 @@ git_credential_gnome_keyring_install() {
 
 
 git_credential_libsecret_install() {
+    is_fedora || return 1
+
+    slog "git credential - libsecret"
     sudo dnf install -y libsecret
     git config --global credential.helper libsecret
 }
 
 git_install() {
-    is_ubuntu && git_credential_gnome_keyring_install
-    is_fedora && git_credential_libsecret_install
+    git_credential_gnome_keyring_install
+    git_credential_libsecret_install
 }
 
 # 

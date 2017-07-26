@@ -1,5 +1,5 @@
 #! /bin/bash
-
+{
 source "$HOME/seartipy/dotfiles/scripts/utils.sh"
 
 #
@@ -129,11 +129,11 @@ gnome_extensions() {
     shell_extension_install $gnomever 1166 # extension update notifier
 
     # dash to panel
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.panel-size 32
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.appicon-margin 4
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.panel-position 'TOP'
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.hot-keys true
-    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.hotkeys-overlay-combo 'ALWAYS'
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel panel-size 32
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel appicon-margin 4
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel panel-position 'TOP'
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel hot-keys true
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel hotkeys-overlay-combo 'ALWAYS'
 
     #drop down terminal
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F12']"
@@ -177,7 +177,6 @@ gnome_settings() {
 
     gsettings set org.gnome.desktop.interface clock-show-date true
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
-    gsettings set org.gnome.shell.calendar show-weekdate true
 
     [ -e ~/.config/gtk-3.0/settings.ini ] || printf "[Settings]\ngtk-application-prefer-dark-theme=1\n" > ~/.config/gtk-3.0/settings.ini
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 1800
@@ -430,7 +429,7 @@ fedora_themes_install() {
     sudo dnf copr -y enable numix/numix
     sudo dnf install -y numix-icon-theme-circle
 
-    dnf config-manager --add-repo http://download.opensuse.org/repositories/home:Horst3180/Fedora_24/home:Horst3180.repo
+    sudo dnf config-manager --add-repo http://download.opensuse.org/repositories/home:Horst3180/Fedora_24/home:Horst3180.repo
     sudo dnf install -y arc-theme
 
     sudo dnf install -y conky
@@ -576,7 +575,7 @@ xmonad_install() {
     if has_cmd mate-session; then
         slog "setting xmonad as mate's window manager"
         dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
-
+    fi
 
     is_apt || return 1
 
@@ -850,3 +849,5 @@ main() {
 }
 
 main "$@"
+
+}

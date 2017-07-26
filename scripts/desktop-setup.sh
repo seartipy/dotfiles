@@ -107,8 +107,6 @@ gnome_extensions() {
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
 
-    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'unitylike-hotkey@webgyerek.net', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou']"
-
     local gnomever=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1-2)
 
     shell_extension_install $gnomever 10   # window navigator
@@ -116,7 +114,7 @@ gnome_extensions() {
     shell_extension_install $gnomever 28   # gtile
     shell_extension_install $gnomever 97   # coverflow alt-tab
     shell_extension_install $gnomever 294  # shellshape
-    shell_extension_install $gnomever 413  # app keys like unity
+    # shell_extension_install $gnomever 413  # app keys like unity
     shell_extension_install $gnomever 442  # drop down terminal
     shell_extension_install $gnomever 657  # shelltile
     shell_extension_install $gnomever 690  # easy screen casting
@@ -127,6 +125,8 @@ gnome_extensions() {
     shell_extension_install $gnomever 1036 # enable/disable extensions
     shell_extension_install $gnomever 1160 # dash to dock
     shell_extension_install $gnomever 1166 # extension update notifier
+
+    gsettings set org.gnome.shell enabled-extensions "['windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'CoverflowAltTab@palatis.blogspot.com', 'drop-down-terminal@gs-extensions.zzrough.org', 'dash-to-panel@jderose9.github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'EasyScreenCast@iacopodeenosee.gmail.com', 'ShellTile@emasab.it', 'text-scaler@gnome-shell-extensions.mariospr.org', 'switcher@landau.fi', 'all-windows@ezix.org', 'gTile@vibou']"
 
     # dash to panel
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas set org.gnome.shell.extensions.dash-to-panel panel-size 32

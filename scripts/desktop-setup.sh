@@ -110,9 +110,9 @@ gnome_extensions() {
 
     shell_extension_install $gnomever 10   # window navigator
     shell_extension_install $gnomever 21   # workspace indicator
-    # shell_extension_install $gnomever 28   # gtile
+    shell_extension_install $gnomever 28   # gtile
     shell_extension_install $gnomever 97   # coverflow alt-tab
-    shell_extension_install $gnomever 294  # shell shape
+    shell_extension_install $gnomever 294  # shellshape
     shell_extension_install $gnomever 413  # app keys like unity
     shell_extension_install $gnomever 442  # drop down terminal
     shell_extension_install $gnomever 657  # shelltile
@@ -122,10 +122,20 @@ gnome_extensions() {
     shell_extension_install $gnomever 973  # app switcher
     shell_extension_install $gnomever 1018 # text scaler
     shell_extension_install $gnomever 1036 # enable/disable extensions
+    shell_extension_install $gnomever 1160 # dash to dock
     shell_extension_install $gnomever 1166 # extension update notifier
 
+    # dash to panel
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.panel-size 32
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.appicon-margin 4
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.panel-position 'TOP'
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.hot-keys true
+    gsettings --schemadir ~/.local/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com/schemas org.gnome.shell.extensions.dash-to-panel.hotkeys-overlay-combo 'ALWAYS'
+
+    #drop down terminal
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/drop-down-terminal@gs-extensions.zzrough.org/ set org.zzrough.gs-extensions.drop-down-terminal real-shortcut "['F12']"
 
+    #switcher
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher show-switcher "['<Super>w']"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher font-size "uint32 18"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher matching "uint32 1"
@@ -133,6 +143,7 @@ gnome_extensions() {
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher activate-immediately "true"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/switcher@landau.fi/schemas set org.gnome.shell.extensions.switcher activate-by-key "uint32 2"
 
+    #shellshape
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.prefs default-layout 'vertical'
     gsettings  --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings next-layout "['<Mod4>Space']"
     gsettings --schemadir ~/.local/share/gnome-shell/extensions/shellshape@gfxmonk.net/data/glib-2.0/schemas set org.gnome.shell.extensions.net.gfxmonk.shellshape.keybindings prev-layout "['<Mod4><Shift>Space']"

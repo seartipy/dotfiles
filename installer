@@ -235,7 +235,7 @@ vsext_exists() {
 
 vsext_check() {
     for p in "$@"; do
-	vsext_exists "$p" || warn "$p vscode extension not installed"
+        vsext_exists "$p" || warn "$p vscode extension not installed"
     done
 }
 
@@ -304,9 +304,9 @@ vsexti() {
     has_cmd code || return 1
 
     for p in "$@"; do
-	if ! vsext_exists "$p"; then
-	    code --install-extension "$p"
-	fi
+        if ! vsext_exists "$p"; then
+            code --install-extension "$p"
+        fi
     done
 }
 
@@ -435,12 +435,14 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux exfat-fuse unar unzip libzmq3-dev pkg-config zip
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview
+    is_ubuntu && sudo apt-get install -y firefox
+
     is_ubuntu && sudo apt-get install -y ubuntu-make
 
     is_wsl && return 0
 
-    sudo apt-get install -y google-chrome-stable exfat-utils zeal "linux-headers-$(uname -r)"
+    sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
     is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
@@ -463,7 +465,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
     brew cask install iterm2 google-chrome
 }
 
@@ -476,7 +478,7 @@ essential_fedora_install() {
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip gawk urlview
 }
 
 fasd_install() {
@@ -486,7 +488,7 @@ fasd_install() {
     slog "Installing fasd"
     if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
         cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
-	cd
+        cd
         rm -rf /tmp/seartipy-installer-fasd
     fi
 }
@@ -609,7 +611,8 @@ zsh_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing zsh"
-    sudo apt-get install -y zsh shellcheck
+    sudo apt-get install -y zsh
+    is_xenial || sudo apt-get install -y shellcheck
 }
 
 zsh_mac_install() {
@@ -658,7 +661,7 @@ emacs_mac_install() {
     brew tap d12frosted/emacs-plus
     brew install emacs-plus
 
-    brew install editorconfig
+    brew install editorconfig discount
     # TODO : ctags
     brew install aspell --with-lang-en
 
@@ -678,14 +681,14 @@ emacs_fedora_install() {
     is_fedora || return 1
 
     slog "Installing emacs"
-    sudo dnf install -y emacs aspell aspell-en ctags-etags
+    sudo dnf install -y emacs aspell aspell-en ctags-etags discount
 }
 
 emacs_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing emacs"
-    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
 
     if is_wsl; then
         sudo apt-get install -y emacs-nox
@@ -1600,7 +1603,7 @@ essential_fedora_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar zip
+    cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
 
     essential_mac_check
     essential_fedora_check
@@ -1633,7 +1636,7 @@ bash_check() {
 }
 
 emacs_check() {
-    cmd_check emacs aspell
+    cmd_check emacs aspell markdown
     if is_apt || is_mac; then
         cmd_check editorconfig
     fi

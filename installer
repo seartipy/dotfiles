@@ -1559,7 +1559,7 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
-    if [ -n "$EMACS" ] && ! is_xenial && ! is_wsl; then
+    if [ -n "$EMACS" ] && is_xenial && ! is_wsl; then
         ppa_check kelleyk
     fi
 

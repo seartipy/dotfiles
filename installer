@@ -36,6 +36,10 @@ is_debian() {
     [[ "$OS" == *"Debian" ]]
 }
 
+is_wsl() {
+    [ -e /proc/version ] && grep -q "Microsoft" /proc/version
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -231,7 +235,7 @@ vsext_exists() {
 
 vsext_check() {
     for p in "$@"; do
-	vsext_exists "$p" || warn "$p vscode extension not installed"
+        vsext_exists "$p" || warn "$p vscode extension not installed"
     done
 }
 
@@ -300,9 +304,9 @@ vsexti() {
     has_cmd code || return 1
 
     for p in "$@"; do
-	if ! vsext_exists "$p"; then
-	    code --install-extension "$p"
-	fi
+        if ! vsext_exists "$p"; then
+            code --install-extension "$p"
+        fi
     done
 }
 
@@ -335,7 +339,7 @@ add_emacs_ppa() {
     is_apt || return 1
     ppa_exists 'kelleyk' && return 0
 
-    slog "Adding emacs 25 ppa"    
+    slog "Adding emacs 25 ppa"
     sudo add-apt-repository ppa:kelleyk/emacs -y
 }
 
@@ -424,16 +428,22 @@ essential_ubuntu_install() {
     sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
-    add_chrome_ppa
+    is_wsl || add_chrome_ppa
     add_umake_ppa
 
     ubuntu_update
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential google-chrome-stable tmux exfat-fuse exfat-utils "linux-headers-$(uname -r)" zeal unar unzip libzmq3-dev pkg-config zip
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview
     is_ubuntu && sudo apt-get install -y firefox
+
     is_ubuntu && sudo apt-get install -y ubuntu-make
+
+    is_wsl && return 0
+
+    sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
+    is_ubuntu && sudo apt-get install -y firefox
     is_debian && sudo apt-get install -y firefox-esr
 }
 
@@ -455,13 +465,13 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config
+    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
     brew cask install iterm2 google-chrome
 }
 
 add_rpmfusion() {
     sudo dnf repolist | grep rpmfusion > /dev/null && return 0
-        
+
     slog "Add rpmfusion free and non free packages"
     sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 }
@@ -470,11 +480,11 @@ essential_fedora_install() {
     is_fedora || return 1
 
     pre_cmd_check dnf
-    
+
     add_rpmfusion
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA gawk urlview
 }
 
 fasd_install() {
@@ -484,7 +494,7 @@ fasd_install() {
     slog "Installing fasd"
     if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
         cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
-	cd
+        cd
         rm -rf /tmp/seartipy-installer-fasd
     fi
 }
@@ -607,7 +617,8 @@ zsh_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing zsh"
-    sudo apt-get install -y zsh shellcheck
+    sudo apt-get install -y zsh
+    is_xenial || sudo apt-get install -y shellcheck
 }
 
 zsh_mac_install() {
@@ -656,7 +667,7 @@ emacs_mac_install() {
     brew tap d12frosted/emacs-plus
     brew install emacs-plus
 
-    brew install editorconfig
+    brew install editorconfig discount
     # TODO : ctags
     brew install aspell --with-lang-en
 
@@ -676,16 +687,18 @@ emacs_fedora_install() {
     is_fedora || return 1
 
     slog "Installing emacs"
-    sudo dnf install -y emacs aspell aspell-en ctags-etags
+    sudo dnf install -y emacs aspell aspell-en ctags-etags discount
 }
 
 emacs_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing emacs"
-    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
 
-    if is_xenial; then
+    if is_wsl; then
+        sudo apt-get install -y emacs-nox
+    elif is_xenial; then
         add_emacs_ppa
         sudo apt-get update
         sudo apt-get install -y emacs25
@@ -722,6 +735,7 @@ emacs_install() {
 # atom
 
 ubuntu_atom_install() {
+    is_wsl && return 1
     is_apt || return 1
     add_atom_ppa
     ubuntu_update
@@ -751,6 +765,7 @@ atom_install() {
 # vscode
 
 ubuntu_vscode_install() {
+    is_wsl && return 1
     is_apt || return 1
     add_vscode_ppa
     ubuntu_update
@@ -827,8 +842,9 @@ git_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing git"
-    sudo apt-get install -y kdiff3 git-extras
-    git_credential_gnome_keyring_install
+    sudo apt-get install -y git-extras git
+    is_wsl || sudo apt-get install -y kdiff3
+    is_wsl || git_credential_gnome_keyring_install
 }
 
 git_install() {
@@ -862,8 +878,11 @@ jdk_ubuntu_install() {
     is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    is_ubuntu && sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
-    is_debian && sudo apt-get install -y openjdk-8-jdk openjdk-8-source openjdk-8-doc
+    if is_wsl || is_debian; then
+        sudo apt-get install -y openjdk-8-jdk openjdk-8-source openjdk-8-doc
+    else
+        is_ubuntu && sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
+    fi
 }
 
 jdk_install() {
@@ -894,7 +913,7 @@ java_install() {
 
 linux_lein_install() {
     is_linux || return 1
-    has_cmd lein && return 1
+    has_cmd ~/bin/lein && return 1
 
     slog "Installing leiningen"
     curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
@@ -903,7 +922,7 @@ linux_lein_install() {
 
 linux_boot_install() {
     is_linux || return 1
-    if ! has_cmd boot; then
+    if ! has_cmd ~/bin/boot; then
         if cd ~/bin; then
             curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
             chmod 755 boot
@@ -1549,12 +1568,16 @@ pre_installer_check() {
 ppas_check() {
     is_apt || return 1
 
-    is_xenial && ppa_check kelleyk
+    if [ -n "$EMACS" ] && is_xenial && ! is_wsl; then
+        ppa_check kelleyk
+    fi
 
-    ppa_check google-chrome
+    is_wsl || ppa_check google-chrome
     if is_ubuntu; then
        is_zesty || ppa_check ubuntu-make
     fi
+
+    is_wsl && return 0
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
@@ -1574,20 +1597,21 @@ essential_ubuntu_check() {
 
     ppas_check
 
+    cmd_check p7zip dconf xsel xclip trash-put
     is_ubuntu && cmd_check umake
-    cmd_check xsel xclip p7zip dconf google-chrome zeal firefox trash-put
+    is_wsl || cmd_check google-chrome zeal firefox
 }
 
 essential_fedora_check() {
     is_fedora || return 1
 
     sudo dnf repolist | grep rpmfusion > /dev/null || warn "rpmfusion not added"
-    
+
     cmd_check xsel xclip 7za dconf g++ trash shasum
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar zip
+    cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
 
     essential_mac_check
     essential_fedora_check
@@ -1604,7 +1628,7 @@ zsh_check() {
     cmd_check zsh shellcheck
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen ~/seartipy/vendors/liquidprompt
+    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen
     file_check ~/.zgen-options-local.sh
     file_check ~/.zshrc-pre-local.sh
 }
@@ -1612,14 +1636,15 @@ zsh_check() {
 bash_check() {
     is_mac && ln_check ~/seartipy/dotfiles/bashrc ~/.bashrc
     ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/seartipy/vendors/liquidprompt ~/.slimzsh ~/.zgen
+    dir_check ~/seartipy/vendors/liquidprompt
 }
 
 emacs_check() {
-    cmd_check emacs aspell
+    cmd_check emacs aspell markdown
     if is_apt || is_mac; then
         cmd_check editorconfig
     fi
@@ -1629,6 +1654,10 @@ emacs_check() {
 }
 
 atom_check() {
+    if is_wsl; then
+        warn "atom unsupported on wsl"
+        return 1
+    fi
     cmd_check atom apm
     has_cmd apm || return 1
 
@@ -1636,6 +1665,10 @@ atom_check() {
 }
 
 vscode_check() {
+    if is_wsl; then
+        warn "vscode unsupported on wsl"
+        return 1
+    fi
     cmd_check code
 
     vsext_check EditorConfig.EditorConfig
@@ -1673,6 +1706,7 @@ scala_check() {
 
 clojure_check() {
     cmd_check javac lein boot
+    is_wsl && cmd_check ~/bin/lein ~/bin/boot
 
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
@@ -1724,7 +1758,8 @@ cpp_check() {
 }
 
 git_check() {
-    cmd_check kdiff3 git-extras
+    is_wsl || cmd_check kdiff3
+    cmd_check git git-extras
     is_mac && brew_cask_check smartgit hub github-desktop
 
     file_check ~/.gitconfig
@@ -1742,7 +1777,7 @@ post_installer_check() {
     export PATH="$HOME/.cask/bin:$PATH"
 
     essential_check
-    dotfiles_check
+    [ -n "$DOTFILES" ] && dotfiles_check
 
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check

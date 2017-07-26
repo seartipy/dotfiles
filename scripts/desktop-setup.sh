@@ -641,6 +641,25 @@ mac_install() {
     mac_settings
 }
 
+#
+
+git_credential_gnome_keyring_install() {
+    sudo apt-get install -y libgnome-keyring-dev
+    sudo make --directory=/usr/share/doc/git/contrib/credential/gnome-keyring
+    git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+}
+
+
+git_credential_libsecret_install() {
+    sudo dnf install -y libsecret
+    git config --global credential.helper libsecret
+}
+
+git_install() {
+    is_ubuntu && git_credential_gnome_keyring_install
+    is_fedora && git_credential_libsecret_install
+}
+
 # 
 
 select_defaults() {
@@ -653,6 +672,7 @@ select_defaults() {
 select_everything() {
     select_defaults
 
+    GIT="git"
     XMONAD="xmonad"
     I3="i3"
     LXDE="lxde"
@@ -661,6 +681,8 @@ select_everything() {
     XMONAD="xmonad"
     MAC="mac"
     MATE="mate"
+    THEMES="themes"
+    HIDPI="hidpi"
 }
 
 script_options() {
@@ -698,6 +720,10 @@ script_options() {
                 ;;
             mac)
                 MAC="mac"
+                shift
+                ;;
+            git)
+                GIT="git"
                 shift
                 ;;
             mate)
@@ -744,6 +770,8 @@ installer() {
     [ -n "$GNOME" ] && gnome_install
     [ -n "$KDE" ] && kde_install
     [ -n "$MATE" ] && mate_install
+
+    [ -n "$GIT" ] && git_install
 }
 
 post_installer_check() {
@@ -762,6 +790,7 @@ post_installer_check() {
     # [ -n "$GNOME" ] && gnome_check
     # [ -n "$KDE" ] && kde_check
     # [ -n "$MATE" ] && mate_check
+    # [ -n "$GIT" ] && git_install
 }
 
 main() {

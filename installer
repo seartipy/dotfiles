@@ -832,19 +832,12 @@ git_fedora_install() {
     sudo dnf install -y kdiff3 git-extras
 }
 
-git_credential_gnome_keyring_install() {
-    sudo apt-get install -y libgnome-keyring-dev
-    sudo make --directory=/usr/share/doc/git/contrib/credential/gnome-keyring
-    git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
-}
-
 git_ubuntu_install() {
     is_apt || return 1
 
     slog "Installing git"
     sudo apt-get install -y git-extras git
     is_wsl || sudo apt-get install -y kdiff3
-    is_wsl || git_credential_gnome_keyring_install
 }
 
 git_install() {

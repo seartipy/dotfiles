@@ -484,7 +484,7 @@ essential_fedora_install() {
     add_rpmfusion
 
     slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA gawk urlview
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA gawk urlview sqlite
 }
 
 fasd_install() {
@@ -1600,7 +1600,7 @@ essential_fedora_check() {
 
     sudo dnf repolist | grep rpmfusion > /dev/null || warn "rpmfusion not added"
 
-    cmd_check xsel xclip 7za dconf g++ trash shasum
+    cmd_check xsel xclip 7za dconf g++ trash shasum sqlite3
 }
 
 essential_check() {

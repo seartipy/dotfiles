@@ -792,6 +792,7 @@ vscode_install() {
 
     has_cmd code || return 1
 
+    vsexti wix.vscode-import-cost
     vsexti EditorConfig.EditorConfig
     vsexti msjsdiag.debugger-for-chrome
     vsexti eg2.tslint
@@ -1664,6 +1665,7 @@ vscode_check() {
     fi
     cmd_check code
 
+    vsext_check wix.vscode-import-cost
     vsext_check EditorConfig.EditorConfig
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint

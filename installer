@@ -1665,26 +1665,26 @@ vscode_check() {
     fi
     cmd_check code
 
-    vsext_check wix.vscode-import-cost
-    vsext_check EditorConfig.EditorConfig
-    vsext_check msjsdiag.debugger-for-chrome
-    vsext_check eg2.tslint
-    vsext_check dbaeumer.vscode-eslint
-    vsext_check alefragnani.project-manager
-    vsext_check robertohuertasm.vscode-icons
-    vsext_check Orta.vscode-jest
-    vsext_check flowtype.flow-for-vscode
-    vsext_check ms-vscode.cpptools
-    vsext_check jakethashi.vscode-angular2-emmet
-    vsext_check natewallace.angular2-inline
-    vsext_check formulahendry.auto-rename-tag
-    vsext_check Angular.ng-template
-    vsext_check lucax88x.codeacejumper
-    vsext_check dracula-theme.theme-dracula
-    vsext_check wmaurer.vscode-jumpy
-    vsext_check ms-vscode.Theme-TomorrowKit
-    vsext_check esbenp.prettier-vscode
-    vsext_check redhat.java
+    # vsext_check wix.vscode-import-cost
+    # vsext_check EditorConfig.EditorConfig
+    # vsext_check msjsdiag.debugger-for-chrome
+    # vsext_check eg2.tslint
+    # vsext_check dbaeumer.vscode-eslint
+    # vsext_check alefragnani.project-manager
+    # vsext_check robertohuertasm.vscode-icons
+    # vsext_check Orta.vscode-jest
+    # vsext_check flowtype.flow-for-vscode
+    # vsext_check ms-vscode.cpptools
+    # vsext_check jakethashi.vscode-angular2-emmet
+    # vsext_check natewallace.angular2-inline
+    # vsext_check formulahendry.auto-rename-tag
+    # vsext_check Angular.ng-template
+    # vsext_check lucax88x.codeacejumper
+    # vsext_check dracula-theme.theme-dracula
+    # vsext_check wmaurer.vscode-jumpy
+    # vsext_check ms-vscode.Theme-TomorrowKit
+    # vsext_check esbenp.prettier-vscode
+    # vsext_check redhat.java
 }
 
 java_check() {

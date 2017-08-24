@@ -1115,7 +1115,7 @@ python3_install() {
     apt_python3_install
     fedora_python3_install
 
-    pipi yapf service-factory jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake
+    pipi yapf service-factory jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake Cython numba
     is_linux && export PATH="$HOME/.local/bin:$PATH"
 }
 
@@ -1728,7 +1728,7 @@ haskell_check() {
 
 python3_check() {
     export PATH="$HOME/.local/bin:$PATH"
-    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptw ptpython autoflake
+    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptw ptpython autoflake cython numba
 }
 
 python_check() {

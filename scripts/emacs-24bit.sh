@@ -6,7 +6,7 @@ add_emacs_ppa() {
     is_ubuntu || return 1
     ppa_exists elisp && return 0
     echo "Adding PPA for emacs snapshot"
-    sudo add-apt-repository ppa:ubuntu-elisp/ppa
+    sudo add-apt-repository -y ppa:ubuntu-elisp/ppa
 }
 
 emacs_snapshot_mac_install() {

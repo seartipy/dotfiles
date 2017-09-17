@@ -59,6 +59,12 @@ is_zesty() {
     [[ "$OS" == *"zesty" ]]
 }
 
+is_artful() {
+    local OS
+    OS=$(lsb_release -c | cut -d ':' -f2)
+    [[ "$OS" == *"artful" ]]
+}
+
 is_apt() {
     is_ubuntu || is_debian
 }
@@ -395,7 +401,9 @@ add_typora_ppa() {
 
 add_umake_ppa() {
     is_ubuntu || return 1
-    is_zesty && return 1
+    if is_zesty || is_artful; then
+        return 1
+    fi
     ppa_exists ubuntu-make && return 0
 
     sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
@@ -1568,7 +1576,9 @@ ppas_check() {
 
     is_wsl || ppa_check google-chrome
     if is_ubuntu; then
-       is_zesty || ppa_check ubuntu-make
+        if is_zesty || is_artful; then
+            ppa_check ubuntu-make
+        fi
     fi
 
     is_wsl && return 0

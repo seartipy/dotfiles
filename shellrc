@@ -128,7 +128,7 @@ if is_mac; then
     export JDK_HOME
 
     #brew
-    export PATH="/usr/local/bin:$PATH"
+    export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 fi
 

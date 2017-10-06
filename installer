@@ -766,7 +766,7 @@ atom_install() {
     mac_atom_install
     fedora_atom_install
 
-    apmi nuclide
+    apmi atom-ide-ui ide-flow ide-typescript language-babel Ensime Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-r language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
 
 #
@@ -814,12 +814,27 @@ vscode_install() {
     vsexti natewallace.angular2-inline
     vsexti formulahendry.auto-rename-tag
     vsexti Angular.ng-template
-    vsexti lucax88x.codeacejumper
     vsexti dracula-theme.theme-dracula
-    vsexti wmaurer.vscode-jumpy
     vsexti ms-vscode.Theme-TomorrowKit
     vsexti esbenp.prettier-vscode
     vsexti redhat.java
+
+    vsexti avli.clojure
+    vsexti shaunlebron.vscode-parinfer
+    vsextidonjayamanne.python
+    vsexti dragos.scala-lsp
+    vsexti lucax88x.codeacejumper
+    vsexti WallabyJs.quokka-vscode
+    vsexti humao.rest-client
+    vsexti jebbs.plantuml
+    vsexti formulahendry
+    vsexti deerawan.vscode-dash
+    vsexti donjayamanne.githistory
+    vsexti eamodio.gitlens
+    vsexti felipecaputo.git-project-manager
+    vsexti codezombiech.gitignore
+    vsexti christian-kohler.npm-intellisense
+    vsexti eg2.vscode-npm-script
 }
 
 #
@@ -1665,7 +1680,7 @@ atom_check() {
     cmd_check atom apm
     has_cmd apm || return 1
 
-    apm_check nuclide
+    apm_check atom-ide-ui ide-flow ide-typescript language-babel Ensime Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-r language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
 
 vscode_check() {
@@ -1675,26 +1690,41 @@ vscode_check() {
     fi
     cmd_check code
 
-    # vsext_check wix.vscode-import-cost
-    # vsext_check EditorConfig.EditorConfig
-    # vsext_check msjsdiag.debugger-for-chrome
-    # vsext_check eg2.tslint
-    # vsext_check dbaeumer.vscode-eslint
-    # vsext_check alefragnani.project-manager
-    # vsext_check robertohuertasm.vscode-icons
-    # vsext_check Orta.vscode-jest
-    # vsext_check flowtype.flow-for-vscode
-    # vsext_check ms-vscode.cpptools
-    # vsext_check jakethashi.vscode-angular2-emmet
-    # vsext_check natewallace.angular2-inline
-    # vsext_check formulahendry.auto-rename-tag
-    # vsext_check Angular.ng-template
-    # vsext_check lucax88x.codeacejumper
-    # vsext_check dracula-theme.theme-dracula
-    # vsext_check wmaurer.vscode-jumpy
-    # vsext_check ms-vscode.Theme-TomorrowKit
-    # vsext_check esbenp.prettier-vscode
-    # vsext_check redhat.java
+    vsext_check wix.vscode-import-cost
+    vsext_check EditorConfig.EditorConfig
+    vsext_check msjsdiag.debugger-for-chrome
+    vsext_check eg2.tslint
+    vsext_check dbaeumer.vscode-eslint
+    vsext_check alefragnani.project-manager
+    vsext_check robertohuertasm.vscode-icons
+    vsext_check Orta.vscode-jest
+    vsext_check flowtype.flow-for-vscode
+    vsext_check ms-vscode.cpptools
+    vsext_check jakethashi.vscode-angular2-emmet
+    vsext_check natewallace.angular2-inline
+    vsext_check formulahendry.auto-rename-tag
+    vsext_check Angular.ng-template
+    vsext_check dracula-theme.theme-dracula
+    vsext_check ms-vscode.Theme-TomorrowKit
+    vsext_check esbenp.prettier-vscode
+    vsext_check redhat.java
+
+    vsext_check avli.clojure
+    vsext_check shaunlebron.vscode-parinfer
+    vsext_check donjayamanne.python
+    vsext_check dragos.scala-lsp
+    vsext_check lucax88x.codeacejumper
+    vsext_check WallabyJs.quokka-vscode
+    vsext_check humao.rest-client
+    vsext_check jebbs.plantuml
+    vsext_check formulahendry
+    vsext_check deerawan.vscode-dash
+    vsext_check donjayamanne.githistory
+    vsext_check eamodio.gitlens
+    vsext_check felipecaputo.git-project-manager
+    vsext_check codezombiech.gitignore
+    vsext_check christian-kohler.npm-intellisense
+    vsext_check eg2.vscode-npm-script
 }
 
 java_check() {

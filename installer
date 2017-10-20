@@ -821,7 +821,7 @@ vscode_install() {
 
     vsexti avli.clojure
     vsexti shaunlebron.vscode-parinfer
-    vsextidonjayamanne.python
+    vsexti donjayamanne.python
     vsexti dragos.scala-lsp
     vsexti lucax88x.codeacejumper
     vsexti WallabyJs.quokka-vscode

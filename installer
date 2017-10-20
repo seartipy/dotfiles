@@ -1591,9 +1591,8 @@ ppas_check() {
 
     is_wsl || ppa_check google-chrome
     if is_ubuntu; then
-        if is_zesty || is_artful; then
-            ppa_check ubuntu-make
-        fi
+        is_zesty || ppa_check ubuntu-make
+        is_artful || ppa_check ubuntu-make
     fi
 
     is_wsl && return 0

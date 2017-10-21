@@ -879,7 +879,8 @@ jdk_mac_install() {
     is_mac || return 1
 
     slog "Installing java"
-    brew cask install java
+    # brew cask install java
+    brew cask install caskroom/versions/java8
 }
 
 jdk_fedora_install() {

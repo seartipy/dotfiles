@@ -1,6 +1,7 @@
 {
     "LAYOUTS": "----------------------",
     "layouts": [
+        "tall",
         "tall-right",
         "middle-wide",
         "fullscreen",

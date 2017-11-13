@@ -399,16 +399,6 @@ add_typora_ppa() {
     sudo add-apt-repository 'deb https://typora.io ./linux/' -y
 }
 
-add_umake_ppa() {
-    is_ubuntu || return 1
-    if is_zesty || is_artful; then
-        return 1
-    fi
-    ppa_exists ubuntu-make && return 0
-
-    sudo sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
-}
-
 #
 # essential
 
@@ -437,7 +427,6 @@ essential_ubuntu_install() {
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     is_wsl || add_chrome_ppa
-    add_umake_ppa
 
     ubuntu_update
     ubuntu_upgrade
@@ -446,7 +435,9 @@ essential_ubuntu_install() {
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview
     is_ubuntu && sudo apt-get install -y firefox
 
-    is_ubuntu && sudo apt-get install -y ubuntu-make
+    if is_ubuntu && ! is_xenial; then
+        sudo apt-get install -y ubuntu-make
+    fi
 
     is_wsl && return 0
 
@@ -1617,7 +1608,9 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put
-    is_ubuntu && cmd_check umake
+    if is_ubuntu && ! is_xenial; then
+        cmd_check umake
+    fi
     is_wsl || cmd_check google-chrome zeal firefox
 }
 

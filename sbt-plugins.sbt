@@ -1,11 +1,9 @@
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-addSbtPlugin("org.ensime" % "sbt-ensime" % "1.12.14")
+addSbtPlugin("org.ensime" % "sbt-ensime" % "2.1.0")
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.1.0")
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.4")
 
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.1")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
 
-addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-RC10")
-
-addSbtPlugin("org.duhemm" % "sbt-errors-summary" % "0.6.0")
+addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0")

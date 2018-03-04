@@ -791,41 +791,63 @@ vscode_install() {
 
     has_cmd code || return 1
 
-    vsexti wix.vscode-import-cost
+    # vsexti wix.vscode-import-cost
+    # vsexti wmaurer.vscode-jumpy
+    # vsexti eg2.vscode-npm-script
+    # vsexti ms-azuretools.vscode-cosmosdb
+
+    vsexti lucax88x.codeacejumper
+    vsexti lfs.vscode-emacs-friendly
+    vsexti mycelo.embrace
+    vsexti letrieu.expand-region
+
     vsexti EditorConfig.EditorConfig
+    vsexti alefragnani.project-manager
+    vsexti robertohuertasm.vscode-icons
+
+    vsexti formulahendry.code-runner
+
     vsexti msjsdiag.debugger-for-chrome
     vsexti eg2.tslint
     vsexti dbaeumer.vscode-eslint
-    vsexti alefragnani.project-manager
-    vsexti robertohuertasm.vscode-icons
+    vsexti esbenp.prettier-vscode
+    vsexti gottfired.css2react
+    vsexti eg2.vscode-npm-script
+    vsexti WallabyJs.quokka-vscode
+
+    vsexti formulahendry.auto-rename-tag
+    vsexti formulahendry.auto-close-tag
+
     vsexti Orta.vscode-jest
     vsexti flowtype.flow-for-vscode
-    vsexti ms-vscode.cpptools
+
     vsexti jakethashi.vscode-angular2-emmet
     vsexti natewallace.angular2-inline
-    vsexti formulahendry.auto-rename-tag
     vsexti Angular.ng-template
+
+    vsexti ms-vscode.cpptools
+    mitaki28.vscode-clang
+    vsexti xaver.clang-format
+
     vsexti dracula-theme.theme-dracula
     vsexti ms-vscode.Theme-TomorrowKit
-    vsexti esbenp.prettier-vscode
+
     vsexti redhat.java
 
     vsexti avli.clojure
     vsexti shaunlebron.vscode-parinfer
-    vsexti donjayamanne.python
+
+    vsexti ms-python.python
+
     vsexti dragos.scala-lsp
-    vsexti lucax88x.codeacejumper
-    vsexti WallabyJs.quokka-vscode
+
     vsexti humao.rest-client
     vsexti jebbs.plantuml
-    vsexti formulahendry
     vsexti deerawan.vscode-dash
+
     vsexti donjayamanne.githistory
-    vsexti eamodio.gitlens
     vsexti felipecaputo.git-project-manager
     vsexti codezombiech.gitignore
-    vsexti christian-kohler.npm-intellisense
-    vsexti eg2.vscode-npm-script
 }
 
 #
@@ -1683,41 +1705,43 @@ vscode_check() {
     fi
     cmd_check code
 
-    vsext_check wix.vscode-import-cost
+    vsext_check lucax88x.codeacejumper
+    vsext_check lfs.vscode-emacs-friendly
+    vsext_check mycelo.embrace
+    vsext_check letrieu.expand-region
     vsext_check EditorConfig.EditorConfig
+    vsext_check alefragnani.project-manager
+    vsext_check robertohuertasm.vscode-icons
+    vsext_check formulahendry.code-runner
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint
     vsext_check dbaeumer.vscode-eslint
-    vsext_check alefragnani.project-manager
-    vsext_check robertohuertasm.vscode-icons
+    vsext_check esbenp.prettier-vscode
+    vsext_check gottfired.css2react
+    vsext_check eg2.vscode-npm-script
+    vsext_check WallabyJs.quokka-vscode
+    vsext_check formulahendry.auto-rename-tag
+    vsext_check formulahendry.auto-close-tag
     vsext_check Orta.vscode-jest
     vsext_check flowtype.flow-for-vscode
-    vsext_check ms-vscode.cpptools
     vsext_check jakethashi.vscode-angular2-emmet
     vsext_check natewallace.angular2-inline
-    vsext_check formulahendry.auto-rename-tag
     vsext_check Angular.ng-template
+    vsext_check ms-vscode.cpptools
+    vsext_check xaver.clang-format
     vsext_check dracula-theme.theme-dracula
     vsext_check ms-vscode.Theme-TomorrowKit
-    vsext_check esbenp.prettier-vscode
     vsext_check redhat.java
-
     vsext_check avli.clojure
     vsext_check shaunlebron.vscode-parinfer
-    vsext_check donjayamanne.python
+    vsext_check ms-python.python
     vsext_check dragos.scala-lsp
-    vsext_check lucax88x.codeacejumper
-    vsext_check WallabyJs.quokka-vscode
     vsext_check humao.rest-client
     vsext_check jebbs.plantuml
-    vsext_check formulahendry
     vsext_check deerawan.vscode-dash
     vsext_check donjayamanne.githistory
-    vsext_check eamodio.gitlens
     vsext_check felipecaputo.git-project-manager
     vsext_check codezombiech.gitignore
-    vsext_check christian-kohler.npm-intellisense
-    vsext_check eg2.vscode-npm-script
 }
 
 java_check() {

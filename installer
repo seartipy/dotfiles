@@ -783,7 +783,7 @@ vscode_install() {
     vsexti Angular.ng-template
 
     vsexti ms-vscode.cpptools
-    mitaki28.vscode-clang
+    vsexti mitaki28.vscode-clang
     vsexti xaver.clang-format
 
     vsexti dracula-theme.theme-dracula
@@ -1675,6 +1675,7 @@ vscode_check() {
     vsext_check natewallace.angular2-inline
     vsext_check Angular.ng-template
     vsext_check ms-vscode.cpptools
+    vscext_check mitaki28.vscode-clang
     vsext_check xaver.clang-format
     vsext_check dracula-theme.theme-dracula
     vsext_check ms-vscode.Theme-TomorrowKit

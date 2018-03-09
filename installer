@@ -397,7 +397,7 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview ubuntu-make
     is_ubuntu && sudo apt-get install -y firefox
 
     is_wsl && return 0

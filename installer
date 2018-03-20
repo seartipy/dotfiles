@@ -814,7 +814,7 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit github-desktop
+    brew cask install smartgit github
     brew install git-extras
     brew cask install kdiff3
 }
@@ -1760,7 +1760,7 @@ cpp_check() {
 git_check() {
     is_wsl || cmd_check kdiff3
     cmd_check git git-extras
-    is_mac && brew_cask_check smartgit hub github-desktop
+    is_mac && brew_cask_check smartgit github-desktop
 
     file_check ~/.gitconfig
 }

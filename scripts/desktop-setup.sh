@@ -203,6 +203,8 @@ gnome_keybindings() {
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up  "['<Super><Shift>Page_Up', '<Super><Shift><Control>Up']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "['<Super>Page_Down', '<Super><Control>Down']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up  "['<Super>Page_Up', '<Super><Control>Up']"
+
+    # gsettings set org.gnome.desktop.remote-access.require-encryption false
 }
 
 gnome_install() {

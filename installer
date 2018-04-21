@@ -896,35 +896,11 @@ linux_lein_install() {
     chmod +x ~/bin/lein
 }
 
-linux_boot_install() {
-    is_linux || return 1
-    if ! has_cmd ~/bin/boot; then
-        if cd ~/bin; then
-            curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
-            chmod 755 boot
-        fi
-        chmod a+x ~/bin/boot
-    fi
-    boot -u
-}
-
 clojure_mac_install() {
     is_mac || return 1
 
     slog "Installing clojure packages"
-    brew install leiningen boot-clj
-}
-
-boot_dotfiles() {
-    [ -f ~/seartipy/dotfiles/boot-profile.boot ] || return 1
-
-    slog "Moving ~/.boot/profile.boot to $BACKUP_DIR (if exists)"
-    smv ~/.boot/profile.boot $BACKUP_DIR
-
-    smd ~/.boot
-
-    slog "Linking ~/seartipy/dotfiles/boot-profile.boot as ~/.boot/profile.boot"
-    sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
+    brew install leiningen
 }
 
 lein_dotfiles() {
@@ -941,7 +917,6 @@ lein_dotfiles() {
 
 clojure_dotfiles() {
     lein_dotfiles
-    boot_dotfiles
 }
 
 clojure_install() {
@@ -949,7 +924,6 @@ clojure_install() {
 
     clojure_mac_install
     linux_lein_install
-    linux_boot_install
 
     clojure_dotfiles
 }
@@ -1470,7 +1444,6 @@ fresh_install() {
 
     if [ -n "$CLOJURE" ]; then
         srm ~/.len
-        srm ~/.boot
         srm ~/.m2
     fi
 
@@ -1709,16 +1682,15 @@ java_check() {
 scala_check() {
     cmd_check javac sbt scala amm
 
-    ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
-    ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
+    ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
 }
 
 clojure_check() {
-    cmd_check javac lein boot
-    is_wsl && cmd_check ~/bin/lein ~/bin/boot
+    cmd_check javac lein
+    is_wsl && cmd_check ~/bin/lein
 
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
-    ln_check ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
 }
 
 web_check() {

@@ -762,11 +762,11 @@ vscode_install() {
     vsexti formulahendry.auto-close-tag
 
     vsexti Orta.vscode-jest
-    vsexti flowtype.flow-for-vscode
+    # vsexti flowtype.flow-for-vscode
 
-    vsexti jakethashi.vscode-angular2-emmet
-    vsexti natewallace.angular2-inline
-    vsexti Angular.ng-template
+    # vsexti jakethashi.vscode-angular2-emmet
+    # vsexti natewallace.angular2-inline
+    # vsexti Angular.ng-template
 
     vsexti ms-vscode.cpptools
     vsexti mitaki28.vscode-clang
@@ -778,9 +778,11 @@ vscode_install() {
     vsexti redhat.java
 
     vsexti avli.clojure
+    # cospaia.clojure4vscode
     vsexti shaunlebron.vscode-parinfer
 
     vsexti ms-python.python
+    vsexti donjayamanne.jupyter
 
     vsexti dragos.scala-lsp
 
@@ -1677,10 +1679,10 @@ vscode_check() {
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.auto-close-tag
     vsext_check Orta.vscode-jest
-    vsext_check flowtype.flow-for-vscode
-    vsext_check jakethashi.vscode-angular2-emmet
-    vsext_check natewallace.angular2-inline
-    vsext_check Angular.ng-template
+    # vsext_check flowtype.flow-for-vscode
+    # vsext_check jakethashi.vscode-angular2-emmet
+    # vsext_check natewallace.angular2-inline
+    # vsext_check Angular.ng-template
     vsext_check ms-vscode.cpptools
     vsext_check mitaki28.vscode-clang
     vsext_check xaver.clang-format

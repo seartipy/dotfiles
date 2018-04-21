@@ -935,17 +935,20 @@ clojure_install() {
 
 
 sbt_ubuntu_install() {
+    is_apt || return 1
+
     has_cmd sbt && return 0
 
+    slog "Installing sbt"
     add_sbt_ppa
     ubuntu_update
-
     sudo apt-get install -y sbt
 }
 
 sbt_fedora_install() {
     is_fedora || return 1
 
+    slog "Installing sbt"
     curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo > /dev/null
     sudo dnf install -y sbt
 }
@@ -956,16 +959,10 @@ sbt_mac_install() {
     brew install sbt
 }
 
-sbt_install() {
-    sbt_ubuntu_install
-    sbt_fedora_install
-    sbt_mac_install
-}
-
 scala_mac_install() {
     is_mac || return 1
 
-    slog "Installing scala packages"
+    slog "Installing scala"
     brew install scala ammonite-repl
 }
 
@@ -1022,7 +1019,9 @@ scala_dotfiles() {
 scala_install() {
     jdk_install
 
-    sbt_install
+    sbt_mac_install
+    sbt_fedora_install
+    sbt_ubuntu_install
 
     scala_mac_install
     scala_fedora_install

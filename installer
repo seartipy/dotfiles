@@ -971,7 +971,7 @@ ammonite_install() {
     is_linux || return 1
     has_cmd amm && return 0
 
-     curl -L https://git.io/v0FGO > ~/bin/amm && chmod +x ~/bin/amm
+     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.1.0/2.12-1.1.0 > ~/bin/amm && chmod +x ~/bin/amm
 }
 
 scala_fedora_install() {
@@ -991,25 +991,25 @@ scala_ubuntu_install() {
 sbt_plugins() {
     [ -f ~/seartipy/dotfiles/sbt-plugins.sbt ] || return 1
 
-    slog "Moving ~/.sbt/0.13/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
-    smv ~/.sbt/0.13/plugins/plugins.sbt $BACKUP_DIR
+    slog "Moving ~/.sbt/1.0/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
+    smv ~/.sbt/1.0/plugins/plugins.sbt $BACKUP_DIR
 
-    smd ~/.sbt/0.13/plugins
+    smd ~/.sbt/1.0/plugins
 
-    slog "Linking ~/seartipy/dotfiles/sbt-plugins.sbt as ~/.sbt/0.13/plugins/plugins.sbt"
-    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
+    slog "Linking ~/seartipy/dotfiles/sbt-plugins.sbt as ~/.sbt/1.0/plugins/plugins.sbt"
+    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
 }
 
 sbt_global() {
     [ -f ~/seartipy/dotfiles/sbt-global.sbt ] || return 1
 
-    slog "Moving ~/.sbt/0.13/global.sbt to $BACKUP_DIR (if exists)"
-    smv ~/.sbt/0.13/global.sbt $BACKUP_DIR
+    slog "Moving ~/.sbt/1.0/global.sbt to $BACKUP_DIR (if exists)"
+    smv ~/.sbt/1.0/global.sbt $BACKUP_DIR
 
-    smd ~/.sbt/0.13/
+    smd ~/.sbt/1.0/
 
-    slog "Linking ~/seartipy/dotfiles/sbt-global.sbt as ~/.sbt/0.13/global.sbt"
-    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+    slog "Linking ~/seartipy/dotfiles/sbt-global.sbt as ~/.sbt/1.0/global.sbt"
+    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
 }
 
 scala_dotfiles() {

@@ -1545,6 +1545,7 @@ ppas_check() {
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
+    [ -n "$SCALA" ] && ppa_check 'sbt'
 
     is_ubuntu || return 1
 }

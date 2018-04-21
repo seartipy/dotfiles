@@ -412,7 +412,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip gpg the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
+    brew install wget trash tree fasd unar p7zip the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
     brew cask install iterm2 google-chrome
 }
 
@@ -471,6 +471,7 @@ cleanup_mac() {
     brew cleanup
     brew cask cleanup
 }
+
 cleanup_fedora() {
     is_fedora || return 1
 

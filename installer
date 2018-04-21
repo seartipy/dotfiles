@@ -1178,7 +1178,7 @@ web_install() {
     npmi typescript flow-bin yarn
     npmi eslint tslint jsonlint
     npmi eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
-    npmi create-react-app @angular/cli feathers-cli express-generator
+    npmi create-react-app
     npmi tern js-beautify ijavascript
     npmi npm-check npm-check-updates lite-server
 }
@@ -1731,7 +1731,7 @@ web_check() {
     cmd_check tsc flow yarn
     cmd_check eslint tslint jsonlint
     cmd_check tern js-beautify ijs
-    cmd_check create-react-app ng feathers express
+    cmd_check create-react-app
     npm_check eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
     cmd_check npm-check ncu lite-server
 }

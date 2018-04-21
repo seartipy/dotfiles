@@ -709,6 +709,7 @@ atom_install() {
 ubuntu_vscode_install() {
     is_wsl && return 1
     is_apt || return 1
+
     add_vscode_ppa
     ubuntu_update
     sudo apt-get install -y code
@@ -716,6 +717,7 @@ ubuntu_vscode_install() {
 
 mac_vscode_install() {
     is_mac || return 1
+
     brew cask install visual-studio-code
 }
 
@@ -1666,6 +1668,7 @@ vscode_check() {
     vsext_check avli.clojure
     vsext_check shaunlebron.vscode-parinfer
     vsext_check ms-python.python
+    vsext_check donjayamanne.jupyter
     vsext_check dragos.scala-lsp
     vsext_check humao.rest-client
     vsext_check jebbs.plantuml

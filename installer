@@ -599,8 +599,6 @@ zsh_install() {
 
     zsh_dotfiles
 
-    sclone https://github.com/changs/slimzsh.git ~/.slimzsh
-    sclone https://github.com/zsh-users/antigen.git ~/seartipy/vendors/antigen
     sclone https://github.com/tarjoilija/zgen.git ~/.zgen
 }
 
@@ -1433,9 +1431,7 @@ fresh_install() {
 
     if [ -n "$ZSH" ]; then
         srm ~/.zshrc
-        srm ~/seartipy/vendors/antigen
         srm ~/.zgen
-        srm ~/.slimzsh
     fi
 
     if [ -n "$BASH" ]; then
@@ -1620,7 +1616,7 @@ zsh_check() {
     cmd_check zsh shellcheck
 
     ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-    dir_check ~/.slimzsh ~/seartipy/vendors/antigen ~/.zgen
+    dir_check ~/.zgen
     file_check ~/.zgen-options-local.sh
     file_check ~/.zshrc-pre-local.sh
 }

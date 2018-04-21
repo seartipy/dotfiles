@@ -227,16 +227,6 @@ vsext_check() {
     done
 }
 
-gem_exists() {
-    gem list --local | grep "$1" > /dev/null
-}
-
-gem_check() {
-    for p in "$@"; do
-        gem_exists "$p" || warn "$p gem not installed"
-    done
-}
-
 brew_exists() {
     brew list | grep "^$1$" > /dev/null
 }
@@ -305,17 +295,6 @@ npmi() {
         if ! npm_exists "$p"; then
             slog "Installing npm package $p"
             npm install -g "$p"
-        fi
-    done
-}
-
-gemi() {
-    has_cmd gem || return 1
-
-    for p in "$@"; do
-        if ! gem_exists "$p"; then
-            slog "Installing gem package $p"
-            gem install "$p" --no-ri --no-rdoc
         fi
     done
 }

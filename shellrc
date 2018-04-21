@@ -197,16 +197,11 @@ seartipy_fix_links() {
         sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
     fi
 
-    if has_cmd boot; then
-        smd ~/.boot
-        sln ~/seartipy/dotfiles/boot-profile.boot ~/.boot/profile.boot
-    fi
-
     # scala
     if has_cmd sbt; then
-        smd ~/.sbt/0.13/plugins
-        sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
-        sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/0.13/global.sbt
+        smd ~/.sbt/1.0/plugins
+        sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
+        sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
     fi
 
 

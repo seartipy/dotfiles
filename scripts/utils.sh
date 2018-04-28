@@ -26,32 +26,11 @@ ${BOLD}${RED}FATAL: ${RESET} $1
     exit 1
 }
 
-is_debian() {
-    has_cmd lsb_release || return 1
-    local OS
-    OS=$(lsb_release -i | cut -d ':' -f2)
-    [[ "$OS" == *"Debian" ]]
-}
-
-is_yakkety() {
-    has_cmd lsb_release || return 1
-    local os=`echo $(lsb_release -c | cut -d ':' -f 2)`
-    [[ "yakkety" == $os ]]
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
     OS=$(lsb_release -i | cut -d ':' -f2)
     [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
-}
-
-is_apt() {
-    is_ubuntu || is_debian
-}
-
-is_fedora() {
-    [ -f /etc/redhat-release ]
 }
 
 is_linux() {
@@ -81,7 +60,7 @@ smd() {
 
 srm() {
     for f in "$@"; do
-        if is_apt; then
+        if is_ubuntu; then
             trash-put "$f" 2> /dev/null && slog "Trashed $f"
         else
             trash "$f" 2> /dev/null && slog "Trashed $f"
@@ -266,10 +245,8 @@ sysi() {
     for p in "$@"; do
         if is_mac; then
             brew install "$p"
-        elif is_apt; then
+        elif is_ubuntu; then
             sudo apt install -y "$p"
-        elif is_fedora; then
-            sudo dnf install -y "$p"
         fi
     done
 }

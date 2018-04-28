@@ -41,17 +41,8 @@ additional_mac_install() {
     fi
 }
 
-additional_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing additional packages"
-    sudo dnf install -y jq httpie
-    has_cmd vmware-user-suid-wrapper || sudo dnf install -y VirtualBox dkms vlc youtube-dl
-}
-
-
 typora_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     add_typora_ppa
     sudo apt-get update
@@ -60,7 +51,7 @@ typora_install() {
 }
 
 additional_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     add_webupd8_ppa
     ubuntu_update
@@ -80,7 +71,6 @@ additional_ubuntu_install() {
 
 additional_install() {
     additional_mac_install
-    additional_fedora_install
     additional_ubuntu_install
 
     icdiff_install

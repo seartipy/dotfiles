@@ -32,26 +32,11 @@ is_linux() {
     [[ "$OSTYPE" == "linux-gnu" ]]
 }
 
-is_debian() {
-    has_cmd lsb_release || return 1
-    local os
-    os=$(lsb_release -i | cut -d ':' -f2)
-    [[ "$os" == *"Debian" ]]
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local os
     os=$(lsb_release -i | cut -d ':' -f2)
     [[ "$os" == *"Ubuntu" ]] || [[ "$os" == *"neon" ]] || [[ "$os" == *"elementary OS" ]] || [[ "$os" == *"LinuxMint" ]]
-}
-
-is_apt() {
-    is_ubuntu || is_debian
-}
-
-is_fedora() {
-    [ -f /etc/redhat-release ]
 }
 
 is_mac() {
@@ -83,7 +68,7 @@ srm() {
     for f in "$@"; do
         if [ -L "$f" ]; then
             rm -f "$f"
-        elif is_apt; then
+        elif is_ubuntu; then
             trash-put "$f" 2> /dev/null && slog "Trashed $f"
         else
             trash "$f" 2> /dev/null && slog "Trashed $f"
@@ -102,19 +87,12 @@ if is_linux; then
     alias open="xdg-open"
 fi
 
-if is_apt; then
+if is_ubuntu; then
     alias trash=trash-put
 
     #java
     export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
     export JDK_HOME="/usr/lib/jvm/java-8-oracle"
-fi
-
-if is_fedora; then
-    alias upgrade="sudo dnf upgrade -y"
-
-    export JAVA_HOME="/etc/alternatives/java_sdk"
-    export JDK_HOME="/etc/alternatives/java_sdk"
 fi
 
 if is_mac; then
@@ -436,7 +414,7 @@ alias sfl=seartipy_fix_links
 
 alias gst="git status"
 
-if is_apt; then
+if is_ubuntu; then
     alias si="sudo apt-get install -y"
     alias ss="sudo apt-cache search"
     alias sr="sudo apt-get purge"
@@ -446,12 +424,6 @@ if is_mac; then
     alias si="brew install"
     alias ss="brew search"
     alias sr="brew uninstall"
-fi
-
-if is_fedora; then
-    alias si="sudo dnf install -y"
-    alias ss="sudo dnf search"
-    alias sr="sudo dnf remove"
 fi
 
 #

@@ -1,5 +1,3 @@
--- default desktop configuration for Fedora
-
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 

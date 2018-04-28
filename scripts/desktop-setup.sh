@@ -101,8 +101,6 @@ gnome_extensions() {
 
     if is_ubuntu; then
         sudo apt-get install -y chrome-gnome-shell
-    elif is_fedora; then
-        sudo dnf install -y chrome-gnome-shell
     fi
 
     gsettings set org.gnome.shell disable-extension-version-validation "true"
@@ -426,20 +424,6 @@ mac_settings() {
 #
 # themes
 
-fedora_themes_install() {
-    is_fedora || return 1
-
-    slog "Installing themes"
-
-    sudo dnf copr -y enable numix/numix
-    sudo dnf install -y numix-icon-theme-circle
-
-    sudo dnf config-manager --add-repo http://download.opensuse.org/repositories/home:Horst3180/Fedora_24/home:Horst3180.repo
-    sudo dnf install -y arc-theme
-
-    sudo dnf install -y conky
-}
-
 add_numix_ppa() {
     is_ubuntu || return 1
     ppa_exists numix && return 0
@@ -461,9 +445,6 @@ ubuntu_themes_install() {
 
 themes_install() {
     ubuntu_themes_install
-    fedora_themes_install
-
-    is_debian && return 1
 
     if has_cmd gnome-shell; then
         slog "Setting Arc theme and Numix Circle theme for gnome"
@@ -542,15 +523,8 @@ fonts_check() {
 #
 # XMONAD
 
-xmonad_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing xmonad"
-    sudo dnf install -y xmonad ghc-xmonad-devel ghc-xmonad-contrib ghc-xmonad-contrib-devel xmobar dmenu
-}
-
 xmonad_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Installing xmonad"
     sudo apt-get install -y xmonad libghc-xmonad-contrib-dev xmobar suckless-tools rofi
@@ -566,7 +540,6 @@ xmonad_install() {
 
     slog "xmonad setup"
 
-    xmonad_fedora_install
     xmonad_ubuntu_install
 
     slog "moving ~/.xmonad to $BACKUP_DIR"
@@ -582,7 +555,7 @@ xmonad_install() {
         dconf write /org/mate/desktop/session/required-components/windowmanager "'xmonad'"
     fi
 
-    is_apt || return 1
+    is_ubuntu || return 1
 
     xmonad_fix
 }
@@ -599,15 +572,9 @@ xmonad_check() {
 # i3
 
 i3_ubuntu_install() {
-    is_apt ||  return 1
+    is_ubuntu ||  return 1
 
     sudo apt-get install -y i3-wm rofi suckless-tools i3status
-}
-
-i3_fedora_install() {
-    is_fedora || return 1
-
-    sudo dnf install -y i3 i3status
 }
 
 i3_install() {
@@ -616,7 +583,6 @@ i3_install() {
     slog "i3 setup"
 
     i3_ubuntu_install
-    i3_fedora_install
 
     scopy ~/seartipy/dotfiles/templates/desktops/i3-config ~/.i3/config
 }
@@ -701,8 +667,6 @@ git_credential_gnome_keyring_install() {
 
 
 git_credential_libsecret_install() {
-    is_fedora || return 1
-
     slog "git credential - libsecret"
     sudo dnf install -y libsecret
     git config --global credential.helper libsecret

@@ -1058,12 +1058,12 @@ haskell_install() {
     stackexei alex
     stackexei happy
     stackexei hlint
-    stackexei structured-haskell-mode
+    # stackexei structured-haskell-mode
     stackexei stylish-haskell
     stackexei hasktags
     stackexei hindent
     stackexei hdevtools
-    stackexei ghc-mod
+    # stackexei ghc-mod
     # stackexei ghci-ng
     stackexei apply-refact
     stackexei hoogle
@@ -1728,7 +1728,7 @@ web_check() {
 }
 
 haskell_check() {
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghc-mod hoogle intero structured-haskell-mode
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
 }
 
 python3_check() {

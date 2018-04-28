@@ -1750,10 +1750,18 @@ python_check() {
 }
 
 cpp_check() {
-    cmd_check cmake scons cppcheck clang++ clang-format
+    cmd_check cmake scons cppcheck clang++
+
+    if is_ubuntu; then
+        cmd_check clang-format-6.0 clang-tidy-6.0
+    else
+        cmd_check clang-format
+        is_apt && clang-tidy
+    fi
+
     is_linux && cmd_check g++
     is_fedora && cmd_check ninja-build
-    is_apt && cmd_check ninja bear clang-tidy
+    is_apt && cmd_check ninja bear
     is_mac && cmd_check ninja bear
 }
 

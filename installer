@@ -859,7 +859,7 @@ jdk_ubuntu_install() {
     if is_wsl || is_debian; then
         sudo apt-get install -y openjdk-8-jdk openjdk-8-source openjdk-8-doc
     else
-        is_ubuntu && sudo apt-get install -y oracle-java8-installer oracle-java9-installer oracle-java8-set-default
+        is_ubuntu && sudo apt-get install -y oracle-java8-installer
     fi
 }
 
@@ -1044,12 +1044,12 @@ haskell_install() {
     stackexei alex
     stackexei happy
     stackexei hlint
-    stackexei structured-haskell-mode
+    # stackexei structured-haskell-mode
     stackexei stylish-haskell
     stackexei hasktags
     stackexei hindent
     stackexei hdevtools
-    stackexei ghc-mod
+    # stackexei ghc-mod
     # stackexei ghci-ng
     stackexei apply-refact
     stackexei hoogle
@@ -1712,7 +1712,7 @@ web_check() {
 }
 
 haskell_check() {
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools ghc-mod hoogle intero structured-haskell-mode
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
 }
 
 python3_check() {
@@ -1734,10 +1734,18 @@ python_check() {
 }
 
 cpp_check() {
-    cmd_check cmake scons cppcheck clang++ clang-format
+    cmd_check cmake scons cppcheck clang++
+
+    if is_ubuntu; then
+        cmd_check clang-format-6.0 clang-tidy-6.0
+    else
+        cmd_check clang-format
+        is_apt && clang-tidy
+    fi
+
     is_linux && cmd_check g++
     is_fedora && cmd_check ninja-build
-    is_apt && cmd_check ninja bear clang-tidy
+    is_apt && cmd_check ninja bear
     is_mac && cmd_check ninja bear
 }
 

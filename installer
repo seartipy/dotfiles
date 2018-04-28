@@ -942,29 +942,6 @@ pipi() {
     fi
 }
 
-mac_python3_install() {
-    is_mac || return 1
-
-    brew install python3
-    pip3 install --upgrade pip setuptools wheel
-    pip3 install matplotlib
-}
-
-apt_python3_install() {
-    is_ubuntu || return 1
-
-    sudo apt-get install -y python3-pip python3-dev python3-matplotlib python3-setuptools python3-wheel python3-tk
-    pip3 install --upgrade --user pip
-}
-
-python3_install() {
-    mac_python3_install
-    apt_python3_install
-
-    pipi yapf service-factory jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake Cython numba
-    is_linux && export PATH="$HOME/.local/bin:$PATH"
-}
-
 python_mac_install() {
     is_mac || return 1
 
@@ -1071,7 +1048,6 @@ select_everything() {
     CPP="cpp"
 
     PYTHON="python"
-    PYTHON3="python3"
     HASKELL="haskell"
 }
 
@@ -1189,10 +1165,6 @@ script_options() {
                 GIT=""
                 shift
                 ;;
-            nopython3)
-                PYTHON3=""
-                shift
-                ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
                 shift
@@ -1207,7 +1179,6 @@ script_options() {
                 ;;
             python)
                 PYTHON="python"
-                PYTHON3="python3"
                 shift
                 ;;
             seartipy)
@@ -1335,8 +1306,6 @@ install_all() {
     [ -n "$VSCODE" ] && vscode_install
 
     [ -n "$GIT" ] && git_install
-
-    [ -n "$PYTHON3" ] && python3_install
 
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
@@ -1550,10 +1519,6 @@ haskell_check() {
     cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
 }
 
-python3_check() {
-    export PATH="$HOME/.local/bin:$PATH"
-    cmd_check python3 pip3 git-up yapf flake8 jupyter ipython pep8 bokeh isort py.test ptw ptpython autoflake cython numba
-}
 
 python_check() {
     cmd_check pyenv
@@ -1619,7 +1584,6 @@ post_installer_check() {
 
     [ -n "$WEB" ] && web_check
     [ -n "$CPP" ] && cpp_check
-    [ -n "$PYTHON3" ] && python3_check
     [ -n "$PYTHON" ] && python_check
     [ -n "$HASKELL" ] && haskell_check
 }

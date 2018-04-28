@@ -29,30 +29,11 @@ ${BOLD}${RED}FATAL: ${RESET} $1
     exit 1
 }
 
-is_debian() {
-    has_cmd lsb_release || return 1
-    local OS
-    OS=$(lsb_release -i | cut -d ':' -f2)
-    [[ "$OS" == *"Debian" ]]
-}
-
-is_wsl() {
-    [ -e /proc/version ] && grep -q "Microsoft" /proc/version
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
     OS=$(lsb_release -i | cut -d ':' -f2)
     [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
-}
-
-is_apt() {
-    is_ubuntu || is_debian
-}
-
-is_fedora() {
-    [ -f /etc/redhat-release ]
 }
 
 is_linux() {
@@ -84,7 +65,7 @@ srm() {
     for f in "$@"; do
         if [ -L "$f" ]; then
             rm -f "$f"
-        elif is_apt; then
+        elif is_ubuntu; then
             trash-put "$f" 2> /dev/null && slog "Trashed $f"
         else
             trash "$f" 2> /dev/null && slog "Trashed $f"
@@ -262,10 +243,8 @@ sysi() {
     for p in "$@"; do
         if is_mac; then
             brew install "$p"
-        elif is_apt; then
+        elif is_ubuntu; then
             sudo apt install -y "$p"
-        elif is_fedora; then
-            sudo dnf install -y "$p"
         fi
     done
 }
@@ -312,7 +291,7 @@ add_java_ppa() {
 }
 
 add_chrome_ppa() {
-    is_apt || return 1
+    is_ubuntu || return 1
     ppa_exists google-chrome && return 0
 
     slog "Adding google chrome ppa"
@@ -329,14 +308,14 @@ add_webupd8_ppa() {
 }
 
 add_atom_ppa() {
-    is_apt || return 1
+    is_ubuntuq || return 1
     ppa_exists 'webupd8team.*-atom' && return 0
     slog "Adding atom ppa"
     sudo add-apt-repository ppa:webupd8team/atom -y
 }
 
 add_vscode_ppa() {
-    is_apt || return 1
+    is_ubuntu || return 1
     ppa_exists 'vscode' && return 0
 
     sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
@@ -344,7 +323,7 @@ add_vscode_ppa() {
 }
 
 add_sbt_ppa() {
-    is_apt || return 1
+    is_ubuntu || return 1
     ppa_exists 'sbt' && return 0
 
     echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt.list > /dev/null
@@ -355,7 +334,7 @@ add_sbt_ppa() {
 # essential
 
 ubuntu_update() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Updating ubuntu"
     if ! sudo apt-get update; then
@@ -364,7 +343,7 @@ ubuntu_update() {
 }
 
 ubuntu_upgrade() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Upgrading packages"
     if ! sudo apt-get upgrade -y; then
@@ -373,12 +352,12 @@ ubuntu_upgrade() {
 }
 
 essential_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
     pre_cmd_check apt-get
     sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
-    is_wsl || add_chrome_ppa
+    add_chrome_ppa
 
     ubuntu_update
     ubuntu_upgrade
@@ -387,11 +366,8 @@ essential_ubuntu_install() {
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview ubuntu-make
     is_ubuntu && sudo apt-get install -y firefox
 
-    is_wsl && return 0
-
     sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
     is_ubuntu && sudo apt-get install -y firefox
-    is_debian && sudo apt-get install -y firefox-esr
 }
 
 essential_mac_install() {
@@ -416,24 +392,6 @@ essential_mac_install() {
     brew cask install iterm2 google-chrome
 }
 
-add_rpmfusion() {
-    sudo dnf repolist | grep rpmfusion > /dev/null && return 0
-
-    slog "Add rpmfusion free and non free packages"
-    sudo dnf install -y http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-}
-
-essential_fedora_install() {
-    is_fedora || return 1
-
-    pre_cmd_check dnf
-
-    add_rpmfusion
-
-    slog "Installing essential packages"
-    sudo dnf install -y curl wget git trash-cli tree xsel xclip the_silver_searcher unar p7zip dconf tmux util-linux-user gcc-c++ zeromq zeromq-devel readline-devel zip perl-Digest-SHA gawk urlview sqlite
-}
-
 fasd_install() {
     is_linux || return 1
     has_cmd fasd && return 0
@@ -448,7 +406,6 @@ fasd_install() {
 
 essential_install() {
     essential_ubuntu_install
-    essential_fedora_install
     essential_mac_install
 
     fasd_install
@@ -458,7 +415,7 @@ essential_install() {
 # cleanup
 
 cleanup_ubuntu() {
-    is_apt || return 1
+    is_ubuntu || return 1
     sudo apt-get clean
     sudo apt-get autoclean
     sudo apt-get autoremove -y
@@ -472,16 +429,8 @@ cleanup_mac() {
     brew cask cleanup
 }
 
-cleanup_fedora() {
-    is_fedora || return 1
-
-    slog "dnf cleanup"
-    sudo dnf clean all
-}
-
 cleanup() {
     cleanup_ubuntu
-    cleanup_fedora
     cleanup_mac
 }
 
@@ -554,15 +503,8 @@ bash_install() {
 #
 # zsh
 
-zsh_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing zsh"
-    sudo dnf install -y zsh ShellCheck
-}
-
 zsh_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Installing zsh"
     sudo apt-get install -y zsh
@@ -593,7 +535,6 @@ zsh_dotfiles() {
 }
 
 zsh_install() {
-    zsh_fedora_install
     zsh_ubuntu_install
     zsh_mac_install
 
@@ -629,24 +570,13 @@ emacs_mac_install() {
     tic -o ~/.terminfo /usr/local/Cellar/emacs-plus/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
 }
 
-emacs_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing emacs"
-    sudo dnf install -y emacs aspell aspell-en ctags-etags discount
-}
-
 emacs_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Installing emacs"
     sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
 
-    if is_wsl; then
-        sudo apt-get install -y emacs-nox
-    else
-        sudo apt-get install -y emacs
-    fi
+    sudo apt-get install -y emacs
 }
 
 emacs_dotfiles() {
@@ -667,7 +597,6 @@ emacs_dotfiles() {
 
 emacs_install() {
     emacs_mac_install
-    emacs_fedora_install
     emacs_ubuntu_install
 
     emacs_dotfiles
@@ -677,17 +606,10 @@ emacs_install() {
 # atom
 
 ubuntu_atom_install() {
-    is_wsl && return 1
-    is_apt || return 1
+    is_ubuntu || return 1
     add_atom_ppa
     ubuntu_update
     sudo apt-get install -y atom
-}
-
-fedora_atom_install() {
-    is_fedora || return 1
-    sudo dnf -y copr enable mosquito/atom
-    sudo dnf install -y atom
 }
 
 mac_atom_install() {
@@ -698,7 +620,6 @@ mac_atom_install() {
 atom_install() {
     ubuntu_atom_install
     mac_atom_install
-    fedora_atom_install
 
     apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-r language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
@@ -707,8 +628,7 @@ atom_install() {
 # vscode
 
 ubuntu_vscode_install() {
-    is_wsl && return 1
-    is_apt || return 1
+    is_ubuntu || return 1
 
     add_vscode_ppa
     ubuntu_update
@@ -721,18 +641,9 @@ mac_vscode_install() {
     brew cask install visual-studio-code
 }
 
-fedora_vscode_install() {
-    is_fedora || return 1
-
-    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-    sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-    sudo dnf install -y code
-}
-
 vscode_install() {
     ubuntu_vscode_install
     mac_vscode_install
-    fedora_vscode_install
 
     has_cmd code || return 1
 
@@ -809,24 +720,16 @@ git_mac_install() {
     brew cask install kdiff3
 }
 
-git_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing git"
-    sudo dnf install -y kdiff3 git-extras
-}
-
 git_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Installing git"
     sudo apt-get install -y git-extras git
-    is_wsl || sudo apt-get install -y kdiff3
+ sudo apt-get install -y kdiff3
 }
 
 git_install() {
     git_mac_install
-    git_fedora_install
     git_ubuntu_install
 
     scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
@@ -843,31 +746,19 @@ jdk_mac_install() {
     brew cask install caskroom/versions/java8
 }
 
-jdk_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing java"
-    sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-src
-}
-
 jdk_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
     add_java_ppa
     is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    if is_wsl || is_debian; then
-        sudo apt-get install -y openjdk-8-jdk openjdk-8-source openjdk-8-doc
-    else
-        is_ubuntu && sudo apt-get install -y oracle-java8-installer
-    fi
+    is_ubuntu && sudo apt-get install -y oracle-java8-installer
 }
 
 jdk_install() {
     has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
 
     jdk_mac_install
-    jdk_fedora_install
     jdk_ubuntu_install
 }
 
@@ -935,7 +826,7 @@ clojure_install() {
 
 
 sbt_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     has_cmd sbt && return 0
 
@@ -943,14 +834,6 @@ sbt_ubuntu_install() {
     add_sbt_ppa
     ubuntu_update
     sudo apt-get install -y sbt
-}
-
-sbt_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing sbt"
-    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo > /dev/null
-    sudo dnf install -y sbt
 }
 
 sbt_mac_install() {
@@ -973,15 +856,8 @@ ammonite_install() {
      curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.1.0/2.12-1.1.0 > ~/bin/amm && chmod +x ~/bin/amm
 }
 
-scala_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing scala"
-    sudo dnf install -y scala
-}
-
 scala_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Install scala"
     sudo apt-get -y install scala
@@ -1020,11 +896,9 @@ scala_install() {
     jdk_install
 
     sbt_mac_install
-    sbt_fedora_install
     sbt_ubuntu_install
 
     scala_mac_install
-    scala_fedora_install
     scala_ubuntu_install
 
     ammonite_install
@@ -1077,23 +951,15 @@ mac_python3_install() {
 }
 
 apt_python3_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     sudo apt-get install -y python3-pip python3-dev python3-matplotlib python3-setuptools python3-wheel python3-tk
-    pip3 install --upgrade --user pip
-}
-
-fedora_python3_install() {
-    is_fedora || return 1
-
-    sudo dnf install -y python3-pip python3-devel python3-matplotlib python3-setuptools python3-wheel python3-tkinter
     pip3 install --upgrade --user pip
 }
 
 python3_install() {
     mac_python3_install
     apt_python3_install
-    fedora_python3_install
 
     pipi yapf service-factory jedi flake8 isort jupyter numpy scipy pep8 pandas bokeh git-up pyqt5 pytest pytest-watch ptpython autoflake Cython numba
     is_linux && export PATH="$HOME/.local/bin:$PATH"
@@ -1162,17 +1028,10 @@ web_install() {
 # c++
 
 cpp_ubuntu_install() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     slog "Installing C++"
     sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy ninja-build lldb
-}
-
-cpp_fedora_install() {
-    is_fedora || return 1
-
-    slog "Installing C++"
-    sudo dnf install -y clang clang-devel clang-analyzer clang-libs boost boost-build cppcheck scons cmake ninja-build lldb
 }
 
 cpp_mac_install() {
@@ -1185,7 +1044,6 @@ cpp_mac_install() {
 
 cpp_install() {
     cpp_mac_install
-    cpp_fedora_install
     cpp_ubuntu_install
 }
 
@@ -1395,7 +1253,7 @@ setup_backup_dir() {
 }
 
 fresh_ppas() {
-    is_apt || return 1
+    is_ubuntu || return 1
     has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
     is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
 }
@@ -1528,7 +1386,7 @@ installer() {
 
 pre_installer_check() {
     pre_cmd_check git curl wget unzip
-    if is_apt; then
+    if is_ubuntu; then
         pre_cmd_check trash-put
     else
         pre_cmd_check trash
@@ -1537,11 +1395,9 @@ pre_installer_check() {
 }
 
 ppas_check() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
-    is_wsl || ppa_check google-chrome
-
-    is_wsl && return 0
+    ppa_check google-chrome
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
@@ -1558,28 +1414,19 @@ essential_mac_check() {
 }
 
 essential_ubuntu_check() {
-    is_apt || return 1
+    is_ubuntu || return 1
 
     ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put
     is_ubuntu && cmd_check umake
-    is_wsl || cmd_check google-chrome zeal firefox
-}
-
-essential_fedora_check() {
-    is_fedora || return 1
-
-    sudo dnf repolist | grep rpmfusion > /dev/null || warn "rpmfusion not added"
-
-    cmd_check xsel xclip 7za dconf g++ trash shasum sqlite3
+    cmd_check google-chrome zeal firefox
 }
 
 essential_check() {
     cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
 
     essential_mac_check
-    essential_fedora_check
     essential_ubuntu_check
 }
 
@@ -1610,19 +1457,13 @@ bash_check() {
 
 emacs_check() {
     cmd_check emacs aspell markdown
-    if is_apt || is_mac; then
-        cmd_check editorconfig
-    fi
+    cmd_check editorconfig
     is_linux && cmd_check ctags
 
     ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
 }
 
 atom_check() {
-    if is_wsl; then
-        warn "atom unsupported on wsl"
-        return 1
-    fi
     cmd_check atom apm
     has_cmd apm || return 1
 
@@ -1630,10 +1471,6 @@ atom_check() {
 }
 
 vscode_check() {
-    if is_wsl; then
-        warn "vscode unsupported on wsl"
-        return 1
-    fi
     cmd_check code
 
     vsext_check lucax88x.codeacejumper
@@ -1691,8 +1528,6 @@ scala_check() {
 
 clojure_check() {
     cmd_check javac lein
-    is_wsl && cmd_check ~/bin/lein
-
     ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
 }
 
@@ -1739,18 +1574,16 @@ cpp_check() {
     if is_ubuntu; then
         cmd_check clang-format-6.0 clang-tidy-6.0
     else
-        cmd_check clang-format
-        is_apt && clang-tidy
+        cmd_check clang-format clang-tidy
     fi
 
     is_linux && cmd_check g++
-    is_fedora && cmd_check ninja-build
-    is_apt && cmd_check ninja bear
+    is_ubuntu && cmd_check ninja bear
     is_mac && cmd_check ninja bear
 }
 
 git_check() {
-    is_wsl || cmd_check kdiff3
+    cmd_check kdiff3
     cmd_check git git-extras
     is_mac && brew_cask_check smartgit github-desktop
 
@@ -1793,7 +1626,7 @@ post_installer_check() {
 
 curdir=$(pwd)
 
-if is_apt; then
+if is_ubuntu; then
     trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 else
     trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null

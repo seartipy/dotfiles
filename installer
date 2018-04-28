@@ -762,19 +762,19 @@ jdk_install() {
     jdk_ubuntu_install
 }
 
-sdkman_install() {
-    has_cmd sdk && return 0
-    curl -s "https://get.sdkman.io" | bash
-}
+# sdkman_install() {
+#     has_cmd sdk && return 0
+#     curl -s "https://get.sdkman.io" | bash
+# }
 
 
 java_install() {
     jdk_install
-    sdkman_install
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-    has_cmd maven || sdk install maven < /dev/null
-    has_cmd gradle || sdk install gradle < /dev/null
-    has_cmd groovy || sdk install groovy < /dev/null
+    # sdkman_install
+    # source "$HOME/.sdkman/bin/sdkman-init.sh"
+    # has_cmd maven || sdk install maven < /dev/null
+    # has_cmd gradle || sdk install gradle < /dev/null
+    # has_cmd groovy || sdk install groovy < /dev/null
 }
 
 #
@@ -1484,8 +1484,8 @@ vscode_check() {
 }
 
 java_check() {
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-    has_cmd javac java sdk groovy maven gradle
+    # source "$HOME/.sdkman/bin/sdkman-init.sh"
+    has_cmd javac java # sdk groovy maven gradle
 }
 
 scala_check() {

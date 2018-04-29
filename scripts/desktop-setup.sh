@@ -440,7 +440,7 @@ ubuntu_themes_install() {
     add_numix_ppa
     sudo apt-get update
 
-    sudo apt-get install -y numix-icon-theme-circle arc-theme conky-all
+    sudo apt-get install -y numix-icon-theme-circle arc-theme
 }
 
 themes_install() {
@@ -461,10 +461,7 @@ themes_install() {
 }
 
 ppas_check() {
-    if [ -n "$THEMES" ]; then
-        ppa_check numix
-        ppa_check teejee2008
-    fi
+    [ -n "$THEMES" ] && ppa_check numix
 }
 
 # 
@@ -681,6 +678,7 @@ git_install() {
 
 select_defaults() {
     FONTS="fonts"
+    GIT="git"
     is_ubuntu || return 1
     echo "enabled=0" | sudo tee /etc/default/apport > /dev/null
 
@@ -792,6 +790,7 @@ installer() {
 }
 
 post_installer_check() {
+    ppas_check
     [ -n "$FONTS" ] && fonts_check
     # [ -n "$THEMES" ] && themes_check
     # [ -n "$HIDPI" ] && hidpi_check
@@ -807,7 +806,7 @@ post_installer_check() {
     # [ -n "$GNOME" ] && gnome_check
     # [ -n "$KDE" ] && kde_check
     # [ -n "$MATE" ] && mate_check
-    # [ -n "$GIT" ] && git_install
+    # [ -n "$GIT" ] && git_check
 }
 
 main() {

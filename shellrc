@@ -182,7 +182,6 @@ seartipy_fix_links() {
         sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
     fi
 
-
     has_cmd tmux && sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
 
     is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
@@ -322,11 +321,6 @@ seartipy_conda_upgrade_all() {
 # http://stackoverflow.com/questions/2720014/upgrading-all-packages-with-pip
 seartipy_pip_upgrade_all() {
     pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
-}
-
-seartipy_gem_upgrade_all() {
-    gem update
-    gem update --system
 }
 
 seartipy_upgrade_all() {

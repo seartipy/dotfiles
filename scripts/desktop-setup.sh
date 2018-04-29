@@ -207,7 +207,7 @@ gnome_keybindings() {
 
 gnome_install() {
     sudo apt-get install -y ubuntu-gnome-default-settings ubuntu-gnome-desktop
-    sudo apt purge gnome-shell-extension-ubuntu-dock
+    sudo apt purge -y gnome-shell-extension-ubuntu-dock
 
     gnome_extensions
     gnome_settings

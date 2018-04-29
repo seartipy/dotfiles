@@ -662,16 +662,8 @@ git_credential_gnome_keyring_install() {
     git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
 }
 
-
-git_credential_libsecret_install() {
-    slog "git credential - libsecret"
-    sudo dnf install -y libsecret
-    git config --global credential.helper libsecret
-}
-
 git_install() {
     git_credential_gnome_keyring_install
-    git_credential_libsecret_install
 }
 
 # 

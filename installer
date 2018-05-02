@@ -621,7 +621,7 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
 
-    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-r language-scala linter-eslint linter-scalac lisp-paredit parinfer script
+      apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
 
 #
@@ -1436,7 +1436,7 @@ atom_check() {
     cmd_check atom apm
     has_cmd apm || return 1
 
-    apm_check atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-r language-scala linter-eslint linter-scalac lisp-paredit parinfer script
+    apm_check atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
 
 vscode_check() {

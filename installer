@@ -994,7 +994,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi typescript flow-bin yarn
+    npmi typescript flow-bin yarn ts-node
     npmi eslint tslint jsonlint
     npmi eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
     npmi create-react-app
@@ -1515,7 +1515,7 @@ web_check() {
     cmd_check npm
 
     has_cmd npm || return 1
-    cmd_check tsc flow yarn
+    cmd_check tsc flow yarn ts-node
     cmd_check eslint tslint jsonlint
     cmd_check tern js-beautify ijs
     cmd_check create-react-app

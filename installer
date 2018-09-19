@@ -652,15 +652,25 @@ vscode_install() {
     # vsexti eg2.vscode-npm-script
     # vsexti ms-azuretools.vscode-cosmosdb
 
-    vsexti lucax88x.codeacejumper
-    vsexti lfs.vscode-emacs-friendly
-    vsexti mycelo.embrace
-    vsexti letrieu.expand-region
+    if [ -n "$SEARTIPY" ]; then
+        vsexti lucax88x.codeacejumper
+        vsexti lfs.vscode-emacs-friendly
+        vsexti mycelo.embrace
+        vsexti letrieu.expand-region
+        vsexti robertohuertasm.vscode-icons
+        vsexti WallabyJs.quokka-vscode
+
+        vsexti ms-vscode.cpptools
+        vsexti mitaki28.vscode-clang
+        vsexti xaver.clang-format
+        vsexti dracula-theme.theme-dracula
+        vsexti ms-vscode.Theme-TomorrowKit
+        vsexti jebbs.plantuml
+        vsexti deerawan.vscode-dash
+    fi
 
     vsexti EditorConfig.EditorConfig
     vsexti alefragnani.project-manager
-    vsexti robertohuertasm.vscode-icons
-
     vsexti formulahendry.code-runner
 
     vsexti msjsdiag.debugger-for-chrome
@@ -669,7 +679,6 @@ vscode_install() {
     vsexti esbenp.prettier-vscode
     vsexti gottfired.css2react
     vsexti eg2.vscode-npm-script
-    vsexti WallabyJs.quokka-vscode
 
     vsexti formulahendry.auto-rename-tag
     vsexti formulahendry.auto-close-tag
@@ -681,12 +690,6 @@ vscode_install() {
     # vsexti natewallace.angular2-inline
     # vsexti Angular.ng-template
 
-    vsexti ms-vscode.cpptools
-    vsexti mitaki28.vscode-clang
-    vsexti xaver.clang-format
-
-    vsexti dracula-theme.theme-dracula
-    vsexti ms-vscode.Theme-TomorrowKit
 
     vsexti redhat.java
 
@@ -700,8 +703,6 @@ vscode_install() {
     vsexti dragos.scala-lsp
 
     vsexti humao.rest-client
-    vsexti jebbs.plantuml
-    vsexti deerawan.vscode-dash
 
     vsexti donjayamanne.githistory
     vsexti felipecaputo.git-project-manager
@@ -1442,13 +1443,8 @@ atom_check() {
 vscode_check() {
     cmd_check code
 
-    vsext_check lucax88x.codeacejumper
-    vsext_check lfs.vscode-emacs-friendly
-    vsext_check mycelo.embrace
-    vsext_check letrieu.expand-region
     vsext_check EditorConfig.EditorConfig
     vsext_check alefragnani.project-manager
-    vsext_check robertohuertasm.vscode-icons
     vsext_check formulahendry.code-runner
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint
@@ -1460,15 +1456,29 @@ vscode_check() {
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.auto-close-tag
     vsext_check Orta.vscode-jest
+
+
+    if [ -n "$SEARTIPY" ]; then
+        vsext_check lucax88x.codeacejumper
+        vsext_check lfs.vscode-emacs-friendly
+        vsext_check mycelo.embrace
+        vsext_check letrieu.expand-region
+        vsext_check robertohuertasm.vscode-icons
+        vsext_check WallabyJs.quokka-vscode
+
+        vsext_check ms-vscode.cpptools
+        vsext_check mitaki28.vscode-clang
+        vsext_check xaver.clang-format
+        vsext_check dracula-theme.theme-dracula
+        vsext_check ms-vscode.Theme-TomorrowKit
+        vsext_check jebbs.plantuml
+        vsext_check deerawan.vscode-dash
+    fi
+
     # vsext_check flowtype.flow-for-vscode
     # vsext_check jakethashi.vscode-angular2-emmet
     # vsext_check natewallace.angular2-inline
     # vsext_check Angular.ng-template
-    vsext_check ms-vscode.cpptools
-    vsext_check mitaki28.vscode-clang
-    vsext_check xaver.clang-format
-    vsext_check dracula-theme.theme-dracula
-    vsext_check ms-vscode.Theme-TomorrowKit
     vsext_check redhat.java
     vsext_check avli.clojure
     vsext_check shaunlebron.vscode-parinfer
@@ -1476,8 +1486,6 @@ vscode_check() {
     vsext_check donjayamanne.jupyter
     vsext_check dragos.scala-lsp
     vsext_check humao.rest-client
-    vsext_check jebbs.plantuml
-    vsext_check deerawan.vscode-dash
     vsext_check donjayamanne.githistory
     vsext_check felipecaputo.git-project-manager
     vsext_check codezombiech.gitignore

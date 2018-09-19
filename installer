@@ -621,7 +621,7 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
 
-      apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-scala linter-eslint linter-scalac lisp-paredit parinfer script
+    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test atomic-emacs git-plus git-projects git-time-machine ink intentions jumpy language-scala linter-eslint linter-scalac lisp-paredit parinfer script
 }
 
 #

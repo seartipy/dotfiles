@@ -426,7 +426,6 @@ cleanup_mac() {
 
     slog "cleanup brew"
     brew cleanup
-    brew cask cleanup
 }
 
 cleanup() {

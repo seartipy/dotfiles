@@ -651,7 +651,6 @@ mac_vscode_install() {
 vscode_install() {
     ubuntu_vscode_install
     mac_vscode_install
-
     has_cmd code || return 1
 
     # vsexti wix.vscode-import-cost
@@ -1024,7 +1023,7 @@ cpp_mac_install() {
     is_mac || return 1
 
     slog "Installing c++ packages"
-    brew install boost --c++11
+    brew install boost
     brew install cmake
     brew install scons
     brew install boost-build
@@ -1561,7 +1560,7 @@ cpp_check() {
     if is_ubuntu; then
         cmd_check clang-format-6.0 clang-tidy-6.0
     else
-        cmd_check clang-format clang-tidy
+        cmd_check clang-format
     fi
 
     is_linux && cmd_check g++

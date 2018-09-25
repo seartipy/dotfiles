@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 
+{
 # utils
 
 BOLD=$(tput bold)
@@ -228,6 +229,20 @@ brew_cask_check() {
     done
 }
 
+brewi() {
+  for p in "$@"; do
+    slog "Installing brew package $p"
+    brew install "$p"
+  done
+}
+
+brewcaski() {
+  for p in "$@"; do
+    slog "Installing brew package $p"
+    brew cask install "$p"
+  done
+}
+
 apmi() {
     has_cmd apm || return 1
 
@@ -242,7 +257,7 @@ apmi() {
 sysi() {
     for p in "$@"; do
         if is_mac; then
-            brew install "$p"
+            brewi "$p"
         elif is_ubuntu; then
             sudo apt install -y "$p"
         fi
@@ -373,6 +388,9 @@ essential_ubuntu_install() {
 essential_mac_install() {
     is_mac || return 1
 
+    slog "Agreeing to xcodebuild license..."
+    sudo xcodebuild -license accept
+
     if ! has_cmd brew; then
         pre_cmd_check ruby
 
@@ -388,8 +406,8 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brew install wget trash tree fasd unar p7zip the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
-    brew cask install iterm2 google-chrome
+    brewi wget trash tree fasd p7zip the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
+    brewcaski iterm2 google-chrome
 }
 
 fasd_install() {
@@ -514,7 +532,7 @@ zsh_mac_install() {
     is_mac || return 1
 
     slog "Installing zsh"
-    brew install shellcheck
+    brewi shellcheck
 }
 
 zsh_dotfiles() {
@@ -551,11 +569,11 @@ emacs_mac_install() {
 
     slog "Installing emacs packages"
     brew tap d12frosted/emacs-plus
-    brew install emacs-plus
+    brewi emacs-plus
 
-    brew install editorconfig discount
+    brewi editorconfig discount
     # TODO : ctags
-    brew install aspell --with-lang-en
+    brewi aspell
 
     slog "Trashing /Applications/Emacs.app(if exists)"
     srm '/Applications/Emacs.app'
@@ -613,7 +631,7 @@ ubuntu_atom_install() {
 
 mac_atom_install() {
     is_mac || return 1
-    brew cask install atom
+    brewcaski atom
 }
 
 atom_install() {
@@ -637,7 +655,7 @@ ubuntu_vscode_install() {
 mac_vscode_install() {
     is_mac || return 1
 
-    brew cask install visual-studio-code
+    brewcaski visual-studio-code
 }
 
 vscode_install() {
@@ -715,9 +733,9 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit github
-    brew install git-extras
-    brew cask install kdiff3
+    brewcaski smartgit github
+    brewi git-extras
+    brewcaski kdiff3
 }
 
 git_ubuntu_install() {
@@ -742,8 +760,8 @@ jdk_mac_install() {
     is_mac || return 1
 
     slog "Installing java"
-    # brew cask install java
-    brew cask install caskroom/versions/java8
+    # java
+    brewcaski caskroom/versions/java8
 }
 
 jdk_ubuntu_install() {
@@ -793,7 +811,7 @@ clojure_mac_install() {
     is_mac || return 1
 
     slog "Installing clojure packages"
-    brew install leiningen
+    brewi leiningen
 }
 
 lein_dotfiles() {
@@ -839,14 +857,14 @@ sbt_ubuntu_install() {
 sbt_mac_install() {
     is_mac || return 1
 
-    brew install sbt
+    brewi sbt
 }
 
 scala_mac_install() {
     is_mac || return 1
 
     slog "Installing scala"
-    brew install scala ammonite-repl
+    brewi scala ammonite-repl
 }
 
 ammonite_install() {
@@ -946,7 +964,7 @@ python_mac_install() {
     is_mac || return 1
 
     slog "Installing python packages"
-    brew install pyenv pyenv-virtualenv
+    brewi pyenv pyenv-virtualenv
 }
 
 python_linux_install() {
@@ -1015,8 +1033,8 @@ cpp_mac_install() {
     is_mac || return 1
 
     slog "Installing c++ packages"
-    brew install boost --c++11
-    brew install cmake scons boost-build cppcheck clang-format ninja bear
+    brewi "boost --c++11"
+    brewi cmake scons boost-build cppcheck clang-format ninja bear
 }
 
 cpp_install() {
@@ -1557,7 +1575,7 @@ cpp_check() {
 git_check() {
     cmd_check kdiff3
     cmd_check git git-extras
-    is_mac && brew_cask_check smartgit github-desktop
+    is_mac && brew_cask_check smartgit github
 
     file_check ~/.gitconfig
 }
@@ -1619,3 +1637,5 @@ else
 fi
 
 cd "$curdir"
+
+}

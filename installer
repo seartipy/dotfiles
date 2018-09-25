@@ -229,20 +229,6 @@ brew_cask_check() {
     done
 }
 
-brewi() {
-  for p in "$@"; do
-    slog "Installing brew package $p"
-    brew install "$p"
-  done
-}
-
-brewcaski() {
-  for p in "$@"; do
-    slog "Installing brew package $p"
-    brew cask install "$p"
-  done
-}
-
 apmi() {
     has_cmd apm || return 1
 
@@ -250,16 +236,6 @@ apmi() {
         if ! apm_exists "$p"; then
             slog "Installing apm package $p"
             apm install "$p"
-        fi
-    done
-}
-
-sysi() {
-    for p in "$@"; do
-        if is_mac; then
-            brewi "$p"
-        elif is_ubuntu; then
-            sudo apt install -y "$p"
         fi
     done
 }
@@ -406,8 +382,21 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
-    brewi wget trash tree fasd p7zip the_silver_searcher coreutils tmux gpg zeromq pkg-config gawk urlview
-    brewcaski iterm2 google-chrome
+    brew install wget
+    brew install trash
+    brew install tree
+    brew install fasd
+    brew install p7zip
+    brew install the_silver_searcher
+    brew install coreutils
+    brew install tmux
+    brew install gpg
+    brew install zeromq
+    brew install pkg-config
+    brew install gawk
+    brew install urlview
+    brew cask install iterm2
+    brew cask install google-chrome
 }
 
 fasd_install() {
@@ -532,7 +521,7 @@ zsh_mac_install() {
     is_mac || return 1
 
     slog "Installing zsh"
-    brewi shellcheck
+    brew install shellcheck
 }
 
 zsh_dotfiles() {
@@ -569,11 +558,12 @@ emacs_mac_install() {
 
     slog "Installing emacs packages"
     brew tap d12frosted/emacs-plus
-    brewi emacs-plus
+    brew install emacs-plus
 
-    brewi editorconfig discount
+    brew install editorconfig
+    brew install discount
     # TODO : ctags
-    brewi aspell
+    brew install  aspell
 
     slog "Trashing /Applications/Emacs.app(if exists)"
     srm '/Applications/Emacs.app'
@@ -631,7 +621,7 @@ ubuntu_atom_install() {
 
 mac_atom_install() {
     is_mac || return 1
-    brewcaski atom
+    brew cask install atom
 }
 
 atom_install() {
@@ -655,7 +645,7 @@ ubuntu_vscode_install() {
 mac_vscode_install() {
     is_mac || return 1
 
-    brewcaski visual-studio-code
+    brew cask install visual-studio-code
 }
 
 vscode_install() {
@@ -733,9 +723,9 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brewcaski smartgit github
-    brewi git-extras
-    brewcaski kdiff3
+    brew cask install smartgit github
+    brew install  git-extras
+    brew cask install  kdiff3
 }
 
 git_ubuntu_install() {
@@ -761,7 +751,7 @@ jdk_mac_install() {
 
     slog "Installing java"
     # java
-    brewcaski caskroom/versions/java8
+    brew cask install caskroom/versions/java8
 }
 
 jdk_ubuntu_install() {
@@ -811,7 +801,7 @@ clojure_mac_install() {
     is_mac || return 1
 
     slog "Installing clojure packages"
-    brewi leiningen
+    brew install leiningen
 }
 
 lein_dotfiles() {
@@ -857,14 +847,14 @@ sbt_ubuntu_install() {
 sbt_mac_install() {
     is_mac || return 1
 
-    brewi sbt
+    brew install sbt
 }
 
 scala_mac_install() {
     is_mac || return 1
 
     slog "Installing scala"
-    brewi scala ammonite-repl
+    brew install scala ammonite-repl
 }
 
 ammonite_install() {
@@ -964,7 +954,8 @@ python_mac_install() {
     is_mac || return 1
 
     slog "Installing python packages"
-    brewi pyenv pyenv-virtualenv
+    brew install pyenv
+    brew install pyenv-virtualenv
 }
 
 python_linux_install() {
@@ -1033,8 +1024,14 @@ cpp_mac_install() {
     is_mac || return 1
 
     slog "Installing c++ packages"
-    brewi "boost --c++11"
-    brewi cmake scons boost-build cppcheck clang-format ninja bear
+    brew install boost --c++11
+    brew install cmake
+    brew install scons
+    brew install boost-build
+    brew install cppcheck
+    brew install clang-format
+    brew install ninja
+    brew install bear
 }
 
 cpp_install() {

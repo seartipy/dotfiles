@@ -657,6 +657,7 @@ vscode_install() {
     # vsexti wmaurer.vscode-jumpy
     # vsexti eg2.vscode-npm-script
     # vsexti ms-azuretools.vscode-cosmosdb
+    vsexti ms-vsliveshare.vsliveshare
 
     if [ -n "$SEARTIPY" ]; then
         vsexti lucax88x.codeacejumper
@@ -668,7 +669,7 @@ vscode_install() {
 
         vsexti ms-vscode.cpptools
         vsexti mitaki28.vscode-clang
-        vsexti xaver.clang-format
+        # vsexti xaver.clang-format; this messes with prettier formatting
         vsexti dracula-theme.theme-dracula
         vsexti ms-vscode.Theme-TomorrowKit
         vsexti jebbs.plantuml
@@ -1481,7 +1482,7 @@ vscode_check() {
 
         vsext_check ms-vscode.cpptools
         vsext_check mitaki28.vscode-clang
-        vsext_check xaver.clang-format
+        # vsext_check xaver.clang-format
         vsext_check dracula-theme.theme-dracula
         vsext_check ms-vscode.Theme-TomorrowKit
         vsext_check jebbs.plantuml
@@ -1502,6 +1503,7 @@ vscode_check() {
     vsext_check donjayamanne.githistory
     vsext_check felipecaputo.git-project-manager
     vsext_check codezombiech.gitignore
+    vsext_check ms-vsliveshare.vsliveshare
 }
 
 java_check() {

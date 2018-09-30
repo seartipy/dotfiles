@@ -674,10 +674,16 @@ vscode_install() {
         vsexti ms-vscode.Theme-TomorrowKit
         vsexti jebbs.plantuml
         vsexti deerawan.vscode-dash
+        vsexti alefragnani.project-manager
+
+        vsexti ms-python.anaconda-extension-pack
+        vsexti coenraads.bracket-pair-colorizer
+        vsexti peterjausovec.vscode-docker
+        vsexti ziyasal.vscode-open-in-github
+        vsexti christian-kohler.path-intellisense
     fi
 
     vsexti EditorConfig.EditorConfig
-    vsexti alefragnani.project-manager
     vsexti formulahendry.code-runner
 
     vsexti msjsdiag.debugger-for-chrome
@@ -686,6 +692,8 @@ vscode_install() {
     vsexti esbenp.prettier-vscode
     vsexti gottfired.css2react
     vsexti eg2.vscode-npm-script
+    vsexti ritwickdey.liveserver
+    vsexti ms-vsliveshare.vsliveshare
 
     vsexti formulahendry.auto-rename-tag
     vsexti formulahendry.auto-close-tag
@@ -1458,7 +1466,6 @@ vscode_check() {
     cmd_check code
 
     vsext_check EditorConfig.EditorConfig
-    vsext_check alefragnani.project-manager
     vsext_check formulahendry.code-runner
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint
@@ -1487,6 +1494,12 @@ vscode_check() {
         vsext_check ms-vscode.Theme-TomorrowKit
         vsext_check jebbs.plantuml
         vsext_check deerawan.vscode-dash
+
+        vsext_check ms-python.anaconda-extension-pack
+        vsext_check coenraads.bracket-pair-colorizer
+        vsext_check peterjausovec.vscode-docker
+        vsext_check ziyasal.vscode-open-in-github
+        vsext_check christian-kohler.path-intellisense
     fi
 
     # vsext_check flowtype.flow-for-vscode
@@ -1503,6 +1516,8 @@ vscode_check() {
     vsext_check donjayamanne.githistory
     vsext_check felipecaputo.git-project-manager
     vsext_check codezombiech.gitignore
+    vsext_check ms-vsliveshare.vsliveshare
+    vsext_check ritwickdey.liveserver
     vsext_check ms-vsliveshare.vsliveshare
 }
 

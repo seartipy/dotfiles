@@ -30,6 +30,12 @@ ${BOLD}${RED}FATAL: ${RESET} $1
     exit 1
 }
 
+is_cosmic() {
+    local OS
+    OS=$(lsb_release -c | cut -d ':' -f2)
+    [[ "$OS" == *"cosmic" ]]
+}
+
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -1575,9 +1581,11 @@ cpp_check() {
     cmd_check cmake scons cppcheck clang++
 
     if is_ubuntu; then
-        cmd_check clang-format-6.0 clang-tidy-6.0
-    else
-        cmd_check clang-format
+        if is_cosmic; then
+            cmd_check clang-format-6.0 clang-tidy-6.0
+        else
+            cmd_check clang-format clang-tidy
+        fi
     fi
 
     is_linux && cmd_check g++

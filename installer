@@ -657,7 +657,6 @@ vscode_install() {
     # vsexti wmaurer.vscode-jumpy
     # vsexti eg2.vscode-npm-script
     # vsexti ms-azuretools.vscode-cosmosdb
-    vsexti ms-vsliveshare.vsliveshare
 
     if [ -n "$SEARTIPY" ]; then
         vsexti lucax88x.codeacejumper
@@ -675,6 +674,7 @@ vscode_install() {
         vsexti jebbs.plantuml
         vsexti deerawan.vscode-dash
         vsexti alefragnani.project-manager
+        vsexti felipecaputo.git-project-manager
 
         vsexti ms-python.anaconda-extension-pack
         vsexti coenraads.bracket-pair-colorizer
@@ -720,8 +720,9 @@ vscode_install() {
     vsexti humao.rest-client
 
     vsexti donjayamanne.githistory
-    vsexti felipecaputo.git-project-manager
     vsexti codezombiech.gitignore
+    vsexti ritwickdey.liveserver
+    vsexti  ms-vsliveshare.vsliveshare
 }
 
 #
@@ -1473,7 +1474,6 @@ vscode_check() {
     vsext_check esbenp.prettier-vscode
     vsext_check gottfired.css2react
     vsext_check eg2.vscode-npm-script
-    vsext_check WallabyJs.quokka-vscode
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.auto-close-tag
     vsext_check Orta.vscode-jest
@@ -1494,6 +1494,8 @@ vscode_check() {
         vsext_check ms-vscode.Theme-TomorrowKit
         vsext_check jebbs.plantuml
         vsext_check deerawan.vscode-dash
+        vsext_check alefragnani.project-manager
+        vsext_check felipecaputo.git-project-manager
 
         vsext_check ms-python.anaconda-extension-pack
         vsext_check coenraads.bracket-pair-colorizer
@@ -1514,9 +1516,7 @@ vscode_check() {
     vsext_check dragos.scala-lsp
     vsext_check humao.rest-client
     vsext_check donjayamanne.githistory
-    vsext_check felipecaputo.git-project-manager
     vsext_check codezombiech.gitignore
-    vsext_check ms-vsliveshare.vsliveshare
     vsext_check ritwickdey.liveserver
     vsext_check ms-vsliveshare.vsliveshare
 }

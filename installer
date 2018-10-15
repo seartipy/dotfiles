@@ -361,17 +361,14 @@ essential_ubuntu_install() {
 
     slog "Installing essential packages"
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview ubuntu-make
-    is_ubuntu && sudo apt-get install -y firefox
 
     sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
+
     is_ubuntu && sudo apt-get install -y firefox
 }
 
 essential_mac_install() {
     is_mac || return 1
-
-    slog "Agreeing to xcodebuild license..."
-    sudo xcodebuild -license accept
 
     if ! has_cmd brew; then
         pre_cmd_check ruby
@@ -571,8 +568,8 @@ emacs_mac_install() {
     # TODO : ctags
     brew install aspell
 
-    slog "Trashing /Applications/Emacs.app(if exists)"
-    srm '/Applications/Emacs.app'
+    # slog "Trashing /Applications/Emacs.app(if exists)"
+    # srm '/Applications/Emacs.app'
 
     ## slog "Creating Emacs alias in /Applications"
     ## make emacs available from spotlight
@@ -687,10 +684,19 @@ vscode_install() {
         vsexti peterjausovec.vscode-docker
         vsexti ziyasal.vscode-open-in-github
         vsexti christian-kohler.path-intellisense
-    fi
 
-    vsexti EditorConfig.EditorConfig
+
+        vsexti donjayamanne.githistory
+        vsexti codezombiech.gitignore
+
+        vsexti avli.clojure
+        # cospaia.clojure4vscode
+        vsexti shaunlebron.vscode-parinfer
+        vsexti dragos.scala-lsp
+        vsexti redhat.java
+    fi
     vsexti formulahendry.code-runner
+    vsexti ms-vsliveshare.vsliveshare
 
     vsexti msjsdiag.debugger-for-chrome
     vsexti eg2.tslint
@@ -698,37 +704,19 @@ vscode_install() {
     vsexti esbenp.prettier-vscode
     vsexti gottfired.css2react
     vsexti eg2.vscode-npm-script
-    vsexti ritwickdey.liveserver
-    vsexti ms-vsliveshare.vsliveshare
-
     vsexti formulahendry.auto-rename-tag
     vsexti formulahendry.auto-close-tag
-
     vsexti Orta.vscode-jest
+    vsexti humao.rest-client
+    vsexti ritwickdey.liveserver
     # vsexti flowtype.flow-for-vscode
 
     # vsexti jakethashi.vscode-angular2-emmet
     # vsexti natewallace.angular2-inline
     # vsexti Angular.ng-template
 
-
-    vsexti redhat.java
-
-    vsexti avli.clojure
-    # cospaia.clojure4vscode
-    vsexti shaunlebron.vscode-parinfer
-
     vsexti ms-python.python
     vsexti donjayamanne.jupyter
-
-    vsexti dragos.scala-lsp
-
-    vsexti humao.rest-client
-
-    vsexti donjayamanne.githistory
-    vsexti codezombiech.gitignore
-    vsexti ritwickdey.liveserver
-    vsexti  ms-vsliveshare.vsliveshare
 }
 
 #
@@ -738,9 +726,10 @@ git_mac_install() {
     is_mac || return 1
 
     slog "Installing git packages"
-    brew cask install smartgit github
-    brew install  git-extras
-    brew cask install  kdiff3
+    brew install git-extras
+    brew cask install smartgit
+    brew casl install github
+    brew cask install kdiff3
 }
 
 git_ubuntu_install() {
@@ -748,7 +737,7 @@ git_ubuntu_install() {
 
     slog "Installing git"
     sudo apt-get install -y git-extras git
- sudo apt-get install -y kdiff3
+    sudo apt-get install -y kdiff3
 }
 
 git_install() {
@@ -1004,7 +993,7 @@ nvm_install() {
 
     slog "Installing nvm"
     if ! has_cmd nvm; then
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -1021,7 +1010,7 @@ web_install() {
     npmi eslint tslint jsonlint
     npmi eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
     npmi create-react-app
-    npmi tern js-beautify ijavascript
+    npmi tern ijavascript
     npmi npm-check npm-check-updates lite-server
 }
 
@@ -1472,8 +1461,35 @@ atom_check() {
 vscode_check() {
     cmd_check code
 
-    vsext_check EditorConfig.EditorConfig
+        if [ -n "$SEARTIPY" ]; then
+        vsext_check lucax88x.codeacejumper
+        vsext_check lfs.vscode-emacs-friendly
+        vsext_check mycelo.embrace
+        vsext_check letrieu.expand-region
+        vsext_check robertohuertasm.vscode-icons
+        vsext_check WallabyJs.quokka-vscode
+        vsext_check ms-vscode.cpptools
+        vsext_check mitaki28.vscode-clang
+        vsext_check dracula-theme.theme-dracula
+        vsext_check ms-vscode.Theme-TomorrowKit
+        vsext_check jebbs.plantuml
+        vsext_check deerawan.vscode-dash
+        vsext_check alefragnani.project-manager
+        vsext_check felipecaputo.git-project-manager
+        vsext_check ms-python.anaconda-extension-pack
+        vsext_check coenraads.bracket-pair-colorizer
+        vsext_check peterjausovec.vscode-docker
+        vsext_check ziyasal.vscode-open-in-github
+        vsext_check christian-kohler.path-intellisense
+        vsext_check donjayamanne.githistory
+        vsext_check codezombiech.gitignore
+        vsext_check avli.clojure
+        vsext_check shaunlebron.vscode-parinfer
+        vsext_check dragos.scala-lsp
+        vsext_check redhat.java
+    fi
     vsext_check formulahendry.code-runner
+    vsext_check ms-vsliveshare.vsliveshare
     vsext_check msjsdiag.debugger-for-chrome
     vsext_check eg2.tslint
     vsext_check dbaeumer.vscode-eslint
@@ -1483,48 +1499,10 @@ vscode_check() {
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.auto-close-tag
     vsext_check Orta.vscode-jest
-
-
-    if [ -n "$SEARTIPY" ]; then
-        vsext_check lucax88x.codeacejumper
-        vsext_check lfs.vscode-emacs-friendly
-        vsext_check mycelo.embrace
-        vsext_check letrieu.expand-region
-        vsext_check robertohuertasm.vscode-icons
-        vsext_check WallabyJs.quokka-vscode
-
-        vsext_check ms-vscode.cpptools
-        vsext_check mitaki28.vscode-clang
-        # vsext_check xaver.clang-format
-        vsext_check dracula-theme.theme-dracula
-        vsext_check ms-vscode.Theme-TomorrowKit
-        vsext_check jebbs.plantuml
-        vsext_check deerawan.vscode-dash
-        vsext_check alefragnani.project-manager
-        vsext_check felipecaputo.git-project-manager
-
-        vsext_check ms-python.anaconda-extension-pack
-        vsext_check coenraads.bracket-pair-colorizer
-        vsext_check peterjausovec.vscode-docker
-        vsext_check ziyasal.vscode-open-in-github
-        vsext_check christian-kohler.path-intellisense
-    fi
-
-    # vsext_check flowtype.flow-for-vscode
-    # vsext_check jakethashi.vscode-angular2-emmet
-    # vsext_check natewallace.angular2-inline
-    # vsext_check Angular.ng-template
-    vsext_check redhat.java
-    vsext_check avli.clojure
-    vsext_check shaunlebron.vscode-parinfer
+    vsext_check humao.rest-client
+    vsext_check ritwickdey.liveserver
     vsext_check ms-python.python
     vsext_check donjayamanne.jupyter
-    vsext_check dragos.scala-lsp
-    vsext_check humao.rest-client
-    vsext_check donjayamanne.githistory
-    vsext_check codezombiech.gitignore
-    vsext_check ritwickdey.liveserver
-    vsext_check ms-vsliveshare.vsliveshare
 }
 
 java_check() {

@@ -1531,7 +1531,7 @@ web_check() {
     has_cmd npm || return 1
     cmd_check tsc flow yarn ts-node
     cmd_check eslint tslint jsonlint
-    cmd_check tern js-beautify ijs
+    cmd_check tern ijs
     cmd_check create-react-app
     npm_check eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
     cmd_check npm-check ncu lite-server

@@ -736,6 +736,8 @@ vscode_install() {
         vsexti yzhang.markdown-all-in-one
         vsexti gabrielbb.vscode-lombok
         vsexti vscjava.vscode-maven
+        vsexti shinnn.stylelint
+        vsexti dracula-theme.theme-dracula
     fi
     vsexti formulahendry.code-runner
     vsexti ms-vsliveshare.vsliveshare
@@ -1539,6 +1541,8 @@ vscode_check() {
         vsexti yzhang.markdown-all-in-one
         vsexti gabrielbb.vscode-lombok
         vsexti vscjava.vscode-maven
+        vsexti shinnn.stylelint
+        vsexti dracula-theme.theme-dracula
 
         vsext_check lucax88x.codeacejumper
         vsext_check lfs.vscode-emacs-friendly

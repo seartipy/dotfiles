@@ -1511,38 +1511,38 @@ vscode_check() {
     cmd_check code
 
     if [ -n "$SEARTIPY" ]; then
-        vsexti jock.svg
-        vsexti mattn.runner
-        vsexti ericadamski.carbon-now-sh
-        vsexti pnp.polacode
-        vsexti vincaslt.highlight-matching-tag
-        vsexti ryu1kn.edit-with-shell
-        vsexti deerawan.vscode-dash
-        vsexti ibm.output-colorizer
-        veexti formulahendry.code-runner
-        vsexti konstantin.wrapselection
-        vsexti yatki.vscode-surround
-        vsexti wwm.better-align
-        vsexti britesnow.vscode-toggle-quotes
-        vsexti gruntfuggly.todo-tree
-        vsexti humao.rest-client
-        vsexti quicktype.quicktype
-        vsexti ryu1kn.partial-diff
-        vsexti wmaurer.vscode-jumpy
-        vsexti lannonbr.vscode-js-annotations
-        vsexti knisterpeter.vscode-github
-        vsexti lamartire.git-indicator
-        vsexti qezhu.gitlink
-        vsexti rubbersheep.gi
-        vsexti dsznajder.es7-react-js-snippets
-        vsexti ms-azuretools.vscode-cosmosdb
-        vsexti kalitaalexey.vscode-rust
-        vsexti jaredly.reason-vscode
-        vsexti yzhang.markdown-all-in-one
-        vsexti gabrielbb.vscode-lombok
-        vsexti vscjava.vscode-maven
-        vsexti shinnn.stylelint
-        vsexti dracula-theme.theme-dracula
+        vsext_check jock.svg
+        vsext_check mattn.runner
+        vsext_check ericadamski.carbon-now-sh
+        vsext_check pnp.polacode
+        vsext_check vincaslt.highlight-matching-tag
+        vsext_check ryu1kn.edit-with-shell
+        vsext_check deerawan.vscode-dash
+        vsext_check ibm.output-colorizer
+        veext_check formulahendry.code-runner
+        vsext_check konstantin.wrapselection
+        vsext_check yatki.vscode-surround
+        vsext_check wwm.better-align
+        vsext_check britesnow.vscode-toggle-quotes
+        vsext_check gruntfuggly.todo-tree
+        vsext_check humao.rest-client
+        vsext_check quicktype.quicktype
+        vsext_check ryu1kn.partial-diff
+        vsext_check wmaurer.vscode-jumpy
+        vsext_check lannonbr.vscode-js-annotations
+        vsext_check knisterpeter.vscode-github
+        vsext_check lamartire.git-indicator
+        vsext_check qezhu.gitlink
+        vsext_check rubbersheep.gi
+        vsext_check dsznajder.es7-react-js-snippets
+        vsext_check ms-azuretools.vscode-cosmosdb
+        vsext_check kalitaalexey.vscode-rust
+        vsext_check jaredly.reason-vscode
+        vsext_check yzhang.markdown-all-in-one
+        vsext_check gabrielbb.vscode-lombok
+        vsext_check vscjava.vscode-maven
+        vsext_check shinnn.stylelint
+        vsext_check dracula-theme.theme-dracula
 
         vsext_check lucax88x.codeacejumper
         vsext_check lfs.vscode-emacs-friendly

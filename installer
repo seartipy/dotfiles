@@ -694,6 +694,48 @@ vscode_install() {
         vsexti shaunlebron.vscode-parinfer
         vsexti dragos.scala-lsp
         vsexti redhat.java
+
+        vsexti mads-hartmann.bash-ide-vscode
+        vsexti rogalmic.bash-debug
+        vsexti zignd.html-css-class-completion
+
+        # vsexti cospaia.clojure4vscode
+        # vsexti cospaia.calva-fmt
+        # vsexti cospaia.paredit-revived
+
+        # vsexti vscjava.vscode-java-debug
+        # vsexti truman.autocomplate-shell
+
+        vsexti jock.svg
+        vsexti mattn.runner
+        vsexti ericadamski.carbon-now-sh
+        vsexti pnp.polacode
+        vsexti vincaslt.highlight-matching-tag
+        vsexti ryu1kn.edit-with-shell
+        vsexti deerawan.vscode-das
+        vsexti ibm.output-colorize
+        veexti formulahendry.code-runner
+        vsexti konstantin.wrapselection
+        vsexti yatki.vscode-surround
+        vsexti wwm.better-align
+        vsexti britesnow.vscode-toggle-quotes
+        vsexti gruntfuggly.todo-tree
+        vsexti humao.rest-client
+        vsexti quicktype.quicktype
+        vsexti ryu1kn.partial-diff
+        vsexti wmaurer.vscode-jumpy
+        vsexti lannonbr.vscode-js-annotations
+        vsexti knisterpeter.vscode-github
+        vsexti lamartire.git-indicator
+        vsexti qezhu.gitlink
+        vsexti rubbersheep.gi
+        vsexti dsznajder.es7-react-js-snippets
+        vsexti ms-azuretools.vscode-cosmosdb
+        vsexti kalitaalexey.vscode-rust
+        vsexti jaredly.reason-vscode
+        vsexti yzhang.markdown-all-in-one
+        vsexti gabrielbb.vscode-lombok
+        vsexti vscjava.vscode-maven
     fi
     vsexti formulahendry.code-runner
     vsexti ms-vsliveshare.vsliveshare
@@ -1466,7 +1508,38 @@ atom_check() {
 vscode_check() {
     cmd_check code
 
-        if [ -n "$SEARTIPY" ]; then
+    if [ -n "$SEARTIPY" ]; then
+        vsexti jock.svg
+        vsexti mattn.runner
+        vsexti ericadamski.carbon-now-sh
+        vsexti pnp.polacode
+        vsexti vincaslt.highlight-matching-tag
+        vsexti ryu1kn.edit-with-shell
+        vsexti deerawan.vscode-das
+        vsexti ibm.output-colorize
+        veexti formulahendry.code-runner
+        vsexti konstantin.wrapselection
+        vsexti yatki.vscode-surround
+        vsexti wwm.better-align
+        vsexti britesnow.vscode-toggle-quotes
+        vsexti gruntfuggly.todo-tree
+        vsexti humao.rest-client
+        vsexti quicktype.quicktype
+        vsexti ryu1kn.partial-diff
+        vsexti wmaurer.vscode-jumpy
+        vsexti lannonbr.vscode-js-annotations
+        vsexti knisterpeter.vscode-github
+        vsexti lamartire.git-indicator
+        vsexti qezhu.gitlink
+        vsexti rubbersheep.gi
+        vsexti dsznajder.es7-react-js-snippets
+        vsexti ms-azuretools.vscode-cosmosdb
+        vsexti kalitaalexey.vscode-rust
+        vsexti jaredly.reason-vscode
+        vsexti yzhang.markdown-all-in-one
+        vsexti gabrielbb.vscode-lombok
+        vsexti vscjava.vscode-maven
+
         vsext_check lucax88x.codeacejumper
         vsext_check lfs.vscode-emacs-friendly
         vsext_check mycelo.embrace
@@ -1493,6 +1566,7 @@ vscode_check() {
         vsext_check dragos.scala-lsp
         vsext_check redhat.java
     fi
+
     vsext_check formulahendry.code-runner
     vsext_check ms-vsliveshare.vsliveshare
     vsext_check msjsdiag.debugger-for-chrome

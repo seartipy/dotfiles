@@ -712,8 +712,8 @@ vscode_install() {
         vsexti pnp.polacode
         vsexti vincaslt.highlight-matching-tag
         vsexti ryu1kn.edit-with-shell
-        vsexti deerawan.vscode-das
-        vsexti ibm.output-colorize
+        vsexti deerawan.vscode-dash
+        vsexti ibm.output-colorizer
         veexti formulahendry.code-runner
         vsexti konstantin.wrapselection
         vsexti yatki.vscode-surround
@@ -1515,8 +1515,8 @@ vscode_check() {
         vsexti pnp.polacode
         vsexti vincaslt.highlight-matching-tag
         vsexti ryu1kn.edit-with-shell
-        vsexti deerawan.vscode-das
-        vsexti ibm.output-colorize
+        vsexti deerawan.vscode-dash
+        vsexti ibm.output-colorizer
         veexti formulahendry.code-runner
         vsexti konstantin.wrapselection
         vsexti yatki.vscode-surround

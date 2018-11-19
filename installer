@@ -714,7 +714,7 @@ vscode_install() {
         vsexti ryu1kn.edit-with-shell
         vsexti deerawan.vscode-dash
         vsexti ibm.output-colorizer
-        veexti formulahendry.code-runner
+        vsexti formulahendry.code-runner
         vsexti konstantin.wrapselection
         vsexti yatki.vscode-surround
         vsexti wwm.better-align
@@ -1519,7 +1519,7 @@ vscode_check() {
         vsext_check ryu1kn.edit-with-shell
         vsext_check deerawan.vscode-dash
         vsext_check ibm.output-colorizer
-        veext_check formulahendry.code-runner
+        vsext_check formulahendry.code-runner
         vsext_check konstantin.wrapselection
         vsext_check yatki.vscode-surround
         vsext_check wwm.better-align

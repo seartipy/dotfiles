@@ -306,9 +306,10 @@ add_webupd8_ppa() {
 
 add_atom_ppa() {
     is_ubuntu || return 1
-    ppa_exists 'webupd8team.*-atom' && return 0
+    ppa_exists 'AtomEditor' && return 0
     slog "Adding atom ppa"
-    sudo add-apt-repository ppa:webupd8team/atom -y
+    curl -sL https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 }
 
 add_vscode_ppa() {
@@ -1437,7 +1438,7 @@ ppas_check() {
     ppa_check google-chrome
 
     [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
-    [ -n "$ATOM" ] && ppa_check 'webupd8team.*-atom'
+    [ -n "$ATOM" ] && ppa_check 'AtomEditor'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
     [ -n "$SCALA" ] && ppa_check 'sbt'
 

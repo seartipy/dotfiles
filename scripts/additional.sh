@@ -39,6 +39,7 @@ additional_mac_install() {
     if ! has_cmd vmware-user-suid-wrapper; then
         brew cask install virtualbox virtualbox-extension-pack
     fi
+    brew cask install gitkraken vlc
 }
 
 typora_install() {

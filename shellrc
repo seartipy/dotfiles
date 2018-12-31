@@ -406,6 +406,8 @@ alias upd=seartipy_upgrade_dotfiles
 
 alias sfl=seartipy_fix_links
 
+alias git-unstage="git reset HEAD"
+alias git-discard="git checkout --"
 alias gst="git status"
 alias gsu="git status -u"
 alias tsgfm="git stash && ((git pull --rebase || git pull); git stash pop)"

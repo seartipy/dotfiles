@@ -407,6 +407,23 @@ alias upd=seartipy_upgrade_dotfiles
 alias sfl=seartipy_fix_links
 
 alias gst="git status"
+alias gsu="git status -u"
+alias tsgfm="git stash && ((git pull --rebase || git pull); git stash pop)"
+
+alias yi="yarn install"
+alias yid="yarn install -D"
+alias yrm="trash node_modules && trash yarn.lock"
+alias ys="yarn start"
+alias yt="yarn test"
+alias yb="yarn build"
+alias yl="yarn lint"
+alias yc="yarn check-all"
+alias yct="yarn check-types"
+
+alias ylf="yarn lint:fix"
+alias m="mkdir -p"
+
+alias c="code"
 
 if is_ubuntu; then
     alias si="sudo apt-get install -y"

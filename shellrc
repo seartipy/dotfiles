@@ -419,13 +419,17 @@ alias ys="yarn start"
 alias yt="yarn test"
 alias yb="yarn build"
 alias yl="yarn lint"
-alias yc="yarn check-all"
+alias ycl="yarn clean"
+alias yca="yarn check-all"
 alias yct="yarn check-types"
 
 alias ylf="yarn lint:fix"
 alias m="mkdir -p"
 
 alias c="code"
+alias c.="code ."
+alias jf="code ~/programs/web/devfractal" # use j maybe?
+alias jd="code ~/seartpy/dotfiles" # use j maybe?
 
 if is_ubuntu; then
     alias si="sudo apt-get install -y"

@@ -739,7 +739,16 @@ vscode_install() {
         vsexti vscjava.vscode-maven
         vsexti shinnn.stylelint
         vsexti dracula-theme.theme-dracula
+        vsexti pkief.material-icon-theme
+        vsexti roscop.activefileinstatusbar
+        vsexti codestream.codestream
+        vsexti equinusocio.vsc-material-theme
+        vsexti ahmadawais.shades-of-purple
+        vsexti visualstudioexptteam.vscodeintellicode
+        vsexti kumar-harsh.graphql-for-vscode
     fi
+    vsexti streetsidesoftware.code-spell-checker
+
     vsexti formulahendry.code-runner
     vsexti ms-vsliveshare.vsliveshare
 
@@ -1571,8 +1580,15 @@ vscode_check() {
         vsext_check shaunlebron.vscode-parinfer
         vsext_check dragos.scala-lsp
         vsext_check redhat.java
+        vsext_check pkief.material-icon-theme
+        vsext_check roscop.activefileinstatusbar
+        vsext_check codestream.codestream
+        vsext_check equinusocio.vsc-material-theme
+        vsext_check ahmadawais.shades-of-purple
+        vsext_check visualstudioexptteam.vscodeintellicode
+        vsext_check kumar-harsh.graphql-for-vscode
     fi
-
+    vsext_check streetsidesoftware.code-spell-checker
     vsext_check formulahendry.code-runner
     vsext_check ms-vsliveshare.vsliveshare
     vsext_check msjsdiag.debugger-for-chrome

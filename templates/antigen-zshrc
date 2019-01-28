@@ -1,5 +1,4 @@
-
-# curl -L git.io/antigen > antigen.zsh
+[[ -s "$HOME/antigen.zsh" ]] || curl -L git.io/antigen > antigen.zsh
 
 source "$HOME/antigen.zsh"
 
@@ -21,4 +20,4 @@ antigen theme bira
 # Tell Antigen that you're done.
 antigen apply
 
-source "$HOME/seartipy/dotfiles/shellrc"
+[[ -s "$HOME/seartipy/dotfiles/shellrc" ]] && source "$HOME/seartipy/dotfiles/shellrc"

@@ -7,9 +7,6 @@ const result = execSync('code --list-extensions');
 const list = String(result)
   .split('\n')
   .filter(Boolean)
-  .map(
-    x => `- [${x}](https://marketplace.visualstudio.com/items?itemName=${x})`
-  )
   .join('\n');
 
 const proc = spawn('pbcopy');

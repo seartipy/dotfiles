@@ -278,15 +278,6 @@ npmi() {
 #
 # PPAs
 
-add_java_ppa() {
-    is_ubuntu || return 1
-    ppa_exists 'webupd8team.*java' && return 0
-
-    slog "Adding java ppa"
-    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-    sudo add-apt-repository ppa:webupd8team/java -y
-}
-
 add_chrome_ppa() {
     is_ubuntu || return 1
     ppa_exists google-chrome && return 0
@@ -761,7 +752,7 @@ jdk_ubuntu_install() {
     is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    is_ubuntu && sudo apt-get install -y oracle-java8-installer
+    is_ubuntu && sudo apt-get install -y openjdk-8-jdk openjdk-8-doc openjdk-8-source
 }
 
 jdk_install() {
@@ -1390,7 +1381,6 @@ ppas_check() {
 
     ppa_check google-chrome
 
-    [ -n "$JAVA" ] && ppa_check 'webupd8team.*java'
     [ -n "$ATOM" ] && ppa_check 'AtomEditor'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
     [ -n "$SCALA" ] && ppa_check 'sbt'

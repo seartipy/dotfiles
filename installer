@@ -657,120 +657,63 @@ vscode_install() {
     mac_vscode_install
     has_cmd code || return 1
 
-    # vsexti wix.vscode-import-cost
-    # vsexti wmaurer.vscode-jumpy
-    # vsexti eg2.vscode-npm-script
-    # vsexti ms-azuretools.vscode-cosmosdb
-
     if [ -n "$SEARTIPY" ]; then
-        vsexti lucax88x.codeacejumper
-        vsexti lfs.vscode-emacs-friendly
-        vsexti mycelo.embrace
-        vsexti letrieu.expand-region
-        vsexti robertohuertasm.vscode-icons
-        vsexti WallabyJs.quokka-vscode
-
-        vsexti ms-vscode.cpptools
-        vsexti mitaki28.vscode-clang
-        # vsexti xaver.clang-format; this messes with prettier formatting
-        vsexti dracula-theme.theme-dracula
-        vsexti ms-vscode.Theme-TomorrowKit
-        vsexti jebbs.plantuml
-        vsexti deerawan.vscode-dash
-        vsexti alefragnani.project-manager
-        vsexti felipecaputo.git-project-manager
-
-        vsexti ms-python.anaconda-extension-pack
-        vsexti coenraads.bracket-pair-colorizer
-        vsexti peterjausovec.vscode-docker
-        vsexti ziyasal.vscode-open-in-github
-        vsexti christian-kohler.path-intellisense
-
-
-        vsexti donjayamanne.githistory
-        vsexti codezombiech.gitignore
-
-        vsexti avli.clojure
-        # cospaia.clojure4vscode
-        vsexti shaunlebron.vscode-parinfer
-        vsexti dragos.scala-lsp
-        vsexti redhat.java
-
-        vsexti mads-hartmann.bash-ide-vscode
-        vsexti rogalmic.bash-debug
-        vsexti zignd.html-css-class-completion
-
-        # vsexti cospaia.clojure4vscode
-        # vsexti cospaia.calva-fmt
-        # vsexti cospaia.paredit-revived
-
-        # vsexti vscjava.vscode-java-debug
-        # vsexti truman.autocomplate-shell
-
-        vsexti jock.svg
-        vsexti mattn.runner
-        vsexti ericadamski.carbon-now-sh
-        vsexti pnp.polacode
-        vsexti vincaslt.highlight-matching-tag
-        vsexti ryu1kn.edit-with-shell
-        vsexti deerawan.vscode-dash
-        vsexti ibm.output-colorizer
-        vsexti formulahendry.code-runner
-        vsexti konstantin.wrapselection
-        vsexti yatki.vscode-surround
-        vsexti wwm.better-align
-        vsexti britesnow.vscode-toggle-quotes
-        vsexti gruntfuggly.todo-tree
-        vsexti humao.rest-client
-        vsexti quicktype.quicktype
-        vsexti ryu1kn.partial-diff
-        vsexti wmaurer.vscode-jumpy
-        vsexti lannonbr.vscode-js-annotations
-        vsexti knisterpeter.vscode-github
-        vsexti lamartire.git-indicator
-        vsexti qezhu.gitlink
-        vsexti rubbersheep.gi
-        vsexti dsznajder.es7-react-js-snippets
-        vsexti ms-azuretools.vscode-cosmosdb
-        vsexti kalitaalexey.vscode-rust
-        vsexti jaredly.reason-vscode
-        vsexti yzhang.markdown-all-in-one
-        vsexti gabrielbb.vscode-lombok
-        vsexti vscjava.vscode-maven
-        vsexti shinnn.stylelint
-        vsexti dracula-theme.theme-dracula
-        vsexti pkief.material-icon-theme
-        vsexti roscop.activefileinstatusbar
-        vsexti codestream.codestream
-        vsexti equinusocio.vsc-material-theme
+        vexeti PKief.material-icon-theme
+        vexeti patbenatar.advanced-new-file
         vsexti ahmadawais.shades-of-purple
+        vsexti alefragnani.project-manager
+        vsexti britesnow.vscode-toggle-quotes
+        vsexti christian-kohler.path-intellisense
+        vsexti codezombiech.gitignore
+        vsexti donjayamanne.githistory
+        vsexti equinusocio.vsc-material-theme
+        vsexti felipecaputo.git-project-manager
+        vsexti ibm.output-colorizer
+        vsexti konstantin.wrapselection
+        vsexti lamartire.git-indicator
+        vsexti lucax88x.codeacejumper
+        vsexti mads-hartmann.bash-ide-vscode
+        vsexti mattn.runner
+        vsexti ms-azuretools.vscode-cosmosdb
+        vsexti mycelo.embrace
+        vsexti peterjausovec.vscode-docker
+        vsexti pkief.material-icon-theme
+        vsexti quicktype.quicktype
+        vsexti rogalmic.bash-debug
+        vsexti roscop.activefileinstatusbar
         vsexti visualstudioexptteam.vscodeintellicode
-        vsexti kumar-harsh.graphql-for-vscode
+        vsexti wmaurer.vscode-jumpy
+        vsexti wwm.better-align
+        vsexti yatki.vscode-surround
+        vsexti yzhang.markdown-all-in-one
     fi
-    vsexti streetsidesoftware.code-spell-checker
 
-    vsexti formulahendry.code-runner
-    vsexti ms-vsliveshare.vsliveshare
-
-    vsexti msjsdiag.debugger-for-chrome
-    vsexti eg2.tslint
-    vsexti dbaeumer.vscode-eslint
-    vsexti esbenp.prettier-vscode
-    vsexti gottfired.css2react
-    vsexti eg2.vscode-npm-script
-    vsexti formulahendry.auto-rename-tag
-    vsexti formulahendry.auto-close-tag
+    veexti wayou.vscode-todo-highlight
+    vexeti kumar-harsh.graphql-for-vscode
+    vsexti KnisterPeter.vscode-commitizen
     vsexti Orta.vscode-jest
-    vsexti humao.rest-client
-    vsexti ritwickdey.liveserver
-    # vsexti flowtype.flow-for-vscode
-
-    # vsexti jakethashi.vscode-angular2-emmet
-    # vsexti natewallace.angular2-inline
-    # vsexti Angular.ng-template
-
-    vsexti ms-python.python
+    vsexti coenraads.bracket-pair-colorizer
+    vsexti dbaeumer.vscode-eslint
     vsexti donjayamanne.jupyter
+    vsexti dsznajder.es7-react-js-snippets
+    vsexti eg2.vscode-npm-script
+    vsexti esbenp.prettier-vscode
+    vsexti formulahendry.auto-close-tag
+    vsexti formulahendry.auto-rename-tag
+    vsexti formulahendry.code-runner
+    vsexti gottfired.css2react
+    vsexti humao.rest-client
+    vsexti icrawl.discord-vscode
+    vsexti letrieu.expand-region
+    vsexti ms-python.python
+    vsexti ms-vscode.vscode-typescript-tslint-plugin
+    vsexti ms-vsliveshare.vsliveshare
+    vsexti ms-vsliveshare.vsliveshare-audio
+    vsexti msjsdiag.debugger-for-chrome
+    vsexti ritwickdey.LiveServer
+    vsexti ritwickdey.liveserver
+    vsexti streetsidesoftware.code-spell-checker
+    vsexti vincaslt.highlight-matching-tag
 }
 
 #
@@ -1522,88 +1465,64 @@ vscode_check() {
     cmd_check code
 
     if [ -n "$SEARTIPY" ]; then
-        vsext_check jock.svg
-        vsext_check mattn.runner
-        vsext_check ericadamski.carbon-now-sh
-        vsext_check pnp.polacode
-        vsext_check vincaslt.highlight-matching-tag
-        vsext_check ryu1kn.edit-with-shell
-        vsext_check deerawan.vscode-dash
-        vsext_check ibm.output-colorizer
-        vsext_check formulahendry.code-runner
-        vsext_check konstantin.wrapselection
-        vsext_check yatki.vscode-surround
-        vsext_check wwm.better-align
-        vsext_check britesnow.vscode-toggle-quotes
-        vsext_check gruntfuggly.todo-tree
-        vsext_check humao.rest-client
-        vsext_check quicktype.quicktype
-        vsext_check ryu1kn.partial-diff
-        vsext_check wmaurer.vscode-jumpy
-        vsext_check lannonbr.vscode-js-annotations
-        vsext_check knisterpeter.vscode-github
-        vsext_check lamartire.git-indicator
-        vsext_check qezhu.gitlink
-        vsext_check rubbersheep.gi
-        vsext_check dsznajder.es7-react-js-snippets
-        vsext_check ms-azuretools.vscode-cosmosdb
-        vsext_check kalitaalexey.vscode-rust
-        vsext_check jaredly.reason-vscode
-        vsext_check yzhang.markdown-all-in-one
-        vsext_check gabrielbb.vscode-lombok
-        vsext_check vscjava.vscode-maven
-        vsext_check shinnn.stylelint
-        vsext_check dracula-theme.theme-dracula
 
-        vsext_check lucax88x.codeacejumper
-        vsext_check lfs.vscode-emacs-friendly
-        vsext_check mycelo.embrace
-        vsext_check letrieu.expand-region
-        vsext_check robertohuertasm.vscode-icons
-        vsext_check WallabyJs.quokka-vscode
-        vsext_check ms-vscode.cpptools
-        vsext_check mitaki28.vscode-clang
-        vsext_check dracula-theme.theme-dracula
-        vsext_check ms-vscode.Theme-TomorrowKit
-        vsext_check jebbs.plantuml
-        vsext_check deerawan.vscode-dash
-        vsext_check alefragnani.project-manager
-        vsext_check felipecaputo.git-project-manager
-        vsext_check ms-python.anaconda-extension-pack
-        vsext_check coenraads.bracket-pair-colorizer
-        vsext_check peterjausovec.vscode-docker
-        vsext_check ziyasal.vscode-open-in-github
-        vsext_check christian-kohler.path-intellisense
-        vsext_check donjayamanne.githistory
-        vsext_check codezombiech.gitignore
-        vsext_check avli.clojure
-        vsext_check shaunlebron.vscode-parinfer
-        vsext_check dragos.scala-lsp
-        vsext_check redhat.java
-        vsext_check pkief.material-icon-theme
-        vsext_check roscop.activefileinstatusbar
-        vsext_check codestream.codestream
-        vsext_check equinusocio.vsc-material-theme
+        vexet_check PKief.material-icon-theme
+        vexet_check patbenatar.advanced-new-file
         vsext_check ahmadawais.shades-of-purple
+        vsext_check alefragnani.project-manager
+        vsext_check britesnow.vscode-toggle-quotes
+        vsext_check christian-kohler.path-intellisense
+        vsext_check codezombiech.gitignore
+        vsext_check donjayamanne.githistory
+        vsext_check equinusocio.vsc-material-theme
+        vsext_check felipecaputo.git-project-manager
+        vsext_check ibm.output-colorizer
+        vsext_check konstantin.wrapselection
+        vsext_check lamartire.git-indicator
+        vsext_check lucax88x.codeacejumper
+        vsext_check mads-hartmann.bash-ide-vscode
+        vsext_check mattn.runner
+        vsext_check ms-azuretools.vscode-cosmosdb
+        vsext_check mycelo.embrace
+        vsext_check peterjausovec.vscode-docker
+        vsext_check pkief.material-icon-theme
+        vsext_check quicktype.quicktype
+        vsext_check rogalmic.bash-debug
+        vsext_check roscop.activefileinstatusbar
         vsext_check visualstudioexptteam.vscodeintellicode
-        vsext_check kumar-harsh.graphql-for-vscode
+        vsext_check wmaurer.vscode-jumpy
+        vsext_check wwm.better-align
+        vsext_check yatki.vscode-surround
+        vsext_check yzhang.markdown-all-in-one
     fi
-    vsext_check streetsidesoftware.code-spell-checker
-    vsext_check formulahendry.code-runner
-    vsext_check ms-vsliveshare.vsliveshare
-    vsext_check msjsdiag.debugger-for-chrome
-    vsext_check eg2.tslint
-    vsext_check dbaeumer.vscode-eslint
-    vsext_check esbenp.prettier-vscode
-    vsext_check gottfired.css2react
-    vsext_check eg2.vscode-npm-script
-    vsext_check formulahendry.auto-rename-tag
-    vsext_check formulahendry.auto-close-tag
+
+    vsext_check wayou.vscode-todo-highlight
+    vsext_check kumar-harsh.graphql-for-vscode
+    vsext_check KnisterPeter.vscode-commitizen
     vsext_check Orta.vscode-jest
-    vsext_check humao.rest-client
-    vsext_check ritwickdey.liveserver
-    vsext_check ms-python.python
+    vsext_check coenraads.bracket-pair-colorizer
+    vsext_check dbaeumer.vscode-eslint
     vsext_check donjayamanne.jupyter
+    vsext_check dsznajder.es7-react-js-snippets
+    vsext_check eg2.vscode-npm-script
+    vsext_check esbenp.prettier-vscode
+    vsext_check formulahendry.auto-close-tag
+    vsext_check formulahendry.auto-rename-tag
+    vsext_check formulahendry.code-runner
+    vsext_check gottfired.css2react
+    vsext_check humao.rest-client
+    vsext_check icrawl.discord-vscode
+    vsext_check letrieu.expand-region
+    vsext_check ms-python.python
+    vsext_check ms-vscode.vscode-typescript-tslint-plugin
+    vsext_check ms-vsliveshare.vsliveshare
+    vsext_check ms-vsliveshare.vsliveshare-audio
+    vsext_check msjsdiag.debugger-for-chrome
+    vsext_check ritwickdey.LiveServer
+    vsext_check ritwickdey.liveserver
+    vsext_check streetsidesoftware.code-spell-checker
+    vsext_check vincaslt.highlight-matching-tag
+
 }
 
 java_check() {

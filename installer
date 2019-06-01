@@ -641,8 +641,6 @@ vscode_install() {
     has_cmd code || return 1
 
     if [ -n "$SEARTIPY" ]; then
-        vexeti PKief.material-icon-theme
-        vexeti patbenatar.advanced-new-file
         vsexti ahmadawais.shades-of-purple
         vsexti alefragnani.project-manager
         vsexti britesnow.vscode-toggle-quotes
@@ -651,6 +649,8 @@ vscode_install() {
         vsexti donjayamanne.githistory
         vsexti equinusocio.vsc-material-theme
         vsexti felipecaputo.git-project-manager
+        vsexti gottfired.css2react
+        vsexti humao.rest-client
         vsexti ibm.output-colorizer
         vsexti konstantin.wrapselection
         vsexti lamartire.git-indicator
@@ -659,6 +659,7 @@ vscode_install() {
         vsexti mattn.runner
         vsexti ms-azuretools.vscode-cosmosdb
         vsexti mycelo.embrace
+        vsexti patbenatar.advanced-new-file
         vsexti peterjausovec.vscode-docker
         vsexti pkief.material-icon-theme
         vsexti quicktype.quicktype
@@ -671,10 +672,6 @@ vscode_install() {
         vsexti yzhang.markdown-all-in-one
     fi
 
-    veexti wayou.vscode-todo-highlight
-    vexeti kumar-harsh.graphql-for-vscode
-    vsexti KnisterPeter.vscode-commitizen
-    vsexti Orta.vscode-jest
     vsexti coenraads.bracket-pair-colorizer
     vsexti dbaeumer.vscode-eslint
     vsexti donjayamanne.jupyter
@@ -684,19 +681,20 @@ vscode_install() {
     vsexti formulahendry.auto-close-tag
     vsexti formulahendry.auto-rename-tag
     vsexti formulahendry.code-runner
-    vsexti gottfired.css2react
-    vsexti humao.rest-client
     vsexti icrawl.discord-vscode
+    vsexti KnisterPeter.vscode-commitizen
+    vsexti kumar-harsh.graphql-for-vscode
     vsexti letrieu.expand-region
     vsexti ms-python.python
     vsexti ms-vscode.vscode-typescript-tslint-plugin
     vsexti ms-vsliveshare.vsliveshare
     vsexti ms-vsliveshare.vsliveshare-audio
     vsexti msjsdiag.debugger-for-chrome
-    vsexti ritwickdey.LiveServer
+    vsexti Orta.vscode-jest
     vsexti ritwickdey.liveserver
     vsexti streetsidesoftware.code-spell-checker
     vsexti vincaslt.highlight-matching-tag
+    vsexti wayou.vscode-todo-highlight
 }
 
 #
@@ -1447,9 +1445,6 @@ vscode_check() {
     cmd_check code
 
     if [ -n "$SEARTIPY" ]; then
-
-        vexet_check PKief.material-icon-theme
-        vexet_check patbenatar.advanced-new-file
         vsext_check ahmadawais.shades-of-purple
         vsext_check alefragnani.project-manager
         vsext_check britesnow.vscode-toggle-quotes
@@ -1458,6 +1453,8 @@ vscode_check() {
         vsext_check donjayamanne.githistory
         vsext_check equinusocio.vsc-material-theme
         vsext_check felipecaputo.git-project-manager
+        vsext_check gottfired.css2react
+        vsext_check humao.rest-client
         vsext_check ibm.output-colorizer
         vsext_check konstantin.wrapselection
         vsext_check lamartire.git-indicator
@@ -1466,6 +1463,7 @@ vscode_check() {
         vsext_check mattn.runner
         vsext_check ms-azuretools.vscode-cosmosdb
         vsext_check mycelo.embrace
+        vsext_check patbenatar.advanced-new-file
         vsext_check peterjausovec.vscode-docker
         vsext_check pkief.material-icon-theme
         vsext_check quicktype.quicktype
@@ -1478,10 +1476,6 @@ vscode_check() {
         vsext_check yzhang.markdown-all-in-one
     fi
 
-    vsext_check wayou.vscode-todo-highlight
-    vsext_check kumar-harsh.graphql-for-vscode
-    vsext_check KnisterPeter.vscode-commitizen
-    vsext_check Orta.vscode-jest
     vsext_check coenraads.bracket-pair-colorizer
     vsext_check dbaeumer.vscode-eslint
     vsext_check donjayamanne.jupyter
@@ -1491,20 +1485,20 @@ vscode_check() {
     vsext_check formulahendry.auto-close-tag
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.code-runner
-    vsext_check gottfired.css2react
-    vsext_check humao.rest-client
     vsext_check icrawl.discord-vscode
+    vsext_check KnisterPeter.vscode-commitizen
+    vsext_check kumar-harsh.graphql-for-vscode
     vsext_check letrieu.expand-region
     vsext_check ms-python.python
     vsext_check ms-vscode.vscode-typescript-tslint-plugin
     vsext_check ms-vsliveshare.vsliveshare
     vsext_check ms-vsliveshare.vsliveshare-audio
     vsext_check msjsdiag.debugger-for-chrome
-    vsext_check ritwickdey.LiveServer
+    vsext_check Orta.vscode-jest
     vsext_check ritwickdey.liveserver
     vsext_check streetsidesoftware.code-spell-checker
     vsext_check vincaslt.highlight-matching-tag
-
+    vsext_check wayou.vscode-todo-highlight
 }
 
 java_check() {

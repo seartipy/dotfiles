@@ -54,7 +54,6 @@ typora_install() {
 additional_ubuntu_install() {
     is_ubuntu || return 1
 
-    add_webupd8_ppa
     ubuntu_update
 
     slog "Installing additional"
@@ -63,7 +62,6 @@ additional_ubuntu_install() {
 
     if ! has_cmd vmware-user-suid-wrapper; then
         sudo apt-get install -y virtualbox vlc
-        sudo apt-get install -y youtube-dl
         docker_ubuntu_install
     fi
 

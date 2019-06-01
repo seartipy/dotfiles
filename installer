@@ -287,14 +287,6 @@ add_chrome_ppa() {
     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 }
 
-add_webupd8_ppa() {
-    is_ubuntu || return 1
-    ppa_exists nilarimogard && return 0
-
-    slog "Adding webupd8 ppa for youtub-dl etc"
-    sudo add-apt-repository ppa:nilarimogard/webupd8 -y
-}
-
 add_atom_ppa() {
     is_ubuntu || return 1
     ppa_exists 'AtomEditor' && return 0

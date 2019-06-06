@@ -30,12 +30,6 @@ ${BOLD}${RED}FATAL: ${RESET} $1
     exit 1
 }
 
-is_cosmic() {
-    local OS
-    OS=$(lsb_release -c | cut -d ':' -f2)
-    [[ "$OS" == *"cosmic" ]]
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -382,6 +376,7 @@ essential_mac_install() {
     brew install pkg-config
     brew install gawk
     brew install urlview
+
     brew cask install iterm2
     brew cask install google-chrome
 }
@@ -615,7 +610,7 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
 
-    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter linter-eslint linter-tslint linter-ui-default busy-signal prettier-atom linter-scalac lisp-paredit parinfer script
+    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter linter-eslint linter-tslint linter-ui-default busy-signal prettier-atom script
 }
 
 #
@@ -709,6 +704,7 @@ git_mac_install() {
     brew cask install smartgit
     brew casl install github
     brew cask install kdiff3
+    brew cask install gitup
 }
 
 git_ubuntu_install() {
@@ -844,7 +840,7 @@ ammonite_install() {
     is_linux || return 1
     has_cmd amm && return 0
 
-     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.1.0/2.12-1.1.0 > ~/bin/amm && chmod +x ~/bin/amm
+     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.6.7/2.12-1.6.7 > ~/bin/amm && chmod +x ~/bin/amm
 }
 
 scala_ubuntu_install() {
@@ -973,7 +969,7 @@ nvm_install() {
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -1550,16 +1546,8 @@ python_check() {
 cpp_check() {
     cmd_check cmake scons cppcheck clang++
 
-    if is_ubuntu; then
-        if is_cosmic; then
-            cmd_check clang-format-6.0 clang-tidy-6.0
-        else
-            cmd_check clang-format clang-tidy
-        fi
-    fi
-
     is_linux && cmd_check g++
-    is_ubuntu && cmd_check ninja bear
+    is_ubuntu && cmd_check ninja bear clang-format clang-tidy
     is_mac && cmd_check ninja bear
 }
 

@@ -1,5 +1,7 @@
 #! /bin/bash
 
-[[ $- = *i* ]] && source ~/seartipy/vendors/liquidprompt/liquidprompt
+[ -d ~/.liquidprompt ] || git clone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
+
+[[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt
 
 source ~/seartipy/dotfiles/shellrc

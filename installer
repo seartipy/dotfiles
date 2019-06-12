@@ -485,7 +485,7 @@ bash_install() {
     mac_bash_dotfiles
     linux_bash_dotfiles
 
-    sclone https://github.com/nojhan/liquidprompt.git ~/seartipy/vendors/liquidprompt
+    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
 }
 
 #
@@ -1236,7 +1236,7 @@ fresh_install() {
 
     if [ -n "$BASH" ]; then
         srm ~/.bash_profile
-        srm ~/seartipy/vendors/liquidprompt
+        srm ~/.liquidprompt
     fi
 
     if [ -n "$SCALA" ]; then
@@ -1414,7 +1414,7 @@ bash_check() {
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/seartipy/vendors/liquidprompt
+    dir_check ~/.liquidprompt
 }
 
 emacs_check() {

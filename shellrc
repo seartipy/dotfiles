@@ -446,7 +446,7 @@ alias jd="code ~/seartpy/dotfiles" # use j maybe?
 
 if is_ubuntu; then
     alias si="sudo apt-get install -y"
-    alias ss="sudo apt-cache search"
+    alias ss="apt-cache search"
     alias sr="sudo apt-get purge"
 fi
 

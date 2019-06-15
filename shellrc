@@ -195,72 +195,8 @@ seartipy_fix_links() {
 #
 # emacs
 
-seartipy_emacs_default() {
-    sln "$HOME/seartipy/emacses/$1" ~/.emacs.d
-}
-
-seartipy_emacs_launch() {
-    seartipy_emacs_default "$@"
-    is_mac && open -a /Applications/Emacs.app
-    is_linux && emacs&
-}
-
-seartipy_spacemacs() {
-    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/spacemacs/") (setq spacemacs-start-directory "~/seartipy/emacses/spacemacs/") (load-file (concat spacemacs-start-directory "init.el")))' &
-}
-
-seartipy_isolated_dir() {
-    local DIR=$1
-    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
-}
-
-seartipy_isolated() {
-    emacs --no-init-file  --eval "(progn (setq user-emacs-directory \"~/seartipy/emacses/$1/\") (load-file (concat user-emacs-directory \"init.el\")))" &
-}
-
-seartipy_emacsd() {
-    emacs --no-init-file  --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/emacsd/") (load-file (concat user-emacs-directory "init.el")))' &
-}
-
-seartipy_lean() {
-    emacs --no-init-file --eval '(progn (setq user-emacs-directory "~/seartipy/emacses/lean-emacs/") (load-file (concat user-emacs-directory "init.el")))' &
-}
-
 seartipy_kill_emacs() {
     emacsclient -e "(progn (setq kill-emacs-hook nil) (save-buffers-kill-emacs '(4)))"
-}
-
-# emacs upgrade
-
-function seartipy_emacs_backup() {
-    if ! [[ -d ~/.emacs.d/elpa ]]; then
-        echo "$HOME/.emacs.d/elpa does not exist, nothing to backup"
-        return 1
-    fi
-
-    cp -r ~/.emacs.d/elpa ~/.emacs.d/elpa-rollback-$(date +"%Y-%m-%d-%H-%M-%S")
-
-    local ROLLBACK_COUNT
-    ROLLBACK_COUNT=$(ls ~/.emacs.d | grep "^elpa-rollback-" | wc -l | cut -d " " -f 2)
-    if [ "$ROLLBACK_COUNT" -gt 5 ]; then
-        srm ~/.emacs.d/$(ls -1v ~/.emacs.d | grep "^elpa-rollback" | head -1)
-    fi
-}
-
-function seartipy_emacs_rollback() {
-    local LATEST_BACKUP
-    LATEST_BACKUP=$(ls -1v ~/.emacs.d | grep "^elpa-rollback" | tail -1)
-    if [[ -z "${LATEST_BACKUP}" ]]; then
-        echo "no backups available, cannot rollback"
-        return 1
-    fi
-
-    srm "$HOME/.emacs.d/elpa"
-    if [ -d ~/.emacs.d/elpa ]; then
-        warn "cannot trash ~/.emacs.d/elpa, can not rolling back"
-    elif ! mv ~/.emacs.d/"$LATEST_BACKUP" ~/.emacs.d/elpa; then
-        error "cannot move $LATEST_BACKUP to $ELPA_DIR; previous $ELPA_DIR must be in trash"
-    fi
 }
 
 function seartipy_emacs_upgrade() {
@@ -286,7 +222,6 @@ seartipy-gitup() {
 
 seartipy_upgrade_emacs() {
     seartipy-gitup ~/seartipy/emacses/emacsd
-    seartipy_emacs_backup
     seartipy_emacs_upgrade
 }
 
@@ -396,7 +331,6 @@ alias ten= "TERM=xterm-24bits emacs -nw"
 alias tet="TERM=xterm-24bits emacsclient -t"
 
 alias emacs-kill="seartipy_kill_emacs"
-alias emacs-restore="seartipy_emacs_rollback"
 
 alias upa=seartipy_upgrade_all
 alias upm=seartipy_upgrade_mean

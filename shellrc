@@ -411,17 +411,18 @@ alias git-discard="git checkout --"
 alias gst="git status"
 alias gsu="git status -u"
 alias tsgfm="git stash && ((git pull --rebase || git pull); git stash pop)"
-
 alias yi="yarn install"
 alias yid="yarn install -D"
-alias yrm="trash node_modules && trash yarn.lock"
+alias yrmn="trash node_modules && trash yarn.lock"
 alias ys="yarn start"
 alias yt="yarn test"
+alias ytw="yarn test:watch"
 alias yb="yarn build"
 alias yl="yarn lint"
+alias yv="yarn validate"
 alias ycl="yarn clean"
-alias yca="yarn check-all"
-alias yct="yarn check-types"
+alias yty="yarn types"
+alias ytyw="yarn types:watch"
 
 alias ylf="yarn lint:fix"
 alias m="mkdir -p"
@@ -438,7 +439,9 @@ alias zz='fasd_cd -d -i' # cd with interactive selection
 alias c="fasd -d -e code"
 alias c.="code ."
 
+alias gcm="git commit -m"
 alias gcne="git commit --no-edit"
+alias gca="git commit --amend"
 alias gcan="git commit --amend --no-edit"
 
 alias jf="code ~/programs/web/devfractal" # use j maybe?

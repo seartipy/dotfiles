@@ -69,19 +69,19 @@ if ! zgen saved; then
 fi
 
 # copied from tmux prezto module
-start_tmux() {
-    tmux start-server
+# start_tmux() {
+#     tmux start-server
 
-    # Create a 'seartipy' session if no session has been defined in tmux.conf.
-    if ! tmux has-session 2> /dev/null; then
-        tmux_session='seartipy'
-        tmux \
-            new-session -d -s "$tmux_session" \; \
-            set-option -t "$tmux_session" destroy-unattached off &> /dev/null
-    fi
+#     # Create a 'seartipy' session if no session has been defined in tmux.conf.
+#     if ! tmux has-session 2> /dev/null; then
+#         tmux_session='seartipy'
+#         tmux \
+#             new-session -d -s "$tmux_session" \; \
+#             set-option -t "$tmux_session" destroy-unattached off &> /dev/null
+#     fi
 
-    # Attach to the 'prezto' session or to the last session used.
-    exec tmux attach-session
-}
+#     # Attach to the 'prezto' session or to the last session used.
+#     exec tmux attach-session
+# }
 
-[ -n "$SEARTIPY_TMUX" ] && [[ -z "$SEARTIPY_EMACS" && -z "$TMUX" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$VIM" ]] && start_tmux
+# [ -n "$SEARTIPY_TMUX" ] && [[ -z "$SEARTIPY_EMACS" && -z "$TMUX" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$VIM" ]] && start_tmux

@@ -110,15 +110,11 @@ if is_mac; then
 
 fi
 
-#
-
 # exports
 
 #haskell
 export PATH="$HOME/.cabal/bin:$PATH"
-
-# haskell stack
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH" # haskell stack
 
 #node
 export NVM_DIR="$HOME/.nvm"
@@ -144,8 +140,6 @@ if has_cmd pyenv > /dev/null; then
     eval "$(pyenv init - --no-rehash)"
     eval "$(pyenv virtualenv-init -)"
 fi
-
-#
 
 seartipy_fix_links() {
     if ! [ -d ~/seartipy/dotfiles ]; then
@@ -192,7 +186,6 @@ seartipy_fix_links() {
     fi
 }
 
-#
 # emacs
 
 seartipy_kill_emacs() {
@@ -207,7 +200,6 @@ function seartipy_emacs_clean() {
     srm ~/.emacs.d/.cache ~/.emacs.d/auto-save-list ~/.emacs.d/.last-package-update-day
 }
 
-#
 # upgrade
 
 seartipy-gitup() {
@@ -273,7 +265,6 @@ seartipy_upgrade_all() {
     cd && has_cmd npm && npm update -g
     cd && has_cmd cabal && cabal update
     cd && has_cmd stack && stack update
-    cd && has_cmd boot && boot -u && boot
     cd && has_cmd stack && stack update
     cd && has_cmd pyenv && pyenv rehash
 }
@@ -340,11 +331,6 @@ alias upd=seartipy_upgrade_dotfiles
 
 alias sfl=seartipy_fix_links
 
-alias git-unstage="git reset HEAD"
-alias git-discard="git checkout --"
-alias gst="git status"
-alias gsu="git status -u"
-alias tsgfm="git stash && ((git pull --rebase || git pull); git stash pop)"
 alias yi="yarn install"
 alias yid="yarn install -D"
 alias yrmn="trash node_modules && trash yarn.lock"
@@ -373,6 +359,14 @@ alias zz='fasd_cd -d -i' # cd with interactive selection
 alias c="fasd -d -e code"
 alias c.="code ."
 
+alias git-unstage="git reset HEAD"
+alias git-discard="git checkout --"
+alias gst="git status"
+alias gsu="git status -u"
+alias tsgfm="git stash && ((git pull --rebase || git pull); git stash pop)"
+
+alias gun="git-unstage"
+alias gur="git-discard"
 alias gcm="git commit -m"
 alias gcne="git commit --no-edit"
 alias gca="git commit --amend"

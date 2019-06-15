@@ -1049,7 +1049,6 @@ select_defaults() {
     ESSENTIAL="essential"
     ZSH="zsh"
     BASH="bash"
-    EMACS="emacs"
     DOTFILES="dotfiles"
     GIT="git"
 }

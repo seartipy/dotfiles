@@ -343,7 +343,7 @@ alias yv="yarn validate"
 alias ycl="yarn clean"
 alias yty="yarn types"
 alias ytyw="yarn types:watch"
-
+alias ycbv="yarn clean && yarn build && yarn validate"
 alias ylf="yarn lint:fix"
 alias m="mkdir -p"
 

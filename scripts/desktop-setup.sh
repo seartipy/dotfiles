@@ -657,9 +657,9 @@ git_credential_gnome_keyring_install() {
     is_ubuntu || return 1
 
     slog "git credential - gnome-keyring"
-    sudo apt-get install -y libgnome-keyring-dev
-    sudo make --directory=/usr/share/doc/git/contrib/credential/gnome-keyring
-    git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+    sudo apt-get install libsecret-1-0 libsecret-1-dev
+    cd /usr/share/doc/git/contrib/credential/libsecret && sudo make
+    git config --global credential.helper /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 }
 
 git_install() {

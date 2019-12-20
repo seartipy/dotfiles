@@ -338,9 +338,11 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview ubuntu-make
-
-    sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip bat fzf
+    sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
+    sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
+    sudo apt-get install -y urlview ubuntu-make google-chrome-stable exfat-utils
+    sudo apt-get install -y exfat-fuse zeal "linux-headers-$(uname -r)"
 
     is_ubuntu && sudo apt-get install -y firefox
 }
@@ -367,6 +369,9 @@ essential_mac_install() {
     brew install trash
     brew install tree
     brew install fasd
+    brew install bat
+    brew install fzf
+    brew install unar
     brew install p7zip
     brew install the_silver_searcher
     brew install coreutils
@@ -610,7 +615,7 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
 
-    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter linter-eslint linter-tslint linter-ui-default busy-signal prettier-atom script
+    apmi linter linter-ui-default Hydrogen atom-python-test jumpy
 }
 
 #
@@ -637,13 +642,11 @@ vscode_install() {
 
     if [ -n "$SEARTIPY" ]; then
         vsexti ahmadawais.shades-of-purple
-        vsexti alefragnani.project-manager
         vsexti britesnow.vscode-toggle-quotes
         vsexti christian-kohler.path-intellisense
         vsexti codezombiech.gitignore
         vsexti donjayamanne.githistory
         vsexti equinusocio.vsc-material-theme
-        vsexti felipecaputo.git-project-manager
         vsexti gottfired.css2react
         vsexti humao.rest-client
         vsexti ibm.output-colorizer
@@ -666,18 +669,17 @@ vscode_install() {
         vsexti wwm.better-align
         vsexti yatki.vscode-surround
         vsexti yzhang.markdown-all-in-one
+        vsexti dsznajder.es7-react-js-snippets
     fi
 
     vsexti coenraads.bracket-pair-colorizer
     vsexti dbaeumer.vscode-eslint
     vsexti donjayamanne.jupyter
-    vsexti dsznajder.es7-react-js-snippets
     vsexti eg2.vscode-npm-script
     vsexti esbenp.prettier-vscode
     vsexti formulahendry.auto-close-tag
     vsexti formulahendry.auto-rename-tag
     vsexti formulahendry.code-runner
-    vsexti icrawl.discord-vscode
     vsexti KnisterPeter.vscode-commitizen
     vsexti kumar-harsh.graphql-for-vscode
     vsexti letrieu.expand-region
@@ -686,7 +688,6 @@ vscode_install() {
     vsexti ms-vsliveshare.vsliveshare
     vsexti ms-vsliveshare.vsliveshare-audio
     vsexti msjsdiag.debugger-for-chrome
-    vsexti Orta.vscode-jest
     vsexti ritwickdey.liveserver
     vsexti streetsidesoftware.code-spell-checker
     vsexti vincaslt.highlight-matching-tag
@@ -703,7 +704,6 @@ git_mac_install() {
     brew install git-extras
     brew cask install smartgit
     brew casl install github
-    brew cask install kdiff3
     brew cask install gitup
 }
 
@@ -840,7 +840,7 @@ ammonite_install() {
     is_linux || return 1
     has_cmd amm && return 0
 
-     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.6.7/2.12-1.6.7 > ~/bin/amm && chmod +x ~/bin/amm
+     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.9.2/2.13-1.9.2 > ~/bin/amm && chmod +x ~/bin/amm
 }
 
 scala_ubuntu_install() {
@@ -982,7 +982,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi yarn ijavascript bash-language-server npm-check npm-check-updates lite-server
+    npmi yarn bash-language-server npm-check npm-check-updates lite-server
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -1385,7 +1385,7 @@ essential_ubuntu_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
+    cmd_check curl wget git tree ag fasd bat fzf gpg tmux unar zip gawk urlview
 
     essential_mac_check
     essential_ubuntu_check
@@ -1428,7 +1428,7 @@ atom_check() {
     cmd_check atom apm
     has_cmd apm || return 1
 
-    apm_check atom-ide-ui ide-flowtype linter linter-ui-default busy-signal prettier-atom ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter-eslint linter-tslint linter-scalac lisp-paredit parinfer script
+    apm_check linter linter-ui-default Hydrogen atom-python-test jumpy
 }
 
 vscode_check() {
@@ -1436,13 +1436,11 @@ vscode_check() {
 
     if [ -n "$SEARTIPY" ]; then
         vsext_check ahmadawais.shades-of-purple
-        vsext_check alefragnani.project-manager
         vsext_check britesnow.vscode-toggle-quotes
         vsext_check christian-kohler.path-intellisense
         vsext_check codezombiech.gitignore
         vsext_check donjayamanne.githistory
         vsext_check equinusocio.vsc-material-theme
-        vsext_check felipecaputo.git-project-manager
         vsext_check gottfired.css2react
         vsext_check humao.rest-client
         vsext_check ibm.output-colorizer
@@ -1465,18 +1463,17 @@ vscode_check() {
         vsext_check wwm.better-align
         vsext_check yatki.vscode-surround
         vsext_check yzhang.markdown-all-in-one
+        vsext_check dsznajder.es7-react-js-snippets
     fi
 
     vsext_check coenraads.bracket-pair-colorizer
     vsext_check dbaeumer.vscode-eslint
     vsext_check donjayamanne.jupyter
-    vsext_check dsznajder.es7-react-js-snippets
     vsext_check eg2.vscode-npm-script
     vsext_check esbenp.prettier-vscode
     vsext_check formulahendry.auto-close-tag
     vsext_check formulahendry.auto-rename-tag
     vsext_check formulahendry.code-runner
-    vsext_check icrawl.discord-vscode
     vsext_check KnisterPeter.vscode-commitizen
     vsext_check kumar-harsh.graphql-for-vscode
     vsext_check letrieu.expand-region
@@ -1485,7 +1482,6 @@ vscode_check() {
     vsext_check ms-vsliveshare.vsliveshare
     vsext_check ms-vsliveshare.vsliveshare-audio
     vsext_check msjsdiag.debugger-for-chrome
-    vsext_check Orta.vscode-jest
     vsext_check ritwickdey.liveserver
     vsext_check streetsidesoftware.code-spell-checker
     vsext_check vincaslt.highlight-matching-tag
@@ -1515,7 +1511,7 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check yarn ijs bash-language-server npm-check ncu lite-server
+    cmd_check yarn bash-language-server npm-check ncu lite-server
 
     if is_ubuntu; then
         if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
@@ -1551,8 +1547,8 @@ cpp_check() {
 }
 
 git_check() {
-    cmd_check kdiff3
     cmd_check git git-extras
+    is_ubuntu && cmd_check kdiff3
     is_mac && brew_cask_check smartgit github
 
     file_check ~/.gitconfig

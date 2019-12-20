@@ -56,6 +56,7 @@ if ! zgen saved; then
     zgen load djui/alias-tips
     zgen load rimraf/k
 
+    zgen load andrewferrier/fzf-z
     zgen load unixorn/tumult.plugin.zsh
     zgen load peterhurford/git-it-on.zsh
     zgen load unixorn/git-extra-commands

@@ -507,14 +507,25 @@ powerline_fonts() {
     fi
 }
 
+firacode_font() {
+    if is_ubuntu; then
+        sudo apt-get install -y fonts-firacode
+    elif is_mac; then
+        brew tap homebrew/cask-fonts
+        brew cask install font-fira-code
+    fi
+}
+
 fonts_install() {
     powerline_fonts
     mononoki_font
+    firacode_font
 }
 
 fonts_check() {
     font_exists "Powerline" || warn "powerline fonts not installed"
     font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+    font_exists "firacode" > /dev/null || warn "firacode font not installed"
 }
 
 #

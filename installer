@@ -359,9 +359,6 @@ essential_mac_install() {
 
     pre_cmd_check brew
 
-    slog "Installing brew cask"
-    brew tap caskroom/cask
-
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
@@ -703,7 +700,7 @@ git_mac_install() {
     slog "Installing git packages"
     brew install git-extras
     brew cask install smartgit
-    brew casl install github
+    brew cask install github
     brew cask install gitup
 }
 
@@ -1453,7 +1450,7 @@ vscode_check() {
         vsext_check mycelo.embrace
         vsext_check patbenatar.advanced-new-file
         vsext_check peterjausovec.vscode-docker
-        vsext_check vsexti pflannery.vscode-versionlens
+        vsext_check pflannery.vscode-versionlens
         vsext_check pkief.material-icon-theme
         vsext_check quicktype.quicktype
         vsext_check rogalmic.bash-debug

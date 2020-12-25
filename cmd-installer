@@ -1,0 +1,1133 @@
+#! /usr/bin/env bash
+
+{
+# utils
+
+BOLD=$(tput bold)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RESET=$(tput sgr0)
+# WHITE=$(tput setaf 7)
+
+slog() {
+    echo "
+${BOLD}${GREEN}SEARTIPY: ${RESET} $1
+" | tee -a ~/seartipy-installer.log
+}
+
+warn() {
+    echo "
+${BOLD}${YELLOW}WARNING: ${RESET} $1
+" | tee -a ~/seartipy-installer.log
+}
+
+err_exit() {
+    echo "
+${BOLD}${RED}FATAL: ${RESET} $1
+" | tee -a ~/seartipy-installer.log
+
+    exit 1
+}
+
+is_ubuntu() {
+    has_cmd lsb_release || return 1
+    local OS
+    OS=$(lsb_release -i | cut -d ':' -f2)
+    [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
+}
+
+is_linux() {
+    [ "$OSTYPE" == "linux-gnu" ]
+}
+
+is_mac() {
+    [[ "$OSTYPE" == "darwin"* ]]
+}
+
+has_cmd() {
+    command -v "$1" > /dev/null
+}
+
+smv() {
+    if mv "$1" "$2" 2> /dev/null; then
+        slog "Moved $1 to $2"
+    fi
+}
+
+smd() {
+    [ -d "$1" ] && return 1
+    slog "Creating directory $1"
+    mkdir -p "$1" 2> /dev/null
+}
+
+
+srm() {
+    for f in "$@"; do
+        if [ -L "$f" ]; then
+            rm -f "$f"
+        elif is_ubuntu; then
+            trash-put "$f" 2> /dev/null && slog "Trashed $f"
+        else
+            trash "$f" 2> /dev/null && slog "Trashed $f"
+        fi
+    done
+}
+
+sln() {
+    if ! [ -e "$1" ]; then
+        warn "$1 does not exist, cannot create the link $2"
+        return 1
+    elif [ -L "$2" ]; then
+        srm "$2"
+    elif [ -e "$2" ]; then
+        warn "$2 exists and not a symbolic link! not creating link"
+        return 1
+    fi
+    slog "Creating link $2 to $1"
+    ln -s "$1" "$2"
+}
+
+sclone() {
+    local dest=${*: -1}
+    local src=${*: -2:1}
+
+    if [ -d "$dest" ]; then
+        if cd "$dest"; then
+            slog "Pulling $dest"
+            if has_cmd git-up; then
+                git-up
+            else
+                git pull --ff-only
+            fi
+            cd
+        fi
+    else
+        slog "Cloning $src to $dest"
+        git clone "$@"
+    fi
+}
+
+fclone() {
+    local dest=${*: -1}
+    local src=${*: -2:1}
+
+    srm "$dest"
+    slog "Cloning $src to $dest"
+    git clone "$@"
+}
+
+scopy() {
+    if [ -e "$2" ] || [ -L "$2" ]; then
+        return 0
+    else
+        slog "Copying $1 to $2"
+        cp "$1" "$2"
+    fi
+}
+
+pre_cmd_check() {
+    for cmd in "$@"; do
+        has_cmd "$cmd" || err_exit "$cmd not installed, quitting"
+    done
+}
+
+pre_dir_check() {
+    for dir in "$@"; do
+        [ -d "$dir" ] || err_exit "$dir does not exist, quitting"
+    done
+}
+
+cmd_check() {
+    for cmd in "$@"; do
+        has_cmd "$cmd" || warn "$cmd not installed"
+    done
+}
+
+dir_exists() {
+    [[ -d "$1" ]]
+}
+
+dir_check() {
+    for dir in "$@"; do
+        dir_exists "$dir" || warn "$dir does not exist"
+    done
+}
+
+ln_to_exists() {
+    local rl=readlink    
+    [[ "$1" == $($rl -f "$2") ]]
+}
+
+ln_check() {
+    ln_to_exists "$1" "$2" || warn "$2 not a link to $1"
+}
+
+file_check() {
+    for f in "$@"; do
+        [ -f "$f" ] || warn "$f does not exist"
+    done
+}
+
+ppa_exists() {
+    ls /etc/apt/sources.list.d | grep "$1" > /dev/null
+}
+
+ppa_check() {
+    ppa_exists "$1" || warn "$1 ppa not added"
+}
+
+npm_exists() {
+    npm list --global --depth=0 "$1" 2> /dev/null | grep "$1" > /dev/null
+}
+
+npm_check() {
+    for p in "$@"; do
+        npm_exists "$p" || warn "$p npm package not installed"
+    done
+}
+
+stackexei() {
+    has_cmd stack || return 1
+
+    for p in "$@"; do
+        stack install "$p"
+    done
+}
+
+npmi() {
+    has_cmd npm || return 1
+
+    for p in "$@"; do
+        if ! npm_exists "$p"; then
+            slog "Installing npm package $p"
+            npm install -g "$p"
+        fi
+    done
+}
+
+#
+# PPAs
+
+add_sbt_ppa() {
+    is_ubuntu || return 1
+    ppa_exists 'sbt' && return 0
+
+    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt.list > /dev/null
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+}
+
+#
+# essential
+
+ubuntu_update() {
+    is_ubuntu || return 1
+
+    slog "Updating ubuntu"
+    if ! sudo apt-get update; then
+        err_exit "apt-get update failed, quitting"
+    fi
+}
+
+ubuntu_upgrade() {
+    is_ubuntu || return 1
+
+    slog "Upgrading packages"
+    if ! sudo apt-get upgrade -y; then
+        err_exit "apt-get upgrade failed, quitting"
+    fi
+}
+
+essential_ubuntu_install() {
+    is_ubuntu || return 1
+    pre_cmd_check apt-get
+    sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
+    pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
+
+    ubuntu_update
+    ubuntu_upgrade
+
+    slog "Installing essential packages"
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip fzf
+    sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
+    sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
+    sudo apt-get install -y urlview ubuntu-make exfat-utils
+    sudo apt-get install -y exfat-fuse "linux-headers-$(uname -r)"
+}
+
+fasd_install() {
+    is_linux || return 1
+    has_cmd fasd && return 0
+
+    slog "Installing fasd"
+    if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
+        cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
+        cd
+        rm -rf /tmp/seartipy-installer-fasd
+    fi
+}
+
+essential_install() {
+    essential_ubuntu_install
+    fasd_install
+}
+
+#
+# cleanup
+
+cleanup_ubuntu() {
+    is_ubuntu || return 1
+    sudo apt-get clean
+    sudo apt-get autoclean
+    sudo apt-get autoremove -y
+}
+
+cleanup() {
+    cleanup_ubuntu
+}
+
+#
+# dotfiles
+
+clone_dotfiles() {
+    sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
+    [ -d ~/seartipy/dotfiles ] || return 1
+
+    pre_dir_check ~/seartipy/dotfiles
+}
+
+tmux_dotfiles() {
+    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
+
+    slog "Moving ~/.tmux.conf to $BACKUP_DIR"
+    smv ~/.tmux.conf "$BACKUP_DIR"
+
+    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
+    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+
+    smd ~/.tmux/plugins
+    sclone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+}
+
+dotfiles_install() {
+    clone_dotfiles
+
+    tmux_dotfiles
+}
+
+#
+# bash
+
+linux_bash_dotfiles() {
+    is_linux || return 1
+    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
+
+    slog "Moving ~/.bash_profile to $BACKUP_DIR"
+    smv ~/.bash_profile "$BACKUP_DIR"
+    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
+    if ! grep .bash_profile ~/.bashrc > /dev/null; then
+        echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
+    fi
+}
+
+bash_install() {
+    linux_bash_dotfiles
+
+    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
+}
+
+#
+# zsh
+
+zsh_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Installing zsh"
+    sudo apt-get install -y zsh
+    sudo apt-get install -y shellcheck
+}
+
+zsh_dotfiles() {
+    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
+
+    slog "Moving ~/.zshrc to $BACKUP_DIR "
+    smv ~/.zshrc "$BACKUP_DIR"
+
+    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
+}
+
+zsh_install() {
+    zsh_ubuntu_install
+
+    zsh_dotfiles
+
+    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
+}
+
+#
+# emacs
+
+emacs_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Installing emacs"
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
+
+    sudo apt-get install -y emacs-nox
+}
+
+emacs_dotfiles() {
+    sclone  https://gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
+
+    [ -d "$HOME/seartipy/emacses/emacsd" ] || return 1
+
+
+    slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
+    smv ~/.emacs.d $BACKUP_DIR
+
+    slog "Linking ~/seartipy/emacses/emacsd as ~/.emacs.d"
+    sln ~/seartipy/emacses/emacsd ~/.emacs.d
+
+    slog "Copying ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
+    scopy ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
+}
+
+emacs_install() {
+    emacs_ubuntu_install
+
+    emacs_dotfiles
+}
+
+#
+# git
+
+git_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Installing git"
+    sudo apt-get install -y git-extras git
+    sudo apt-get install -y kdiff3
+}
+
+git_install() {
+    git_ubuntu_install
+
+    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
+}
+
+#
+# java
+
+jdk_ubuntu_install() {
+    is_ubuntu || return 1
+    add_java_ppa
+    is_ubuntu && ubuntu_update
+
+    slog "Installing Java"
+    is_ubuntu && sudo apt-get install -y openjdk-8-jdk openjdk-8-doc openjdk-8-source
+}
+
+jdk_install() {
+    has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
+
+    jdk_ubuntu_install
+}
+
+# sdkman_install() {
+#     has_cmd sdk && return 0
+#     curl -s "https://get.sdkman.io" | bash
+# }
+
+
+java_install() {
+    jdk_install
+    # sdkman_install
+    # source "$HOME/.sdkman/bin/sdkman-init.sh"
+    # has_cmd maven || sdk install maven < /dev/null
+    # has_cmd gradle || sdk install gradle < /dev/null
+    # has_cmd groovy || sdk install groovy < /dev/null
+}
+
+#
+# clojure
+
+linux_lein_install() {
+    is_linux || return 1
+    has_cmd ~/bin/lein && return 1
+
+    slog "Installing leiningen"
+    curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
+    chmod +x ~/bin/lein
+}
+
+lein_dotfiles() {
+    [ -f ~/seartipy/dotfiles/lein-profiles.clj ] || return 1
+
+    slog "Moving ~/.lein/profiles.clj to $BACKUP_DIR (if exists)"
+    smv ~/.lein/profiles.clj $BACKUP_DIR
+
+    smd ~/.lein
+
+    slog "Linking ~/seartipy/dotfiles/lein-profiles.clj as ~/.lein/profiles.clj"
+    sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+}
+
+clojure_dotfiles() {
+    lein_dotfiles
+}
+
+clojure_install() {
+    jdk_install
+
+    linux_lein_install
+
+    clojure_dotfiles
+}
+
+#
+# scala
+
+
+sbt_ubuntu_install() {
+    is_ubuntu || return 1
+
+    has_cmd sbt && return 0
+
+    slog "Installing sbt"
+    add_sbt_ppa
+    ubuntu_update
+    sudo apt-get install -y sbt
+}
+
+ammonite_install() {
+    is_linux || return 1
+    has_cmd amm && return 0
+
+     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.9.2/2.13-1.9.2 > ~/bin/amm && chmod +x ~/bin/amm
+}
+
+scala_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Install scala"
+    sudo apt-get -y install scala
+}
+
+sbt_plugins() {
+    [ -f ~/seartipy/dotfiles/sbt-plugins.sbt ] || return 1
+
+    slog "Moving ~/.sbt/1.0/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
+    smv ~/.sbt/1.0/plugins/plugins.sbt $BACKUP_DIR
+
+    smd ~/.sbt/1.0/plugins
+
+    slog "Linking ~/seartipy/dotfiles/sbt-plugins.sbt as ~/.sbt/1.0/plugins/plugins.sbt"
+    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
+}
+
+sbt_global() {
+    [ -f ~/seartipy/dotfiles/sbt-global.sbt ] || return 1
+
+    slog "Moving ~/.sbt/1.0/global.sbt to $BACKUP_DIR (if exists)"
+    smv ~/.sbt/1.0/global.sbt $BACKUP_DIR
+
+    smd ~/.sbt/1.0/
+
+    slog "Linking ~/seartipy/dotfiles/sbt-global.sbt as ~/.sbt/1.0/global.sbt"
+    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
+}
+
+scala_dotfiles() {
+    sbt_plugins
+    sbt_global
+}
+
+scala_install() {
+    jdk_install
+
+    sbt_ubuntu_install
+
+    scala_ubuntu_install
+
+    ammonite_install
+
+    scala_dotfiles
+}
+
+#
+# haskell
+
+haskell_install() {
+    slog "Installing stack"
+    curl -sSL https://get.haskellstack.org/ | sh
+
+    slog "Installing stack packages"
+    stack setup
+    stackexei alex
+    stackexei happy
+    stackexei hlint
+    # stackexei structured-haskell-mode
+    stackexei stylish-haskell
+    stackexei hasktags
+    stackexei hindent
+    stackexei hdevtools
+    # stackexei ghc-mod
+    # stackexei ghci-ng
+    stackexei apply-refact
+    stackexei hoogle
+    stackexei intero
+    # ihaskell_install
+}
+
+#
+# python
+
+pipi() {
+    is_linux || return 1
+
+    pip3 install --user "$@"
+}
+
+python_linux_install() {
+    is_linux || return 1
+
+    sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
+    sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+}
+
+python_install() {
+    python_linux_install
+
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+
+    has_cmd pyenv || return 1
+
+    if ! pyenv versions | grep anaconda > /dev/null; then
+        slog "Installing anaconda"
+        local anacondaversion=`pyenv install --list | grep anaconda | tail -1`
+        pyenv install $anacondaversion
+    fi
+}
+
+#
+# web
+
+nvm_install() {
+    [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
+    slog "Installing nvm"
+    if ! has_cmd nvm; then
+        smd ~/.nvm
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+        source ~/.nvm/nvm.sh
+    fi
+    has_cmd nvm || return 1
+
+    nvm install node
+    nvm alias default node
+}
+
+web_install() {
+    nvm_install
+
+    slog "Installing npm packages for web development"
+    npmi yarn bash-language-server npm-check npm-check-updates lite-server
+
+    if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
+        echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
+    fi
+}
+
+#
+# c++
+
+cpp_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Installing C++"
+    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy ninja-build lldb
+}
+
+cpp_install() {
+    cpp_ubuntu_install
+}
+
+#
+# installer
+
+select_everything() {
+    ESSENTIAL="essential"
+
+    ZSH="zsh"
+    BASH="bash"
+
+    EMACS="emacs"
+
+    GIT="git"
+    DOTFILES="dotfiles"
+
+    JAVA="java"
+    SCALA="scala"
+    CLOJURE="clojure"
+
+    WEB="web"
+    CPP="cpp"
+
+    PYTHON="python"
+    HASKELL="haskell"
+}
+
+select_defaults() {
+    ESSENTIAL="essential"
+    ZSH="zsh"
+    BASH="bash"
+    DOTFILES="dotfiles"
+    GIT="git"
+}
+
+script_options() {
+    select_defaults
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            essential)
+                ESSENTIAL="essential"
+                shift
+                ;;
+            zsh)
+                ZSH="zsh"
+                shift
+                ;;
+            bash)
+                BASH="bash"
+                shift
+                ;;
+            emacs)
+                EMACS="emacs"
+                shift
+                ;;
+            dotfiles)
+                DOTFILES="dotfiles"
+                shift
+                ;;
+            git)
+                GIT="git"
+                shift
+                ;;
+            java)
+                JAVA="java"
+                shift
+                ;;
+            clojure)
+                CLOJURE="clojure"
+                shift
+                ;;
+            scala)
+                SCALA="scala"
+                shift
+                ;;
+            web)
+                WEB="web"
+                shift
+                ;;
+            nothing)
+                ESSENTIAL=""
+                ZSH=""
+                BASH=""
+                EMACS=""
+                GIT=""
+                shift
+                ;;
+            nodefaults)
+                ZSH=""
+                BASH=""
+                EMACS=""
+                DOTFILES=""
+                GIT=""
+                shift
+                ;;
+            noessential)
+                ESSENTIAL=""
+                shift
+                ;;
+            nozsh)
+                ZSH=""
+                shift
+                ;;
+            nobash)
+                BASH=""
+                shift
+                ;;
+            nodotfiles)
+                DOTFILES=""
+                shift
+                ;;
+            nogit)
+                GIT=""
+                shift
+                ;;
+            diagnostics)
+                DIAGNOSTICS="diagnostics"
+                shift
+                ;;
+            haskell)
+                HASKELL="haskell"
+                shift
+                ;;
+            cpp)
+                CPP="cpp"
+                shift
+                ;;
+            python)
+                PYTHON="python"
+                shift
+                ;;
+            fresh)
+                FRESH="fresh"
+                shift
+                ;;
+            everything)
+                select_everything
+                shift
+                ;;
+            *)
+                err_exit "unknown option $1"
+                ;;
+        esac
+    done
+}
+
+keep_sudo_running() {
+    # Ask for the administrator password upfront
+    sudo -v
+
+    # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+}
+
+setup_backup_dir() {
+    BACKUP_DIR=~/seartipy.backups
+
+    if [ -d "$BACKUP_DIR" ]; then
+        slog "moving $BACKUP_DIR to trash"
+        srm $BACKUP_DIR
+    fi
+
+    smd $BACKUP_DIR
+
+    if ! [ -d "$BACKUP_DIR" ]; then
+        err_exit "cannot create $BACKUP_DIR, quitting"
+    fi
+}
+
+fresh_ppas() {
+    is_ubuntu || return 1
+    has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
+    is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
+}
+
+fresh_install() {
+    if [ -n "$DOTFILES" ]; then
+        srm ~/seartipy/dotfiles
+        srm ~/.tmux.conf
+    fi
+
+    if [ -n "$ZSH" ]; then
+        srm ~/.zshrc
+        srm ~/.zgen
+    fi
+
+    if [ -n "$BASH" ]; then
+        srm ~/.bash_profile
+        srm ~/.liquidprompt
+    fi
+
+    if [ -n "$SCALA" ]; then
+        srm ~/.sbt
+        srm ~/.ivy2
+    fi
+
+    if [ -n "$HASKELL" ]; then
+        srm ~/.ghc
+        srm ~/.stack
+        srm ~/.cabal
+    fi
+
+    if [ -n "$EMACS" ]; then
+        srm ~/.emacs.d
+        srm ~/seartipy/emacses
+        srm "/Applications/Emacs.app alias"
+        rm -rf ~/.emacs.d/.cask
+    fi
+
+    if [ -n "$CLOJURE" ]; then
+        srm ~/.len
+        srm ~/.m2
+    fi
+
+    if [ -n "$WEB" ]; then
+        srm ~/.npm
+        srm ~/.nvm
+        srm ~/.node-gyp
+    fi
+
+    if [ -n "$PYTHON" ]; then
+        srm ~/.pyenv
+    fi
+}
+
+create_dirs() {
+    setup_backup_dir
+    smd ~/seartipy/emacses
+    smd ~/seartipy/vendors
+    smd ~/bin
+}
+
+install_all() {
+    [ -n "$DOTFILES" ] && dotfiles_install
+
+    [ -n "$ZSH" ] && zsh_install
+    [ -n "$BASH" ] && bash_install
+
+    [ -n "$EMACS" ] && emacs_install
+
+    [ -n "$GIT" ] && git_install
+
+    [ -n "$JAVA" ] && java_install
+    [ -n "$CLOJURE" ] && clojure_install
+    [ -n "$SCALA" ] && scala_install
+
+    [ -n "$WEB" ] && web_install
+
+    [ -n "$PYTHON" ] && python_install
+
+    [ -n "$HASKELL" ] && haskell_install
+
+    [ -n "$CPP" ] && cpp_install
+}
+
+installer() {
+    script_options $*
+
+    if [ -n "$DIAGNOSTICS" ]; then
+        post_installer_check
+        exit 0
+    fi
+
+    echo "Installing $EMACS $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL"
+
+    [ -n "$FRESH" ]  && fresh_install
+
+    [ -n "$ESSENTIAL" ] && essential_install
+
+    pre_installer_check
+
+    install_all
+
+    if [ -n "$ZSH" ]; then
+        echo "Set zsh as your default shell(this sometimes fails)"
+        chsh -s /bin/zsh
+    fi
+
+    cleanup
+
+    post_installer_check
+
+    echo "Installation done!"
+}
+
+#
+# diagnostics
+
+pre_installer_check() {
+    pre_cmd_check git curl wget unzip
+    if is_ubuntu; then
+        pre_cmd_check trash-put
+    else
+        pre_cmd_check trash
+    fi
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
+}
+
+ppas_check() {
+    is_ubuntu || return 1
+
+    [ -n "$SCALA" ] && ppa_check 'sbt'
+
+    is_ubuntu || return 1
+}
+
+essential_ubuntu_check() {
+    is_ubuntu || return 1
+
+    ppas_check
+
+    cmd_check p7zip dconf xsel xclip trash-put
+    is_ubuntu && cmd_check umake    
+}
+
+essential_check() {
+    cmd_check curl wget git tree ag fasd fzf gpg tmux unar zip gawk urlview
+
+    essential_ubuntu_check
+}
+
+dotfiles_check() {
+    dir_check ~/seartipy/dotfiles
+    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    dir_check ~/.tmux/plugins/tpm
+}
+
+zsh_check() {
+    cmd_check zsh shellcheck
+
+    ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    dir_check ~/.zgen
+    file_check ~/.zgen-options-local.sh
+    file_check ~/.zshrc-pre-local.sh
+}
+
+bash_check() {
+    ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
+    if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
+        warn "~/.bash_profile not sourced in ~/.bashrc"
+    fi
+    dir_check ~/.liquidprompt
+}
+
+emacs_check() {
+    cmd_check emacs aspell markdown
+    cmd_check editorconfig
+    is_linux && cmd_check ctags
+
+    ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
+}
+
+java_check() {
+    # source "$HOME/.sdkman/bin/sdkman-init.sh"
+    has_cmd javac java # sdk groovy maven gradle
+}
+
+scala_check() {
+    cmd_check javac sbt scala amm
+
+    ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
+    ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
+}
+
+clojure_check() {
+    cmd_check javac lein
+    ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+}
+
+web_check() {
+    cmd_check nvm
+    cmd_check npm
+
+    has_cmd npm || return 1
+
+    cmd_check yarn bash-language-server npm-check ncu lite-server
+
+    if is_ubuntu; then
+        if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
+            warn "max user watches not set properly in /etc/sysctl.conf"
+        fi
+    fi
+}
+
+haskell_check() {
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
+}
+
+
+python_check() {
+    cmd_check pyenv
+
+    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-virtualenv
+
+    has_cmd pyenv || return 1
+
+    if ! pyenv versions | grep anaconda > /dev/null; then
+        warn "anaconda not installed"
+    fi
+}
+
+cpp_check() {
+    cmd_check cmake scons cppcheck clang++
+
+    is_linux && cmd_check g++
+    is_ubuntu && cmd_check ninja bear clang-format clang-tidy
+}
+
+git_check() {
+    cmd_check git git-extras
+    is_ubuntu && cmd_check kdiff3    
+
+    file_check ~/.gitconfig
+}
+
+post_installer_check() {
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    export PATH="$HOME/.local/bin:$PATH"
+
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
+    export PATH="$HOME/.cask/bin:$PATH"
+
+    essential_check
+    [ -n "$DOTFILES" ] && dotfiles_check
+
+    [ -n "$ZSH" ] && zsh_check
+    [ -n "$BASH" ] && bash_check
+
+    [ -n "$EMACS" ] && emacs_check
+
+    [ -n "$GIT" ] && git_check
+
+    [ -n "$JAVA" ] && java_check
+    [ -n "$CLOJURE" ] && clojure_check
+    [ -n "$SCALA" ] && scala_check
+
+    [ -n "$WEB" ] && web_check
+    [ -n "$CPP" ] && cpp_check
+    [ -n "$PYTHON" ] && python_check
+    [ -n "$HASKELL" ] && haskell_check
+}
+
+curdir=$(pwd)
+
+if is_ubuntu; then
+    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+else
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+fi
+
+keep_sudo_running
+
+create_dirs
+
+export PATH="$HOME/bin:$PATH"
+
+if [[ $- = *i* ]]; then
+    slog "Running pre installer check..."
+    slog "if this does not succeed you must first at least install essentials by running this script without parameters"
+    pre_installer_check
+    slog "installer check succeeded, you could run functions in this script for testing"
+else
+    installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+fi
+
+cd "$curdir"
+
+}

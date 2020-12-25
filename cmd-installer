@@ -252,7 +252,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
     sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
     sudo apt-get install -y urlview ubuntu-make exfat-utils
-    sudo apt-get install -y exfat-fuse "linux-headers-$(uname -r)"
+    sudo apt-get install -y exfat-fuse python-is-python3
 }
 
 fasd_install() {
@@ -640,7 +640,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi yarn bash-language-server npm-check npm-check-updates lite-server
+    npmi yarn bash-language-server
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -972,7 +972,7 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put
-    is_ubuntu && cmd_check umake    
+    is_ubuntu && cmd_check umake
 }
 
 essential_check() {
@@ -1036,7 +1036,7 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check yarn bash-language-server npm-check ncu lite-server
+    cmd_check yarn bash-language-server
 
     if is_ubuntu; then
         if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then

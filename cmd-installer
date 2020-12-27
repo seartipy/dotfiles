@@ -155,7 +155,7 @@ dir_check() {
 }
 
 ln_to_exists() {
-    local rl=readlink    
+    local rl=readlink
     [[ "$1" == $($rl -f "$2") ]]
 }
 
@@ -187,14 +187,6 @@ npm_check() {
     done
 }
 
-stackexei() {
-    has_cmd stack || return 1
-
-    for p in "$@"; do
-        stack install "$p"
-    done
-}
-
 npmi() {
     has_cmd npm || return 1
 
@@ -204,17 +196,6 @@ npmi() {
             npm install -g "$p"
         fi
     done
-}
-
-#
-# PPAs
-
-add_sbt_ppa() {
-    is_ubuntu || return 1
-    ppa_exists 'sbt' && return 0
-
-    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt.list > /dev/null
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 }
 
 #
@@ -238,7 +219,7 @@ ubuntu_upgrade() {
     fi
 }
 
-essential_ubuntu_install() {
+essential_nstall() {
     is_ubuntu || return 1
     pre_cmd_check apt-get
     sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
@@ -255,21 +236,8 @@ essential_ubuntu_install() {
     sudo apt-get install -y exfat-fuse python-is-python3
 }
 
-fasd_install() {
-    is_linux || return 1
-    has_cmd fasd && return 0
-
-    slog "Installing fasd"
-    if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
-        cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
-        cd
-        rm -rf /tmp/seartipy-installer-fasd
-    fi
-}
-
 essential_install() {
     essential_ubuntu_install
-    fasd_install
 }
 
 #
@@ -311,7 +279,6 @@ tmux_dotfiles() {
 
 dotfiles_install() {
     clone_dotfiles
-
     tmux_dotfiles
 }
 
@@ -414,7 +381,6 @@ git_ubuntu_install() {
 
     slog "Installing git"
     sudo apt-get install -y git-extras git
-    sudo apt-get install -y kdiff3
 }
 
 git_install() {
@@ -428,11 +394,9 @@ git_install() {
 
 jdk_ubuntu_install() {
     is_ubuntu || return 1
-    add_java_ppa
-    is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    is_ubuntu && sudo apt-get install -y openjdk-8-jdk openjdk-8-doc openjdk-8-source
+    is_ubuntu && sudo apt-get install -y default-8-jdk default-8-doc
 }
 
 jdk_install() {
@@ -441,19 +405,8 @@ jdk_install() {
     jdk_ubuntu_install
 }
 
-# sdkman_install() {
-#     has_cmd sdk && return 0
-#     curl -s "https://get.sdkman.io" | bash
-# }
-
-
 java_install() {
     jdk_install
-    # sdkman_install
-    # source "$HOME/.sdkman/bin/sdkman-init.sh"
-    # has_cmd maven || sdk install maven < /dev/null
-    # has_cmd gradle || sdk install gradle < /dev/null
-    # has_cmd groovy || sdk install groovy < /dev/null
 }
 
 #
@@ -495,30 +448,11 @@ clojure_install() {
 #
 # scala
 
-
-sbt_ubuntu_install() {
-    is_ubuntu || return 1
-
-    has_cmd sbt && return 0
-
-    slog "Installing sbt"
-    add_sbt_ppa
-    ubuntu_update
-    sudo apt-get install -y sbt
-}
-
-ammonite_install() {
-    is_linux || return 1
-    has_cmd amm && return 0
-
-     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.9.2/2.13-1.9.2 > ~/bin/amm && chmod +x ~/bin/amm
-}
-
 scala_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Install scala"
-    sudo apt-get -y install scala
+    curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
 }
 
 sbt_plugins() {
@@ -553,69 +487,9 @@ scala_dotfiles() {
 scala_install() {
     jdk_install
 
-    sbt_ubuntu_install
-
     scala_ubuntu_install
 
-    ammonite_install
-
     scala_dotfiles
-}
-
-#
-# haskell
-
-haskell_install() {
-    slog "Installing stack"
-    curl -sSL https://get.haskellstack.org/ | sh
-
-    slog "Installing stack packages"
-    stack setup
-    stackexei alex
-    stackexei happy
-    stackexei hlint
-    # stackexei structured-haskell-mode
-    stackexei stylish-haskell
-    stackexei hasktags
-    stackexei hindent
-    stackexei hdevtools
-    # stackexei ghc-mod
-    # stackexei ghci-ng
-    stackexei apply-refact
-    stackexei hoogle
-    stackexei intero
-    # ihaskell_install
-}
-
-#
-# python
-
-pipi() {
-    is_linux || return 1
-
-    pip3 install --user "$@"
-}
-
-python_linux_install() {
-    is_linux || return 1
-
-    sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
-    sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-}
-
-python_install() {
-    python_linux_install
-
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-
-    has_cmd pyenv || return 1
-
-    if ! pyenv versions | grep anaconda > /dev/null; then
-        slog "Installing anaconda"
-        local anacondaversion=`pyenv install --list | grep anaconda | tail -1`
-        pyenv install $anacondaversion
-    fi
 }
 
 #
@@ -627,7 +501,7 @@ nvm_install() {
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -681,9 +555,6 @@ select_everything() {
 
     WEB="web"
     CPP="cpp"
-
-    PYTHON="python"
-    HASKELL="haskell"
 }
 
 select_defaults() {
@@ -779,20 +650,8 @@ script_options() {
                 DIAGNOSTICS="diagnostics"
                 shift
                 ;;
-            haskell)
-                HASKELL="haskell"
-                shift
-                ;;
             cpp)
                 CPP="cpp"
-                shift
-                ;;
-            python)
-                PYTHON="python"
-                shift
-                ;;
-            fresh)
-                FRESH="fresh"
                 shift
                 ;;
             everything)
@@ -829,61 +688,6 @@ setup_backup_dir() {
     fi
 }
 
-fresh_ppas() {
-    is_ubuntu || return 1
-    has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
-    is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
-}
-
-fresh_install() {
-    if [ -n "$DOTFILES" ]; then
-        srm ~/seartipy/dotfiles
-        srm ~/.tmux.conf
-    fi
-
-    if [ -n "$ZSH" ]; then
-        srm ~/.zshrc
-        srm ~/.zgen
-    fi
-
-    if [ -n "$BASH" ]; then
-        srm ~/.bash_profile
-        srm ~/.liquidprompt
-    fi
-
-    if [ -n "$SCALA" ]; then
-        srm ~/.sbt
-        srm ~/.ivy2
-    fi
-
-    if [ -n "$HASKELL" ]; then
-        srm ~/.ghc
-        srm ~/.stack
-        srm ~/.cabal
-    fi
-
-    if [ -n "$EMACS" ]; then
-        srm ~/.emacs.d
-        srm ~/seartipy/emacses
-        srm "/Applications/Emacs.app alias"
-        rm -rf ~/.emacs.d/.cask
-    fi
-
-    if [ -n "$CLOJURE" ]; then
-        srm ~/.len
-        srm ~/.m2
-    fi
-
-    if [ -n "$WEB" ]; then
-        srm ~/.npm
-        srm ~/.nvm
-        srm ~/.node-gyp
-    fi
-
-    if [ -n "$PYTHON" ]; then
-        srm ~/.pyenv
-    fi
-}
 
 create_dirs() {
     setup_backup_dir
@@ -908,10 +712,6 @@ install_all() {
 
     [ -n "$WEB" ] && web_install
 
-    [ -n "$PYTHON" ] && python_install
-
-    [ -n "$HASKELL" ] && haskell_install
-
     [ -n "$CPP" ] && cpp_install
 }
 
@@ -923,9 +723,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL"
-
-    [ -n "$FRESH" ]  && fresh_install
+    echo "Installing $EMACS $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $CPP"
 
     [ -n "$ESSENTIAL" ] && essential_install
 
@@ -958,25 +756,15 @@ pre_installer_check() {
     pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
 }
 
-ppas_check() {
-    is_ubuntu || return 1
-
-    [ -n "$SCALA" ] && ppa_check 'sbt'
-
-    is_ubuntu || return 1
-}
-
 essential_ubuntu_check() {
     is_ubuntu || return 1
-
-    ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put
     is_ubuntu && cmd_check umake
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd fzf gpg tmux unar zip gawk urlview
+    cmd_check curl wget git tree ag fzf gpg tmux unar zip gawk urlview
 
     essential_ubuntu_check
 }
@@ -1045,23 +833,6 @@ web_check() {
     fi
 }
 
-haskell_check() {
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
-}
-
-
-python_check() {
-    cmd_check pyenv
-
-    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-virtualenv
-
-    has_cmd pyenv || return 1
-
-    if ! pyenv versions | grep anaconda > /dev/null; then
-        warn "anaconda not installed"
-    fi
-}
-
 cpp_check() {
     cmd_check cmake scons cppcheck clang++
 
@@ -1071,7 +842,6 @@ cpp_check() {
 
 git_check() {
     cmd_check git git-extras
-    is_ubuntu && cmd_check kdiff3    
 
     file_check ~/.gitconfig
 }
@@ -1101,8 +871,6 @@ post_installer_check() {
 
     [ -n "$WEB" ] && web_check
     [ -n "$CPP" ] && cpp_check
-    [ -n "$PYTHON" ] && python_check
-    [ -n "$HASKELL" ] && haskell_check
 }
 
 curdir=$(pwd)

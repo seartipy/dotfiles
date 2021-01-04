@@ -507,14 +507,25 @@ powerline_fonts() {
     fi
 }
 
+firacode_font() {
+    if is_ubuntu; then
+        sudo apt-get install -y fonts-firacode
+    elif is_mac; then
+        brew tap homebrew/cask-fonts
+        brew cask install font-fira-code
+    fi
+}
+
 fonts_install() {
     powerline_fonts
     mononoki_font
+    firacode_font
 }
 
 fonts_check() {
     font_exists "Powerline" || warn "powerline fonts not installed"
     font_exists "mononoki" > /dev/null || warn "mononoki font not installed"
+    font_exists "firacode" > /dev/null || warn "firacode font not installed"
 }
 
 #
@@ -657,9 +668,9 @@ git_credential_gnome_keyring_install() {
     is_ubuntu || return 1
 
     slog "git credential - gnome-keyring"
-    sudo apt-get install -y libgnome-keyring-dev
-    sudo make --directory=/usr/share/doc/git/contrib/credential/gnome-keyring
-    git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+    sudo apt-get install libsecret-1-0 libsecret-1-dev
+    cd /usr/share/doc/git/contrib/credential/libsecret && sudo make
+    git config --global credential.helper /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 }
 
 git_install() {

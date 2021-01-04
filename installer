@@ -30,12 +30,6 @@ ${BOLD}${RED}FATAL: ${RESET} $1
     exit 1
 }
 
-is_cosmic() {
-    local OS
-    OS=$(lsb_release -c | cut -d ':' -f2)
-    [[ "$OS" == *"cosmic" ]]
-}
-
 is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
@@ -287,14 +281,6 @@ add_chrome_ppa() {
     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 }
 
-add_webupd8_ppa() {
-    is_ubuntu || return 1
-    ppa_exists nilarimogard && return 0
-
-    slog "Adding webupd8 ppa for youtub-dl etc"
-    sudo add-apt-repository ppa:nilarimogard/webupd8 -y
-}
-
 add_atom_ppa() {
     is_ubuntu || return 1
     ppa_exists 'AtomEditor' && return 0
@@ -352,9 +338,11 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip silversearcher-ag p7zip dconf-cli build-essential tmux unar unzip libzmq3-dev pkg-config zip gawk urlview ubuntu-make
-
-    sudo apt-get install -y google-chrome-stable exfat-utils exfat-fuse zeal "linux-headers-$(uname -r)"
+    sudo apt-get install -y curl wget git trash-cli tree xsel xclip bat fzf
+    sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
+    sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
+    sudo apt-get install -y urlview ubuntu-make google-chrome-stable exfat-utils
+    sudo apt-get install -y exfat-fuse zeal "linux-headers-$(uname -r)"
 
     is_ubuntu && sudo apt-get install -y firefox
 }
@@ -371,9 +359,6 @@ essential_mac_install() {
 
     pre_cmd_check brew
 
-    slog "Installing brew cask"
-    brew tap caskroom/cask
-
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
@@ -381,6 +366,9 @@ essential_mac_install() {
     brew install trash
     brew install tree
     brew install fasd
+    brew install bat
+    brew install fzf
+    brew install unar
     brew install p7zip
     brew install the_silver_searcher
     brew install coreutils
@@ -390,6 +378,7 @@ essential_mac_install() {
     brew install pkg-config
     brew install gawk
     brew install urlview
+
     brew cask install iterm2
     brew cask install google-chrome
 }
@@ -498,7 +487,7 @@ bash_install() {
     mac_bash_dotfiles
     linux_bash_dotfiles
 
-    sclone https://github.com/nojhan/liquidprompt.git ~/seartipy/vendors/liquidprompt
+    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
 }
 
 #
@@ -623,7 +612,7 @@ atom_install() {
     ubuntu_atom_install
     mac_atom_install
 
-    apmi atom-ide-ui ide-flowtype ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter linter-eslint linter-tslint linter-ui-default busy-signal prettier-atom linter-scalac lisp-paredit parinfer script
+    apmi linter linter-ui-default Hydrogen atom-python-test jumpy
 }
 
 #
@@ -648,120 +637,58 @@ vscode_install() {
     mac_vscode_install
     has_cmd code || return 1
 
-    # vsexti wix.vscode-import-cost
-    # vsexti wmaurer.vscode-jumpy
-    # vsexti eg2.vscode-npm-script
-    # vsexti ms-azuretools.vscode-cosmosdb
-
     if [ -n "$SEARTIPY" ]; then
-        vsexti lucax88x.codeacejumper
-        vsexti lfs.vscode-emacs-friendly
-        vsexti mycelo.embrace
-        vsexti letrieu.expand-region
-        vsexti robertohuertasm.vscode-icons
-        vsexti WallabyJs.quokka-vscode
-
-        vsexti ms-vscode.cpptools
-        vsexti mitaki28.vscode-clang
-        # vsexti xaver.clang-format; this messes with prettier formatting
-        vsexti dracula-theme.theme-dracula
-        vsexti ms-vscode.Theme-TomorrowKit
-        vsexti jebbs.plantuml
-        vsexti deerawan.vscode-dash
-        vsexti alefragnani.project-manager
-        vsexti felipecaputo.git-project-manager
-
-        vsexti ms-python.anaconda-extension-pack
-        vsexti coenraads.bracket-pair-colorizer
-        vsexti peterjausovec.vscode-docker
-        vsexti ziyasal.vscode-open-in-github
-        vsexti christian-kohler.path-intellisense
-
-
-        vsexti donjayamanne.githistory
-        vsexti codezombiech.gitignore
-
-        vsexti avli.clojure
-        # cospaia.clojure4vscode
-        vsexti shaunlebron.vscode-parinfer
-        vsexti dragos.scala-lsp
-        vsexti redhat.java
-
-        vsexti mads-hartmann.bash-ide-vscode
-        vsexti rogalmic.bash-debug
-        vsexti zignd.html-css-class-completion
-
-        # vsexti cospaia.clojure4vscode
-        # vsexti cospaia.calva-fmt
-        # vsexti cospaia.paredit-revived
-
-        # vsexti vscjava.vscode-java-debug
-        # vsexti truman.autocomplate-shell
-
-        vsexti jock.svg
-        vsexti mattn.runner
-        vsexti ericadamski.carbon-now-sh
-        vsexti pnp.polacode
-        vsexti vincaslt.highlight-matching-tag
-        vsexti ryu1kn.edit-with-shell
-        vsexti deerawan.vscode-dash
-        vsexti ibm.output-colorizer
-        vsexti formulahendry.code-runner
-        vsexti konstantin.wrapselection
-        vsexti yatki.vscode-surround
-        vsexti wwm.better-align
-        vsexti britesnow.vscode-toggle-quotes
-        vsexti gruntfuggly.todo-tree
-        vsexti humao.rest-client
-        vsexti quicktype.quicktype
-        vsexti ryu1kn.partial-diff
-        vsexti wmaurer.vscode-jumpy
-        vsexti lannonbr.vscode-js-annotations
-        vsexti knisterpeter.vscode-github
-        vsexti lamartire.git-indicator
-        vsexti qezhu.gitlink
-        vsexti rubbersheep.gi
-        vsexti dsznajder.es7-react-js-snippets
-        vsexti ms-azuretools.vscode-cosmosdb
-        vsexti kalitaalexey.vscode-rust
-        vsexti jaredly.reason-vscode
-        vsexti yzhang.markdown-all-in-one
-        vsexti gabrielbb.vscode-lombok
-        vsexti vscjava.vscode-maven
-        vsexti shinnn.stylelint
-        vsexti dracula-theme.theme-dracula
-        vsexti pkief.material-icon-theme
-        vsexti roscop.activefileinstatusbar
-        vsexti codestream.codestream
-        vsexti equinusocio.vsc-material-theme
         vsexti ahmadawais.shades-of-purple
+        vsexti britesnow.vscode-toggle-quotes
+        vsexti christian-kohler.path-intellisense
+        vsexti codezombiech.gitignore
+        vsexti donjayamanne.githistory
+        vsexti equinusocio.vsc-material-theme
+        vsexti gottfired.css2react
+        vsexti humao.rest-client
+        vsexti ibm.output-colorizer
+        vsexti konstantin.wrapselection
+        vsexti lamartire.git-indicator
+        vsexti lucax88x.codeacejumper
+        vsexti mads-hartmann.bash-ide-vscode
+        vsexti mattn.runner
+        vsexti ms-azuretools.vscode-cosmosdb
+        vsexti mycelo.embrace
+        vsexti patbenatar.advanced-new-file
+        vsexti peterjausovec.vscode-docker
+        vsexti pflannery.vscode-versionlens
+        vsexti pkief.material-icon-theme
+        vsexti quicktype.quicktype
+        vsexti rogalmic.bash-debug
+        vsexti roscop.activefileinstatusbar
         vsexti visualstudioexptteam.vscodeintellicode
-        vsexti kumar-harsh.graphql-for-vscode
+        vsexti wmaurer.vscode-jumpy
+        vsexti wwm.better-align
+        vsexti yatki.vscode-surround
+        vsexti yzhang.markdown-all-in-one
+        vsexti dsznajder.es7-react-js-snippets
     fi
-    vsexti streetsidesoftware.code-spell-checker
 
-    vsexti formulahendry.code-runner
-    vsexti ms-vsliveshare.vsliveshare
-
-    vsexti msjsdiag.debugger-for-chrome
-    vsexti eg2.tslint
+    vsexti coenraads.bracket-pair-colorizer
     vsexti dbaeumer.vscode-eslint
-    vsexti esbenp.prettier-vscode
-    vsexti gottfired.css2react
-    vsexti eg2.vscode-npm-script
-    vsexti formulahendry.auto-rename-tag
-    vsexti formulahendry.auto-close-tag
-    vsexti Orta.vscode-jest
-    vsexti humao.rest-client
-    vsexti ritwickdey.liveserver
-    # vsexti flowtype.flow-for-vscode
-
-    # vsexti jakethashi.vscode-angular2-emmet
-    # vsexti natewallace.angular2-inline
-    # vsexti Angular.ng-template
-
-    vsexti ms-python.python
     vsexti donjayamanne.jupyter
+    vsexti eg2.vscode-npm-script
+    vsexti esbenp.prettier-vscode
+    vsexti formulahendry.auto-close-tag
+    vsexti formulahendry.auto-rename-tag
+    vsexti formulahendry.code-runner
+    vsexti KnisterPeter.vscode-commitizen
+    vsexti kumar-harsh.graphql-for-vscode
+    vsexti letrieu.expand-region
+    vsexti ms-python.python
+    vsexti ms-vscode.vscode-typescript-tslint-plugin
+    vsexti ms-vsliveshare.vsliveshare
+    vsexti ms-vsliveshare.vsliveshare-audio
+    vsexti msjsdiag.debugger-for-chrome
+    vsexti ritwickdey.liveserver
+    vsexti streetsidesoftware.code-spell-checker
+    vsexti vincaslt.highlight-matching-tag
+    vsexti wayou.vscode-todo-highlight
 }
 
 #
@@ -773,8 +700,8 @@ git_mac_install() {
     slog "Installing git packages"
     brew install git-extras
     brew cask install smartgit
-    brew casl install github
-    brew cask install kdiff3
+    brew cask install github
+    brew cask install gitup
 }
 
 git_ubuntu_install() {
@@ -910,7 +837,7 @@ ammonite_install() {
     is_linux || return 1
     has_cmd amm && return 0
 
-     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.1.0/2.12-1.1.0 > ~/bin/amm && chmod +x ~/bin/amm
+     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.9.2/2.13-1.9.2 > ~/bin/amm && chmod +x ~/bin/amm
 }
 
 scala_ubuntu_install() {
@@ -1039,7 +966,7 @@ nvm_install() {
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -1052,13 +979,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi typescript flow-bin yarn ts-node
-    npmi eslint tslint jsonlint
-    npmi eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
-    npmi create-react-app
-    npmi tern ijavascript
-    npmi bash-language-server
-    npmi npm-check npm-check-updates lite-server
+    npmi yarn bash-language-server npm-check npm-check-updates lite-server
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -1125,7 +1046,6 @@ select_defaults() {
     ESSENTIAL="essential"
     ZSH="zsh"
     BASH="bash"
-    EMACS="emacs"
     DOTFILES="dotfiles"
     GIT="git"
 }
@@ -1312,7 +1232,7 @@ fresh_install() {
 
     if [ -n "$BASH" ]; then
         srm ~/.bash_profile
-        srm ~/seartipy/vendors/liquidprompt
+        srm ~/.liquidprompt
     fi
 
     if [ -n "$SCALA" ]; then
@@ -1462,7 +1382,7 @@ essential_ubuntu_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd gpg tmux unar zip gawk urlview
+    cmd_check curl wget git tree ag fasd bat fzf gpg tmux unar zip gawk urlview
 
     essential_mac_check
     essential_ubuntu_check
@@ -1490,7 +1410,7 @@ bash_check() {
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/seartipy/vendors/liquidprompt
+    dir_check ~/.liquidprompt
 }
 
 emacs_check() {
@@ -1505,95 +1425,64 @@ atom_check() {
     cmd_check atom apm
     has_cmd apm || return 1
 
-    apm_check atom-ide-ui ide-flowtype linter linter-ui-default busy-signal prettier-atom ide-typescript language-babel Hydrogen atom-python-test git-plus git-time-machine ink intentions jumpy language-scala linter-eslint linter-tslint linter-scalac lisp-paredit parinfer script
+    apm_check linter linter-ui-default Hydrogen atom-python-test jumpy
 }
 
 vscode_check() {
     cmd_check code
 
     if [ -n "$SEARTIPY" ]; then
-        vsext_check jock.svg
-        vsext_check mattn.runner
-        vsext_check ericadamski.carbon-now-sh
-        vsext_check pnp.polacode
-        vsext_check vincaslt.highlight-matching-tag
-        vsext_check ryu1kn.edit-with-shell
-        vsext_check deerawan.vscode-dash
-        vsext_check ibm.output-colorizer
-        vsext_check formulahendry.code-runner
-        vsext_check konstantin.wrapselection
-        vsext_check yatki.vscode-surround
-        vsext_check wwm.better-align
-        vsext_check britesnow.vscode-toggle-quotes
-        vsext_check gruntfuggly.todo-tree
-        vsext_check humao.rest-client
-        vsext_check quicktype.quicktype
-        vsext_check ryu1kn.partial-diff
-        vsext_check wmaurer.vscode-jumpy
-        vsext_check lannonbr.vscode-js-annotations
-        vsext_check knisterpeter.vscode-github
-        vsext_check lamartire.git-indicator
-        vsext_check qezhu.gitlink
-        vsext_check rubbersheep.gi
-        vsext_check dsznajder.es7-react-js-snippets
-        vsext_check ms-azuretools.vscode-cosmosdb
-        vsext_check kalitaalexey.vscode-rust
-        vsext_check jaredly.reason-vscode
-        vsext_check yzhang.markdown-all-in-one
-        vsext_check gabrielbb.vscode-lombok
-        vsext_check vscjava.vscode-maven
-        vsext_check shinnn.stylelint
-        vsext_check dracula-theme.theme-dracula
-
-        vsext_check lucax88x.codeacejumper
-        vsext_check lfs.vscode-emacs-friendly
-        vsext_check mycelo.embrace
-        vsext_check letrieu.expand-region
-        vsext_check robertohuertasm.vscode-icons
-        vsext_check WallabyJs.quokka-vscode
-        vsext_check ms-vscode.cpptools
-        vsext_check mitaki28.vscode-clang
-        vsext_check dracula-theme.theme-dracula
-        vsext_check ms-vscode.Theme-TomorrowKit
-        vsext_check jebbs.plantuml
-        vsext_check deerawan.vscode-dash
-        vsext_check alefragnani.project-manager
-        vsext_check felipecaputo.git-project-manager
-        vsext_check ms-python.anaconda-extension-pack
-        vsext_check coenraads.bracket-pair-colorizer
-        vsext_check peterjausovec.vscode-docker
-        vsext_check ziyasal.vscode-open-in-github
-        vsext_check christian-kohler.path-intellisense
-        vsext_check donjayamanne.githistory
-        vsext_check codezombiech.gitignore
-        vsext_check avli.clojure
-        vsext_check shaunlebron.vscode-parinfer
-        vsext_check dragos.scala-lsp
-        vsext_check redhat.java
-        vsext_check pkief.material-icon-theme
-        vsext_check roscop.activefileinstatusbar
-        vsext_check codestream.codestream
-        vsext_check equinusocio.vsc-material-theme
         vsext_check ahmadawais.shades-of-purple
+        vsext_check britesnow.vscode-toggle-quotes
+        vsext_check christian-kohler.path-intellisense
+        vsext_check codezombiech.gitignore
+        vsext_check donjayamanne.githistory
+        vsext_check equinusocio.vsc-material-theme
+        vsext_check gottfired.css2react
+        vsext_check humao.rest-client
+        vsext_check ibm.output-colorizer
+        vsext_check konstantin.wrapselection
+        vsext_check lamartire.git-indicator
+        vsext_check lucax88x.codeacejumper
+        vsext_check mads-hartmann.bash-ide-vscode
+        vsext_check mattn.runner
+        vsext_check ms-azuretools.vscode-cosmosdb
+        vsext_check mycelo.embrace
+        vsext_check patbenatar.advanced-new-file
+        vsext_check peterjausovec.vscode-docker
+        vsext_check pflannery.vscode-versionlens
+        vsext_check pkief.material-icon-theme
+        vsext_check quicktype.quicktype
+        vsext_check rogalmic.bash-debug
+        vsext_check roscop.activefileinstatusbar
         vsext_check visualstudioexptteam.vscodeintellicode
-        vsext_check kumar-harsh.graphql-for-vscode
+        vsext_check wmaurer.vscode-jumpy
+        vsext_check wwm.better-align
+        vsext_check yatki.vscode-surround
+        vsext_check yzhang.markdown-all-in-one
+        vsext_check dsznajder.es7-react-js-snippets
     fi
-    vsext_check streetsidesoftware.code-spell-checker
-    vsext_check formulahendry.code-runner
-    vsext_check ms-vsliveshare.vsliveshare
-    vsext_check msjsdiag.debugger-for-chrome
-    vsext_check eg2.tslint
+
+    vsext_check coenraads.bracket-pair-colorizer
     vsext_check dbaeumer.vscode-eslint
-    vsext_check esbenp.prettier-vscode
-    vsext_check gottfired.css2react
-    vsext_check eg2.vscode-npm-script
-    vsext_check formulahendry.auto-rename-tag
-    vsext_check formulahendry.auto-close-tag
-    vsext_check Orta.vscode-jest
-    vsext_check humao.rest-client
-    vsext_check ritwickdey.liveserver
-    vsext_check ms-python.python
     vsext_check donjayamanne.jupyter
+    vsext_check eg2.vscode-npm-script
+    vsext_check esbenp.prettier-vscode
+    vsext_check formulahendry.auto-close-tag
+    vsext_check formulahendry.auto-rename-tag
+    vsext_check formulahendry.code-runner
+    vsext_check KnisterPeter.vscode-commitizen
+    vsext_check kumar-harsh.graphql-for-vscode
+    vsext_check letrieu.expand-region
+    vsext_check ms-python.python
+    vsext_check ms-vscode.vscode-typescript-tslint-plugin
+    vsext_check ms-vsliveshare.vsliveshare
+    vsext_check ms-vsliveshare.vsliveshare-audio
+    vsext_check msjsdiag.debugger-for-chrome
+    vsext_check ritwickdey.liveserver
+    vsext_check streetsidesoftware.code-spell-checker
+    vsext_check vincaslt.highlight-matching-tag
+    vsext_check wayou.vscode-todo-highlight
 }
 
 java_check() {
@@ -1614,18 +1503,12 @@ clojure_check() {
 }
 
 web_check() {
-    cmd_check flow
     cmd_check nvm
-
     cmd_check npm
 
     has_cmd npm || return 1
-    cmd_check tsc flow yarn ts-node
-    cmd_check eslint tslint jsonlint
-    cmd_check tern ijs bash-language-server
-    cmd_check create-react-app
-    npm_check eslint-config-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-flowtype babel-eslint
-    cmd_check npm-check ncu lite-server
+
+    cmd_check yarn bash-language-server npm-check ncu lite-server
 
     if is_ubuntu; then
         if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
@@ -1655,22 +1538,14 @@ python_check() {
 cpp_check() {
     cmd_check cmake scons cppcheck clang++
 
-    if is_ubuntu; then
-        if is_cosmic; then
-            cmd_check clang-format-6.0 clang-tidy-6.0
-        else
-            cmd_check clang-format clang-tidy
-        fi
-    fi
-
     is_linux && cmd_check g++
-    is_ubuntu && cmd_check ninja bear
+    is_ubuntu && cmd_check ninja bear clang-format clang-tidy
     is_mac && cmd_check ninja bear
 }
 
 git_check() {
-    cmd_check kdiff3
     cmd_check git git-extras
+    is_ubuntu && cmd_check kdiff3
     is_mac && brew_cask_check smartgit github
 
     file_check ~/.gitconfig

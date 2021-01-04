@@ -219,7 +219,7 @@ ubuntu_upgrade() {
     fi
 }
 
-essential_nstall() {
+essential_ubuntu_install() {
     is_ubuntu || return 1
     pre_cmd_check apt-get
     sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
@@ -692,7 +692,6 @@ setup_backup_dir() {
 create_dirs() {
     setup_backup_dir
     smd ~/seartipy/emacses
-    smd ~/seartipy/vendors
     smd ~/bin
 }
 
@@ -753,7 +752,7 @@ pre_installer_check() {
     else
         pre_cmd_check trash
     fi
-    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/bin
 }
 
 essential_ubuntu_check() {

@@ -1,0 +1,432 @@
+#! /usr/bin/env bash
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+{
+
+# essential
+
+fedora_update() {
+    slog "Updating fedora"
+    if ! sudo dnf update -y; then
+        err_exit "dnf update failed, quitting"
+    fi
+}
+
+fedora_upgrade() {
+    slog "Upgrading packages"
+    if ! sudo dnf upgrade -y; then
+        err_exit "dnf upgrade failed, quitting"
+    fi
+}
+
+essential_fedora_install() {
+    pre_cmd_check dnf
+
+    fedora_update
+    fedora_upgrade
+
+    slog "Installing essential packages"
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip fzf
+    sudo dnf install -y the_silver_searcher p7zip dconf
+    sudo dnf install -y tmux unar unzip pkg-config zip gawk urlview
+}
+
+# dotfiles
+
+clone_dotfiles() {
+    sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
+    [ -d ~/seartipy/dotfiles ] || return 1
+
+    pre_dir_check ~/seartipy/dotfiles
+}
+
+tmux_dotfiles() {
+    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
+
+    slog "Moving ~/.tmux.conf to $BACKUP_DIR"
+    smv ~/.tmux.conf "$BACKUP_DIR"
+
+    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
+    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+
+    smd ~/.tmux/plugins
+    sclone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+}
+
+dotfiles_install() {
+    clone_dotfiles
+    tmux_dotfiles
+}
+
+# bash
+
+linux_bash_dotfiles() {
+    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
+
+    slog "Moving ~/.bash_profile to $BACKUP_DIR"
+    smv ~/.bash_profile "$BACKUP_DIR"
+    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
+    if ! grep .bash_profile ~/.bashrc > /dev/null; then
+        echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
+    fi
+}
+
+bash_install() {
+    linux_bash_dotfiles
+
+    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
+}
+
+# zsh
+
+zsh_fedora_install() {
+    slog "Installing zsh"
+    sudo dnf install -y zsh ShellCheck
+}
+
+zsh_dotfiles() {
+    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
+
+    slog "Moving ~/.zshrc to $BACKUP_DIR "
+    smv ~/.zshrc "$BACKUP_DIR"
+
+    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
+
+    slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
+    scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
+}
+
+zsh_install() {
+    zsh_fedora_install
+    zsh_dotfiles
+
+    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
+}
+
+# git
+
+git_install() {
+    slog "Installing git"
+    sudo dnf install -y git-extras git
+
+    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
+}
+
+# java
+
+java_install() {
+    slog "Installing Java"
+    sudo dnf install -y java-latest-openjdk java-latest-openjdk-src java-latest-openjdk-devel java-latest-openjdk-javadoc
+}
+
+# all essential install
+essential_install() {
+    essential_fedora_install
+    dotfiles_install
+    bash_install
+    zsh_install
+    git_install
+}
+
+# clojure
+
+lein_install() {
+    has_cmd ~/bin/lein && return 1
+
+    slog "Installing leiningen"
+    curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
+    chmod +x ~/bin/lein
+}
+
+clojure_install() {
+    java_install
+    lein_install
+}
+
+# scala
+
+scala_install() {
+    has_cmd coursier && return 1
+    java_install
+    slog "Install scala"
+    curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
+}
+
+# web
+
+nvm_install() {
+    [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
+    slog "Installing nvm"
+    if ! has_cmd nvm; then
+        smd ~/.nvm
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+        source ~/.nvm/nvm.sh
+    fi
+    has_cmd nvm || return 1
+
+    nvm install node
+    nvm alias default node
+}
+
+web_install() {
+    nvm_install
+
+    slog "Installing npm packages for web development"
+    npmi  bash-language-server yarn @microsoft/rush pnpm npm-check-updates
+}
+
+# c++
+
+cpp_install() {
+    slog "Installing C++"
+    sudo dnf install -y gcc g++ clang clang-devel clang-libs clang-analyzer cmake boost cppcheck lldb clang-tools-extra bear
+}
+
+# vscode
+
+vscode_install() {
+    has_cmd code && return 1
+
+    if ! [ -f /etc/yum.repos.d/vscode.repo ]; then
+        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+        sudo dnf check-update -y
+    fi
+    sudo dnf install -y code
+}
+
+# installer
+
+select_everything() {
+    ESSENTIAL="essential"
+
+    SCALA="scala"
+    CLOJURE="clojure"
+
+    WEB="web"
+    VSCODE="vscode"
+    CPP="cpp"
+}
+
+script_options() {
+    ESSENTIAL="essential"
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            essential)
+                ESSENTIAL="essential"
+                shift
+                ;;
+            noessential)
+                ESSENTIAL=""
+                shift
+                ;;
+            clojure)
+                CLOJURE="clojure"
+                shift
+                ;;
+            scala)
+                SCALA="scala"
+                shift
+                ;;
+            web)
+                WEB="web"
+                shift
+                ;;
+            vscode)
+                VSCODE="vscode"
+                shift
+                ;;
+            diagnostics)
+                DIAGNOSTICS="diagnostics"
+                shift
+                ;;
+            cpp)
+                CPP="cpp"
+                shift
+                ;;
+            everything)
+                select_everything
+                shift
+                ;;
+            *)
+                err_exit "unknown option $1"
+                ;;
+        esac
+    done
+}
+
+keep_sudo_running() {
+    # Ask for the administrator password upfront
+    sudo -v
+
+    # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+}
+
+setup_backup_dir() {
+    BACKUP_DIR=~/seartipy.backups
+
+    if [ -d "$BACKUP_DIR" ]; then
+        slog "moving $BACKUP_DIR to trash"
+        srm $BACKUP_DIR
+    fi
+
+    smd $BACKUP_DIR
+
+    if ! [ -d "$BACKUP_DIR" ]; then
+        err_exit "cannot create $BACKUP_DIR, quitting"
+    fi
+}
+
+
+create_dirs() {
+    setup_backup_dir
+    smd ~/bin
+}
+
+install_all() {
+    [ -n "$CLOJURE" ] && clojure_install
+    [ -n "$SCALA" ] && scala_install
+    [ -n "$WEB" ] && web_install
+    [ -n "$VSCODE" ] && vscode_install
+    [ -n "$CPP" ] && cpp_install
+}
+
+installer() {
+    script_options $*
+
+    if [ -n "$DIAGNOSTICS" ]; then
+        post_installer_check
+        exit 0
+    fi
+
+    echo "Installing $SCALA $WEB $VSCODE $CLOJURE $CPP"
+
+    [ -n "$ESSENTIAL" ] && essential_install
+
+    pre_installer_check
+    install_all
+    post_installer_check
+
+    echo "Installation done!"
+}
+
+# diagnostics
+
+pre_installer_check() {
+    pre_cmd_check git curl wget unzip trash
+}
+
+dotfiles_check() {
+    dir_check ~/seartipy/dotfiles
+    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    dir_check ~/.tmux/plugins/tpm
+}
+
+zsh_check() {
+    cmd_check zsh shellcheck
+
+    ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    dir_check ~/.zgen
+    file_check ~/.zgen-options-local.sh
+    file_check ~/.zshrc-pre-local.sh
+}
+
+bash_check() {
+    ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+
+    if ! grep .bash_profile ~/.bashrc > /dev/null; then
+        warn "~/.bash_profile not sourced in ~/.bashrc"
+    fi
+    dir_check ~/.liquidprompt
+}
+
+essential_check() {
+    cmd_check curl wget git tree ag fzf gpg tmux unar zip gawk urlview
+    cmd_check 7za dconf xsel xclip
+
+    bash_check
+    zsh_check
+    dotfiles_check
+    git_check
+}
+
+scala_check() {
+    has_cmd javac java
+    cmd_check javac sbt scala amm
+}
+
+clojure_check() {
+    cmd_check javac lein
+}
+
+web_check() {
+    cmd_check nvm
+    cmd_check npm
+
+    has_cmd npm || return 1
+
+    cmd_check yarn bash-language-server pnpm rush
+}
+
+cpp_check() {
+    cmd_check cmake cppcheck clang++ g++ bear clang-format clang-tidy
+}
+
+git_check() {
+    cmd_check git git-extras
+
+    file_check ~/.gitconfig
+}
+
+vscode_check() {
+    has_cmd code
+    file_check /etc/yum.repos.d/vscode.repo
+}
+
+post_installer_check() {
+    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
+
+    essential_check
+
+    [ -n "$CLOJURE" ] && clojure_check
+    [ -n "$SCALA" ] && scala_check
+
+    [ -n "$WEB" ] && web_check
+    [ -n "$VSCODE" ] && vscode_check
+    [ -n "$CPP" ] && cpp_check
+}
+
+curdir=$(pwd)
+
+trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+
+keep_sudo_running
+
+create_dirs
+
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/share/coursier/bin:$PATH"
+
+if [[ $- = *i* ]]; then
+    slog "Running pre installer check..."
+    slog "if this does not succeed you must first at least install essentials by running this script without parameters"
+    pre_installer_check
+    slog "installer check succeeded, you could run functions in this script for testing"
+else
+    installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+fi
+
+cd "$curdir"
+
+}

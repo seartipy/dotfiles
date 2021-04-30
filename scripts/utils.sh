@@ -200,6 +200,17 @@ npm_check() {
     done
 }
 
+vsext_exists() {
+    has_cmd code || return 1
+    code --list-extensions | grep -i "$1" > /dev/null
+}
+
+vsext_check() {
+    for p in "$@"; do
+        vsext_exists "$p" || warn "$p vscode extension not installed"
+    done
+}
+
 gem_exists() {
     gem list --local | grep "$1" > /dev/null
 }

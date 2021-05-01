@@ -421,85 +421,12 @@ clojure_install() {
 # scala
 
 
-sbt_ubuntu_install() {
-    is_ubuntu || return 1
-
-    has_cmd sbt && return 0
-
-    slog "Installing sbt"
-    add_sbt_ppa
-    ubuntu_update
-    sudo apt-get install -y sbt
-}
-
-sbt_mac_install() {
-    is_mac || return 1
-
-    brew install sbt
-}
-
-scala_mac_install() {
-    is_mac || return 1
-
-    slog "Installing scala"
-    brew install scala ammonite-repl
-}
-
-ammonite_install() {
-    is_linux || return 1
-    has_cmd amm && return 0
-
-     curl -L https://github.com/lihaoyi/Ammonite/releases/download/1.9.2/2.13-1.9.2 > ~/bin/amm && chmod +x ~/bin/amm
-}
-
-scala_ubuntu_install() {
-    is_ubuntu || return 1
-
-    slog "Install scala"
-    sudo apt-get -y install scala
-}
-
-sbt_plugins() {
-    [ -f ~/seartipy/dotfiles/sbt-plugins.sbt ] || return 1
-
-    slog "Moving ~/.sbt/1.0/plugins/plugins.sbt to $BACKUP_DIR (if exists)"
-    smv ~/.sbt/1.0/plugins/plugins.sbt $BACKUP_DIR
-
-    smd ~/.sbt/1.0/plugins
-
-    slog "Linking ~/seartipy/dotfiles/sbt-plugins.sbt as ~/.sbt/1.0/plugins/plugins.sbt"
-    sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
-}
-
-sbt_global() {
-    [ -f ~/seartipy/dotfiles/sbt-global.sbt ] || return 1
-
-    slog "Moving ~/.sbt/1.0/global.sbt to $BACKUP_DIR (if exists)"
-    smv ~/.sbt/1.0/global.sbt $BACKUP_DIR
-
-    smd ~/.sbt/1.0/
-
-    slog "Linking ~/seartipy/dotfiles/sbt-global.sbt as ~/.sbt/1.0/global.sbt"
-    sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
-}
-
-scala_dotfiles() {
-    sbt_plugins
-    sbt_global
-}
-
 scala_install() {
+    has_cmd coursier && return 1
     jdk_install
-
-    sbt_mac_install
-    sbt_ubuntu_install
-
-    scala_mac_install
-    scala_ubuntu_install
-
-    ammonite_install
-
-    scala_dotfiles
+    
+    slog "Install scala"
+    curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
 }
 
 #
@@ -511,7 +438,7 @@ nvm_install() {
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.38.0/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -673,7 +600,6 @@ script_options() {
     done
 }
 
-
 create_dirs() {
     setup_backup_dir
     smd ~/bin
@@ -820,10 +746,7 @@ java_check() {
 }
 
 scala_check() {
-    cmd_check javac sbt scala amm
-
-    ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
-    ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
+    cmd_check javac sbt scala amm coursier
 }
 
 clojure_check() {
@@ -893,6 +816,7 @@ keep_sudo_running
 create_dirs
 
 export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/share/coursier/bin:$PATH"
 
 if [[ $- = *i* ]]; then
     slog "Running pre installer check..."

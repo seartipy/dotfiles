@@ -21,7 +21,7 @@ fi
 
 if is_fedora; then
     export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-    export JDK_HOME=$JAVA_HOME
+    export JDK_HOME=$JAVA_HOME    
 fi
 
 if is_mac; then
@@ -189,13 +189,6 @@ alias car=seartipy_ctrl_alt_reset
 alias ccs=seartipy_ctrl_caps_set
 alias ccr=seartipy_ctrl_caps_reset
 
-alias sse="seartipy_emacs_default spacemacs"
-alias sle="seartipy_emacs_default lean-emacs"
-alias she="seartipy_emacs_default emacsd"
-
-alias es="seartipy_spacemacs"
-alias el="seartipy_lean"
-alias eh="seartipy_emacsd"
 
 alias ec="emacsclient -c -n"
 

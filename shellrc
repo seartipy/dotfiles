@@ -1,84 +1,8 @@
 #! /bin/bash
 
-#
-# utils
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-BOLD=$(tput bold)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-RESET=$(tput sgr0)
-# WHITE=$(tput setaf 7)
-
-slog() {
-    echo "
-${BOLD}${GREEN}SEARTIPY: ${RESET} $1
-"
-}
-
-warn() {
-    echo "
-${BOLD}${YELLOW}WARNING: ${RESET} $1
-"
-}
-
-error() {
-    echo "
-${BOLD}${RED}FATAL : ${RESET} $1
-"
-}
-
-is_linux() {
-    [[ "$OSTYPE" == "linux-gnu" ]]
-}
-
-is_ubuntu() {
-    has_cmd lsb_release || return 1
-    local os
-    os=$(lsb_release -i | cut -d ':' -f2)
-    [[ "$os" == *"Ubuntu" ]] || [[ "$os" == *"neon" ]] || [[ "$os" == *"elementary OS" ]] || [[ "$os" == *"LinuxMint" ]]
-}
-
-is_mac() {
-    [[ "$OSTYPE" == "darwin"* ]]
-}
-
-has_cmd() {
-    command -v "$1" > /dev/null
-}
-
-smd() {
-    [ -d "$1" ] || mkdir -p "$1"
-}
-
-sln() {
-    if ! [ -e "$1" ]; then
-        warn "$1 does not exist, cannot create the link $2"
-        return 1
-    elif [ -L "$2" ]; then
-        trash "$2"
-    elif [ -e "$2" ]; then
-        warn "$2 exists and not a symbolic link! not creating link"
-        return 1
-    fi
-    ln -s "$1" "$2"
-}
-
-srm() {
-    for f in "$@"; do
-        if [ -L "$f" ]; then
-            rm -f "$f"
-        elif is_ubuntu; then
-            trash-put "$f" 2> /dev/null && slog "Trashed $f"
-        else
-            trash "$f" 2> /dev/null && slog "Trashed $f"
-        fi
-    done
-}
-
-scopy() {
-    [ -e "$2" ] || cp "$1" "$2"
-}
+source "$DOTFILES_DIR/scripts/utils.sh"
 
 if is_linux; then
     alias upgrade="sudo apt-get update && sudo apt-get upgrade -y"
@@ -143,51 +67,6 @@ if has_cmd pyenv > /dev/null; then
     eval "$(pyenv init - --no-rehash)"
     eval "$(pyenv virtualenv-init -)"
 fi
-
-seartipy_fix_links() {
-    if ! [ -d ~/seartipy/dotfiles ]; then
-        smd ~/seartipy
-        git clone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    fi
-    if ! [ -d ~/seartipy/dotfiles ]; then
-        error "no ~/seartipy/dotfiles, cannot fix links"
-    fi
-
-    # bash
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
-    is_mac && sln ~/seartipy/dotfiles/bashrc ~/.bashrc
-    if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
-        echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
-    fi
-
-    # zsh
-    has_cmd zsh && sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-
-    # emacs
-    has_cmd emacs && sln ~/seartipy/emacses/emacsd ~/.emacs.d
-
-    # clojure
-    if has_cmd lein; then
-        smd ~/.lein
-        sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
-    fi
-
-    # scala
-    if has_cmd sbt; then
-        smd ~/.sbt/1.0/plugins
-        sln ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
-        sln ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
-    fi
-
-    has_cmd tmux && sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-
-    is_mac && sln ~/seartipy/dotfiles/amethyst ~/.amethyst
-
-    if has_cmd xmonad; then
-        smd ~/.xmonad
-        sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
-    fi
-}
 
 # emacs
 
@@ -331,8 +210,6 @@ alias upm=seartipy_upgrade_mean
 alias ups=upgrade
 alias upe=seartipy_upgrade_emacs
 alias upd=seartipy_upgrade_dotfiles
-
-alias sfl=seartipy_fix_links
 
 alias yi="yarn install"
 alias yid="yarn install -D"

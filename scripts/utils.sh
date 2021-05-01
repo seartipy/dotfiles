@@ -34,11 +34,11 @@ is_ubuntu() {
 }
 
 is_fedora() {
-    cat /etc/os-release | grep "^ID=fedora$" > /dev/null
+    cat /etc/os-release | grep "^ID=fedora$" > /dev/null 
 }
 
 is_linux() {
-    [ "$OSTYPE" == "linux-gnu" ]
+    [[ "$OSTYPE" == "linux-gnu" ]]
 }
 
 is_mac() {

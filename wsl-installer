@@ -427,6 +427,8 @@ post_installer_check() {
     [ -n "$CPP" ] && cpp_check
 }
 
+is_ubuntu || err_exit "code not installed. First install visual studio code"
+
 curdir=$(pwd)
 
 trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null

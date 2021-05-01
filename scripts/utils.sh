@@ -299,3 +299,30 @@ keep_sudo_running() {
     # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
     while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 }
+
+setup_backup_dir() {
+    BACKUP_DIR=~/seartipy.backups
+
+    if [ -d "$BACKUP_DIR" ]; then
+        slog "moving $BACKUP_DIR to trash"
+        srm $BACKUP_DIR
+    fi
+
+    smd $BACKUP_DIR
+
+    if ! [ -d "$BACKUP_DIR" ]; then
+        err_exit "cannot create $BACKUP_DIR, quitting"
+    fi
+}
+
+pre_installer_check() {
+    BACKUP_DIR=~/seartipy.backups
+
+    pre_cmd_check git curl wget unzip
+    if is_ubuntu; then
+        pre_cmd_check trash-put
+    else
+        pre_cmd_check trash
+    fi
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
+}

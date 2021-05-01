@@ -1,0 +1,62 @@
+#! /usr/bin/env bash
+
+{
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+add_atom_ppa() {
+    is_ubuntu || return 1
+    ppa_exists 'AtomEditor' && return 0
+    slog "Adding atom ppa"
+    curl -sL https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
+}
+
+ubuntu_atom_install() {
+    is_ubuntu || return 1
+    add_atom_ppa
+    ubuntu_update
+    sudo apt-get install -y atom
+}
+
+mac_atom_install() {
+    is_mac || return 1
+    brew cask install atom
+}
+
+atom_install() {
+    ubuntu_atom_install
+    mac_atom_install
+
+    apmi linter linter-ui-default Hydrogen atom-python-test jumpy
+}
+
+atom_check() {
+    cmd_check atom apm
+    has_cmd apm || return 1
+
+    apm_check linter linter-ui-default Hydrogen atom-python-test jumpy
+}
+
+curdir=$(pwd)
+
+if is_ubuntu; then
+    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+else
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+fi
+
+keep_sudo_running
+
+setup_backup_dir
+
+export PATH="$HOME/bin:$PATH"
+
+pre_installer_check
+installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+
+cd "$curdir"
+
+}

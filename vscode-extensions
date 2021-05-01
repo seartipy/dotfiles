@@ -1,0 +1,88 @@
+#! /usr/bin/env bash
+
+{
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+vsext_exists() {    
+    code --list-extensions | grep -i "$1" > /dev/null
+}
+
+vsext_check() {
+    for p in "$@"; do
+        vsext_exists "$p" || warn "$p vscode extension not installed"
+    done
+}
+
+vsexti() {
+    for p in "$@"; do
+        if ! vsext_exists "$p"; then
+            code --install-extension "$p"
+        fi
+    done
+}
+
+vsext_install() {
+        if [ -n "$SEARTIPY" ]; then
+        vsexti ahmadawais.shades-of-purple
+        vsexti britesnow.vscode-toggle-quotes
+        vsexti christian-kohler.path-intellisense
+        vsexti codezombiech.gitignore
+        vsexti donjayamanne.githistory
+        vsexti equinusocio.vsc-material-theme
+        vsexti gottfired.css2react
+        vsexti humao.rest-client
+        vsexti ibm.output-colorizer
+        vsexti konstantin.wrapselection
+        vsexti lamartire.git-indicator
+        vsexti lucax88x.codeacejumper
+        vsexti mads-hartmann.bash-ide-vscode
+        vsexti mattn.runner
+        vsexti ms-azuretools.vscode-cosmosdb
+        vsexti mycelo.embrace
+        vsexti patbenatar.advanced-new-file
+        vsexti peterjausovec.vscode-docker
+        vsexti pflannery.vscode-versionlens
+        vsexti pkief.material-icon-theme
+        vsexti quicktype.quicktype
+        vsexti rogalmic.bash-debug
+        vsexti roscop.activefileinstatusbar
+        vsexti visualstudioexptteam.vscodeintellicode
+        vsexti wmaurer.vscode-jumpy
+        vsexti wwm.better-align
+        vsexti yatki.vscode-surround
+        vsexti yzhang.markdown-all-in-one
+        vsexti dsznajder.es7-react-js-snippets
+    fi
+
+    vsexti coenraads.bracket-pair-colorizer
+    vsexti dbaeumer.vscode-eslint
+    vsexti donjayamanne.jupyter
+    vsexti eg2.vscode-npm-script
+    vsexti esbenp.prettier-vscode
+    vsexti formulahendry.auto-close-tag
+    vsexti formulahendry.auto-rename-tag
+    vsexti formulahendry.code-runner
+    vsexti KnisterPeter.vscode-commitizen
+    vsexti kumar-harsh.graphql-for-vscode
+    vsexti letrieu.expand-region
+    vsexti ms-python.python
+    vsexti ms-vscode.vscode-typescript-tslint-plugin
+    vsexti ms-vsliveshare.vsliveshare
+    vsexti ms-vsliveshare.vsliveshare-audio
+    vsexti msjsdiag.debugger-for-chrome
+    vsexti ritwickdey.liveserver
+    vsexti streetsidesoftware.code-spell-checker
+    vsexti vincaslt.highlight-matching-tag
+    vsexti wayou.vscode-todo-highlight
+}
+
+if has_cmd code; then
+    vscode_install
+else
+    err_exit "code not installed. First install visual studio code"
+fi
+
+}

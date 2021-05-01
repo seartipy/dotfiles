@@ -198,17 +198,6 @@ npm_check() {
     done
 }
 
-vsext_exists() {
-    has_cmd code || return 1
-    code --list-extensions | grep -i "$1" > /dev/null
-}
-
-vsext_check() {
-    for p in "$@"; do
-        vsext_exists "$p" || warn "$p vscode extension not installed"
-    done
-}
-
 brew_exists() {
     brew list | grep "^$1$" > /dev/null
 }
@@ -248,16 +237,6 @@ stackexei() {
     done
 }
 
-vsexti() {
-    has_cmd code || return 1
-
-    for p in "$@"; do
-        if ! vsext_exists "$p"; then
-            code --install-extension "$p"
-        fi
-    done
-}
-
 npmi() {
     has_cmd npm || return 1
 
@@ -281,13 +260,6 @@ add_chrome_ppa() {
     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 }
 
-add_atom_ppa() {
-    is_ubuntu || return 1
-    ppa_exists 'AtomEditor' && return 0
-    slog "Adding atom ppa"
-    curl -sL https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
-    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
-}
 
 add_vscode_ppa() {
     is_ubuntu || return 1
@@ -534,88 +506,6 @@ zsh_install() {
 }
 
 #
-# emacs
-
-# drop emacs-mac, normal emacs works better with emacsclient
-emacs_mac_install() {
-    is_mac || return 1
-
-    slog "Installing emacs packages"
-    # brew tap d12frosted/emacs-plus
-    # brew install emacs-plus
-    brew cask install emacs
-    brew install editorconfig
-    brew install discount
-    # TODO : ctags
-    brew install aspell
-
-    # slog "Trashing /Applications/Emacs.app(if exists)"
-    # srm '/Applications/Emacs.app'
-
-    ## slog "Creating Emacs alias in /Applications"
-    ## make emacs available from spotlight
-    # osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-plus/Emacs.app" at POSIX file "/Applications"'
-
-    ## slog "Generating terminfo for terminal in emacs"
-    # local emacsversion=`ls -r /usr/local/Cellar/emacs-plus | head -1`
-    # tic -o ~/.terminfo /usr/local/Cellar/emacs-plus/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
-}
-
-emacs_ubuntu_install() {
-    is_ubuntu || return 1
-
-    slog "Installing emacs"
-    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
-
-    sudo apt-get install -y emacs
-}
-
-emacs_dotfiles() {
-    sclone  https://gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
-
-    [ -d "$HOME/seartipy/emacses/emacsd" ] || return 1
-
-
-    slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
-    smv ~/.emacs.d $BACKUP_DIR
-
-    slog "Linking ~/seartipy/emacses/emacsd as ~/.emacs.d"
-    sln ~/seartipy/emacses/emacsd ~/.emacs.d
-
-    slog "Copying ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
-    scopy ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
-}
-
-emacs_install() {
-    emacs_mac_install
-    emacs_ubuntu_install
-
-    emacs_dotfiles
-}
-
-#
-# atom
-
-ubuntu_atom_install() {
-    is_ubuntu || return 1
-    add_atom_ppa
-    ubuntu_update
-    sudo apt-get install -y atom
-}
-
-mac_atom_install() {
-    is_mac || return 1
-    brew cask install atom
-}
-
-atom_install() {
-    ubuntu_atom_install
-    mac_atom_install
-
-    apmi linter linter-ui-default Hydrogen atom-python-test jumpy
-}
-
-#
 # vscode
 
 ubuntu_vscode_install() {
@@ -637,58 +527,6 @@ vscode_install() {
     mac_vscode_install
     has_cmd code || return 1
 
-    if [ -n "$SEARTIPY" ]; then
-        vsexti ahmadawais.shades-of-purple
-        vsexti britesnow.vscode-toggle-quotes
-        vsexti christian-kohler.path-intellisense
-        vsexti codezombiech.gitignore
-        vsexti donjayamanne.githistory
-        vsexti equinusocio.vsc-material-theme
-        vsexti gottfired.css2react
-        vsexti humao.rest-client
-        vsexti ibm.output-colorizer
-        vsexti konstantin.wrapselection
-        vsexti lamartire.git-indicator
-        vsexti lucax88x.codeacejumper
-        vsexti mads-hartmann.bash-ide-vscode
-        vsexti mattn.runner
-        vsexti ms-azuretools.vscode-cosmosdb
-        vsexti mycelo.embrace
-        vsexti patbenatar.advanced-new-file
-        vsexti peterjausovec.vscode-docker
-        vsexti pflannery.vscode-versionlens
-        vsexti pkief.material-icon-theme
-        vsexti quicktype.quicktype
-        vsexti rogalmic.bash-debug
-        vsexti roscop.activefileinstatusbar
-        vsexti visualstudioexptteam.vscodeintellicode
-        vsexti wmaurer.vscode-jumpy
-        vsexti wwm.better-align
-        vsexti yatki.vscode-surround
-        vsexti yzhang.markdown-all-in-one
-        vsexti dsznajder.es7-react-js-snippets
-    fi
-
-    vsexti coenraads.bracket-pair-colorizer
-    vsexti dbaeumer.vscode-eslint
-    vsexti donjayamanne.jupyter
-    vsexti eg2.vscode-npm-script
-    vsexti esbenp.prettier-vscode
-    vsexti formulahendry.auto-close-tag
-    vsexti formulahendry.auto-rename-tag
-    vsexti formulahendry.code-runner
-    vsexti KnisterPeter.vscode-commitizen
-    vsexti kumar-harsh.graphql-for-vscode
-    vsexti letrieu.expand-region
-    vsexti ms-python.python
-    vsexti ms-vscode.vscode-typescript-tslint-plugin
-    vsexti ms-vsliveshare.vsliveshare
-    vsexti ms-vsliveshare.vsliveshare-audio
-    vsexti msjsdiag.debugger-for-chrome
-    vsexti ritwickdey.liveserver
-    vsexti streetsidesoftware.code-spell-checker
-    vsexti vincaslt.highlight-matching-tag
-    vsexti wayou.vscode-todo-highlight
 }
 
 #
@@ -891,73 +729,6 @@ scala_install() {
 }
 
 #
-# haskell
-
-haskell_install() {
-    slog "Installing stack"
-    curl -sSL https://get.haskellstack.org/ | sh
-
-    slog "Installing stack packages"
-    stack setup
-    stackexei alex
-    stackexei happy
-    stackexei hlint
-    # stackexei structured-haskell-mode
-    stackexei stylish-haskell
-    stackexei hasktags
-    stackexei hindent
-    stackexei hdevtools
-    # stackexei ghc-mod
-    # stackexei ghci-ng
-    stackexei apply-refact
-    stackexei hoogle
-    stackexei intero
-    # ihaskell_install
-}
-
-#
-# python
-
-pipi() {
-    if is_mac; then
-        pip3 install "$@"
-    elif is_linux; then
-        pip3 install --user "$@"
-    fi
-}
-
-python_mac_install() {
-    is_mac || return 1
-
-    slog "Installing python packages"
-    brew install pyenv
-    brew install pyenv-virtualenv
-}
-
-python_linux_install() {
-    is_linux || return 1
-
-    sclone  https://github.com/yyuu/pyenv.git ~/.pyenv
-    sclone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-}
-
-python_install() {
-    python_mac_install
-    python_linux_install
-
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-
-    has_cmd pyenv || return 1
-
-    if ! pyenv versions | grep anaconda > /dev/null; then
-        slog "Installing anaconda"
-        local anacondaversion=`pyenv install --list | grep anaconda | tail -1`
-        pyenv install $anacondaversion
-    fi
-}
-
-#
 # web
 
 nvm_install() {
@@ -987,35 +758,6 @@ web_install() {
 }
 
 #
-# c++
-
-cpp_ubuntu_install() {
-    is_ubuntu || return 1
-
-    slog "Installing C++"
-    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy ninja-build lldb
-}
-
-cpp_mac_install() {
-    is_mac || return 1
-
-    slog "Installing c++ packages"
-    brew install boost
-    brew install cmake
-    brew install scons
-    brew install boost-build
-    brew install cppcheck
-    brew install clang-format
-    brew install ninja
-    brew install bear
-}
-
-cpp_install() {
-    cpp_mac_install
-    cpp_ubuntu_install
-}
-
-#
 # installer
 
 select_everything() {
@@ -1024,8 +766,6 @@ select_everything() {
     ZSH="zsh"
     BASH="bash"
 
-    EMACS="emacs"
-    ATOM="atom"
     VSCODE="vscode"
 
     GIT="git"
@@ -1036,10 +776,6 @@ select_everything() {
     CLOJURE="clojure"
 
     WEB="web"
-    CPP="cpp"
-
-    PYTHON="python"
-    HASKELL="haskell"
 }
 
 select_defaults() {
@@ -1051,11 +787,7 @@ select_defaults() {
 }
 
 script_options() {
-    if [ $# -eq 0 ]; then
-        select_everything
-    else
-        select_defaults
-    fi
+    select_defaults
 
     if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
         SEARTIPY="seartipy"
@@ -1075,20 +807,12 @@ script_options() {
                 BASH="bash"
                 shift
                 ;;
-            emacs)
-                EMACS="emacs"
-                shift
-                ;;
             dotfiles)
                 DOTFILES="dotfiles"
                 shift
                 ;;
             git)
                 GIT="git"
-                shift
-                ;;
-            atom)
-                ATOM="atom"
                 shift
                 ;;
             vscode)
@@ -1135,10 +859,6 @@ script_options() {
                 ZSH=""
                 shift
                 ;;
-            noemacs)
-                EMACS=""
-                shift
-                ;;
             nobash)
                 BASH=""
                 shift
@@ -1157,18 +877,6 @@ script_options() {
                 ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
-                shift
-                ;;
-            haskell)
-                HASKELL="haskell"
-                shift
-                ;;
-            cpp)
-                CPP="cpp"
-                shift
-                ;;
-            python)
-                PYTHON="python"
                 shift
                 ;;
             seartipy)
@@ -1240,24 +948,6 @@ fresh_install() {
         srm ~/.ivy2
     fi
 
-    if [ -n "$HASKELL" ]; then
-        srm ~/.ghc
-        srm ~/.stack
-        srm ~/.cabal
-    fi
-
-    if [ -n "$EMACS" ]; then
-        srm ~/.emacs.d
-        srm ~/seartipy/emacses
-        srm "/Applications/Emacs.app alias"
-        rm -rf ~/.emacs.d/.cask
-    fi
-
-    if [ -n "$ATOM" ]; then
-        srm ~/.atom
-        srm ~/.proton
-    fi
-
     if [ -n "$VSCODE" ]; then
         srm ~/.vscode
     fi
@@ -1273,14 +963,10 @@ fresh_install() {
         srm ~/.node-gyp
     fi
 
-    if [ -n "$PYTHON" ]; then
-        srm ~/.pyenv
-    fi
 }
 
 create_dirs() {
-    setup_backup_dir
-    smd ~/seartipy/emacses
+    setup_backup_dir    
     smd ~/seartipy/vendors
     smd ~/bin
 }
@@ -1291,8 +977,6 @@ install_all() {
     [ -n "$ZSH" ] && zsh_install
     [ -n "$BASH" ] && bash_install
 
-    [ -n "$EMACS" ] && emacs_install
-    [ -n "$ATOM" ] && atom_install
     [ -n "$VSCODE" ] && vscode_install
 
     [ -n "$GIT" ] && git_install
@@ -1300,14 +984,7 @@ install_all() {
     [ -n "$JAVA" ] && java_install
     [ -n "$CLOJURE" ] && clojure_install
     [ -n "$SCALA" ] && scala_install
-
     [ -n "$WEB" ] && web_install
-
-    [ -n "$PYTHON" ] && python_install
-
-    [ -n "$HASKELL" ] && haskell_install
-
-    [ -n "$CPP" ] && cpp_install
 }
 
 installer() {
@@ -1350,7 +1027,7 @@ pre_installer_check() {
     else
         pre_cmd_check trash
     fi
-    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/vendors ~/bin
 }
 
 ppas_check() {
@@ -1413,76 +1090,8 @@ bash_check() {
     dir_check ~/.liquidprompt
 }
 
-emacs_check() {
-    cmd_check emacs aspell markdown
-    cmd_check editorconfig
-    is_linux && cmd_check ctags
-
-    ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
-}
-
-atom_check() {
-    cmd_check atom apm
-    has_cmd apm || return 1
-
-    apm_check linter linter-ui-default Hydrogen atom-python-test jumpy
-}
-
 vscode_check() {
     cmd_check code
-
-    if [ -n "$SEARTIPY" ]; then
-        vsext_check ahmadawais.shades-of-purple
-        vsext_check britesnow.vscode-toggle-quotes
-        vsext_check christian-kohler.path-intellisense
-        vsext_check codezombiech.gitignore
-        vsext_check donjayamanne.githistory
-        vsext_check equinusocio.vsc-material-theme
-        vsext_check gottfired.css2react
-        vsext_check humao.rest-client
-        vsext_check ibm.output-colorizer
-        vsext_check konstantin.wrapselection
-        vsext_check lamartire.git-indicator
-        vsext_check lucax88x.codeacejumper
-        vsext_check mads-hartmann.bash-ide-vscode
-        vsext_check mattn.runner
-        vsext_check ms-azuretools.vscode-cosmosdb
-        vsext_check mycelo.embrace
-        vsext_check patbenatar.advanced-new-file
-        vsext_check peterjausovec.vscode-docker
-        vsext_check pflannery.vscode-versionlens
-        vsext_check pkief.material-icon-theme
-        vsext_check quicktype.quicktype
-        vsext_check rogalmic.bash-debug
-        vsext_check roscop.activefileinstatusbar
-        vsext_check visualstudioexptteam.vscodeintellicode
-        vsext_check wmaurer.vscode-jumpy
-        vsext_check wwm.better-align
-        vsext_check yatki.vscode-surround
-        vsext_check yzhang.markdown-all-in-one
-        vsext_check dsznajder.es7-react-js-snippets
-    fi
-
-    vsext_check coenraads.bracket-pair-colorizer
-    vsext_check dbaeumer.vscode-eslint
-    vsext_check donjayamanne.jupyter
-    vsext_check eg2.vscode-npm-script
-    vsext_check esbenp.prettier-vscode
-    vsext_check formulahendry.auto-close-tag
-    vsext_check formulahendry.auto-rename-tag
-    vsext_check formulahendry.code-runner
-    vsext_check KnisterPeter.vscode-commitizen
-    vsext_check kumar-harsh.graphql-for-vscode
-    vsext_check letrieu.expand-region
-    vsext_check ms-python.python
-    vsext_check ms-vscode.vscode-typescript-tslint-plugin
-    vsext_check ms-vsliveshare.vsliveshare
-    vsext_check ms-vsliveshare.vsliveshare-audio
-    vsext_check msjsdiag.debugger-for-chrome
-    vsext_check ritwickdey.liveserver
-    vsext_check streetsidesoftware.code-spell-checker
-    vsext_check vincaslt.highlight-matching-tag
-    vsext_check wayou.vscode-todo-highlight
 }
 
 java_check() {
@@ -1517,31 +1126,6 @@ web_check() {
     fi
 }
 
-haskell_check() {
-    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
-}
-
-
-python_check() {
-    cmd_check pyenv
-    is_mac && cmd_check pyenv-virtualenv
-
-    is_linux && dir_check ~/.pyenv ~/.pyenv/plugins/pyenv-virtualenv
-
-    has_cmd pyenv || return 1
-
-    if ! pyenv versions | grep anaconda > /dev/null; then
-        warn "anaconda not installed"
-    fi
-}
-
-cpp_check() {
-    cmd_check cmake scons cppcheck clang++
-
-    is_linux && cmd_check g++
-    is_ubuntu && cmd_check ninja bear clang-format clang-tidy
-    is_mac && cmd_check ninja bear
-}
 
 git_check() {
     cmd_check git git-extras
@@ -1552,8 +1136,6 @@ git_check() {
 }
 
 post_installer_check() {
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
     export PATH="$HOME/.local/bin:$PATH"
 
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
@@ -1568,8 +1150,6 @@ post_installer_check() {
     [ -n "$ZSH" ] && zsh_check
     [ -n "$BASH" ] && bash_check
 
-    [ -n "$EMACS" ] && emacs_check
-    [ -n "$ATOM" ] && atom_check
     [ -n "$VSCODE" ] && vscode_check
 
     [ -n "$GIT" ] && git_check
@@ -1577,11 +1157,7 @@ post_installer_check() {
     [ -n "$JAVA" ] && java_check
     [ -n "$CLOJURE" ] && clojure_check
     [ -n "$SCALA" ] && scala_check
-
     [ -n "$WEB" ] && web_check
-    [ -n "$CPP" ] && cpp_check
-    [ -n "$PYTHON" ] && python_check
-    [ -n "$HASKELL" ] && haskell_check
 }
 
 curdir=$(pwd)

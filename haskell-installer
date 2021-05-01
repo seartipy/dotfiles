@@ -1,0 +1,43 @@
+#! /usr/bin/env bash
+
+{
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+haskell_install() {
+    slog "Installing stack"
+    curl -sSL https://get.haskellstack.org/ | sh
+
+    slog "Installing stack packages"
+    stack setup
+    stackexei alex
+    stackexei happy
+    stackexei hlint
+    # stackexei structured-haskell-mode
+    stackexei stylish-haskell
+    stackexei hasktags
+    stackexei hindent
+    stackexei hdevtools
+    # stackexei ghc-mod
+    # stackexei ghci-ng
+    stackexei apply-refact
+    stackexei hoogle
+    stackexei intero
+    # ihaskell_install
+}
+
+fresh_haskell() {
+    if [ -n "$HASKELL" ]; then
+        srm ~/.ghc
+        srm ~/.stack
+        srm ~/.cabal
+    fi
+}
+
+haskell_check() {
+    cmd_check alex happy hlint stylish-haskell hasktags hindent hdevtools hoogle intero
+}
+
+}

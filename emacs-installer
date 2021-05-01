@@ -1,0 +1,90 @@
+#! /usr/bin/env bash
+
+{
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+# drop emacs-mac, normal emacs works better with emacsclient
+emacs_mac_install() {
+    is_mac || return 1
+
+    slog "Installing emacs packages"
+    # brew tap d12frosted/emacs-plus
+    # brew install emacs-plus
+    brew cask install emacs
+    brew install editorconfig
+    brew install discount
+    # TODO : ctags
+    brew install aspell
+
+    # slog "Trashing /Applications/Emacs.app(if exists)"
+    # srm '/Applications/Emacs.app'
+
+    ## slog "Creating Emacs alias in /Applications"
+    ## make emacs available from spotlight
+    # osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-plus/Emacs.app" at POSIX file "/Applications"'
+
+    ## slog "Generating terminfo for terminal in emacs"
+    # local emacsversion=`ls -r /usr/local/Cellar/emacs-plus | head -1`
+    # tic -o ~/.terminfo /usr/local/Cellar/emacs-plus/${emacsversion}/share/emacs/${emacsversion}/etc/e/eterm-color.ti
+}
+
+emacs_ubuntu_install() {
+    is_ubuntu || return 1
+
+    slog "Installing emacs"
+    sudo apt-get install -y aspell aspell-en editorconfig exuberant-ctags discount
+
+    sudo apt-get install -y emacs
+}
+
+emacs_dotfiles() {
+    sclone  https://gitlab.com/seartipy/emacsd.git ~/seartipy/emacses/emacsd
+
+    [ -d "$HOME/seartipy/emacses/emacsd" ] || return 1
+
+
+    slog "Moving ~/.emacs.d to $BACKUP_DIR (if they exist) "
+    smv ~/.emacs.d $BACKUP_DIR
+
+    slog "Linking ~/seartipy/emacses/emacsd as ~/.emacs.d"
+    sln ~/seartipy/emacses/emacsd ~/.emacs.d
+
+    slog "Copying ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el to ~/.emacs-pre-local.el"
+    scopy ~/seartipy/emacses/emacsd/templates/emacs-pre-local.el ~/.emacs-pre-local.el
+}
+
+emacs_install() {
+    emacs_mac_install
+    emacs_ubuntu_install
+
+    emacs_dotfiles
+}
+
+fresh_emacs() {
+    if [ -n "$EMACS" ]; then
+        srm ~/.emacs.d
+        srm ~/seartipy/emacses
+        srm "/Applications/Emacs.app alias"
+        rm -rf ~/.emacs.d/.cask
+    fi
+}
+
+emacs_check() {
+    cmd_check emacs aspell markdown
+    cmd_check editorconfig
+    is_linux && cmd_check ctags
+
+    ln_check  ~/seartipy/emacses/emacsd ~/.emacs.d
+}
+
+create_dirs() {
+    setup_backup_dir
+    smd ~/seartipy/emacses
+    smd ~/seartipy/vendors
+    smd ~/bin
+}
+
+}

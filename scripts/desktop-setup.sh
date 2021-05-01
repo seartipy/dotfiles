@@ -1,6 +1,9 @@
 #! /bin/bash
 {
-source "$HOME/seartipy/dotfiles/scripts/utils.sh"
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
 
 #
 # GNOME

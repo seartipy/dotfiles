@@ -2,7 +2,7 @@
 
 {
 
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 source "$DOTFILES_DIR/scripts/utils.sh"
 
@@ -38,6 +38,11 @@ atom_check() {
     has_cmd apm || return 1
 
     apm_check linter linter-ui-default Hydrogen atom-python-test jumpy
+}
+
+installer() {
+    atom_install
+    atom_check
 }
 
 curdir=$(pwd)

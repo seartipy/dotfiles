@@ -2,59 +2,38 @@
 
 {
 
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 source "$DOTFILES_DIR/scripts/utils.sh"
 
-#
 # essential
 
-ubuntu_update() {
-    slog "Updating ubuntu"
-    if ! sudo apt-get update; then
-        err_exit "apt-get update failed, quitting"
+fedora_update() {
+    slog "Updating fedora"
+    if ! sudo dnf update -y; then
+        err_exit "dnf update failed, quitting"
     fi
 }
 
-ubuntu_upgrade() {
+fedora_upgrade() {
     slog "Upgrading packages"
-    if ! sudo apt-get upgrade -y; then
-        err_exit "apt-get upgrade failed, quitting"
+    if ! sudo dnf upgrade -y; then
+        err_exit "dnf upgrade failed, quitting"
     fi
 }
 
-essential_install() {
-    pre_cmd_check apt-get
+essential_fedora_install() {
+    pre_cmd_check dnf
 
-    sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
-    pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
-
-    ubuntu_update
-    ubuntu_upgrade
+    fedora_update
+    fedora_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip fzf
-    sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
-    sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
-    sudo apt-get install -y urlview ubuntu-make exfat-utils
-    sudo apt-get install -y exfat-fuse python-is-python3
-
-    dotfiles_install
-    zsh_install
-    bash_install
-    git_install
+    sudo dnf install -y curl wget git trash-cli tree xsel xclip fzf
+    sudo dnf install -y the_silver_searcher p7zip dconf
+    sudo dnf install -y tmux unar unzip pkg-config zip gawk urlview
 }
 
-#
-# cleanup
-
-cleanup() {
-    sudo apt-get clean
-    sudo apt-get autoclean
-    sudo apt-get autoremove -y
-}
-
-#
 # dotfiles
 
 clone_dotfiles() {
@@ -82,7 +61,6 @@ dotfiles_install() {
     tmux_dotfiles
 }
 
-#
 # bash
 
 linux_bash_dotfiles() {
@@ -103,8 +81,12 @@ bash_install() {
     sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
 }
 
-#
 # zsh
+
+zsh_fedora_install() {
+    slog "Installing zsh"
+    sudo dnf install -y zsh ShellCheck
+}
 
 zsh_dotfiles() {
     [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
@@ -123,40 +105,40 @@ zsh_dotfiles() {
 }
 
 zsh_install() {
-    slog "Installing zsh"
-    sudo apt-get install -y zsh
-    sudo apt-get install -y shellcheck
-
+    zsh_fedora_install
     zsh_dotfiles
 
     sclone https://github.com/tarjoilija/zgen.git ~/.zgen
 }
 
-#
 # git
 
 git_install() {
-
     slog "Installing git"
-    sudo apt-get install -y git-extras git
+    sudo dnf install -y git-extras git
 
     scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
 }
 
-#
 # java
 
 java_install() {
-    has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
-
     slog "Installing Java"
-    sudo apt-get install -y default-8-jdk default-8-doc
+    sudo dnf install -y java-latest-openjdk java-latest-openjdk-src java-latest-openjdk-devel java-latest-openjdk-javadoc
 }
 
-#
+# all essential install
+essential_install() {
+    essential_fedora_install
+    dotfiles_install
+    bash_install
+    zsh_install
+    git_install
+}
+
 # clojure
 
-linux_lein_install() {
+lein_install() {
     has_cmd ~/bin/lein && return 1
 
     slog "Installing leiningen"
@@ -166,20 +148,18 @@ linux_lein_install() {
 
 clojure_install() {
     java_install
-    linux_lein_install
+    lein_install
 }
 
-#
 # scala
 
 scala_install() {
+    has_cmd coursier && return 1
     java_install
     slog "Install scala"
-
     curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
 }
 
-#
 # web
 
 nvm_install() {
@@ -188,7 +168,7 @@ nvm_install() {
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -201,22 +181,29 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi yarn bash-language-server @microsoft/rush pnpm npm-check-updates
-
-    if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
-        echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
-    fi
+    npmi  bash-language-server yarn @microsoft/rush pnpm npm-check-updates
 }
 
-#
 # c++
 
 cpp_install() {
     slog "Installing C++"
-    sudo apt-get install -y clang libclang-dev libc++-dev libc++abi-dev libboost-all-dev g++ cppcheck scons cmake bear clang-format clang-tidy ninja-build lldb
+    sudo dnf install -y gcc g++ clang clang-devel clang-libs clang-analyzer cmake boost cppcheck lldb clang-tools-extra bear
 }
 
-#
+# vscode
+
+vscode_install() {
+    has_cmd code && return 1
+
+    if ! [ -f /etc/yum.repos.d/vscode.repo ]; then
+        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+        sudo dnf check-update -y
+    fi
+    sudo dnf install -y code
+}
+
 # installer
 
 select_everything() {
@@ -224,7 +211,9 @@ select_everything() {
 
     SCALA="scala"
     CLOJURE="clojure"
+
     WEB="web"
+    VSCODE="vscode"
     CPP="cpp"
 }
 
@@ -235,6 +224,10 @@ script_options() {
         case $1 in
             essential)
                 ESSENTIAL="essential"
+                shift
+                ;;
+            noessential)
+                ESSENTIAL=""
                 shift
                 ;;
             clojure)
@@ -249,8 +242,8 @@ script_options() {
                 WEB="web"
                 shift
                 ;;
-            noessential)
-                ESSENTIAL=""
+            vscode)
+                VSCODE="vscode"
                 shift
                 ;;
             diagnostics)
@@ -305,6 +298,7 @@ install_all() {
     [ -n "$CLOJURE" ] && clojure_install
     [ -n "$SCALA" ] && scala_install
     [ -n "$WEB" ] && web_install
+    [ -n "$VSCODE" ] && vscode_install
     [ -n "$CPP" ] && cpp_install
 }
 
@@ -316,44 +310,21 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $CPP"
+    echo "Installing $SCALA $WEB $VSCODE $CLOJURE $CPP"
 
     [ -n "$ESSENTIAL" ] && essential_install
 
     pre_installer_check
-
     install_all
-
-    if [ -n "$ZSH" ]; then
-        echo "Set zsh as your default shell(this sometimes fails)"
-        chsh -s /bin/zsh
-    fi
-
-    cleanup
-
     post_installer_check
 
     echo "Installation done!"
 }
 
-#
 # diagnostics
 
 pre_installer_check() {
-    pre_cmd_check git curl wget unzip
-    pre_cmd_check trash-put
-    pre_dir_check "$BACKUP_DIR" ~/bin
-}
-
-essential_check() {
-    cmd_check curl wget git tree ag fzf gpg tmux unar zip gawk urlview
-
-    cmd_check p7zip dconf xsel xclip trash-put
-    cmd_check umake
-    dotfiles_check
-    bash_check
-    zsh_check
-    git_check    
+    pre_cmd_check git curl wget unzip trash
 }
 
 dotfiles_check() {
@@ -380,16 +351,23 @@ bash_check() {
     dir_check ~/.liquidprompt
 }
 
-scala_check() {
-    cmd_check javac sbt scala amm
+essential_check() {
+    cmd_check curl wget git tree ag fzf gpg tmux unar zip gawk urlview
+    cmd_check 7za dconf xsel xclip
 
-    ln_check ~/seartipy/dotfiles/sbt-plugins.sbt ~/.sbt/1.0/plugins/plugins.sbt
-    ln_check ~/seartipy/dotfiles/sbt-global.sbt ~/.sbt/1.0/global.sbt
+    bash_check
+    zsh_check
+    dotfiles_check
+    git_check
+}
+
+scala_check() {
+    has_cmd javac java
+    cmd_check javac sbt scala amm
 }
 
 clojure_check() {
     cmd_check javac lein
-    ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
 }
 
 web_check() {
@@ -398,22 +376,22 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check yarn bash-language-server ncu pnpm rush
-
-    if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
-        warn "max user watches not set properly in /etc/sysctl.conf"
-    fi
+    cmd_check yarn bash-language-server pnpm rush
 }
 
 cpp_check() {
-    cmd_check cmake scons cppcheck clang++ g++
-    cmd_check ninja bear clang-format clang-tidy
+    cmd_check cmake cppcheck clang++ g++ bear clang-format clang-tidy
 }
 
 git_check() {
     cmd_check git git-extras
 
     file_check ~/.gitconfig
+}
+
+vscode_check() {
+    has_cmd code
+    file_check /etc/yum.repos.d/vscode.repo
 }
 
 post_installer_check() {
@@ -423,21 +401,22 @@ post_installer_check() {
 
     [ -n "$CLOJURE" ] && clojure_check
     [ -n "$SCALA" ] && scala_check
+
     [ -n "$WEB" ] && web_check
+    [ -n "$VSCODE" ] && vscode_check
     [ -n "$CPP" ] && cpp_check
 }
 
-is_ubuntu || err_exit "code not installed. First install visual studio code"
-
 curdir=$(pwd)
 
-trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
 
 keep_sudo_running
 
 create_dirs
 
 export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/share/coursier/bin:$PATH"
 
 if [[ $- = *i* ]]; then
     slog "Running pre installer check..."

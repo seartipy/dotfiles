@@ -2,7 +2,7 @@
 
 {
 
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 source "$DOTFILES_DIR/scripts/utils.sh"
 
@@ -86,5 +86,29 @@ create_dirs() {
     smd ~/seartipy/vendors
     smd ~/bin
 }
+
+installer() {
+    create_dirs
+    emacs_install
+    emacs_check
+}
+
+curdir=$(pwd)
+
+if is_ubuntu; then
+    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+else
+    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
+fi
+
+keep_sudo_running
+
+export PATH="$HOME/bin:$PATH"
+
+pre_installer_check
+
+installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
+
+cd "$curdir"
 
 }

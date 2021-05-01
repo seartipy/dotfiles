@@ -181,7 +181,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi  bash-language-server yarn @microsoft/rush pnpm npm-check-updates
+    npi  bash-language-server yarn @microsoft/rush pnpm npm-check-updates
 }
 
 # c++

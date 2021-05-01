@@ -82,8 +82,7 @@ emacs_check() {
 
 create_dirs() {
     setup_backup_dir
-    smd ~/seartipy/emacses
-    smd ~/seartipy/vendors
+    smd ~/seartipy/emacses    
     smd ~/bin
 }
 

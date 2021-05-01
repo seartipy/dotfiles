@@ -201,7 +201,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi yarn bash-language-server @microsoft/rush pnpm npm-check-updates
+    npi yarn bash-language-server @microsoft/rush pnpm npm-check-updates
 
     if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p

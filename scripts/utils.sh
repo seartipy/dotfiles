@@ -33,6 +33,10 @@ is_ubuntu() {
     [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
 }
 
+is_fedora() {
+    cat /etc/os-release | grep "^ID=fedora$" > /dev/null
+}
+
 is_linux() {
     [ "$OSTYPE" == "linux-gnu" ]
 }
@@ -274,7 +278,7 @@ stackexei() {
     done
 }
 
-npmi() {
+npi() {
     has_cmd npm || return 1
 
     for p in "$@"; do
@@ -328,5 +332,5 @@ pre_installer_check() {
     else
         pre_cmd_check trash
     fi
-    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/seartipy/vendors ~/bin
+    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/bin
 }

@@ -392,29 +392,11 @@ clojure_mac_install() {
     brew install leiningen
 }
 
-lein_dotfiles() {
-    [ -f ~/seartipy/dotfiles/lein-profiles.clj ] || return 1
-
-    slog "Moving ~/.lein/profiles.clj to $BACKUP_DIR (if exists)"
-    smv ~/.lein/profiles.clj $BACKUP_DIR
-
-    smd ~/.lein
-
-    slog "Linking ~/seartipy/dotfiles/lein-profiles.clj as ~/.lein/profiles.clj"
-    sln ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
-}
-
-clojure_dotfiles() {
-    lein_dotfiles
-}
-
 clojure_install() {
     jdk_install
 
     clojure_mac_install
     linux_lein_install
-
-    clojure_dotfiles
 }
 
 #
@@ -750,8 +732,7 @@ scala_check() {
 }
 
 clojure_check() {
-    cmd_check javac lein
-    ln_check ~/seartipy/dotfiles/lein-profiles.clj ~/.lein/profiles.clj
+    cmd_check javac lein    
 }
 
 web_check() {

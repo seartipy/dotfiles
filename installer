@@ -234,28 +234,20 @@ zsh_mac_install() {
 }
 
 oh_my_zsh_install() {
-    dir_exists ~/.oh-my-zsh || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    
-    [ -f ~/seartipy/dotfiles/ohmyzsh-zshrc ] || return 1
+    sclone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 
-    slog "Moving ~/.zshrc to $BACKUP_DIR "
-    smv ~/.zshrc "$BACKUP_DIR"
+    sclone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+    sclone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
+    sclone https://github.com/denysdovhan/spaceship-prompt.git ~/.oh-my-zsh/themes/spaceship-prompt
 
-    sclone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    sclone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-    sclone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
+    sln "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
 
-    slog "Linking ~/seartipy/dotfiles/ohmyzsh-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/ohymzsh-zshrc ~/.zshrc
-
-    sln "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" 
+    slog "Linking ~/seartipy/dotfiles/oh-my-zsh-zshrc as ~/.zshrc"
+    sln ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
 }
 
-zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
-
-    slog "Moving ~/.zshrc to $BACKUP_DIR "
-    smv ~/.zshrc "$BACKUP_DIR"
+zgen_install() {
+    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
 
     slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
     sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
@@ -267,13 +259,24 @@ zsh_dotfiles() {
     scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
 }
 
+zsh_dotfiles() {
+    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
+
+    slog "Moving ~/.zshrc to $BACKUP_DIR "
+    smv ~/.zshrc "$BACKUP_DIR"
+
+    if [ -n "$ZGEN" ]; then
+        zgen_install
+    else
+        oh_my_zsh_install
+    fi
+}
+
 zsh_install() {
     zsh_ubuntu_install
     zsh_mac_install
 
     zsh_dotfiles
-
-    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
 }
 
 #
@@ -521,7 +524,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npmi yarn bash-language-server npm-check npm-check-updates lite-server
+    npi yarn bash-language-server npm-check npm-check-updates lite-server
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -572,6 +575,11 @@ script_options() {
                 ;;
             zsh)
                 ZSH="zsh"
+                shift
+                ;;
+            zgen)
+                zsh="zsh"
+                ZGEN="zgen"
                 shift
                 ;;
             bash)
@@ -667,8 +675,7 @@ script_options() {
 
 
 create_dirs() {
-    setup_backup_dir    
-    smd ~/seartipy/vendors
+    setup_backup_dir
     smd ~/bin
 }
 
@@ -696,7 +703,7 @@ installer() {
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ATOM $ZSH $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL"
+    echo "Installing $EMACS $VSCODE $ZSH $ZGEN $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL"
 
     [ -n "$ESSENTIAL" ] && essential_install
 
@@ -726,7 +733,7 @@ pre_installer_check() {
     else
         pre_cmd_check trash
     fi
-    pre_dir_check "$BACKUP_DIR" ~/seartipy/vendors ~/bin
+    pre_dir_check "$BACKUP_DIR" ~/bin
 }
 
 ppas_check() {
@@ -734,7 +741,6 @@ ppas_check() {
 
     ppa_check google-chrome
 
-    [ -n "$ATOM" ] && ppa_check 'AtomEditor'
     [ -n "$VSCODE" ] && ppa_check 'vscode'
     [ -n "$SCALA" ] && ppa_check 'sbt'
 
@@ -758,8 +764,12 @@ essential_ubuntu_check() {
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd bat fzf gpg tmux unar zip gawk urlview
-
+    cmd_check curl wget git tree ag fasd  fzf gpg tmux unar zip gawk urlview
+    if is_ubuntu; then
+        cmd_check batcat
+    else
+        cmd_check bat
+    fi
     essential_mac_check
     essential_ubuntu_check
 }
@@ -773,10 +783,21 @@ dotfiles_check() {
 zsh_check() {
     cmd_check zsh shellcheck
 
-    ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-    dir_check ~/.zgen
-    file_check ~/.zgen-options-local.sh
-    file_check ~/.zshrc-pre-local.sh
+    if [ -n "$ZGEN" ]; then 
+        ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+        dir_check ~/.zgen
+        file_check ~/.zgen-options-local.sh
+        file_check ~/.zshrc-pre-local.sh
+    else
+        dir_check ~/.oh-my-zsh
+        dir_check ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+        dir_check ~/.oh-my-zsh/plugins/zsh-autosuggestions
+        dir_check ~/.oh-my-zsh/themes/spaceship-prompt
+
+        ln_check ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/themes/spaceship.zsh-theme        
+        ln_check ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
+
+    fi
 }
 
 bash_check() {

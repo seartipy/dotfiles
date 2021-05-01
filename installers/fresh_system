@@ -1,0 +1,55 @@
+#! /usr/bin/env bash
+
+{
+
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+source "$DOTFILES_DIR/scripts/utils.sh"
+
+fresh_ppas() {
+    is_ubuntu || return 1
+    has_cmd trash-put || err_exit "no trash-put, cannot reset, quitting"
+    is_linux && sudo trash-put /etc/apt/sources.list.d/* 2> /dev/null
+}
+
+fresh_install() {
+    if [ -n "$DOTFILES" ]; then
+        srm ~/seartipy/dotfiles
+        srm ~/.tmux.conf
+    fi
+
+    if [ -n "$ZSH" ]; then
+        srm ~/.zshrc
+        srm ~/.zgen
+    fi
+
+    if [ -n "$BASH" ]; then
+        srm ~/.bash_profile
+        srm ~/.liquidprompt
+    fi
+
+    if [ -n "$SCALA" ]; then
+        srm ~/.sbt
+        srm ~/.ivy2
+    fi
+
+    if [ -n "$VSCODE" ]; then
+        srm ~/.vscode
+    fi
+
+    if [ -n "$CLOJURE" ]; then
+        srm ~/.len
+        srm ~/.m2
+    fi
+
+    if [ -n "$WEB" ]; then
+        srm ~/.npm
+        srm ~/.nvm
+        srm ~/.node-gyp
+    fi
+
+}
+
+fresh_install
+
+}

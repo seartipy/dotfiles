@@ -102,6 +102,10 @@ sclone() {
     fi
 }
 
+mclone() {
+    sclone "$@" --depth=1
+}
+
 fclone() {
     local dest=${*: -1}
     local src=${*: -2:1}

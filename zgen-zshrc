@@ -62,6 +62,8 @@ if ! zgen saved; then
     zgen load unixorn/git-extra-commands
     zgen load paulirish/git-open
 
+    # zgen load denysdovhan/spaceship-prompt spaceship
+
     [ -s ~/.zgen-plugins-local.sh ] || touch ~/.zgen-plugins-local.sh
     source ~/.zgen-plugins-local.sh
 

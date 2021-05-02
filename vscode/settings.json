@@ -1,0 +1,211 @@
+{
+  "workbench.activityBar.visible": true,
+  "workbench.colorTheme": "Material Theme High Contrast",
+  "workbench.commandPalette.preserveInput": true,
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.showTabs": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.settings.editor": "ui",
+  "workbench.settings.openDefaultKeybindings": false,
+  "workbench.settings.openDefaultSettings": false,
+  "workbench.sideBar.location": "left",
+  "workbench.startupEditor": "newUntitledFile",
+  // "workbench.activityBar.visible": false
+
+  "editor.acceptSuggestionOnEnter": "smart",
+  "editor.autoIndent": "full",
+  "editor.emptySelectionClipboard": false,
+  "editor.find.autoFindInSelection": "never",
+  "editor.folding": true,
+  "editor.fontFamily": "'Cascadia Mono', 'FiraCode-Retina', 'Fira Code', Hack, 'Source Code Pro', 'Roboto Mono', Monaco, 'Ubuntu Mono', Consolas, mononoki, 'Fira Code', Hack,  'Source Code Pro',  'Courier New', 'Dejavu Sans Mono', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.glyphMargin": true,
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.lineNumbers": "on",
+  "editor.matchBrackets": "never",
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelZoom": true,
+  "editor.multiCursorModifier": "alt",
+  "editor.parameterHints.cycle": true,
+  "editor.renderIndentGuides": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80],
+  "editor.smoothScrolling": true,
+  "editor.snippetSuggestions": "none",
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+
+  "files.associations": { "*.md": "mdx" },
+  "files.autoSave": "onFocusChange",
+  "files.exclude": { "USE_GITIGNORE": true },
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  "window.newWindowDimensions": "inherit",
+  "window.restoreFullscreen": true,
+  "window.restoreWindows": "one",
+  "window.zoomLevel": 0,
+
+  "search.exclude": {
+    "**/.build": true,
+    "**/.cache": true,
+    "**/.gh-pages": true,
+    "**/bower_components": true,
+    "**/coverage": true,
+    "**/dist": true,
+    "**/node_modules": true
+  },
+
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "plaintext": "jade",
+    "vue-html": "html"
+  },
+  "emmet.syntaxProfiles": {
+    "javascript": "html"
+  },
+  "emmet.triggerExpansionOnTab": true,
+
+  "javascript.format.semicolons": "remove",
+  "javascript.implicitProjectConfig.checkJs": true,
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "javascript.suggest.completeFunctionCalls": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.format.semicolons": "remove",
+  "typescript.suggest.completeFunctionCalls": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+
+  "prettier.singleQuote": true,
+  // "prettier.bracketSpacing": false,
+  // "prettier.printWidth": 80,
+  // "prettier.tabWidth": 2,
+  // "prettier.trailingComma": "all",
+  // "prettier.jsxBracketSameLine": false,
+  // "prettier.semi": false,
+  // "prettier.useTabs": false,
+  // "prettier.proseWrap": "always",
+
+  // "local-history.absolute": true,
+  // "local-history.path": ".vscode-history",
+
+  "clang.cxxflags": ["-std=c++17"],
+
+  "explorer.compactFolders": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.openEditors.visible": 0,
+
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+
+  "cSpell.userWords": ["bulma", "immer", "tcomb"],
+  "extensions.autoUpdate": true,
+  "problems.showCurrentInStatus": true,
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.rendererType": "experimentalWebgl",
+
+  "todo-tree.defaultHighlight": {
+    "foreground": "green",
+    "type": "none"
+  },
+  "todo-tree.customHighlight": {
+    "TODO": {},
+    "FIXME": {}
+  },
+
+  "ActiveFileInStatusBar.fullpath": true,
+
+  "breadcrumbs.enabled": true,
+  "breadcrumbs.filePath": "on",
+
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "liveshare.featureSet": "stable",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "c",
+    "cpp",
+    "csharp",
+    "css",
+    "git-commit",
+    "go",
+    "handlebars",
+    "haskell",
+    "html",
+    "jade",
+    "java",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "latex",
+    "less",
+    "markdown",
+    "php",
+    "plaintext",
+    "pug",
+    "python",
+    "restructuredtext",
+    "rust",
+    "scala",
+    "scss",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "yaml",
+    "yml"
+  ]
+
+  // "amVim.bindCtrlCommands": false,
+  // "amVim.mimicVimSearchBehavior": false,
+  // "amVim.smartRelativeLineNumbers": true,
+  // "amVim.startInInsertMode": true,
+  // "amVim.vimStyleNavigationInListView": false
+
+  // egghead
+  /*
+  "window.zoomLevel": 1.3,
+  "scm.diffDecorations": "none",
+  "editor.folding": false,
+  "editor.glyphMargin": false,
+  "editor.lineNumbers": "off",
+  "workbench.editor.showTabs": false,
+  "workbench.statusBar.visible": false,
+  "editor.cursorBlinking": "solid",
+  "breadcrumbs.enabled": false
+  /**/
+  // workshop
+  /*
+  "window.zoomLevel": 1.3,
+  "scm.diffDecorations": "none",
+  "editor.folding": false,
+  "editor.glyphMargin": false,
+  "editor.lineNumbers": "off",
+  "workbench.statusBar.visible": false,
+  "editor.cursorBlinking": "solid"
+  /**/
+}

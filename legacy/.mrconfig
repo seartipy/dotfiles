@@ -1,0 +1,30 @@
+
+[seartipy/dotfiles]
+checkout = git clone 'https://gitlab.com/seartipy/dotfiles.git' 'dotfiles'
+
+[seartipy/emacses/emacsd]
+checkout = git clone 'https://pervezfunctor@gitlab.com/seartipy/emacsd.git' 'emacsd'
+
+[seartipy/lean-dotfiles]
+checkout = git clone 'https://gitlab.com/seartipy/lean-dotfiles.git' 'lean-dotfiles'
+
+[seartipy/dotdotfiles]
+checkout = git clone 'https://gitlab.com/pervezfunctor/dotdotfiles.git' 'dotdotfiles'
+
+[programs/scala/scala-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/scala-starter' 'scala-starter'
+
+[programs/clojure/clj-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/clj-starter' 'clj-starter'
+
+[programs/web/es6-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/es6-starter.git' 'es6-starter'
+
+[programs/web/ts-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/ts-starter.git' 'ts-starter'
+
+[programs/web/node-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/node-starter' 'node-starter'
+
+[programs/web/flow-starter]
+checkout = git clone 'https://gitlab.com/pervezfunctor/flow-starter.git' 'flow-starter'

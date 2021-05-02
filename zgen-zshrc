@@ -1,10 +1,13 @@
 #! /bin/zsh
 
-[ -s ~/.zshrc-pre-local.sh ] && source ~/.zshrc-pre-local.sh
+SEARTIPY_TMUX=""
 
 [ -s ~/seartipy/dotfiles/shellrc ] && source ~/seartipy/dotfiles/shellrc
 
-[ -s ~/.zshrc-post-local.sh ] && source ~/.zshrc-post-local.sh
+export QT_SCALE_FACTOR=2
+
+alias sbt="TERM=xterm-color sbt"
+
 
 [[ $- == *i* ]] || return 0
 
@@ -13,7 +16,8 @@
 [ -s ~/.zgen/zgen.zsh ] || return 1
 
 ZGEN_PREZTO_LOAD_DEFAULT=false
-ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zgen-options-local.sh ${HOME}/.zgen-plugins-local.sh)
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)
+
 source ~/.zgen/zgen.zsh
 
 # check if there's no init script
@@ -30,8 +34,12 @@ if ! zgen saved; then
     zgen prezto syntax-highlighting color 'yes'
     zgen prezto syntax-highlighting highlighters 'main' 'brackets'
 
-    [ -s ~/.zgen-options-local.sh ] || touch ~/.zgen-options-local.sh
-    source ~/.zgen-options-local.sh
+    ZGEN_SYNTAX_HIGHLIGHTING="yes"
+    ZGEN_AUTO_SUGGESIONS="yes"
+
+    # select your prompt, if you have powerline patched fonts installed,
+    # and selected as terminal font, agnoster is a good option
+    zgen prezto prompt theme 'pure'
 
     # prezto and modules
     zgen prezto

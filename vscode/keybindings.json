@@ -1,0 +1,87 @@
+[
+  {
+    "key": "shift+alt+enter",
+    "command": "extension.aceJump",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "shift+enter",
+    "command": "extension.jumpy-word",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "Escape",
+    "command": "extension.jumpy-exit",
+    "when": "editorTextFocus && jumpy.isJumpyMode"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "workbench.action.quickSwitchWindow"
+  },
+  {
+    "key": "ctrl+=",
+    "command": "expand_region",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+=",
+    "command": "undo_expand_region",
+    "when": "editorTextFocus && editorHasSelection"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "workbench.action.quickOpenNavigateNext",
+    "when": "inWindowsPicker"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenRecent"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenNavigateNext",
+    "when": "inRecentFilesPicker"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "workbench.action.terminal.focusFindWidget",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+e",
+    "command": "emmet.expandAbbreviation",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+y left",
+    "command": "workbench.action.splitEditorLeft"
+  },
+  {
+    "key": "cmd+y down",
+    "command": "workbench.action.splitEditorDown"
+  },
+  {
+    "key": "cmd+y right",
+    "command": "workbench.action.splitEditorRight"
+  },
+  {
+    "key": "cmd+y up",
+    "command": "workbench.action.splitEditorUp"
+  },
+  {
+    "key": "ctrl+cmd+enter",
+    "command": "extension.jumpy-line"
+  },
+  {
+    "key": "ctrl+shift+down",
+    "command": "editor.emmet.action.balanceIn"
+  },
+  {
+    "key": "ctrl+shift+up",
+    "command": "editor.emmet.action.balanceOut"
+  },
+  {
+    "key": "shift+cmd+z",
+    "command": "-extension.vscode-git-automator.addAndCommitCurrentFile"
+  }
+]

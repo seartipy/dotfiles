@@ -141,6 +141,11 @@ git_install() {
     sudo apt-get install -y git-extras git
 
     scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
+
+    if [ "$USER" = "pervez"]; then
+        git config --global user.name "Pervez Iqbal"
+        git config --global user.email "pervezfunctor@gmail.com"
+    fi
 }
 
 #
@@ -353,7 +358,7 @@ essential_check() {
     dotfiles_check
     bash_check
     zsh_check
-    git_check    
+    git_check
 }
 
 dotfiles_check() {

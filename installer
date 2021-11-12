@@ -107,8 +107,8 @@ essential_mac_install() {
     brew install gawk
     brew install urlview
 
-    brew cask install iterm2
-    brew cask install google-chrome
+    brew install iterm2
+    brew install google-chrome
 }
 
 fasd_install() {
@@ -296,7 +296,7 @@ ubuntu_vscode_install() {
 mac_vscode_install() {
     is_mac || return 1
 
-    brew cask install visual-studio-code
+    brew install visual-studio-code
 }
 
 vscode_install() {
@@ -314,9 +314,9 @@ git_mac_install() {
 
     slog "Installing git packages"
     brew install git-extras
-    brew cask install smartgit
-    brew cask install github
-    brew cask install gitup
+    brew install smartgit
+    brew install github
+    brew install gitup
 }
 
 git_ubuntu_install() {
@@ -342,7 +342,7 @@ jdk_mac_install() {
 
     slog "Installing java"
     # java
-    brew cask install caskroom/versions/java8
+    brew install caskroom/versions/java8
 }
 
 jdk_ubuntu_install() {
@@ -755,7 +755,7 @@ web_check() {
 git_check() {
     cmd_check git git-extras
     is_ubuntu && cmd_check kdiff3
-    is_mac && brew_cask_check smartgit github
+    is_mac && brew_check smartgit github
 
     file_check ~/.gitconfig
 }

@@ -34,6 +34,8 @@ is_ubuntu() {
 }
 
 is_fedora() {
+    is_mac && return 1
+    
     cat /etc/os-release | grep "^ID=fedora$" > /dev/null 
 }
 

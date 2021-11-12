@@ -243,7 +243,7 @@ oh_my_zsh_install() {
     sclone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
     sclone https://github.com/denysdovhan/spaceship-prompt.git ~/.oh-my-zsh/themes/spaceship-prompt
 
-    sln "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+    sln ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/themes/spaceship.zsh-theme
 
     slog "Linking ~/seartipy/dotfiles/oh-my-zsh-zshrc as ~/.zshrc"
     sln ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
@@ -704,9 +704,8 @@ zsh_check() {
         dir_check ~/.oh-my-zsh/plugins/zsh-autosuggestions
         dir_check ~/.oh-my-zsh/themes/spaceship-prompt
 
-        ln_check ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/themes/spaceship.zsh-theme        
+        ln_check ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh ~/.oh-my-zsh/themes/spaceship.zsh-theme
         ln_check ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
-
     fi
 }
 

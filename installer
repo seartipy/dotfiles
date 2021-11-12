@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${CURRENT_DIR}/scripts/utils.sh"
+
 {
 
 #
@@ -66,7 +69,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y curl wget git trash-cli tree xsel xclip bat fzf
     sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
     sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
-    sudo apt-get install -y urlview ubuntu-make google-chrome-stable exfat-utils
+    sudo apt-get install -y urlview google-chrome-stable exfat-utils
     sudo apt-get install -y exfat-fuse zeal "linux-headers-$(uname -r)"
 
     is_ubuntu && sudo apt-get install -y firefox
@@ -158,7 +161,7 @@ clone_dotfiles() {
 
     pre_dir_check ~/seartipy/dotfiles
 
-    [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
+    # [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
 }
 
 tmux_dotfiles() {
@@ -667,7 +670,6 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put
-    is_ubuntu && cmd_check umake
     cmd_check google-chrome zeal firefox
 }
 

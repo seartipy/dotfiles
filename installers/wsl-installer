@@ -142,7 +142,7 @@ git_install() {
 
     scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
 
-    if [ "$USER" = "pervez"]; then
+    if [ "$USER" = "pervez" ]; then
         git config --global user.name "Pervez Iqbal"
         git config --global user.email "pervezfunctor@gmail.com"
     fi

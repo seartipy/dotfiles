@@ -34,7 +34,7 @@ plugins=(
     fzf
     command-not-found
     alias-finder
-    osx
+    macos
     compleat         
     brew
     common-aliases

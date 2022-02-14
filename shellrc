@@ -14,7 +14,7 @@ fi
 if is_mac; then
     JAVA_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
     export JAVA_HOME
-    
+
     JDK_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
     export JDK_HOME
 
@@ -39,6 +39,10 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
 export PATH="$HOME/bin:$PATH"
+
+if is_ubuntu; then
+    export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
 
 #node
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"

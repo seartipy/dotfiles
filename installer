@@ -73,6 +73,11 @@ essential_ubuntu_install() {
     sudo apt-get install -y exfat-fuse zeal "linux-headers-$(uname -r)"
 
     is_ubuntu && sudo apt-get install -y firefox
+
+    if ! has_cmd brew; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install gh
+    fi
 }
 
 essential_mac_install() {
@@ -107,6 +112,7 @@ essential_mac_install() {
     brew install pkg-config
     brew install gawk
     brew install urlview
+    brew install gh
 
     brew install iterm2
     brew install google-chrome
@@ -410,7 +416,7 @@ clojure_install() {
 scala_install() {
     has_cmd coursier && return 1
     jdk_install
-    
+
     slog "Install scala"
     curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
 }
@@ -662,7 +668,7 @@ ppas_check() {
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew trash 7z greadlink trash
+    cmd_check brew trash 7z greadlink trash gh
 }
 
 essential_ubuntu_check() {
@@ -670,7 +676,8 @@ essential_ubuntu_check() {
 
     ppas_check
 
-    cmd_check p7zip dconf xsel xclip trash-put
+    cmd_check p7zip dconf xsel xclip trash-put brew gh
+    is_ubuntu && cmd_check umake
     cmd_check google-chrome zeal firefox
 }
 
@@ -694,7 +701,7 @@ dotfiles_check() {
 zsh_check() {
     cmd_check zsh shellcheck
 
-    if [ -n "$ZGEN" ]; then 
+    if [ -n "$ZGEN" ]; then
         ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
         dir_check ~/.zgen
         file_check ~/.zgen-options-local.sh
@@ -734,7 +741,7 @@ scala_check() {
 }
 
 clojure_check() {
-    cmd_check javac lein    
+    cmd_check javac lein
 }
 
 web_check() {
@@ -763,6 +770,7 @@ git_check() {
 
 post_installer_check() {
     export PATH="$HOME/.local/bin:$PATH"
+    is_ubuntu && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 

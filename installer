@@ -57,7 +57,10 @@ ubuntu_upgrade() {
 essential_ubuntu_install() {
     is_ubuntu || return 1
     pre_cmd_check apt-get
-    sudo apt-get install -y software-properties-common apt-transport-https ca-certificates
+    sudo apt-get install -y software-properties-common
+    sudo apt-get install -y apt-transport-https
+    sudo apt-get install -y ca-certificates
+
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
     add_chrome_ppa
@@ -66,11 +69,31 @@ essential_ubuntu_install() {
     ubuntu_upgrade
 
     slog "Installing essential packages"
-    sudo apt-get install -y curl wget git trash-cli tree xsel xclip bat fzf
-    sudo apt-get install -y silversearcher-ag p7zip dconf-cli build-essential
-    sudo apt-get install -y tmux unar unzip libzmq3-dev pkg-config zip gawk
-    sudo apt-get install -y urlview google-chrome-stable exfat-utils
-    sudo apt-get install -y exfat-fuse zeal "linux-headers-$(uname -r)"
+    sudo apt-get install -y curl
+    sudo apt-get install -y wget
+    sudo apt-get install -y git
+    sudo apt-get install -y trash-cli
+    sudo apt-get install -y tree
+    sudo apt-get install -y xsel
+    sudo apt-get install -y xclip
+    sudo apt-get install -y bat
+    sudo apt-get install -y fzf
+    sudo apt-get install -y silversearcher-ag
+    sudo apt-get install -y p7zip
+    sudo apt-get install -y dconf-cli
+    sudo apt-get install -y build-essential
+    sudo apt-get install -y tmux
+    sudo apt-get install -y unar
+    sudo apt-get install -y unzip
+    sudo apt-get install -y libzmq3-dev
+    sudo apt-get install -y pkg-config
+    sudo apt-get install -y zip gawk
+    sudo apt-get install -y urlview
+    sudo apt-get install -y google-chrome-stable
+    sudo apt-get install -y exfat-utils
+    sudo apt-get install -y exfat-fuse zeal
+    sudo apt-get install -y "linux-headers-$(uname -r)"
+    sudo apt-get install -y gnome-keyring
 
     is_ubuntu && sudo apt-get install -y firefox
 
@@ -330,7 +353,8 @@ git_ubuntu_install() {
     is_ubuntu || return 1
 
     slog "Installing git"
-    sudo apt-get install -y git-extras git
+    sudo apt-get install -y git
+    sudo apt-get install -y git-extras
     sudo apt-get install -y kdiff3
 }
 
@@ -349,7 +373,7 @@ jdk_mac_install() {
 
     slog "Installing java"
     # java
-    brew install caskroom/versions/java8
+    brew install java
 }
 
 jdk_ubuntu_install() {
@@ -358,11 +382,15 @@ jdk_ubuntu_install() {
     is_ubuntu && ubuntu_update
 
     slog "Installing Java"
-    is_ubuntu && sudo apt-get install -y openjdk-8-jdk openjdk-8-doc openjdk-8-source
+    if is_ubuntu; then
+        sudo apt-get install -y default-jdk
+        sudo apt-get install -y default-jdk-doc
+    fi
 }
 
 jdk_install() {
-    has_cmd javac && javac -version 2>&1 | grep "1.8" > /dev/null && return 0
+    has_cmd javac
+    # javac -version 2>&1 | grep "1.8" > /dev/null && return 0
 
     jdk_mac_install
     jdk_ubuntu_install

@@ -26,16 +26,16 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
     dirhistory
     history-substring-search
-    git 
-    fasd 
     git
-    git-extras 
+    fasd
+    git
+    git-extras
     tmux
     fzf
     command-not-found
     alias-finder
     macos
-    compleat         
+    compleat
     brew
     common-aliases
     node
@@ -52,3 +52,30 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+
+alias g='git'
+alias gst="git status"
+alias gsu="git status -u"
+alias gcan="git commit --amend --no-edit"
+alias gsa='git stash apply'
+alias gfm='git pull'
+alias gp='git push'
+alias gcm='git commit --message'
+alias gia='git add'
+alias gl='git log --topo-order --pretty=format:"$_git_log_medium_format"'
+alias gco='git checkout'
+alias gb='git branch'
+alias gbc='git checkout -b'
+alias gbc='git checkout -b'
+alias gsl='git stash list'
+
+alias n='pnpm'
+alias ni='pnpm install'
+alias ne='pnpm exec'
+alias nd='pnpm dev'
+alias nt='pnpm types'
+alias nc='pnpm ci'
+alias ntt='pnpm test'
+alias Gcm="git commit --no-verify -m"
+alias Gp="gp --no-verify"
+alias Gcan="gcan --no-verify"

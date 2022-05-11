@@ -706,7 +706,6 @@ essential_ubuntu_check() {
     ppas_check
 
     cmd_check p7zip dconf xsel xclip trash-put brew gh
-    is_ubuntu && cmd_check umake
     cmd_check google-chrome zeal firefox
 }
 

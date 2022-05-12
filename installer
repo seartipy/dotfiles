@@ -6,40 +6,12 @@ source "${CURRENT_DIR}/scripts/utils.sh"
 {
 
 #
-# PPAs
-
-add_chrome_ppa() {
-    is_ubuntu || return 1
-    ppa_exists google-chrome && return 0
-
-    slog "Adding google chrome ppa"
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-}
-
-add_vscode_ppa() {
-    is_ubuntu || return 1
-    ppa_exists 'vscode' && return 0
-
-    sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-}
-
-add_sbt_ppa() {
-    is_ubuntu || return 1
-    ppa_exists 'sbt' && return 0
-
-    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt.list > /dev/null
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-}
-
-#
 # essential
 
 ubuntu_update() {
     is_ubuntu || return 1
 
-    slog "Updating ubuntu"
+    slog "Updating ubuntu packages"
     if ! sudo apt-get update; then
         err_exit "apt-get update failed, quitting"
     fi
@@ -48,28 +20,60 @@ ubuntu_update() {
 ubuntu_upgrade() {
     is_ubuntu || return 1
 
-    slog "Upgrading packages"
+    slog "Upgrading ubuntu packages"
     if ! sudo apt-get upgrade -y; then
         err_exit "apt-get upgrade failed, quitting"
     fi
 }
 
+deb_get_install() {
+    slog "Installing deb-get"
+    has_cmd deb-get || return 0
+
+    curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get
+
+    sudo deb-get install gh
+
+    is_gui || return 1
+
+    # sudo deb-get install insomnia
+    # sudo deb-get install zoom
+}
+
+linux_brew_install() {
+    slog "Installing homebrew(linux)"
+
+    if ! has_cmd brew; then
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+}
+
+is_gui() {
+    [[ -n "$GUI" ]]
+}
+
 essential_ubuntu_install() {
     is_ubuntu || return 1
     pre_cmd_check apt-get
+
     sudo apt-get install -y software-properties-common
     sudo apt-get install -y apt-transport-https
     sudo apt-get install -y ca-certificates
 
     pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
 
-    add_chrome_ppa
-
     ubuntu_update
     ubuntu_upgrade
 
-    slog "Installing essential packages"
     sudo apt-get install -y curl
+    pre_cmd_check curl
+
+    deb_get_install
+    linux_brew_install
+    pre_cmd_check brew deb-get
+
+    slog "Installing essential packages"
     sudo apt-get install -y wget
     sudo apt-get install -y git
     sudo apt-get install -y trash-cli
@@ -79,6 +83,7 @@ essential_ubuntu_install() {
     sudo apt-get install -y bat
     sudo apt-get install -y fzf
     sudo apt-get install -y silversearcher-ag
+    sudo apt-get install -y ripgrep
     sudo apt-get install -y p7zip
     sudo apt-get install -y dconf-cli
     sudo apt-get install -y build-essential
@@ -87,32 +92,33 @@ essential_ubuntu_install() {
     sudo apt-get install -y unzip
     sudo apt-get install -y libzmq3-dev
     sudo apt-get install -y pkg-config
-    sudo apt-get install -y zip gawk
+    sudo apt-get install -y zip
+    sudo apt-get install -y gawk
     sudo apt-get install -y urlview
-    sudo apt-get install -y google-chrome-stable
-    sudo apt-get install -y exfat-utils
-    sudo apt-get install -y exfat-fuse
-    sudo apt-get install -y zeal
     sudo apt-get install -y "linux-headers-$(uname -r)"
     sudo apt-get install -y gnome-keyring
+    sudo apt-get install -y fasd
+    sudo apt-get install -y fonts-cascadia-code
 
-    is_ubuntu && sudo apt-get install -y firefox
+    is_gui || return 1
 
-    if ! has_cmd brew; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install gh
-    fi
+    sudo apt-get install -y firefox
+    sudo apt-get install -y exfat-utils
+    sudo apt-get install -y exfat-fuse
+
+    sudo deb-get install google-chrome-stable
 }
 
 essential_mac_install() {
     is_mac || return 1
 
-    if ! has_cmd brew; then
-        pre_cmd_check ruby
+    slog "Installing rosetta"
+    softwareupdate --rosetta --agree-to-license
 
+    if ! has_cmd brew; then
         slog "Installing homebrew"
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	eval "$(/opt/homebrew/bin/brew shellenv)"
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
     pre_cmd_check brew
@@ -120,6 +126,7 @@ essential_mac_install() {
     slog "Upgrading brew packages"
     brew update && brew upgrade
 
+    slog "Installing brew packages"
     brew install wget
     brew install trash
     brew install tree
@@ -129,6 +136,7 @@ essential_mac_install() {
     brew install unar
     brew install p7zip
     brew install the_silver_searcher
+    brew install ripgrep
     brew install coreutils
     brew install tmux
     brew install gpg
@@ -142,23 +150,56 @@ essential_mac_install() {
     brew install google-chrome
 }
 
-fasd_install() {
-    is_linux || return 1
-    has_cmd fasd && return 0
 
-    slog "Installing fasd"
-    if fclone https://github.com/clvv/fasd.git /tmp/seartipy-installer-fasd; then
-        cd /tmp/seartipy-installer-fasd && PREFIX=$HOME make install
-        cd
-        rm -rf /tmp/seartipy-installer-fasd
-    fi
+docker_ubuntu_install() {
+    slog "Installing docker"
+    is_ubuntu || return 1
+
+    sudo deb-get install docker-ce
+    sudo deb-get install docker-desktop
+}
+
+docker_mac_install() {
+    slog "Installing docker"
+    is_mac || return 1
+
+    brew install docker
+}
+
+docker_install() {
+    docker_ubuntu_install()
+    docker_mac_install()
+}
+
+brew_packages_install() {
+    brew install lsd
+    brew install duf
+    brew install git-delta
+    brew install broot
+    brew install fd
+    brew install bottom
+    brew install procs
+
+    # brew install hyperfine
+    # brew install httpie
+    # brew install curlie
+    # brew install fzf
+    # brew install tldr
+    # brew install exa
+    # brew install glances
+    # brew install xh
+    # brew install zoxide
+    # brew install gtop
+    # brew install jq
 }
 
 essential_install() {
     essential_ubuntu_install
     essential_mac_install
 
-    fasd_install
+    docker_install
+
+    brew_packages_install
 }
 
 #
@@ -191,8 +232,6 @@ clone_dotfiles() {
     [ -d ~/seartipy/dotfiles ] || return 1
 
     pre_dir_check ~/seartipy/dotfiles
-
-    # [ -n "$SEARTIPY" ] && cd ~/seartipy/dotfiles && git checkout develop && cd || return 1
 }
 
 tmux_dotfiles() {
@@ -319,9 +358,7 @@ zsh_install() {
 ubuntu_vscode_install() {
     is_ubuntu || return 1
 
-    add_vscode_ppa
-    ubuntu_update
-    sudo apt-get install -y code
+    sudo deb-get install code
 }
 
 mac_vscode_install() {
@@ -333,8 +370,6 @@ mac_vscode_install() {
 vscode_install() {
     ubuntu_vscode_install
     mac_vscode_install
-    has_cmd code || return 1
-
 }
 
 #
@@ -345,6 +380,8 @@ git_mac_install() {
 
     slog "Installing git packages"
     brew install git-extras
+
+    is_gui || return 1
     brew install smartgit
     brew install github
     brew install gitup
@@ -356,12 +393,17 @@ git_ubuntu_install() {
     slog "Installing git"
     sudo apt-get install -y git
     sudo apt-get install -y git-extras
+    is_gui || return 1
+
+    sudo deb-get install github-desktop
     sudo apt-get install -y kdiff3
 }
 
 git_install() {
     git_mac_install
     git_ubuntu_install
+
+    brew install gh
 
     scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
 }
@@ -379,7 +421,6 @@ jdk_mac_install() {
 
 jdk_ubuntu_install() {
     is_ubuntu || return 1
-    add_java_ppa
     is_ubuntu && ubuntu_update
 
     slog "Installing Java"
@@ -391,7 +432,6 @@ jdk_ubuntu_install() {
 
 jdk_install() {
     has_cmd javac
-    # javac -version 2>&1 | grep "1.8" > /dev/null && return 0
 
     jdk_mac_install
     jdk_ubuntu_install
@@ -453,13 +493,19 @@ scala_install() {
 #
 # web
 
+# volta_install() {
+#     has_cmd volta || return 1
+#     curl https://get.volta.sh | bash
+#     volta install node
+# }
+
 nvm_install() {
     [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 
     slog "Installing nvm"
     if ! has_cmd nvm; then
         smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.38.0/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
         source ~/.nvm/nvm.sh
     fi
     has_cmd nvm || return 1
@@ -472,7 +518,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npi yarn bash-language-server npm-check npm-check-updates lite-server
+    npi yarn pnpm bash-language-server
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -506,6 +552,7 @@ select_defaults() {
     BASH="bash"
     DOTFILES="dotfiles"
     GIT="git"
+    GUI="gui"
 }
 
 script_options() {
@@ -602,6 +649,10 @@ script_options() {
                 GIT=""
                 shift
                 ;;
+            nogui)
+                GUI=""
+                shift
+                ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
                 shift
@@ -659,7 +710,7 @@ installer() {
     install_all
 
     if [ -n "$ZSH" ]; then
-        echo "Set zsh as your default shell(this sometimes fails)"
+        echo "Set zsh as your default shell(in case this fails, run `csh -s /bin/zsh` manually later)"
         chsh -s /bin/zsh
     fi
 
@@ -683,34 +734,23 @@ pre_installer_check() {
     pre_dir_check "$BACKUP_DIR" ~/bin
 }
 
-ppas_check() {
-    is_ubuntu || return 1
-
-    ppa_check google-chrome
-
-    [ -n "$VSCODE" ] && ppa_check 'vscode'
-    [ -n "$SCALA" ] && ppa_check 'sbt'
-
-    is_ubuntu || return 1
-}
-
 essential_mac_check() {
     is_mac || return 1
 
-    cmd_check brew trash 7z greadlink trash gh
+    cmd_check brew trash 7z greadlink trash
 }
 
 essential_ubuntu_check() {
     is_ubuntu || return 1
 
-    ppas_check
-
-    cmd_check p7zip dconf xsel xclip trash-put brew gh
-    cmd_check google-chrome zeal firefox
+    cmd_check p7zip dconf xsel xclip trash-put gcc
+    is_gui && cmd_check google-chrome firefox
 }
 
 essential_check() {
-    cmd_check curl wget git tree ag fasd  fzf gpg tmux unar zip gawk urlview
+    cmd_check curl wget git tree ag rg fasd fzf gh gpg tmux unar zip gawk urlview
+    cmd_check docker
+    cmd_check lsd duf delta broot fd btm procs
     if is_ubuntu; then
         cmd_check batcat
     else
@@ -778,7 +818,7 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check yarn bash-language-server npm-check ncu lite-server
+    cmd_check yarn pnpm bash-language-server
 
     if is_ubuntu; then
         if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then

@@ -30,7 +30,7 @@ is_ubuntu() {
     has_cmd lsb_release || return 1
     local OS
     OS=$(lsb_release -i | cut -d ':' -f2)
-    [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]]
+    [[ "$OS" == *"Ubuntu" ]] || [[ "$OS" == *"neon" ]] || [[ "$OS" == *"elementary" ]] || [[ "$OS" == *"LinuxMint" ]] || [[ "$OS" == *"Pop" ]]
 }
 
 is_fedora() {

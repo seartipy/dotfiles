@@ -518,7 +518,7 @@ web_install() {
     nvm_install
 
     slog "Installing npm packages for web development"
-    npi yarn pnpm bash-language-server
+    npi yarn pnpm bash-language-server npm-check-updates
 
     if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
@@ -806,7 +806,7 @@ web_check() {
 
     has_cmd npm || return 1
 
-    cmd_check yarn pnpm bash-language-server
+    cmd_check yarn pnpm bash-language-server ncu
 
     if is_ubuntu; then
         if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then

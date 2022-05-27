@@ -1,6 +1,6 @@
 {
   "workbench.activityBar.visible": true,
-  "workbench.colorTheme": "Material Theme High Contrast",
+  "workbench.colorTheme": "GitHub Dark Dimmed",
   "workbench.commandPalette.preserveInput": true,
   "workbench.editor.enablePreview": false,
   "workbench.editor.enablePreviewFromQuickOpen": true,
@@ -34,7 +34,6 @@
   "editor.mouseWheelZoom": true,
   "editor.multiCursorModifier": "alt",
   "editor.parameterHints.cycle": true,
-  "editor.renderIndentGuides": false,
   "editor.renderWhitespace": "boundary",
   "editor.rulers": [80],
   "editor.smoothScrolling": true,
@@ -178,7 +177,18 @@
     "typescriptreact",
     "yaml",
     "yml"
-  ]
+  ],
+  "editor.guides.indentation": false,
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {},
+    "FIXME": {}
+  },
+  "todo-tree.highlights.defaultHighlight": {
+    "foreground": "green",
+    "type": "none"
+  },
+  "editor.accessibilitySupport": "off",
+  "editor.inlineSuggest.enabled": true
 
   // "amVim.bindCtrlCommands": false,
   // "amVim.mimicVimSearchBehavior": false,

@@ -558,10 +558,6 @@ select_defaults() {
 script_options() {
     select_defaults
 
-    if [ "$USER" == "pervez" ] || [ "$USER" == "tabrez" ] || [ "$USER" == "wasay" ]; then
-        SEARTIPY="seartipy"
-    fi
-
     while [[ $# -gt 0 ]]; do
         case $1 in
             essential)
@@ -641,10 +637,6 @@ script_options() {
                 DOTFILES=""
                 shift
                 ;;
-            noseartipy)
-                SEARTIPY=""
-                shift
-                ;;
             nogit)
                 GIT=""
                 shift
@@ -655,10 +647,6 @@ script_options() {
                 ;;
             diagnostics)
                 DIAGNOSTICS="diagnostics"
-                shift
-                ;;
-            seartipy)
-                SEARTIPY="seartipy"
                 shift
                 ;;
             everything)

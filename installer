@@ -28,7 +28,7 @@ ubuntu_upgrade() {
 
 deb_get_install() {
     slog "Installing deb-get"
-    has_cmd deb-get || return 0
+    has_cmd deb-get && return 0
 
     curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get
 
@@ -45,6 +45,7 @@ linux_brew_install() {
 
     if ! has_cmd brew; then
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	    slog "Setting up brew path"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
 }
@@ -167,8 +168,8 @@ docker_mac_install() {
 }
 
 docker_install() {
-    docker_ubuntu_install()
-    docker_mac_install()
+    docker_ubuntu_install
+    docker_mac_install
 }
 
 brew_packages_install() {
@@ -698,7 +699,7 @@ installer() {
     install_all
 
     if [ -n "$ZSH" ]; then
-        echo "Set zsh as your default shell(in case this fails, run `csh -s /bin/zsh` manually later)"
+        echo "Set zsh as your default shell(in case this fails, run `chsh -s /bin/zsh` manually later)"
         chsh -s /bin/zsh
     fi
 

@@ -35,8 +35,8 @@ is_ubuntu() {
 
 is_fedora() {
     is_mac && return 1
-    
-    cat /etc/os-release | grep "^ID=fedora$" > /dev/null 
+
+    cat /etc/os-release | grep "^ID=fedora$" > /dev/null
 }
 
 is_linux() {
@@ -160,6 +160,9 @@ dir_exists() {
     [[ -d "$1" ]]
 }
 
+file_exists() {
+     [[ -f "$1" ]]
+}
 dir_check() {
     for dir in "$@"; do
         dir_exists "$dir" || warn "$dir does not exist"

@@ -6,7 +6,7 @@ DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 source "$DOTFILES_DIR/scripts/utils.sh"
 
-vsext_exists() {    
+vsext_exists() {
     code --list-extensions | grep -i "$1" > /dev/null
 }
 
@@ -25,38 +25,35 @@ vsexti() {
 }
 
 vsext_install() {
-        if [ -n "$SEARTIPY" ]; then
-        vsexti ahmadawais.shades-of-purple
-        vsexti britesnow.vscode-toggle-quotes
-        vsexti christian-kohler.path-intellisense
-        vsexti codezombiech.gitignore
-        vsexti donjayamanne.githistory
-        vsexti equinusocio.vsc-material-theme
-        vsexti gottfired.css2react
-        vsexti humao.rest-client
-        vsexti ibm.output-colorizer
-        vsexti konstantin.wrapselection
-        vsexti lamartire.git-indicator
-        vsexti lucax88x.codeacejumper
-        vsexti mads-hartmann.bash-ide-vscode
-        vsexti mattn.runner
-        vsexti ms-azuretools.vscode-cosmosdb
-        vsexti mycelo.embrace
-        vsexti patbenatar.advanced-new-file
-        vsexti peterjausovec.vscode-docker
-        vsexti pflannery.vscode-versionlens
-        vsexti pkief.material-icon-theme
-        vsexti quicktype.quicktype
-        vsexti rogalmic.bash-debug
-        vsexti roscop.activefileinstatusbar
-        vsexti visualstudioexptteam.vscodeintellicode
-        vsexti wmaurer.vscode-jumpy
-        vsexti wwm.better-align
-        vsexti yatki.vscode-surround
-        vsexti yzhang.markdown-all-in-one
-        vsexti dsznajder.es7-react-js-snippets
-    fi
-
+    vsexti ahmadawais.shades-of-purple
+    vsexti britesnow.vscode-toggle-quotes
+    vsexti christian-kohler.path-intellisense
+    vsexti codezombiech.gitignore
+    vsexti donjayamanne.githistory
+    vsexti equinusocio.vsc-material-theme
+    vsexti gottfired.css2react
+    vsexti humao.rest-client
+    vsexti ibm.output-colorizer
+    vsexti konstantin.wrapselection
+    vsexti lamartire.git-indicator
+    vsexti lucax88x.codeacejumper
+    vsexti mads-hartmann.bash-ide-vscode
+    vsexti mattn.runner
+    vsexti ms-azuretools.vscode-cosmosdb
+    vsexti mycelo.embrace
+    vsexti patbenatar.advanced-new-file
+    vsexti peterjausovec.vscode-docker
+    vsexti pflannery.vscode-versionlens
+    vsexti pkief.material-icon-theme
+    vsexti quicktype.quicktype
+    vsexti rogalmic.bash-debug
+    vsexti roscop.activefileinstatusbar
+    vsexti visualstudioexptteam.vscodeintellicode
+    vsexti wmaurer.vscode-jumpy
+    vsexti wwm.better-align
+    vsexti yatki.vscode-surround
+    vsexti yzhang.markdown-all-in-one
+    vsexti dsznajder.es7-react-js-snippets
     vsexti coenraads.bracket-pair-colorizer
     vsexti dbaeumer.vscode-eslint
     vsexti donjayamanne.jupyter

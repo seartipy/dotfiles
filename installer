@@ -2,550 +2,11 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${CURRENT_DIR}/scripts/utils.sh"
+source "${CURRENT_DIR}/scripts/installer_utils.sh"
 
 {
 
-#
-# essential
-
-ubuntu_update() {
-    is_ubuntu || return 1
-
-    slog "Updating ubuntu packages"
-    if ! sudo apt-get update; then
-        err_exit "apt-get update failed, quitting"
-    fi
-}
-
-ubuntu_upgrade() {
-    is_ubuntu || return 1
-
-    slog "Upgrading ubuntu packages"
-    if ! sudo apt-get upgrade -y; then
-        err_exit "apt-get upgrade failed, quitting"
-    fi
-}
-
-deb_get_install() {
-    slog "Installing deb-get"
-    has_cmd deb-get && return 0
-
-    curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get
-
-    sudo deb-get install gh
-
-    is_gui || return 1
-
-    # sudo deb-get install insomnia
-    # sudo deb-get install zoom
-}
-
-linux_brew_install() {
-    slog "Installing homebrew(linux)"
-
-    if ! has_cmd brew; then
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	    slog "Setting up brew path"
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    fi
-}
-
-is_gui() {
-    [[ -n "$GUI" ]]
-}
-
-essential_ubuntu_install() {
-    is_ubuntu || return 1
-    pre_cmd_check apt-get
-
-    sudo apt-get install -y software-properties-common
-    sudo apt-get install -y apt-transport-https
-    sudo apt-get install -y ca-certificates
-
-    pre_cmd_check debconf-set-selections add-apt-repository apt-key wget
-
-    ubuntu_update
-    ubuntu_upgrade
-
-    sudo apt-get install -y curl
-    pre_cmd_check curl
-
-    deb_get_install
-    linux_brew_install
-    pre_cmd_check brew deb-get
-
-    slog "Installing essential packages"
-    sudo apt-get install -y wget
-    sudo apt-get install -y git
-    sudo apt-get install -y trash-cli
-    sudo apt-get install -y tree
-    sudo apt-get install -y xsel
-    sudo apt-get install -y xclip
-    sudo apt-get install -y bat
-    sudo apt-get install -y fzf
-    sudo apt-get install -y silversearcher-ag
-    sudo apt-get install -y ripgrep
-    sudo apt-get install -y p7zip
-    sudo apt-get install -y dconf-cli
-    sudo apt-get install -y build-essential
-    sudo apt-get install -y tmux
-    sudo apt-get install -y unar
-    sudo apt-get install -y unzip
-    sudo apt-get install -y libzmq3-dev
-    sudo apt-get install -y pkg-config
-    sudo apt-get install -y zip
-    sudo apt-get install -y gawk
-    sudo apt-get install -y urlview
-    sudo apt-get install -y "linux-headers-$(uname -r)"
-    sudo apt-get install -y gnome-keyring
-    sudo apt-get install -y fasd
-    sudo apt-get install -y fonts-cascadia-code
-
-    is_gui || return 1
-
-    sudo apt-get install -y firefox
-    sudo apt-get install -y exfat-utils
-    sudo apt-get install -y exfat-fuse
-
-    sudo deb-get install google-chrome-stable
-}
-
-essential_mac_install() {
-    is_mac || return 1
-
-    slog "Installing rosetta"
-    softwareupdate --rosetta --agree-to-license
-
-    if ! has_cmd brew; then
-        slog "Installing homebrew"
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
-
-    pre_cmd_check brew
-
-    slog "Upgrading brew packages"
-    brew update && brew upgrade
-
-    slog "Installing brew packages"
-    brew install wget
-    brew install trash
-    brew install tree
-    brew install fasd
-    brew install bat
-    brew install fzf
-    brew install unar
-    brew install p7zip
-    brew install the_silver_searcher
-    brew install ripgrep
-    brew install coreutils
-    brew install tmux
-    brew install gpg
-    brew install zeromq
-    brew install pkg-config
-    brew install gawk
-    brew install urlview
-    brew install gh
-
-    brew install iterm2
-    brew install google-chrome
-}
-
-
-docker_ubuntu_install() {
-    slog "Installing docker"
-    is_ubuntu || return 1
-
-    sudo deb-get install docker-ce
-    sudo deb-get install docker-desktop
-}
-
-docker_mac_install() {
-    slog "Installing docker"
-    is_mac || return 1
-
-    brew install docker
-}
-
-docker_install() {
-    docker_ubuntu_install
-    docker_mac_install
-}
-
-brew_packages_install() {
-    brew install lsd
-    brew install duf
-    brew install git-delta
-    brew install broot
-    brew install fd
-    brew install bottom
-    brew install procs
-
-    # brew install hyperfine
-    # brew install httpie
-    # brew install curlie
-    # brew install fzf
-    # brew install tldr
-    # brew install exa
-    # brew install glances
-    # brew install xh
-    # brew install zoxide
-    # brew install gtop
-    # brew install jq
-}
-
-essential_install() {
-    essential_ubuntu_install
-    essential_mac_install
-
-    docker_install
-
-    brew_packages_install
-}
-
-#
-# cleanup
-
-cleanup_ubuntu() {
-    is_ubuntu || return 1
-    sudo apt-get clean
-    sudo apt-get autoclean
-    sudo apt-get autoremove -y
-}
-
-cleanup_mac() {
-    is_mac || return 1
-
-    slog "cleanup brew"
-    brew cleanup
-}
-
-cleanup() {
-    cleanup_ubuntu
-    cleanup_mac
-}
-
-#
-# dotfiles
-
-clone_dotfiles() {
-    sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    [ -d ~/seartipy/dotfiles ] || return 1
-
-    pre_dir_check ~/seartipy/dotfiles
-}
-
-tmux_dotfiles() {
-    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
-
-    slog "Moving ~/.tmux.conf to $BACKUP_DIR"
-    smv ~/.tmux.conf "$BACKUP_DIR"
-
-    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-
-    smd ~/.tmux/plugins
-    sclone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-}
-
-dotfiles_install() {
-    clone_dotfiles
-
-    tmux_dotfiles
-}
-
-#
-# bash
-
-mac_bash_dotfiles() {
-    is_mac || return 1
-    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
-
-    slog "Moving ~/.bash_profile, ~/.bashrc to $BACKUP_DIR"
-    smv ~/.bash_profile $BACKUP_DIR
-    smv ~/.bashrc "$BACKUP_DIR"
-
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/bashrc ~/.bashrc
-}
-
-linux_bash_dotfiles() {
-    is_linux || return 1
-    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
-
-    slog "Moving ~/.bash_profile to $BACKUP_DIR"
-    smv ~/.bash_profile "$BACKUP_DIR"
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
-
-    if ! grep .bash_profile ~/.bashrc > /dev/null; then
-        echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
-    fi
-}
-
-bash_install() {
-    mac_bash_dotfiles
-    linux_bash_dotfiles
-
-    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
-}
-
-#
-# zsh
-
-zsh_ubuntu_install() {
-    is_ubuntu || return 1
-
-    slog "Installing zsh"
-    sudo apt-get install -y zsh
-    sudo apt-get install -y shellcheck
-}
-
-zsh_mac_install() {
-    is_mac || return 1
-
-    slog "Installing zsh"
-    brew install shellcheck
-}
-
-oh_my_zsh_install() {
-    sclone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-
-    sclone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
-    sclone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
-    sclone https://github.com/denysdovhan/spaceship-prompt.git ~/.oh-my-zsh/themes/spaceship-prompt
-
-    sln ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/themes/spaceship.zsh-theme
-
-    slog "Linking ~/seartipy/dotfiles/oh-my-zsh-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
-}
-
-zgen_install() {
-    sclone https://github.com/tarjoilija/zgen.git ~/.zgen
-
-    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-
-    slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
-    scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
-
-    slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
-    scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
-}
-
-zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
-
-    slog "Moving ~/.zshrc to $BACKUP_DIR "
-    smv ~/.zshrc "$BACKUP_DIR"
-
-    if [ -n "$ZGEN" ]; then
-        zgen_install
-    else
-        oh_my_zsh_install
-    fi
-}
-
-zsh_install() {
-    zsh_ubuntu_install
-    zsh_mac_install
-
-    zsh_dotfiles
-}
-
-#
-# vscode
-
-ubuntu_vscode_install() {
-    is_ubuntu || return 1
-
-    sudo deb-get install code
-}
-
-mac_vscode_install() {
-    is_mac || return 1
-
-    brew install visual-studio-code
-}
-
-vscode_install() {
-    ubuntu_vscode_install
-    mac_vscode_install
-}
-
-#
-# git
-
-git_mac_install() {
-    is_mac || return 1
-
-    slog "Installing git packages"
-    brew install git-extras
-
-    is_gui || return 1
-    brew install smartgit
-    brew install github
-    brew install gitup
-}
-
-git_ubuntu_install() {
-    is_ubuntu || return 1
-
-    slog "Installing git"
-    sudo apt-get install -y git
-    sudo apt-get install -y git-extras
-    is_gui || return 1
-
-    sudo deb-get install github-desktop
-    sudo apt-get install -y kdiff3
-}
-
-git_install() {
-    git_mac_install
-    git_ubuntu_install
-
-    brew install gh
-
-    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
-}
-
-#
-# java
-
-jdk_mac_install() {
-    is_mac || return 1
-
-    slog "Installing java"
-    # java
-    brew install java
-}
-
-jdk_ubuntu_install() {
-    is_ubuntu || return 1
-    is_ubuntu && ubuntu_update
-
-    slog "Installing Java"
-    if is_ubuntu; then
-        sudo apt-get install -y default-jdk
-        sudo apt-get install -y default-jdk-doc
-    fi
-}
-
-jdk_install() {
-    has_cmd javac
-
-    jdk_mac_install
-    jdk_ubuntu_install
-}
-
-# sdkman_install() {
-#     has_cmd sdk && return 0
-#     curl -s "https://get.sdkman.io" | bash
-# }
-
-
-java_install() {
-    jdk_install
-    # sdkman_install
-    # source "$HOME/.sdkman/bin/sdkman-init.sh"
-    # has_cmd maven || sdk install maven < /dev/null
-    # has_cmd gradle || sdk install gradle < /dev/null
-    # has_cmd groovy || sdk install groovy < /dev/null
-}
-
-#
-# clojure
-
-linux_lein_install() {
-    is_linux || return 1
-    has_cmd ~/bin/lein && return 1
-
-    slog "Installing leiningen"
-    curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin/lein
-    chmod +x ~/bin/lein
-}
-
-clojure_mac_install() {
-    is_mac || return 1
-
-    slog "Installing clojure packages"
-    brew install leiningen
-}
-
-clojure_install() {
-    jdk_install
-
-    clojure_mac_install
-    linux_lein_install
-}
-
-#
-# scala
-
-
-scala_install() {
-    has_cmd coursier && return 1
-    jdk_install
-
-    slog "Install scala"
-    curl -Lo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs setup --yes
-}
-
-#
-# web
-
-# volta_install() {
-#     has_cmd volta || return 1
-#     curl https://get.volta.sh | bash
-#     volta install node
-# }
-
-nvm_install() {
-    [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
-
-    slog "Installing nvm"
-    if ! has_cmd nvm; then
-        smd ~/.nvm
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        source ~/.nvm/nvm.sh
-    fi
-    has_cmd nvm || return 1
-
-    nvm install node
-    nvm alias default node
-}
-
-web_install() {
-    nvm_install
-
-    slog "Installing npm packages for web development"
-    npi yarn pnpm bash-language-server npm-check-updates
-
-    if is_ubuntu && ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
-        echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
-    fi
-}
-
-#
 # installer
-
-select_everything() {
-    ESSENTIAL="essential"
-
-    ZSH="zsh"
-    BASH="bash"
-
-    VSCODE="vscode"
-
-    GIT="git"
-    DOTFILES="dotfiles"
-
-    JAVA="java"
-    SCALA="scala"
-    CLOJURE="clojure"
-
-    WEB="web"
-}
 
 select_defaults() {
     ESSENTIAL="essential"
@@ -553,7 +14,7 @@ select_defaults() {
     BASH="bash"
     DOTFILES="dotfiles"
     GIT="git"
-    GUI="gui"
+    # GUI="gui"
 }
 
 script_options() {
@@ -561,63 +22,15 @@ script_options() {
 
     while [[ $# -gt 0 ]]; do
         case $1 in
-            essential)
-                ESSENTIAL="essential"
-                shift
-                ;;
-            zsh)
-                ZSH="zsh"
-                shift
-                ;;
-            zgen)
-                zsh="zsh"
-                ZGEN="zgen"
-                shift
-                ;;
-            bash)
-                BASH="bash"
-                shift
-                ;;
-            dotfiles)
-                DOTFILES="dotfiles"
-                shift
-                ;;
-            git)
-                GIT="git"
-                shift
-                ;;
-            vscode)
-                VSCODE="vscode"
-                shift
-                ;;
-            java)
-                JAVA="java"
-                shift
-                ;;
-            clojure)
-                CLOJURE="clojure"
-                shift
-                ;;
-            scala)
-                SCALA="scala"
-                shift
-                ;;
-            web)
-                WEB="web"
-                shift
-                ;;
             nothing)
-                ESSENTIAL=""
                 ZSH=""
                 BASH=""
-                EMACS=""
                 GIT=""
                 shift
                 ;;
             nodefaults)
                 ZSH=""
                 BASH=""
-                EMACS=""
                 DOTFILES=""
                 GIT=""
                 shift
@@ -650,49 +63,30 @@ script_options() {
                 DIAGNOSTICS="diagnostics"
                 shift
                 ;;
-            everything)
-                select_everything
-                shift
-                ;;
             *)
-                err_exit "unknown option $1"
+                if file_exists "$CURRENT_DIR}/installers/mods/$1.sh"; then
+                    source "$CURRENT_DIR}/installers/mods/$1.sh"
+                else
+                    warn "Unknown installer option: $1"
+                fi
                 ;;
         esac
     done
-}
-
-create_dirs() {
-    setup_backup_dir
-    smd ~/bin
-}
-
-install_all() {
-    [ -n "$DOTFILES" ] && dotfiles_install
-
-    [ -n "$ZSH" ] && zsh_install
-    [ -n "$BASH" ] && bash_install
-
-    [ -n "$VSCODE" ] && vscode_install
-
-    [ -n "$GIT" ] && git_install
-
-    [ -n "$JAVA" ] && java_install
-    [ -n "$CLOJURE" ] && clojure_install
-    [ -n "$SCALA" ] && scala_install
-    [ -n "$WEB" ] && web_install
 }
 
 installer() {
     script_options $*
 
     if [ -n "$DIAGNOSTICS" ]; then
+        echo "Running Diagnostics..."
         post_installer_check
+        echo "Diagnostics complete."
         exit 0
     fi
 
-    echo "Installing $EMACS $VSCODE $ZSH $ZGEN $BASH $GIT $JAVA $SCALA $WEB $CLOJURE $PYTHON $CPP $HASKELL"
+    echo "Installing..."
 
-    [ -n "$ESSENTIAL" ] && essential_install
+    essential_install
 
     pre_installer_check
 
@@ -710,132 +104,13 @@ installer() {
     echo "Installation done!"
 }
 
-#
 # diagnostics
 
-pre_installer_check() {
-    pre_cmd_check git curl wget unzip
-    if is_ubuntu; then
-        pre_cmd_check trash-put
-    else
-        pre_cmd_check trash
-    fi
-    pre_dir_check "$BACKUP_DIR" ~/bin
-}
-
-essential_mac_check() {
-    is_mac || return 1
-
-    cmd_check brew trash 7z greadlink trash
-}
-
-essential_ubuntu_check() {
-    is_ubuntu || return 1
-
-    cmd_check p7zip dconf xsel xclip trash-put gcc
-    is_gui && cmd_check google-chrome firefox
-}
-
-essential_check() {
-    cmd_check curl wget git tree ag rg fasd fzf gh gpg tmux unar zip gawk urlview
-    cmd_check docker
-    cmd_check lsd duf delta broot fd btm procs
-    if is_ubuntu; then
-        cmd_check batcat
-    else
-        cmd_check bat
-    fi
-    essential_mac_check
-    essential_ubuntu_check
-}
-
-dotfiles_check() {
-    dir_check ~/seartipy/dotfiles
-    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
-    dir_check ~/.tmux/plugins/tpm
-}
-
-zsh_check() {
-    cmd_check zsh shellcheck
-
-    if [ -n "$ZGEN" ]; then
-        ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
-        dir_check ~/.zgen
-        file_check ~/.zgen-options-local.sh
-        file_check ~/.zshrc-pre-local.sh
-    else
-        dir_check ~/.oh-my-zsh
-        dir_check ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
-        dir_check ~/.oh-my-zsh/plugins/zsh-autosuggestions
-        dir_check ~/.oh-my-zsh/themes/spaceship-prompt
-
-        ln_check ~/.oh-my-zsh/themes/spaceship-prompt/spaceship.zsh ~/.oh-my-zsh/themes/spaceship.zsh-theme
-        ln_check ~/seartipy/dotfiles/oh-my-zsh-zshrc ~/.zshrc
-    fi
-}
-
-bash_check() {
-    is_mac && ln_check ~/seartipy/dotfiles/bashrc ~/.bashrc
-    ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
-
-    if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
-        warn "~/.bash_profile not sourced in ~/.bashrc"
-    fi
-    dir_check ~/.liquidprompt
-}
-
-vscode_check() {
-    cmd_check code
-}
-
-java_check() {
-    # source "$HOME/.sdkman/bin/sdkman-init.sh"
-    has_cmd javac java # sdk groovy maven gradle
-}
-
-scala_check() {
-    cmd_check javac sbt scala amm coursier
-}
-
-clojure_check() {
-    cmd_check javac lein
-}
-
-web_check() {
-    cmd_check nvm
-    cmd_check npm
-
-    has_cmd npm || return 1
-
-    cmd_check yarn pnpm bash-language-server ncu
-
-    if is_ubuntu; then
-        if ! grep "fs.inotify.max_user_watches" /etc/sysctl.conf > /dev/null; then
-            warn "max user watches not set properly in /etc/sysctl.conf"
-        fi
-    fi
-}
-
-
-git_check() {
-    cmd_check git git-extras
-    is_ubuntu && cmd_check kdiff3
-    is_mac && brew_check smartgit github
-
-    file_check ~/.gitconfig
-}
-
 post_installer_check() {
-    export PATH="$HOME/.local/bin:$PATH"
-    is_ubuntu && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-
-    [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
-
-    is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
-
-    export PATH="$HOME/.cask/bin:$PATH"
+    post_installer_setup
 
     essential_check
+
     [ -n "$DOTFILES" ] && dotfiles_check
 
     [ -n "$ZSH" ] && zsh_check
@@ -844,37 +119,8 @@ post_installer_check() {
     [ -n "$VSCODE" ] && vscode_check
 
     [ -n "$GIT" ] && git_check
-
-    [ -n "$JAVA" ] && java_check
-    [ -n "$CLOJURE" ] && clojure_check
-    [ -n "$SCALA" ] && scala_check
-    [ -n "$WEB" ] && web_check
 }
 
-curdir=$(pwd)
-
-if is_ubuntu; then
-    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
-else
-    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
-fi
-
-keep_sudo_running
-
-create_dirs
-
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/share/coursier/bin:$PATH"
-
-if [[ $- = *i* ]]; then
-    slog "Running pre installer check..."
-    slog "if this does not succeed you must first at least install essentials by running this script without parameters"
-    pre_installer_check
-    slog "installer check succeeded, you could run functions in this script for testing"
-else
-    installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
-fi
-
-cd "$curdir"
+source "${CURRENT_DIR}/scripts/bootstrap.sh"
 
 }

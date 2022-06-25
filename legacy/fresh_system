@@ -14,7 +14,7 @@ fresh_ppas() {
 
 fresh_install() {
     if [ -n "$DOTFILES" ]; then
-        srm ~/seartipy/dotfiles
+        srm ~/.seartipy
         srm ~/.tmux.conf
     fi
 

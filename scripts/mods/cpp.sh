@@ -2,12 +2,6 @@
 
 {
 
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-
-
-source "$DOTFILES_DIR/scripts/utils.sh"
-
-
 cpp_check() {
     cmd_check cmake scons cppcheck clang++
 
@@ -50,22 +44,5 @@ installer() {
     cpp_install
     cpp_check
 }
-
-curdir=$(pwd)
-
-if is_ubuntu; then
-    trash-put ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
-else
-    trash ~/seartipy-installer.log ~/seartipy-error.log ~/seartipy-output.log 2> /dev/null
-fi
-
-keep_sudo_running
-
-export PATH="$HOME/bin:$PATH"
-
-pre_installer_check
-installer "$@" > >(tee ~/seartipy-output.log) 2> >(tee ~/seartipy-error.log >&2)
-
-cd "$curdir"
 
 }

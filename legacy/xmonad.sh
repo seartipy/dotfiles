@@ -22,8 +22,8 @@ xmonad_install() {
 
     smd ~/.xmonad
 
-    slog "Linking ~/seartipy/dotfiles/xmonad.hs to ~/.xmonad/xmonad.hs"
-    sln ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
+    slog "Linking ~/.seartipy/xmonad.hs to ~/.xmonad/xmonad.hs"
+    sln ~/.seartipy/xmonad.hs ~/.xmonad/xmonad.hs
 
     if has_cmd mate-session; then
         slog "setting xmonad as mate's window manager"
@@ -40,5 +40,5 @@ xmonad_check() {
 
     cmd_check xmonad dmenu
     is_ubuntu && cmd_check rofi
-    ln_check ~/seartipy/dotfiles/xmonad.hs ~/.xmonad/xmonad.hs
+    ln_check ~/.seartipy/xmonad.hs ~/.xmonad/xmonad.hs
 }

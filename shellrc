@@ -1,6 +1,6 @@
-source "${HOME}/seartipy/dotfiles/scripts/utils.sh"
+source "${HOME}/.seartipy/scripts/utils.sh"
 
-source "${HOME}/seartipy/dotfiles/aliases"
+source "${HOME}/.seartipy/aliases"
 
 if is_mac; then
     eval "$(/opt/homebrew/bin/brew shellenv)"

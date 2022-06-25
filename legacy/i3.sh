@@ -11,5 +11,5 @@ i3_install() {
 
     i3_ubuntu_install
 
-    scopy ~/seartipy/dotfiles/templates/desktops/i3-config ~/.i3/config
+    scopy ~/.seartipy/templates/desktops/i3-config ~/.i3/config
 }

@@ -141,12 +141,12 @@ mac_settings() {
 amethyst_install() {
     is_mac || return 1
     brew cask install amethyst
-    [ -f ~/seartipy/dotfiles/amethyst ] || return 1
+    [ -f ~/.seartipy/amethyst ] || return 1
 
     slog "Moving ~/.amethyst to $BACKUP_DIR"
     smv ~/.amethyst "$BACKUP_DIR"
 
-    slog "Linking ~/seartipy/dotfiles/amethyst to ~/.amethyst"
+    slog "Linking ~/.seartipy/amethyst to ~/.amethyst"
 
-    sln ~/seartipy/dotfiles/amethyst ~/.amethyst
+    sln ~/.seartipy/amethyst ~/.amethyst
 }

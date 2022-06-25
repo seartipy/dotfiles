@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-source "$HOME/seartipy/dotfiles/scripts/utils.sh"
+source "$HOME.seartipy/scripts/utils.sh"
 
 seartipy_create_emacs_desktops() {
     smd ~/.local/share/applications

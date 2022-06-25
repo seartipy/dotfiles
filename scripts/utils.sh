@@ -332,7 +332,7 @@ keep_sudo_running() {
 }
 
 setup_backup_dir() {
-    BACKUP_DIR=~/seartipy.backups
+    BACKUP_DIR=~/.seartipy.backups
 
     if [ -d "$BACKUP_DIR" ]; then
         slog "moving $BACKUP_DIR to trash"
@@ -347,7 +347,7 @@ setup_backup_dir() {
 }
 
 pre_installer_check() {
-    BACKUP_DIR=~/seartipy.backups
+    BACKUP_DIR=~/.seartipy.backups
 
     pre_cmd_check git curl wget unzip
     if is_ubuntu; then

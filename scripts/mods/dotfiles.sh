@@ -2,20 +2,20 @@
 # dotfiles
 
 clone_dotfiles() {
-    sclone https://github.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    [ -d ~/seartipy/dotfiles ] || return 1
+    sclone https://github.com/seartipy/dotfiles.git ~/.seartipy
+    [ -d ~/.seartipy ] || return 1
 
-    pre_dir_check ~/seartipy/dotfiles
+    pre_dir_check ~/.seartipy
 }
 
 tmux_dotfiles() {
-    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
+    [ -f ~/.seartipy/tmux.conf ] || return 1
 
     slog "Moving ~/.tmux.conf to $BACKUP_DIR"
     smv ~/.tmux.conf "$BACKUP_DIR"
 
-    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    slog "Linking ~/.seartipy/tmux.conf to ~/.tmux.conf"
+    sln ~/.seartipy/tmux.conf ~/.tmux.conf
 
     smd ~/.tmux/plugins
     sclone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -41,12 +41,12 @@ zsh_mac_install() {
 zgen_install() {
     sclone https://github.com/tarjoilija/zgen.git ~/.zgen
 
-    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zshrc ~/.zshrc
+    slog "Linking ~/.seartipy/zgen-zshrc as ~/.zshrc"
+    sln ~/.seartipy/zshrc ~/.zshrc
 }
 
 zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
+    [ -f ~/.seartipy/zgen-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc "$BACKUP_DIR"
@@ -66,23 +66,23 @@ zsh_install() {
 
 mac_bash_dotfiles() {
     is_mac || return 1
-    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
+    [ -f ~/.seartipy/bashrc ] || return 1
 
     slog "Moving ~/.bash_profile, ~/.bashrc to $BACKUP_DIR"
     smv ~/.bash_profile $BACKUP_DIR
     smv ~/.bashrc "$BACKUP_DIR"
 
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
-    sln ~/seartipy/dotfiles/bashrc ~/.bashrc
+    sln ~/.seartipy/bashrc ~/.bash_profile
+    sln ~/.seartipy/bashrc ~/.bashrc
 }
 
 linux_bash_dotfiles() {
     is_linux || return 1
-    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
+    [ -f ~/.seartipy/bashrc ] || return 1
 
     slog "Moving ~/.bash_profile to $BACKUP_DIR"
     smv ~/.bash_profile "$BACKUP_DIR"
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    sln ~/.seartipy/bashrc ~/.bash_profile
 
     if ! grep .bash_profile ~/.bashrc > /dev/null; then
         echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
@@ -107,8 +107,8 @@ dotfiles_install() {
 }
 
 bash_check() {
-    is_mac && ln_check ~/seartipy/dotfiles/bashrc ~/.bashrc
-    ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    is_mac && ln_check ~/.seartipy/bashrc ~/.bashrc
+    ln_check ~/.seartipy/bashrc ~/.bash_profile
 
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
@@ -118,7 +118,7 @@ bash_check() {
 
 zsh_check() {
     cmd_check zsh shellcheck
-    n_check ~/seartipy/dotfiles/zshrc ~/.zshrc
+    n_check ~/.seartipy/zshrc ~/.zshrc
 
     [ -n "$ZGEN"] && dir_check ~/.zgen
 
@@ -132,10 +132,10 @@ zsh_check() {
 }
 
 dotfiles_check() {
-    dir_check ~/seartipy/dotfiles
+    dir_check ~/.seartipy
 
     if [ -n "$TMUX" ]; then
-        ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+        ln_check ~/.seartipy/tmux.conf ~/.tmux.conf
         dir_check ~/.tmux/plugins/tpm
     fi
 

@@ -4,4 +4,4 @@
 
 [[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt
 
-source ~/seartipy/dotfiles/shellrc
+source ~/.seartipy/shellrc

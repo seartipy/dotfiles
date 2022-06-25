@@ -3,7 +3,6 @@ source "${CURRENT_DIR}/scripts/utils.sh"
 source "${CURRENT_DIR}/installers/installer_utils.sh"
 
 source_one() {
-
   if file_exists "$CURRENT_DIR/installers/mods/$1.sh"; then
     slog "Sourcing $CURRENT_DIR/installers/mods/$1.sh"
     source "$CURRENT_DIR/installers/mods/$1.sh"
@@ -19,6 +18,7 @@ mods_source() {
 
 mods_setup() {
   while [[ $# -gt 0 ]]; do
+    slog "Setting up $1"
     has_cmd "$1_setup" && "$1_setup"
     shift
   done
@@ -26,6 +26,7 @@ mods_setup() {
 
 mods_check() {
   while [[ $# -gt 0 ]]; do
+    slog "Checking $1"
     has_cmd "$1_check" && "$1_check"
     shift
   done
@@ -33,6 +34,7 @@ mods_check() {
 
 install_one() {
   if has_cmd "$1_install"; then
+    slog "Installing $1"
     "$1_install"
   else
     warn "installer not available for: $1"
@@ -48,6 +50,7 @@ mods_install() {
 
 mods_cleanup() {
   while [[ $# -gt 0 ]]; do
+    slog "Cleaning up $1"
     has_cmd "$1_cleanup" && "$1_cleanup"
     shift
   done

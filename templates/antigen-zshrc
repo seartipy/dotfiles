@@ -20,4 +20,4 @@ antigen theme refined
 # Tell Antigen that you're done.
 antigen apply
 
-[[ -s "$HOME/seartipy/dotfiles/shellrc" ]] && source "$HOME/seartipy/dotfiles/shellrc"
+[[ -s "$HOME.seartipy/shellrc" ]] && source "$HOME.seartipy/shellrc"

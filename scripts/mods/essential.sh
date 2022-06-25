@@ -48,6 +48,7 @@ git_mac_install() {
     brew install git-extras
 
     is_gui || return 1
+
     brew install smartgit
     brew install github
     brew install gitup
@@ -206,6 +207,7 @@ essential_ubuntu_check() {
 
 cleanup_ubuntu() {
     is_ubuntu || return 1
+    slog "Cleaning up ubuntu"
 
     sudo apt-get clean
     sudo apt-get autoclean
@@ -241,7 +243,7 @@ git_install() {
 
     brew install gh
 
-    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
+    scopy ~/.seartipy/templates/gitconfig ~/.gitconfig
 }
 
 docker_install() {
@@ -273,6 +275,8 @@ git_check() {
 }
 
 essential_check() {
+    slog "Checking essential installation"
+
     cmd_check curl wget git tree ag rg fasd fzf gh gpg tmux unar zip gawk urlview
     cmd_check docker
     cmd_check lsd duf delta broot fd btm procs

@@ -78,7 +78,7 @@ alias gca="git commit --amend"
 alias gcan="git commit --amend --no-edit"
 
 alias jf="code ~/programs/web/devfractal" # use j maybe?
-alias jd="code ~/seartpy/dotfiles" # use j maybe?
+alias jd="code ~/.seartpy" # use j maybe?
 
 if is_ubuntu; then
     alias si="sudo apt-get install -y"

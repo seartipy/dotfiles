@@ -18,7 +18,7 @@ mate_hidpi() {
 
 x11_hidpi() {
     slog "Setting X11 HIDPI(~/.Xresources)"
-    scopy ~/seartipy/dotfiles/templates/desktops/xresources ~/.Xresources
+    scopy ~/.seartipy/templates/desktops/xresources ~/.Xresources
 }
 
 hidpi_install() {

@@ -16,13 +16,13 @@ seartipy_upgrade_emacs() {
 }
 
 seartipy_upgrade_dotfiles() {
-    seartipy-gitup ~/seartipy/dotfiles
+    seartipy-gitup ~/.seartipy
     seartipy-gitup ~/seartipy/dotdotfiles
 }
 
 seartipy_upgrade_mean() {
     upgrade
-    seartipy_upgrade_dotfiles    
+    seartipy_upgrade_dotfiles
     has_cmd zgen && zgen selfupdate && zgen update
     has_cmd zplug && zplug update
 }

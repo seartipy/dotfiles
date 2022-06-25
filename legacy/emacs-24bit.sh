@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-source "$HOME/seartipy/dotfiles/scripts/utils.sh"
+source "$HOME.seartipy/scripts/utils.sh"
 
 main() {
     if ! is_ubuntu && ! is_mac; then
@@ -8,7 +8,7 @@ main() {
     fi
 
     echo "generating terminfo"
-    tic -x -o ~/.terminfo ~/seartipy/dotfiles/templates/terminfo-24bit.src
+    tic -x -o ~/.terminfo ~/.seartipy/templates/terminfo-24bit.src
 }
 
 main

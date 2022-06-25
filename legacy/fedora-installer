@@ -37,20 +37,20 @@ essential_fedora_install() {
 # dotfiles
 
 clone_dotfiles() {
-    sclone https://gitlab.com/seartipy/dotfiles.git ~/seartipy/dotfiles
-    [ -d ~/seartipy/dotfiles ] || return 1
+    sclone https://gitlab.com/seartipy/dotfiles.git ~/.seartipy
+    [ -d ~/.seartipy ] || return 1
 
-    pre_dir_check ~/seartipy/dotfiles
+    pre_dir_check ~/.seartipy
 }
 
 tmux_dotfiles() {
-    [ -f ~/seartipy/dotfiles/tmux.conf ] || return 1
+    [ -f ~/.seartipy/tmux.conf ] || return 1
 
     slog "Moving ~/.tmux.conf to $BACKUP_DIR"
     smv ~/.tmux.conf "$BACKUP_DIR"
 
-    slog "Linking ~/seartipy/dotfiles/tmux.conf to ~/.tmux.conf"
-    sln ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    slog "Linking ~/.seartipy/tmux.conf to ~/.tmux.conf"
+    sln ~/.seartipy/tmux.conf ~/.tmux.conf
 
     smd ~/.tmux/plugins
     sclone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -64,11 +64,11 @@ dotfiles_install() {
 # bash
 
 linux_bash_dotfiles() {
-    [ -f ~/seartipy/dotfiles/bashrc ] || return 1
+    [ -f ~/.seartipy/bashrc ] || return 1
 
     slog "Moving ~/.bash_profile to $BACKUP_DIR"
     smv ~/.bash_profile "$BACKUP_DIR"
-    sln ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    sln ~/.seartipy/bashrc ~/.bash_profile
 
     if ! grep .bash_profile ~/.bashrc > /dev/null; then
         echo "[ -f ~/.bash_profile ] && source ~/.bash_profile" >> ~/.bashrc
@@ -89,19 +89,19 @@ zsh_fedora_install() {
 }
 
 zsh_dotfiles() {
-    [ -f ~/seartipy/dotfiles/zgen-zshrc ] || return 1
+    [ -f ~/.seartipy/zgen-zshrc ] || return 1
 
     slog "Moving ~/.zshrc to $BACKUP_DIR "
     smv ~/.zshrc "$BACKUP_DIR"
 
-    slog "Linking ~/seartipy/dotfiles/zgen-zshrc as ~/.zshrc"
-    sln ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    slog "Linking ~/.seartipy/zgen-zshrc as ~/.zshrc"
+    sln ~/.seartipy/zgen-zshrc ~/.zshrc
 
-    slog "Copying ~/seartipy/dotfiles/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
-    scopy ~/seartipy/dotfiles/templates/zgen-options-local.sh ~/.zgen-options-local.sh
+    slog "Copying ~/.seartipy/templates/zgen-options-local.sh to ~/.zgen-options-local.sh"
+    scopy ~/.seartipy/templates/zgen-options-local.sh ~/.zgen-options-local.sh
 
-    slog "Copying ~/seartipy/dotfiles/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
-    scopy ~/seartipy/dotfiles/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
+    slog "Copying ~/.seartipy/templates/zgen-pre-local.sh to ~/.zgen-pre-local.sh"
+    scopy ~/.seartipy/templates/zshrc-pre-local.sh ~/.zshrc-pre-local.sh
 }
 
 zsh_install() {
@@ -117,7 +117,7 @@ git_install() {
     slog "Installing git"
     sudo dnf install -y git-extras git
 
-    scopy ~/seartipy/dotfiles/templates/gitconfig ~/.gitconfig
+    scopy ~/.seartipy/templates/gitconfig ~/.gitconfig
 }
 
 # java
@@ -274,7 +274,7 @@ keep_sudo_running() {
 }
 
 setup_backup_dir() {
-    BACKUP_DIR=~/seartipy.backups
+    BACKUP_DIR=~/.seartipy.backups
 
     if [ -d "$BACKUP_DIR" ]; then
         slog "moving $BACKUP_DIR to trash"
@@ -328,22 +328,22 @@ pre_installer_check() {
 }
 
 dotfiles_check() {
-    dir_check ~/seartipy/dotfiles
-    ln_check ~/seartipy/dotfiles/tmux.conf ~/.tmux.conf
+    dir_check ~/.seartipy
+    ln_check ~/.seartipy/tmux.conf ~/.tmux.conf
     dir_check ~/.tmux/plugins/tpm
 }
 
 zsh_check() {
     cmd_check zsh shellcheck
 
-    ln_check ~/seartipy/dotfiles/zgen-zshrc ~/.zshrc
+    ln_check ~/.seartipy/zgen-zshrc ~/.zshrc
     dir_check ~/.zgen
     file_check ~/.zgen-options-local.sh
     file_check ~/.zshrc-pre-local.sh
 }
 
 bash_check() {
-    ln_check ~/seartipy/dotfiles/bashrc ~/.bash_profile
+    ln_check ~/.seartipy/bashrc ~/.bash_profile
 
     if ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"

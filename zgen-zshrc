@@ -1,16 +1,5 @@
 #! /bin/zsh
 
-SEARTIPY_TMUX=""
-
-[ -s ~/seartipy/dotfiles/shellrc ] && source ~/seartipy/dotfiles/shellrc
-
-export QT_SCALE_FACTOR=2
-
-alias sbt="TERM=xterm-color sbt"
-
-
-[[ $- == *i* ]] || return 0
-
 [ -d ~/.zgen ] || git clone https://github.com/tarjoilija/zgen.git ~/.zgen
 
 [ -s ~/.zgen/zgen.zsh ] || return 1
@@ -34,9 +23,6 @@ if ! zgen saved; then
     zgen prezto syntax-highlighting color 'yes'
     zgen prezto syntax-highlighting highlighters 'main' 'brackets'
 
-    ZGEN_SYNTAX_HIGHLIGHTING="yes"
-    ZGEN_AUTO_SUGGESIONS="yes"
-
     # select your prompt, if you have powerline patched fonts installed,
     # and selected as terminal font, agnoster is a good option
     zgen prezto prompt theme 'pure'
@@ -56,9 +42,10 @@ if ! zgen saved; then
     zgen prezto command-not-found
     zgen prezto fasd                           # j , f, d etc.
     zgen prezto osx
-    [[ "$ZGEN_SYNTAX_HIGHLIGHTING" == "yes" ]] && zgen prezto syntax-highlighting
+
+    zgen prezto syntax-highlighting
     zgen prezto history-substring-search
-    [[ "$ZGEN_AUTO_SUGGESIONS" == "yes" ]] && zgen prezto autosuggestions
+    zgen prezto autosuggestions
 
     # plugins
     zgen load djui/alias-tips
@@ -72,27 +59,24 @@ if ! zgen saved; then
 
     # zgen load denysdovhan/spaceship-prompt spaceship
 
-    [ -s ~/.zgen-plugins-local.sh ] || touch ~/.zgen-plugins-local.sh
-    source ~/.zgen-plugins-local.sh
-
     zgen prezto prompt          # prompt must be the last module to load
     zgen save                   # save all to init script
 fi
 
 # copied from tmux prezto module
-# start_tmux() {
-#     tmux start-server
+start_tmux() {
+    tmux start-server
 
-#     # Create a 'seartipy' session if no session has been defined in tmux.conf.
-#     if ! tmux has-session 2> /dev/null; then
-#         tmux_session='seartipy'
-#         tmux \
-#             new-session -d -s "$tmux_session" \; \
-#             set-option -t "$tmux_session" destroy-unattached off &> /dev/null
-#     fi
+    # Create a 'seartipy' session if no session has been defined in tmux.conf.
+    if ! tmux has-session 2> /dev/null; then
+        tmux_session='seartipy'
+        tmux \
+            new-session -d -s "$tmux_session" \; \
+            set-option -t "$tmux_session" destroy-unattached off &> /dev/null
+    fi
 
-#     # Attach to the 'prezto' session or to the last session used.
-#     exec tmux attach-session
-# }
+    # Attach to the 'prezto' session or to the last session used.
+    exec tmux attach-session
+}
 
 # [ -n "$SEARTIPY_TMUX" ] && [[ -z "$SEARTIPY_EMACS" && -z "$TMUX" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$VIM" ]] && start_tmux

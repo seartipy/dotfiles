@@ -47,6 +47,10 @@ is_mac() {
     [[ "$OSTYPE" == "darwin"* ]]
 }
 
+is_wsl() {
+    is_ubuntu && grep -qi microsoft /proc/version > /dev/null
+}
+
 has_cmd() {
     command -v "$1" > /dev/null
 }
@@ -63,15 +67,29 @@ smd() {
     mkdir -p "$1" 2> /dev/null
 }
 
-
 srm() {
     for f in "$@"; do
-        if is_ubuntu; then
-            trash-put "$f" 2> /dev/null && slog "Trashed $f"
+        if [ -L "$f" ]; then
+            rm -f "$f" && echo "INFO: Removing existing link $f"
+        elif has_cmd trash-put; then
+            trash-put "$f" 2> /dev/null && echo "INFO: Trashed $f"
+        elif has_cmd trash; then
+            trash "$f" 2> /dev/null && echo "INFO: Trashed $f"
         else
-            trash "$f" 2> /dev/null && slog "Trashed $f"
+            warn "trash not installed, cannot rm $f"
         fi
     done
+}
+
+fln() {
+    if [ -e "$1" ]; then
+        srm "$2"
+    else
+        warn "$1 does not exist, cannot create link $2"
+        return 1
+    fi
+    slog "Creating link $2 to $1"
+    ln -s "$1" "$2"
 }
 
 sln() {

@@ -1,107 +1,36 @@
 #! /usr/bin/env bash
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "${CURRENT_DIR}/scripts/utils.sh"
-source "${CURRENT_DIR}/scripts/installer_utils.sh"
 
 {
 
+source "${CURRENT_DIR}/scripts/utils.sh"
+source "${CURRENT_DIR}/installers/bootstrap.sh"
+source "${CURRENT_DIR}/installers/utils.sh"
+source "${CURRENT_DIR}/installers/mods.sh"
+
+source "${CURRENT_DIR}/installers/mac.sh"
+source "${CURRENT_DIR}/installers/ubuntu.sh"
+
 # installer
 
-select_defaults() {
-    ESSENTIAL="essential"
-    ZSH="zsh"
-    BASH="bash"
-    DOTFILES="dotfiles"
-    GIT="git"
-    # GUI="gui"
-}
-
-script_options() {
-    select_defaults
-
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            nothing)
-                ZSH=""
-                BASH=""
-                GIT=""
-                shift
-                ;;
-            nodefaults)
-                ZSH=""
-                BASH=""
-                DOTFILES=""
-                GIT=""
-                shift
-                ;;
-            noessential)
-                ESSENTIAL=""
-                shift
-                ;;
-            nozsh)
-                ZSH=""
-                shift
-                ;;
-            nobash)
-                BASH=""
-                shift
-                ;;
-            nodotfiles)
-                DOTFILES=""
-                shift
-                ;;
-            nogit)
-                GIT=""
-                shift
-                ;;
-            nogui)
-                GUI=""
-                shift
-                ;;
-            diagnostics)
-                DIAGNOSTICS="diagnostics"
-                shift
-                ;;
-            *)
-                if file_exists "$CURRENT_DIR}/installers/mods/$1.sh"; then
-                    source "$CURRENT_DIR}/installers/mods/$1.sh"
-                else
-                    warn "Unknown installer option: $1"
-                fi
-                ;;
-        esac
-    done
-}
-
 installer() {
-    script_options $*
+    opts=(essential dotfiles "$@")
 
-    if [ -n "$DIAGNOSTICS" ]; then
-        echo "Running Diagnostics..."
-        post_installer_check
-        echo "Diagnostics complete."
-        exit 0
-    fi
+    slog "Installing..."
 
-    echo "Installing..."
-
-    essential_install
-
-    pre_installer_check
-
-    install_all
+    mods_setup ${opts[@]}
+    mods_install ${opts[@]}
+    mods_cleanup ${opts[@]}
 
     if [ -n "$ZSH" ]; then
         echo "Set zsh as your default shell(in case this fails, run `chsh -s /bin/zsh` manually later)"
         chsh -s /bin/zsh
     fi
 
-    cleanup
-
     post_installer_check
 
-    echo "Installation done!"
+    slog "Installation done!"
 }
 
 # diagnostics
@@ -109,16 +38,9 @@ installer() {
 post_installer_check() {
     post_installer_setup
 
-    essential_check
-
+    [ -n "$ESSENTIAL" ] && essential_check
     [ -n "$DOTFILES" ] && dotfiles_check
-
-    [ -n "$ZSH" ] && zsh_check
-    [ -n "$BASH" ] && bash_check
-
-    [ -n "$VSCODE" ] && vscode_check
-
-    [ -n "$GIT" ] && git_check
+    check_mods
 }
 
 source "${CURRENT_DIR}/scripts/bootstrap.sh"

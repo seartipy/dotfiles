@@ -9,41 +9,35 @@ elif is_ubuntu; then
 fi
 
 # exports
-export PATH="$HOME/bin:$PATH"
+path_export "$HOME/bin:$PATH"
 
-if is_ubuntu; then
-    export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
-    export JDK_HOME=$JAVA_HOME
-fi
-
-if is_fedora; then
-    export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-    export JDK_HOME=$JAVA_HOME
+if is_linux; then
+    ignore_export JAVA_HOME $(readlink -f `which javac` | sed "s:/bin/javac::")
+    ignore_export JDK_HOME $JAVA_HOME
 fi
 
 if is_mac; then
-    JAVA_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
-    export JAVA_HOME
-
-    JDK_HOME=$(/usr/libexec/java_home -v 1.8 2> /dev/null)
-    export JDK_HOME
-
     #brew
-    export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+    path_export "/usr/local/sbin:/usr/local/bin"
+
+    #java
+    ignore_export JAVA_HOME $(/usr/libexec/java_home -v 1.8 2> /dev/null)
+    ignore_export JDK_HOME $(/usr/libexec/java_home -v 1.8 2> /dev/null)
 fi
 
 #node
 [ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
+
 if [ -d "$HOME/.volta" ]; then
-    export VOLTA_HOME="$HOME/.volta"
-    export PATH="$VOLTA_HOME/bin:$PATH"
+    ignore_export VOLTA_HOME "$HOME/.volta"
+    ignore_path_export "$VOLTA_HOME/bin"
 fi
 
-export NVM_DIR="$HOME/.nvm"
+ignore_export NVM_DIR "$HOME/.nvm"
 
 #python
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+ignore_export PYENV_ROOT "$HOME/.pyenv"
+ignore_path_export "$PYENV_ROOT/bin"
 
 if has_cmd pyenv; then
     eval "$(pyenv init - --no-rehash)"
@@ -51,8 +45,8 @@ if has_cmd pyenv; then
 fi
 
 #haskell
-export PATH="$HOME/.cabal/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH" # haskell stack
+ignore_path_export "$HOME/.cabal/bin"
+ignore_path_export "$HOME/.local/bin" # haskell stack
 
 #scala
-export PATH="$HOME/.local/share/coursier/bin:$PATH"
+ignore_path_export "$HOME/.local/share/coursier/bin"

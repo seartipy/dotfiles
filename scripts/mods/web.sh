@@ -17,7 +17,6 @@ web_check() {
     fi
 }
 
-
 nvm_install() {
     [ -s ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 

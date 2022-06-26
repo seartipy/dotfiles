@@ -18,15 +18,18 @@ create_dirs() {
     smd ~/bin
 }
 
+
 setup_paths() {
-    export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-    is_ubuntu && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+    path_export "$HOME/bin"
+    path_export "$HOME/.local/bin"
+    is_ubuntu && path_export "/home/linuxbrew/.linuxbrew/bin"
 
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 
-    is_mac && export PATH="$PATH:/usr/local/opt/go/libexec/bin"
+    is_mac && path_export "/usr/local/opt/go/libexec/bin"
 
-    export PATH="$HOME/.cask/bin:$PATH"
+    path_export "$HOME/.cask/bin"
+    path_export "$HOME/.local/share/coursier/bin"
 }
 
 pre_installer_check() {

@@ -323,6 +323,31 @@ gemi() {
     done
 }
 
+path_export() {
+    if [ -d $1 ]; then
+        export PATH="$1:$PATH"
+    else
+        warn "can't export $1: not a directory"
+    fi
+}
+
+ignore_path_export() {
+    [ -d $1 ] && export PATH="$1:$PATH"
+}
+
+sexport() {
+    if [ -d $2 ]; then
+        export $1="$2"
+    else
+        echo "can't export $2: not a directory"
+    fi
+}
+
+ignore_export() {
+    [ -d $2 ] && export $1="$2"
+}
+
+
 keep_sudo_running() {
     # Ask for the administrator password upfront
     sudo -v
@@ -355,5 +380,5 @@ pre_installer_check() {
     else
         pre_cmd_check trash
     fi
-    pre_dir_check "$BACKUP_DIR" ~/seartipy/emacses ~/bin
+    pre_dir_check "$BACKUP_DIR" ~/bin
 }

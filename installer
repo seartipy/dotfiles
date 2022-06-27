@@ -21,15 +21,15 @@ create_dirs() {
 
 setup_paths() {
     path_export "$HOME/bin"
-    path_export "$HOME/.local/bin"
+    ignore_path_export "$HOME/.local/bin"
     is_ubuntu && path_export "/home/linuxbrew/.linuxbrew/bin"
 
     [ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh
 
     is_mac && path_export "/usr/local/opt/go/libexec/bin"
 
-    path_export "$HOME/.cask/bin"
-    path_export "$HOME/.local/share/coursier/bin"
+    ignore_path_export "$HOME/.cask/bin" # ignore only is HASKELL not selected
+    ignore_path_export "$HOME/.local/share/coursier/bin" # ignore only is SCALA not selected
 }
 
 pre_installer_check() {
@@ -51,6 +51,7 @@ installer() {
 
     slog "Installing..."
 
+    mods_source ${opts[@]}
     mods_setup ${opts[@]}
     mods_install ${opts[@]}
     mods_cleanup ${opts[@]}
@@ -72,7 +73,7 @@ post_installer_check() {
 
     [ -n "$ESSENTIAL" ] && essential_check
     [ -n "$DOTFILES" ] && dotfiles_check
-    check_mods
+    mods_check
 }
 
 source "${CURRENT_DIR}/scripts/bootstrap.sh"

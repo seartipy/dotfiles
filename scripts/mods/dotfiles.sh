@@ -97,11 +97,13 @@ bash_install() {
 }
 
 dotfiles_install() {
-    [ -n "$DOTFILES"] || return 0
+    [ -n "$DOTFILES" ] || return 0
 
     clone_dotfiles
 
-    [ -n "$ZSH" ] && zsh_install
+    if [ -n "$ZGEN" ] || [ -n "$OHMYZSH" ]; then
+        zsh_install
+    fi
     [ -n "$BASH" ] && bash_install
     [ -n "$TMUX" ] && tmux_dotfiles
 }
@@ -118,9 +120,9 @@ bash_check() {
 
 zsh_check() {
     cmd_check zsh shellcheck
-    n_check ~/.seartipy/zshrc ~/.zshrc
+    ln_check ~/.seartipy/zshrc ~/.zshrc
 
-    [ -n "$ZGEN"] && dir_check ~/.zgen
+    [ -n "$ZGEN" ] && dir_check ~/.zgen
 
     if [ -n "$OHMYZSH" ]; then
         dir_check ~/.oh-my-zsh
@@ -132,6 +134,8 @@ zsh_check() {
 }
 
 dotfiles_check() {
+    [ -n "$DOTFILES" ] || return 0
+
     dir_check ~/.seartipy
 
     if [ -n "$TMUX" ]; then
@@ -139,15 +143,18 @@ dotfiles_check() {
         dir_check ~/.tmux/plugins/tpm
     fi
 
-    [ -n "$ZSH" ] && zsh_check
+    if [ -n "$OHMYZSH" ] || [ -n "$ZGEN" ]; then 
+        zsh_check
+    fi
+
     [ -n "$BASH" ] && bash_check
 }
 
 dotfiles_setup() {
     DOTFILES="dotfiles"
     BASH="bash"
-    ZGEN="zgen"
     TMUX="tmux"
+    ZGEN="zgen"
     OHMYZSH=""
 
     while [[ $# -gt 0 ]]; do
@@ -175,4 +182,6 @@ dotfiles_setup() {
                 ;;
         esac
     done
+
+    slog "Selecting $DOTFILES $BASH $ZGEN $TMUX $OHMYZSH"
 }

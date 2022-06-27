@@ -56,7 +56,7 @@ git_mac_install() {
 
 docker_mac_install() {
     slog "Installing docker"
-    is_mac || return 1
+    is_mac && return 1
 
     brew install docker
 }
@@ -170,10 +170,9 @@ essential_ubuntu_install() {
     is_gui || return 1
 
     sudo apt-get install -y firefox
-    sudo apt-get install -y exfat-utils
     sudo apt-get install -y exfat-fuse
 
-    1 | sudo deb-get install google-chrome-stab
+    1 | sudo deb-get install google-chrome-stable
     sudo deb-get install microsoft-edge-stable
 }
 
@@ -252,13 +251,14 @@ docker_install() {
 }
 
 essential_install() {
+    echo "$ESSENTIAL"
     [ -n "$ESSENTIAL" ] || return 1
 
     essential_ubuntu_install
     essential_mac_install
 
     if ! is_wsl; then
-        is_gui && [ -n "$DOCKER" ] && docker_install
+        [ -n "$DOCKER" ] && docker_install
     fi
 
     brew_packages_install
@@ -290,7 +290,7 @@ essential_check() {
     essential_mac_check
     essential_ubuntu_check
 
-    [ -n "$DOCKER"] && is_gui && has_cmd docker
+    [ -n "$DOCKER" ] && is_gui && has_cmd docker
 
     git_check
 }
@@ -323,10 +323,6 @@ essential_setup() {
                 ESSENTIAL=""
                 shift
                 ;;
-            nodefaults)
-                no_defaults()
-                shift
-                ;;
             nogit)
                 GIT=""
                 shift
@@ -341,4 +337,6 @@ essential_setup() {
                 ;;
         esac
     done
+
+    slog "Selecting $ESSENTIAL $GIT $DOCKER $GUI"
 }

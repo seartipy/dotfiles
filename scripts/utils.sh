@@ -51,6 +51,10 @@ is_wsl() {
     is_ubuntu && grep -qi microsoft /proc/version > /dev/null
 }
 
+fn_exists() {
+    [[ $(type -t $1) == function ]]
+}
+
 has_cmd() {
     command -v "$1" > /dev/null
 }
@@ -70,11 +74,11 @@ smd() {
 srm() {
     for f in "$@"; do
         if [ -L "$f" ]; then
-            rm -f "$f" && echo "INFO: Removing existing link $f"
+            rm -f "$f" && slog "Removing existing link $f"
         elif has_cmd trash-put; then
-            trash-put "$f" 2> /dev/null && echo "INFO: Trashed $f"
+            trash-put "$f" 2> /dev/null && slog "Trashed $f"
         elif has_cmd trash; then
-            trash "$f" 2> /dev/null && echo "INFO: Trashed $f"
+            trash "$f" 2> /dev/null && slog "Trashed $f"
         else
             warn "trash not installed, cannot rm $f"
         fi

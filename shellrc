@@ -9,16 +9,17 @@ elif is_ubuntu; then
 fi
 
 # exports
-path_export "$HOME/bin:$PATH"
+path_export "$HOME/bin"
 
-if is_linux; then
-    ignore_export JAVA_HOME $(readlink -f `which javac` | sed "s:/bin/javac::")
-    ignore_export JDK_HOME $JAVA_HOME
-fi
+# if is_linux && has_cmd javac; then
+#     ignore_export JAVA_HOME $(readlink -f `which javac` | sed "s:/bin/javac::")
+#     ignore_export JDK_HOME $JAVA_HOME
+# fi
 
 if is_mac; then
     #brew
-    path_export "/usr/local/sbin:/usr/local/bin"
+    path_export "/usr/local/sbin"
+    path_export "/usr/local/bin"
 
     #java
     ignore_export JAVA_HOME $(/usr/libexec/java_home -v 1.8 2> /dev/null)

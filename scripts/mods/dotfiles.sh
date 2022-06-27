@@ -93,7 +93,9 @@ bash_install() {
     mac_bash_dotfiles
     linux_bash_dotfiles
 
-    sclone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
+    if has_cmd starship; then
+        curl -fsSL https://starship.rs/install.sh | sh -s -- --yes
+    fi
 }
 
 dotfiles_install() {
@@ -115,7 +117,8 @@ bash_check() {
     if is_linux && ! grep .bash_profile ~/.bashrc > /dev/null; then
         warn "~/.bash_profile not sourced in ~/.bashrc"
     fi
-    dir_check ~/.liquidprompt
+
+    has_cmd starship
 }
 
 zsh_check() {
@@ -160,6 +163,11 @@ dotfiles_setup() {
         case $1 in
             nobash)
                 BASH=""
+                shift
+                ;;
+            nozsh)
+                ZGEN=""
+                OHMYZSH=""
                 shift
                 ;;
             nozgen)

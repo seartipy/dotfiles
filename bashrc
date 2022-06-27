@@ -1,7 +1,5 @@
 #! /bin/bash
 
-[ -d ~/.liquidprompt ] || git clone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt
-
-[[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt
+has_cmd starship && eval "$(starship init bash)"
 
 source ~/.seartipy/shellrc

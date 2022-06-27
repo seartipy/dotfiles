@@ -151,7 +151,6 @@ dotfiles_check() {
 }
 
 dotfiles_setup() {
-    DOTFILES="dotfiles"
     BASH="bash"
     TMUX="tmux"
     ZGEN="zgen"
@@ -159,10 +158,7 @@ dotfiles_setup() {
 
     while [[ $# -gt 0 ]]; do
         case $1 in
-            nodotfiles)
-                DOTFILES=""
-                shift
-                ;;
+            
             nobash)
                 BASH=""
                 shift
@@ -183,5 +179,5 @@ dotfiles_setup() {
         esac
     done
 
-    slog "Selecting $DOTFILES $BASH $ZGEN $TMUX $OHMYZSH"
+    slog "Selecting $BASH $ZGEN $TMUX $OHMYZSH"
 }

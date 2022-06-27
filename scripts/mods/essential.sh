@@ -251,7 +251,6 @@ docker_install() {
 }
 
 essential_install() {
-    echo "$ESSENTIAL"
     [ -n "$ESSENTIAL" ] || return 1
 
     essential_ubuntu_install
@@ -302,7 +301,6 @@ essential_cleanup() {
 
 
 setup_defaults() {
-    ESSENTIAL="essential"
     GIT="git"
 
     if is_wsl; then
@@ -319,10 +317,6 @@ essential_setup() {
 
     while [[ $# -gt 0 ]]; do
         case $1 in
-            noessential)
-                ESSENTIAL=""
-                shift
-                ;;
             nogit)
                 GIT=""
                 shift
@@ -338,5 +332,5 @@ essential_setup() {
         esac
     done
 
-    slog "Selecting $ESSENTIAL $GIT $DOCKER $GUI"
+    slog "Selecting $GIT $DOCKER $GUI"
 }

@@ -343,7 +343,7 @@ sexport() {
     if [ -d $2 ]; then
         export $1="$2"
     else
-        echo "can't export $2: not a directory"
+        warn "can't export $2: not a directory"
     fi
 }
 

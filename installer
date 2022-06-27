@@ -18,7 +18,6 @@ create_dirs() {
     smd ~/bin
 }
 
-
 setup_paths() {
     path_export "$HOME/bin"
     ignore_path_export "$HOME/.local/bin"
@@ -46,15 +45,42 @@ pre_installer_check() {
     pre_dir_check "$BACKUP_DIR" ~/bin
 }
 
+script_options() {
+    ESSENTIAL="essential"
+    DOTFILES="dotfiles"
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            nodefaults)
+                ESSENTIAL=""
+                DOTFILES=""
+                shift
+                ;;
+            nodotfiles)
+                DOTFILES=""
+                shift
+                ;;
+            noessential)
+                ESSENTIAL=""
+                shift
+                ;;
+        esac
+    done
+
+    slog "Selecting $DOTFILES $ESSENTIAL"
+}
+
 installer() {
-    opts=(essential dotfiles "$@")
+    script_options
+    opts=($ESSENTIAL $DOTFILES "$@")
+    slog "INSTALLATION: ${opts[*]}"
 
     slog "Installing..."
 
-    mods_source ${opts[@]}
-    mods_setup ${opts[@]}
-    mods_install ${opts[@]}
-    mods_cleanup ${opts[@]}
+    mods_source "${opts[@]}"
+    mods_setup "${opts[@]}"
+    mods_install "${opts[@]}"
+    mods_cleanup "${opts[@]}"
 
     if [ -n "$ZSH" ]; then
         echo "Set zsh as your default shell(in case this fails, run `chsh -s /bin/zsh` manually later)"

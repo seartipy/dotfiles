@@ -64,6 +64,9 @@ script_options() {
                 ESSENTIAL=""
                 shift
                 ;;
+            *)
+                shift
+                ;;
         esac
     done
 
@@ -71,7 +74,7 @@ script_options() {
 }
 
 installer() {
-    script_options
+    script_options "$@"
     opts=($ESSENTIAL $DOTFILES "$@")
     slog "INSTALLATION: ${opts[*]}"
 

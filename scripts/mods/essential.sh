@@ -55,8 +55,8 @@ git_mac_install() {
 }
 
 docker_mac_install() {
+    is_mac || return 1
     slog "Installing docker"
-    is_mac && return 1
 
     brew install docker
 }
@@ -178,7 +178,7 @@ essential_ubuntu_install() {
 
 docker_ubuntu_install() {
     is_ubuntu || return 1
-    is_gui && return 1
+    is_gui || return 1
     slog "Installing docker"
 
     sudo deb-get install docker-ce
@@ -298,7 +298,6 @@ essential_cleanup() {
     cleanup_ubuntu
     cleanup_mac
 }
-
 
 setup_defaults() {
     GIT="git"

@@ -158,7 +158,6 @@ dotfiles_setup() {
 
     while [[ $# -gt 0 ]]; do
         case $1 in
-            
             nobash)
                 BASH=""
                 shift

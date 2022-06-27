@@ -33,8 +33,6 @@ install_one() {
   if fn_exists "${1}_install"; then
     slog "Installing $1"
     "${1}_install"
-  else
-    warn "installer not available for: $1"
   fi
 }
 

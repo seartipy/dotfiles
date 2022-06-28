@@ -15,16 +15,18 @@ mods_source() {
 
 mods_setup() {
   while [[ $# -gt 0 ]]; do
-    slog "Setting up $1"
-    fn_exists "${1}_setup" && "${1}_setup"
+    if fn_exists "${1}_setup"; then 
+      slog "Setting up $1"
+      "${1}_setup"
     shift
   done
 }
 
 mods_check() {
   while [[ $# -gt 0 ]]; do
-    slog "Checking $1"
-    fn_exists "${1}_check" && "${1}_check"
+    if fn_exists "${1}_check"; then
+      slog "Checking $1"
+      "${1}_check"
     shift
   done
 }
@@ -45,8 +47,9 @@ mods_install() {
 
 mods_cleanup() {
   while [[ $# -gt 0 ]]; do
-    slog "Cleaning up $1"
-    fn_exists "${1}_cleanup" && "${1}_cleanup"
+    if fn_exists "${1}_cleanup"; then
+      slog "Cleaning up $1"
+      "${1}_cleanup"
     shift
   done
 }

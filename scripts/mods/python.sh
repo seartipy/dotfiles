@@ -2,19 +2,6 @@
 
 {
 
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-
-source "$DOTFILES_DIR/scripts/utils.sh"
-
-
-pipi() {
-    if is_mac; then
-        pip3 install "$@"
-    elif is_linux; then
-        pip3 install --user "$@"
-    fi
-}
-
 python_mac_install() {
     is_mac || return 1
 
@@ -43,12 +30,6 @@ python_install() {
         slog "Installing anaconda"
         local anacondaversion=`pyenv install --list | grep anaconda | tail -1`
         pyenv install $anacondaversion
-    fi
-}
-
-fresh_python() {
-    if [ -n "$PYTHON" ]; then
-        srm ~/.pyenv
     fi
 }
 

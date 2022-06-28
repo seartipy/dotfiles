@@ -42,9 +42,3 @@ web_install() {
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf > /dev/null && sudo sysctl -p
     fi
 }
-
-# volta_install() {
-#     has_cmd volta || return 1
-#     curl https://get.volta.sh | bash
-#     volta install node
-# }

@@ -18,6 +18,7 @@ mods_setup() {
     if fn_exists "${1}_setup"; then 
       slog "Setting up $1"
       "${1}_setup"
+    fi
     shift
   done
 }
@@ -27,6 +28,7 @@ mods_check() {
     if fn_exists "${1}_check"; then
       slog "Checking $1"
       "${1}_check"
+    fi
     shift
   done
 }
@@ -50,6 +52,7 @@ mods_cleanup() {
     if fn_exists "${1}_cleanup"; then
       slog "Cleaning up $1"
       "${1}_cleanup"
+    fi
     shift
   done
 }

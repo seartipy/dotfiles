@@ -1,5 +1,6 @@
 #! /bin/bash
 
-has_cmd starship && eval "$(starship init bash)"
+[ -s ~/.seartipy/shellrc ] && source ~/.seartipy/shellrc
 
-source ~/.seartipy/shellrc
+
+has_cmd starship && eval "$(starship init bash)"

@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-# web
-
 web_check() {
     cmd_check nvm
     cmd_check npm

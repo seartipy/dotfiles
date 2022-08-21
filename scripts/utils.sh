@@ -287,6 +287,13 @@ apmi() {
     done
 }
 
+apti() {
+    for p in "$@"; do
+        slog "Installing package $p"
+        sudo apt-get install -y "$p"
+    done
+}
+
 sysi() {
     for p in "$@"; do
         if is_mac; then

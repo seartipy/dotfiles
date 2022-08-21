@@ -48,12 +48,14 @@
   "files.exclude": { "USE_GITIGNORE": true },
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
 
   "window.newWindowDimensions": "inherit",
   "window.restoreFullscreen": true,
   "window.restoreWindows": "one",
   "window.zoomLevel": 0,
 
+  "git.autofetch": true,
   "search.exclude": {
     "**/.build": true,
     "**/.cache": true,
